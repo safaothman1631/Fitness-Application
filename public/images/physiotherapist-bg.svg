@@ -1,0 +1,97 @@
+<!-- Physiotherapy Login Background - 4K (3840x2160)
+     Palette: calming teal/green with soft aqua
+     Features: organic flowing waves, gentle bokeh, clean center, subtle texture -->
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <defs>
+    <!-- Base gradient (deep teal) -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#061418"/>
+      <stop offset="100%" stop-color="#0B1E1A"/>
+    </linearGradient>
+
+    <!-- Center vignette to keep form readable -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#0A1315" stop-opacity="0.65"/>
+      <stop offset="45%" stop-color="#0A1315" stop-opacity="0.40"/>
+      <stop offset="85%" stop-color="#0A1315" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0A1315" stop-opacity="0.00"/>
+    </radialGradient>
+
+    <!-- Accents -->
+    <linearGradient id="accent-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#7BDCB5"/>
+      <stop offset="100%" stop-color="#2ED1B8"/>
+    </linearGradient>
+    <linearGradient id="accent-aqua" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#57D0E0"/>
+      <stop offset="100%" stop-color="#2ED1B8"/>
+    </linearGradient>
+
+    <!-- Flow ribbon gradient -->
+    <linearGradient id="ribbon-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#7BDCB5" stop-opacity="0.0"/>
+      <stop offset="35%" stop-color="#7BDCB5" stop-opacity="0.35"/>
+      <stop offset="65%" stop-color="#57D0E0" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#57D0E0" stop-opacity="0.0"/>
+    </linearGradient>
+
+    <!-- Soft glow for bokeh -->
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Fine noise to reduce banding -->
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="13" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.03"/></feComponentTransfer>
+    </filter>
+
+    <!-- Subtle scanlines -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#FFFFFF" opacity="0.02"/>
+    </pattern>
+
+    <style>
+      .wave { opacity: 0.55; }
+      .line { stroke-linecap: round; opacity: 0.35; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="3840" height="2160" fill="url(#bg)"/>
+
+  <!-- Flowing organic waves (top-left and bottom-right, away from center) -->
+  <g class="wave">
+    <path d="M -300 420 C 500 260, 1200 320, 2000 460 C 2600 560, 3200 640, 4200 600 L 4200 760 C 3200 780, 2600 700, 2000 580 C 1200 420, 500 360, -300 580 Z"
+          fill="url(#ribbon-grad)"/>
+    <path d="M -320 1680 C 600 1580, 1400 1500, 2200 1560 C 3000 1620, 3600 1780, 4220 1740 L 4220 1890 C 3600 1960, 3000 1900, 2200 1820 C 1400 1700, 600 1780, -320 1900 Z"
+          fill="url(#ribbon-grad)" opacity="0.8"/>
+  </g>
+
+  <!-- Gentle curved lines -->
+  <g>
+    <path d="M 200 320 C 860 420, 1520 380, 2180 420" stroke="url(#accent-aqua)" stroke-width="2" class="line" fill="none"/>
+    <path d="M 220 360 C 880 460, 1540 420, 2200 460" stroke="url(#accent-teal)" stroke-width="1.6" class="line" fill="none" opacity="0.45"/>
+    <path d="M 420 1820 C 1180 1760, 1920 1800, 2680 1840" stroke="url(#accent-teal)" stroke-width="2" class="line" fill="none"/>
+    <path d="M 420 1860 C 1180 1800, 1920 1840, 2680 1880" stroke="url(#accent-aqua)" stroke-width="1.6" class="line" fill="none" opacity="0.45"/>
+  </g>
+
+  <!-- Bokeh along periphery -->
+  <g filter="url(#soft-glow)">
+    <circle cx="320" cy="280" r="38" fill="#7BDCB5" opacity="0.15"/>
+    <circle cx="520" cy="360" r="26" fill="#57D0E0" opacity="0.14"/>
+    <circle cx="3480" cy="420" r="30" fill="#2ED1B8" opacity="0.12"/>
+    <circle cx="3600" cy="1760" r="42" fill="#7BDCB5" opacity="0.14"/>
+    <circle cx="420" cy="1860" r="34" fill="#57D0E0" opacity="0.12"/>
+    <circle cx="800" cy="1680" r="24" fill="#2ED1B8" opacity="0.12"/>
+  </g>
+
+  <!-- Center vignette -->
+  <rect width="3840" height="2160" fill="url(#vignette)"/>
+
+  <!-- Scanlines and film grain -->
+  <rect width="3840" height="2160" fill="url(#scanlines)"/>
+  <rect width="3840" height="2160" filter="url(#film-grain)" opacity="0.18"/>
+</svg>

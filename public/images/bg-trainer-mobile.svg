@@ -1,0 +1,101 @@
+<!-- Trainer/Coach Login Background - Mobile Portrait (1080x2400)
+     Palette: energetic orange/magenta + electric cyan on dark
+     Features: dynamic diagonal streaks, motion lines, light grit, clean center -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="2400" viewBox="0 0 1080 2400">
+  <defs>
+    <!-- Base gradient (dark graphite) -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0A0A0C"/>
+      <stop offset="100%" stop-color="#12141C"/>
+    </linearGradient>
+
+    <!-- Center vignette -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#0A0D12" stop-opacity="0.68"/>
+      <stop offset="50%" stop-color="#0A0D12" stop-opacity="0.42"/>
+      <stop offset="90%" stop-color="#0A0D12" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#0A0D12" stop-opacity="0.00"/>
+    </radialGradient>
+
+    <!-- Accents -->
+    <linearGradient id="accent-hot" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#FF6B3D"/>
+      <stop offset="100%" stop-color="#FF2D95"/>
+    </linearGradient>
+    <linearGradient id="accent-cyan" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#00E0FF"/>
+      <stop offset="100%" stop-color="#24A8FF"/>
+    </linearGradient>
+
+    <!-- Streak gradients -->
+    <linearGradient id="streak" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF6B3D" stop-opacity="0"/>
+      <stop offset="40%" stop-color="#FF6B3D" stop-opacity="0.45"/>
+      <stop offset="65%" stop-color="#FF2D95" stop-opacity="0.45"/>
+      <stop offset="100%" stop-color="#FF2D95" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="streak-cyan" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#00E0FF" stop-opacity="0"/>
+      <stop offset="50%" stop-color="#00E0FF" stop-opacity="0.40"/>
+      <stop offset="80%" stop-color="#24A8FF" stop-opacity="0.40"/>
+      <stop offset="100%" stop-color="#24A8FF" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Motion glow -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Grit/film grain -->
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="1.2" numOctaves="2" seed="21" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.035"/></feComponentTransfer>
+    </filter>
+
+    <!-- Halftone dots -->
+    <pattern id="halftone" width="12" height="12" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.2" fill="#FFFFFF" opacity="0.03"/>
+    </pattern>
+
+    <style>
+      .line { stroke-linecap: round; opacity: 0.4; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="2400" fill="url(#bg)"/>
+
+  <!-- Dynamic diagonal streaks (keep center clean) -->
+  <g filter="url(#glow)">
+    <!-- Top-left to center cyan -->
+    <path d="M -160 520 L 760 -120 L 840 -120 L -160 620 Z" fill="url(#streak-cyan)" opacity="0.8"/>
+    <!-- Top-left warm -->
+    <path d="M -160 260 L 620 -160 L 700 -160 L -160 360 Z" fill="url(#streak)"/>
+    <!-- Bottom-right warm -->
+    <path d="M 320 2400 L 1240 1840 L 1240 1700 L 260 2400 Z" fill="url(#streak)"/>
+    <!-- Bottom-right cyan -->
+    <path d="M 160 2400 L 1180 1900 L 1180 1760 L 60 2400 Z" fill="url(#streak-cyan)" opacity="0.85"/>
+  </g>
+
+  <!-- Motion lines -->
+  <g>
+    <path d="M -140 960 L 1180 240" stroke="url(#accent-hot)" stroke-width="2.2" class="line" fill="none"/>
+    <path d="M -160 1060 L 1200 340" stroke="url(#accent-cyan)" stroke-width="1.6" class="line" fill="none" opacity="0.5"/>
+    <path d="M -160 1740 L 1200 1120" stroke="url(#accent-cyan)" stroke-width="1.8" class="line" fill="none"/>
+    <path d="M -160 1840 L 1200 1220" stroke="url(#accent-hot)" stroke-width="1.4" class="line" fill="none" opacity="0.55"/>
+  </g>
+
+  <!-- Subtle halftone texture -->
+  <rect width="1080" height="2400" fill="url(#halftone)"/>
+
+  <!-- Center vignette -->
+  <rect width="1080" height="2400" fill="url(#vignette)"/>
+
+  <!-- Film grain -->
+  <rect width="1080" height="2400" filter="url(#film-grain)" opacity="0.18"/>
+
+  <!-- Optional safe area -->
+  <!-- <rect x="120" y="540" width="840" height="1320" fill="none" stroke="#FF6B3D" stroke-dasharray="10 12" opacity="0.2"/> -->
+</svg>

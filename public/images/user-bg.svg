@@ -1,0 +1,75 @@
+<!-- Normal User Login Background - 4K (3840x2160)
+     Palette: neutral deep blue
+     Features: minimalist gradient, subtle radial glow, soft abstract blobs, clean center -->
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <defs>
+    <!-- Base gradient (navy) -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0B1020"/>
+      <stop offset="100%" stop-color="#0E1430"/>
+    </linearGradient>
+
+    <!-- Corner glow -->
+    <radialGradient id="cornerGlow" cx="85%" cy="18%" r="35%">
+      <stop offset="0%" stop-color="#2A5DF7" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#2A5DF7" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Center vignette -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#0A0F1F" stop-opacity="0.68"/>
+      <stop offset="45%" stop-color="#0A0F1F" stop-opacity="0.40"/>
+      <stop offset="85%" stop-color="#0A0F1F" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0A0F1F" stop-opacity="0.00"/>
+    </radialGradient>
+
+    <!-- Blob gradient -->
+    <linearGradient id="blob" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2F80ED"/>
+      <stop offset="100%" stop-color="#56CCF2"/>
+    </linearGradient>
+
+    <!-- Film grain -->
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="7" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.028"/></feComponentTransfer>
+    </filter>
+
+    <!-- Scanlines -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#FFFFFF" opacity="0.02"/>
+    </pattern>
+
+    <!-- Soft blur -->
+    <filter id="soft" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="12"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="3840" height="2160" fill="url(#bg)"/>
+
+  <!-- Corner glow -->
+  <rect width="3840" height="2160" fill="url(#cornerGlow)"/>
+
+  <!-- Abstract soft blobs (low opacity, off-center) -->
+  <g opacity="0.16" filter="url(#soft)">
+    <circle cx="420" cy="520" r="360" fill="url(#blob)"/>
+    <circle cx="3460" cy="1700" r="420" fill="url(#blob)"/>
+    <circle cx="900" cy="1850" r="280" fill="url(#blob)"/>
+  </g>
+
+  <!-- Minimal thin lines -->
+  <g opacity="0.15">
+    <path d="M 240 320 L 1100 380 L 2000 340 L 2880 380 L 3600 340" stroke="#5DADE2" stroke-width="1" fill="none" stroke-linecap="round"/>
+    <path d="M 360 1900 L 1400 1940 L 2400 1920 L 3280 1960" stroke="#7FB3D5" stroke-width="1" fill="none" stroke-linecap="round"/>
+  </g>
+
+  <!-- Center vignette -->
+  <rect width="3840" height="2160" fill="url(#vignette)"/>
+
+  <!-- Scanlines and grain -->
+  <rect width="3840" height="2160" fill="url(#scanlines)"/>
+  <rect width="3840" height="2160" filter="url(#film-grain)" opacity="0.16"/>
+</svg>
