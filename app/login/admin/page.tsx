@@ -85,13 +85,14 @@ export default function AdminLoginPage() {
                         className="absolute inset-0 bg-no-repeat opacity-85"
                         style={{
                             backgroundImage: "url('/images/bg-admin-mobile.svg')",
-                            backgroundSize: "cover",
-                            backgroundPosition: "center center",
+                            backgroundSize: "140% auto",
+                            backgroundPosition: "top",
+                            transform: "scale(1.2)",
                             animation: "subtleFloat 20s ease-in-out infinite"
                         }}
                     />
                     {/* Gradient Overlay for depth */}
-                    <div className="absolute inset-0 bg-gradient-to-b from-blue-950/55 via-slate-950/45 to-slate-950/70" />
+                    <div className="absolute inset-0 bg-gradient-to-b from-blue-950/35 via-slate-950/25 to-slate-950/40" />
                 </div>
                 
                 {/* Gradient header block wraps icon + title + form */}

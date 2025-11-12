@@ -55,7 +55,6 @@ import {
   Save,
 } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
-import { LanguageSelector } from "@/components/language-selector"
 
 interface Permission {
   id: string
@@ -699,7 +698,6 @@ export default function OwnerPage() {
   return (
     <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-amber-950/20 via-orange-950/20 to-yellow-950/20" />
-      <div className="absolute inset-0 bg-[url('/modern-gym-interior.png')] bg-cover bg-center opacity-5" />
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="flex items-center justify-between mb-8">
@@ -715,7 +713,6 @@ export default function OwnerPage() {
             </div>
           </div>
           <div className="flex items-center gap-3">
-            <LanguageSelector />
             <Link href="/">
               <Button variant="outline" className="gap-2 bg-transparent">
                 <Dumbbell className="w-4 h-4" />

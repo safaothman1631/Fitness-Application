@@ -114,7 +114,6 @@ export default function MemberDetailPage({ params }: { params: { id: string } })
 	return (
 		<div className="min-h-screen relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-accent/20" />
-			<div className="absolute inset-0 bg-[url('/modern-gym-interior.png')] bg-cover bg-center opacity-5" />
 
 			<div className="relative z-10 container mx-auto px-4 py-8">
 				<div className="mb-8">

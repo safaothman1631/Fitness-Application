@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -9,11 +9,10 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import FitproLayout from "@/components/fitpro-layout"
 import AuthGuard from "@/components/auth-guard"
 import DeleteDialog from "@/components/delete-dialog"
-import { Users, Dumbbell, TrendingUp, Plus, Edit2, Trash2, Search, Award, CheckCircle2, Apple, Calendar, ListPlus, X } from "lucide-react"
+import { Users, Dumbbell, TrendingUp, Plus, Edit2, Trash2, Search, Award, CheckCircle2, Apple, Calendar, ListPlus, X, Target, Zap } from "lucide-react"
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { getPlan, savePlan, planSummary } from "@/lib/plans"
 import { getMealSubmissions, getWorkoutSubmissions } from "@/lib/submissions"
-import { useEffect } from "react"
 import { toast } from "sonner"
 
 interface Trainee {
@@ -176,66 +175,87 @@ export default function TrainerPage() {
         <div className="space-y-6">
         {/* Header */}
         <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Trainer Dashboard</h1>
+          <h1 className="text-3xl font-bold text-white mb-2">Welcome Back, Trainer</h1>
           <p className="text-gray-400">Manage your trainees and track their progress</p>
         </div>
 
         {/* Stats */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <Card className="fitpro-card">
+          <Card className="trainer-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Total Trainees</p>
                   <p className="text-3xl font-bold text-white">{trainees.length}</p>
                 </div>
-                <Users className="w-10 h-10 text-blue-500" />
+                <Users className="w-10 h-10 text-rose-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="fitpro-card">
+          <Card className="trainer-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Active Trainees</p>
                   <p className="text-3xl font-bold text-white">{trainees.filter((t) => t.isActive).length}</p>
                 </div>
-                <Dumbbell className="w-10 h-10 text-green-500" />
+                <Dumbbell className="w-10 h-10 text-yellow-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="fitpro-card">
+          <Card className="trainer-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Total Sessions</p>
                   <p className="text-3xl font-bold text-white">{trainees.reduce((sum, t) => sum + t.sessionsCompleted, 0)}</p>
                 </div>
-                <Award className="w-10 h-10 text-yellow-500" />
+                <Zap className="w-10 h-10 text-amber-500" />
               </div>
             </CardContent>
           </Card>
 
-          <Card className="fitpro-card">
+          <Card className="trainer-card">
             <CardContent className="p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-400 text-sm mb-1">Avg Progress</p>
-                  <p className="text-3xl font-bold text-cyan-500">{Math.round(trainees.reduce((sum, t) => sum + t.progress, 0) / trainees.length || 0)}%</p>
+                  <p className="text-3xl font-bold text-pink-500">{Math.round(trainees.reduce((sum, t) => sum + t.progress, 0) / trainees.length || 0)}%</p>
                 </div>
-                <TrendingUp className="w-10 h-10 text-cyan-500" />
+                <TrendingUp className="w-10 h-10 text-pink-500" />
               </div>
             </CardContent>
           </Card>
         </div>
 
+        {/* Quick Actions */}
+        <Card className="trainer-card">
+          <CardContent className="p-6">
+            <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <Button className="trainer-button w-full gap-2" onClick={handleAdd}>
+                <Plus className="w-5 h-5" />
+                Add Trainee
+              </Button>
+              <Button className="trainer-button w-full gap-2">
+                <Target className="w-5 h-5" />
+                Set Goals
+              </Button>
+              <Button className="trainer-button w-full gap-2">
+                <Award className="w-5 h-5" />
+                View Reports
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Recent Submissions */}
-        <Card className="fitpro-card">
+        <Card className="trainer-card">
           <CardContent className="p-6 space-y-3">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="text-white font-semibold">Recent User Submissions</h2>
+              <h2 className="text-xl font-bold text-white">Recent Activity</h2>
               <span className="text-xs text-gray-400">Today & recent days</span>
             </div>
             {mealSubs.length === 0 && workoutSubs.length === 0 && (
@@ -245,40 +265,37 @@ export default function TrainerPage() {
               .sort((a,b)=>b.timestamp-a.timestamp)
               .slice(0,10)
               .map((s,idx)=> (
-              <div key={idx} className="flex items-center justify-between bg-slate-800/50 rounded-lg p-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-md bg-slate-700/60 flex items-center justify-center">
-                    {s._type==='workout' ? <Dumbbell className="w-4 h-4 text-blue-400"/> : <Apple className="w-4 h-4 text-green-400"/>}
+              <div key={idx} className="bg-slate-800/50 rounded-lg p-4 flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-lg bg-slate-700/60 flex items-center justify-center">
+                    {s._type==='workout' ? <Dumbbell className="w-5 h-5 text-rose-400"/> : <Apple className="w-5 h-5 text-pink-400"/>}
                   </div>
                   <div>
-                    <p className="text-white text-sm font-medium capitalize">{s.userName || 'User'} {s._type} submission</p>
-                    <p className="text-gray-400 text-xs flex items-center gap-1"><Calendar className="w-3 h-3"/> {s.date} • {s.tasks?.length || 0} items</p>
+                    <p className="text-white font-semibold capitalize">{s.userName || 'User'} {s._type} submission</p>
+                    <p className="text-gray-400 text-sm flex items-center gap-1"><Calendar className="w-3 h-3"/> Completed on {s.date}</p>
                   </div>
                 </div>
-                <CheckCircle2 className="w-4 h-4 text-emerald-400"/>
+                <span className="px-3 py-1 rounded-full bg-green-500/20 text-green-400 text-sm font-semibold">Completed</span>
               </div>
             ))}
           </CardContent>
         </Card>
 
         {/* Trainees List */}
-        <Card className="fitpro-card">
+        <Card className="trainer-card">
           <CardContent className="p-6">
-            <div className="flex gap-4 mb-6">
-              <div className="relative flex-1">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-xl font-bold text-white">My Trainees</h2>
+              <div className="relative w-full max-w-md">
                 <Search className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
                 <Input
                   type="text"
                   placeholder="Search trainees..."
                   value={searchTrainee}
                   onChange={(e) => setSearchTrainee(e.target.value)}
-                  className="fitpro-input pl-10 rounded-xl"
+                  className="trainer-input pl-10 rounded-xl"
                 />
               </div>
-              <Button className="fitpro-button rounded-xl gap-2" onClick={handleAdd}>
-                <Plus className="w-4 h-4" />
-                Add Trainee
-              </Button>
             </div>
 
             <div className="space-y-3">
@@ -288,7 +305,7 @@ export default function TrainerPage() {
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-2">
-                          <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 font-semibold">
+                          <div className="w-10 h-10 rounded-full bg-rose-500/20 flex items-center justify-center text-rose-400 font-semibold">
                             {trainee.name.charAt(0)}
                           </div>
                           <div>
@@ -307,8 +324,8 @@ export default function TrainerPage() {
                         <div className="flex items-center gap-3">
                         <div className="text-center">
                           <p className="text-gray-400 text-xs mb-1">Progress</p>
-                          <div className="w-12 h-12 rounded-full bg-green-500/20 flex items-center justify-center">
-                            <p className="text-green-400 font-bold text-sm">{trainee.progress}%</p>
+                          <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center">
+                            <p className="text-pink-400 font-bold text-sm">{trainee.progress}%</p>
                           </div>
                         </div>
                         <span className={`px-3 py-1 rounded-full text-sm font-semibold ${trainee.isActive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>
@@ -316,19 +333,19 @@ export default function TrainerPage() {
                         </span>
                           {/* Plan summary badge */}
                           {(() => { const s = planSummary(trainee.id, today); return s.workouts || s.meals ? (
-                            <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-400 text-xs font-semibold">
+                            <span className="px-3 py-1 rounded-full bg-rose-500/20 text-rose-400 text-xs font-semibold">
                               Plan {s.workouts}W/{s.meals}M
                             </span>) : null })()}
                       </div>
 
                       <div className="flex gap-2">
-                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-blue-400" onClick={() => handleEdit(trainee)}>
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-rose-400" onClick={() => handleEdit(trainee)}>
                       <Edit2 className="w-4 h-4" />
                       </Button>
                       <Button variant="ghost" size="sm" className="text-gray-400 hover:text-red-400" onClick={() => handleDeleteClick(trainee)}>
                       <Trash2 className="w-4 h-4" />
                       </Button>
-                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-emerald-400" onClick={() => openPlan(trainee)}>
+                      <Button variant="ghost" size="sm" className="text-gray-400 hover:text-pink-400" onClick={() => openPlan(trainee)}>
                         <ListPlus className="w-4 h-4" />
                       </Button>
                       </div>
@@ -346,9 +363,9 @@ export default function TrainerPage() {
         {planOpen && planUserId && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="absolute inset-0 bg-black/70" onClick={()=>setPlanOpen(false)} />
-            <div className="relative w-full max-w-xl bg-slate-900 rounded-2xl border border-slate-700 shadow-xl overflow-hidden">
+            <div className="relative w-full max-w-xl bg-slate-900 rounded-2xl border border-rose-700/30 shadow-xl overflow-hidden">
               <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
-                <h2 className="text-white font-semibold flex items-center gap-2"><ListPlus className="w-5 h-5 text-emerald-400" /> Set Plan</h2>
+                <h2 className="text-white font-semibold flex items-center gap-2"><ListPlus className="w-5 h-5 text-rose-400" /> Set Plan</h2>
                 <button onClick={()=>setPlanOpen(false)} className="text-slate-400 hover:text-white"><X className="w-5 h-5" /></button>
               </div>
               <div className="p-6">
@@ -359,8 +376,8 @@ export default function TrainerPage() {
                   </TabsList>
                   <TabsContent value="workouts" className="space-y-4">
                     <div className="flex gap-2">
-                      <Input placeholder="Workout title" value={newWorkoutTitle} onChange={e=>setNewWorkoutTitle(e.target.value)} className="flex-1" />
-                      <Button onClick={addWorkoutItem} disabled={!newWorkoutTitle.trim()}>Add</Button>
+                      <Input placeholder="Workout title" value={newWorkoutTitle} onChange={e=>setNewWorkoutTitle(e.target.value)} className="trainer-input flex-1" />
+                      <Button onClick={addWorkoutItem} disabled={!newWorkoutTitle.trim()} className="trainer-button">Add</Button>
                     </div>
                     <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                       {workoutItems.map(w => (
@@ -374,8 +391,8 @@ export default function TrainerPage() {
                   </TabsContent>
                   <TabsContent value="meals" className="space-y-4">
                     <div className="flex gap-2">
-                      <Input placeholder="Meal title" value={newMealTitle} onChange={e=>setNewMealTitle(e.target.value)} className="flex-1" />
-                      <Button onClick={addMealItem} disabled={!newMealTitle.trim()}>Add</Button>
+                      <Input placeholder="Meal title" value={newMealTitle} onChange={e=>setNewMealTitle(e.target.value)} className="trainer-input flex-1" />
+                      <Button onClick={addMealItem} disabled={!newMealTitle.trim()} className="trainer-button">Add</Button>
                     </div>
                     <div className="space-y-2 max-h-48 overflow-y-auto pr-1">
                       {mealItems.map(m => (
@@ -390,7 +407,7 @@ export default function TrainerPage() {
                 </Tabs>
                 <div className="flex justify-end gap-3 mt-6">
                   <Button variant="outline" onClick={()=>setPlanOpen(false)} className="border-slate-600">Cancel</Button>
-                  <Button onClick={savePlanDialog} disabled={!workoutItems.length && !mealItems.length} className="bg-emerald-600 hover:bg-emerald-500">Save Plan</Button>
+                  <Button onClick={savePlanDialog} disabled={!workoutItems.length && !mealItems.length} className="trainer-button">Save Plan</Button>
                 </div>
               </div>
             </div>

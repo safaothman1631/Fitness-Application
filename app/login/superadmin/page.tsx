@@ -83,6 +83,8 @@ export default function SuperAdminLoginPage() {
                     <div 
                         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-85"
                         style={{
+                            backgroundPosition: "top",
+                            backgroundSize: "140% auto",
                             backgroundImage: "url('/images/bg-superadmin-mobile.svg')",
                             animation: "subtleFloat 20s ease-in-out infinite"
                         }}

@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Activity, User, DollarSign, FileText, Clock, Stethoscope, TrendingUp } from "lucide-react"
-import { LanguageSelector } from "@/components/language-selector"
 
 interface ActivityDetail {
 	id: string
@@ -85,7 +84,6 @@ export default function ActivityDetailPage() {
 	return (
 		<div className="min-h-screen relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-purple-950 via-black to-pink-950" />
-			<div className="absolute inset-0 bg-[url('/modern-gym-interior.png')] bg-cover bg-center opacity-5" />
 
 			<div className="relative z-10">
 				<header className="border-b border-purple-500/20 glass-effect sticky top-0 z-20">
@@ -106,7 +104,6 @@ export default function ActivityDetailPage() {
 								<p className="text-xs text-purple-300/70">Patient record and payment information</p>
 							</div>
 						</div>
-						<LanguageSelector />
 					</div>
 				</header>
 

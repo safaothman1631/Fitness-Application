@@ -1,403 +1,311 @@
 "use client"
 
-import AppBottomNav from "@/components/app-bottom-nav"
-import AuthTopbar from "@/components/auth-topbar"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Sheet, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
-import React, { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Tag, Dumbbell, Utensils, HeartPulse, Play, Clock, Apple, Sandwich, ChevronRight, Droplet, Music2, Plus } from "lucide-react"
-// Tabs not needed here; custom animated rotator below
+import { useLanguage } from "@/hooks/useLanguage"
+import { LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, TrendingUp, Calendar, Award, Target, Bell } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { SubscriptionWarning } from "@/components/subscription-warning"
+import { checkSubscriptionStatus, getSubscriptionExpiry } from "@/lib/subscription"
 
-interface TimelineItem {
-  id: string
-  icon: any
-  title: string
-  subtitle: string
-  time: string
-  accent?: string
-}
-
-const timeline: TimelineItem[] = [
-  { id: "offer", icon: Tag, title: "Limited Offer: 20% off Premium", subtitle: "Upgrade today to unlock custom plans", time: "Now", accent: "" },
-  { id: "workout", icon: Dumbbell, title: "Today's Workout: Full Body Strength", subtitle: "8 exercises • 45 min • Intermediate", time: "07:00" },
-  { id: "breakfast", icon: Apple, title: "Breakfast", subtitle: "Oats + Berries • 420 kcal", time: "08:30" },
-  { id: "lunch", icon: Sandwich, title: "Lunch", subtitle: "Grilled Chicken Salad • 560 kcal", time: "12:45" },
-  { id: "snack", icon: Utensils, title: "Snack", subtitle: "Greek Yogurt • 180 kcal", time: "16:00" },
-]
-
-const defaultSchedule = [
-  { id: "sched-workout", icon: Dumbbell, title: "Full Body Strength", subtitle: "45 min • 8 exercises" },
-  { id: "sched-meal", icon: Utensils, title: "Meal Plan", subtitle: "3 meals • 2 snacks" },
-  { id: "sched-physio", icon: HeartPulse, title: "Physiotherapy", subtitle: "Mobility session • 20 min" },
-]
-
-export default function DashboardPage() {
+export default function UserDashboard() {
   const router = useRouter()
-  const [scheduleItems, setScheduleItems] = useState<typeof defaultSchedule>(defaultSchedule)
-  const [workoutOpen, setWorkoutOpen] = useState(false)
-  const [mealOpen, setMealOpen] = useState(false)
-  const [role, setRole] = useState<string | null>(null)
-
-  // Load custom items from localStorage (if any)
-  useEffect(() => {
-    // Read role once on mount
-    const r = typeof window !== "undefined" ? localStorage.getItem("userRole") : null
-    setRole(r)
-    // Only superadmin can have custom schedule additions
-    if (r === "superadmin") {
-      try {
-        const raw = localStorage.getItem("customScheduleItems")
-        if (raw) {
-          const parsed = JSON.parse(raw) as Array<{ id: string; type: string; title: string; subtitle: string }>
-          const mapped = parsed.map((p) => ({
-            id: p.id,
-            icon: p.type === "workout" ? Dumbbell : Utensils,
-            title: p.title,
-            subtitle: p.subtitle,
-          }))
-          setScheduleItems([...defaultSchedule, ...mapped])
-        }
-      } catch {}
-    }
-  }, [])
-
-  const persistCustom = (items: Array<{ id: string; type: "workout" | "meal"; title: string; subtitle: string }>) => {
-    localStorage.setItem("customScheduleItems", JSON.stringify(items))
-  }
-
-  const addWorkout = (title: string, duration: number, exercises: number) => {
-    const id = `user-workout-${Date.now()}`
-    const subtitle = `${duration} min • ${exercises} exercises`
-    const newItem = { id, icon: Dumbbell, title, subtitle }
-    setScheduleItems((prev) => {
-      const next = [...prev, newItem]
-      const customs = next
-        .filter((i) => i.id.startsWith("user-workout-") || i.id.startsWith("user-meal-"))
-        .map((i) => ({ id: i.id, type: i.id.startsWith("user-workout-") ? "workout" as const : "meal" as const, title: i.title, subtitle: i.subtitle }))
-      persistCustom(customs)
-      return next
-    })
-    setWorkoutOpen(false)
-  }
-
-  const addMeal = (title: string, meals: number, snacks: number) => {
-    const id = `user-meal-${Date.now()}`
-    const subtitle = `${meals} meals • ${snacks} snacks`
-    const newItem = { id, icon: Utensils, title, subtitle }
-    setScheduleItems((prev) => {
-      const next = [...prev, newItem]
-      const customs = next
-        .filter((i) => i.id.startsWith("user-workout-") || i.id.startsWith("user-meal-"))
-        .map((i) => ({ id: i.id, type: i.id.startsWith("user-workout-") ? "workout" as const : "meal" as const, title: i.title, subtitle: i.subtitle }))
-      persistCustom(customs)
-      return next
-    })
-    setMealOpen(false)
-  }
-
-  return (
-    <div className="min-h-screen bg-slate-950 text-white flex flex-col pb-20">
-      <AuthTopbar />
-      <div className="px-4 pt-4 max-w-md mx-auto w-full">
-        <div className="flex items-start justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Dashboard</h1>
-            <p className="text-slate-400 text-sm mt-1">Welcome back, ready for today's plan?</p>
-          </div>
-          <Button className="bg-green-600 hover:bg-green-600/90 rounded-lg h-12 px-4 font-medium flex flex-col items-start justify-center">
-            <span className="text-sm font-semibold flex items-center"><Play className="w-4 h-4 mr-1" /> Start Workout</span>
-          </Button>
-        </div>
-
-        {/* Metrics */}
-        <div className="grid grid-cols-2 gap-3 mt-6">
-          <Card className="bg-slate-900 border-slate-800 p-4 flex flex-col justify-between">
-            <span className="text-xs uppercase tracking-wide text-slate-400">Active Streak</span>
-            <div className="text-2xl font-bold mt-2">6 <span className="text-sm font-medium text-slate-400">days</span></div>
-          </Card>
-          <Card className="bg-slate-900 border-slate-800 p-4 flex flex-col justify-between">
-            <span className="text-xs uppercase tracking-wide text-slate-400">Calories Today</span>
-            <div className="text-2xl font-bold mt-2">1,240 <span className="text-sm font-medium text-slate-400">kcal</span></div>
-          </Card>
-        </div>
-
-        {/* Auto-Rotating Display (3 tabs cycling every 3s) */}
-        <RotatingShowcase />
-
-        {/* Timeline */}
-        <SectionTitle title="Today's Timeline" />
-        <div className="space-y-3">
-          {timeline.map((item, idx) => (
-            <TimelineRow key={item.id} item={item} first={idx === 0} />
-          ))}
-        </div>
-
-        {/* Schedule */}
-        <SectionTitle title="Today's Schedule" />
-        <div className="space-y-3">
-          {scheduleItems.map((s) => {
-            // Map schedule id/title to a destination route
-            const lower = s.title.toLowerCase()
-            let to: string | null = null
-            if (lower.includes("workout") || lower.includes("strength")) to = "/workout"
-            else if (lower.includes("meal")) to = "/meals"
-            else if (lower.includes("physio") || lower.includes("physio")) to = "/physio"
-            return (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => to && router.push(to)}
-                className="group relative w-full text-left"
-              >
-                <Card
-                  className="relative bg-slate-900 border-slate-800 p-5 pr-12 flex items-center gap-4 min-h-[96px] transition-colors group-hover:border-slate-700"
-                >
-                  <div className="w-12 h-12 rounded-2xl bg-slate-800 flex items-center justify-center shrink-0">
-                    <s.icon className="w-6 h-6" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="text-base font-semibold leading-tight">{s.title}</p>
-                    <p className="text-xs text-slate-400 mt-1">{s.subtitle}</p>
-                  </div>
-                  <ChevronRight className="absolute right-5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-600 group-hover:text-slate-400" />
-                </Card>
-              </button>
-            )
-          })}
-        </div>
-
-        {/* Quick Actions (superadmin only) */}
-        {role === "superadmin" && (
-          <>
-            <SectionTitle title="Quick Actions" />
-            <div className="grid grid-cols-2 gap-4 mb-8">
-              <Sheet open={workoutOpen} onOpenChange={setWorkoutOpen}>
-                <SheetTrigger asChild>
-                  <div>
-                    <QuickActionButton
-                      icon={<Plus className="w-5 h-5" />}
-                      label="Add Workout"
-                      accent="from-green-500/60 to-emerald-500/40"
-                    />
-                  </div>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="bg-slate-900 border-t border-slate-800 text-white">
-                  <SheetHeader>
-                    <SheetTitle>Add Workout</SheetTitle>
-                  </SheetHeader>
-                  <AddWorkoutForm onSubmit={addWorkout} />
-                  <SheetFooter />
-                </SheetContent>
-              </Sheet>
-
-              <Sheet open={mealOpen} onOpenChange={setMealOpen}>
-                <SheetTrigger asChild>
-                  <div>
-                    <QuickActionButton
-                      icon={<Apple className="w-5 h-5" />}
-                      label="Log Meal"
-                      accent="from-pink-500/60 to-rose-500/40"
-                    />
-                  </div>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="bg-slate-900 border-t border-slate-800 text-white">
-                  <SheetHeader>
-                    <SheetTitle>Log Meal</SheetTitle>
-                  </SheetHeader>
-                  <LogMealForm onSubmit={addMeal} />
-                  <SheetFooter />
-                </SheetContent>
-              </Sheet>
-            </div>
-          </>
-        )}
-      </div>
-      <AppBottomNav />
-    </div>
-  )
-}
-
-function QuickActionButton({ icon, label, accent, onClick }: { icon: React.ReactNode; label: string; accent: string; onClick?: () => void }) {
-  return (
-    <Button
-      type="button"
-      variant="outline"
-      onClick={onClick}
-      className="group relative overflow-hidden h-14 rounded-2xl bg-slate-900 border-slate-800 text-white flex items-center justify-center gap-2"
-    >
-      <span className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none bg-gradient-to-br" style={{ backgroundImage: `linear-gradient(135deg, var(--tw-gradient-from), var(--tw-gradient-to))` }}></span>
-      <span className={`pointer-events-none absolute inset-0 bg-gradient-to-br ${accent} opacity-0 group-hover:opacity-[0.12] transition-opacity duration-300`}></span>
-      <span className="relative z-10 flex items-center gap-2">
-        {icon}
-        <span className="text-sm font-medium">{label}</span>
-      </span>
-    </Button>
-  )
-}
-
-function AddWorkoutForm({ onSubmit }: { onSubmit: (title: string, duration: number, exercises: number) => void }) {
-  const [title, setTitle] = useState("Full Body (Custom)")
-  const [duration, setDuration] = useState(40)
-  const [exercises, setExercises] = useState(6)
-  return (
-    <form
-      className="p-4 pt-0 space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit(title.trim() || "Workout", Number(duration) || 30, Number(exercises) || 6)
-      }}
-    >
-      <div className="space-y-2">
-        <Label className="text-slate-300">Title</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} className="bg-slate-800 border-slate-700" />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label className="text-slate-300">Duration (min)</Label>
-          <Input type="number" min={5} max={180} value={duration} onChange={(e) => setDuration(parseInt(e.target.value || "0"))} className="bg-slate-800 border-slate-700" />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-slate-300">Exercises</Label>
-          <Input type="number" min={1} max={30} value={exercises} onChange={(e) => setExercises(parseInt(e.target.value || "0"))} className="bg-slate-800 border-slate-700" />
-        </div>
-      </div>
-      <div className="pt-2">
-        <Button type="submit" className="bg-green-600 hover:bg-green-600/90 w-full">Save Workout</Button>
-      </div>
-    </form>
-  )
-}
-
-function LogMealForm({ onSubmit }: { onSubmit: (title: string, meals: number, snacks: number) => void }) {
-  const [title, setTitle] = useState("Meal Plan (Custom)")
-  const [meals, setMeals] = useState(3)
-  const [snacks, setSnacks] = useState(2)
-  return (
-    <form
-      className="p-4 pt-0 space-y-4"
-      onSubmit={(e) => {
-        e.preventDefault()
-        onSubmit(title.trim() || "Meal Plan", Number(meals) || 3, Number(snacks) || 1)
-      }}
-    >
-      <div className="space-y-2">
-        <Label className="text-slate-300">Title</Label>
-        <Input value={title} onChange={(e) => setTitle(e.target.value)} className="bg-slate-800 border-slate-700" />
-      </div>
-      <div className="grid grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label className="text-slate-300">Meals</Label>
-          <Input type="number" min={1} max={8} value={meals} onChange={(e) => setMeals(parseInt(e.target.value || "0"))} className="bg-slate-800 border-slate-700" />
-        </div>
-        <div className="space-y-2">
-          <Label className="text-slate-300">Snacks</Label>
-          <Input type="number" min={0} max={6} value={snacks} onChange={(e) => setSnacks(parseInt(e.target.value || "0"))} className="bg-slate-800 border-slate-700" />
-        </div>
-      </div>
-      <div className="pt-2">
-        <Button type="submit" className="bg-pink-600 hover:bg-pink-600/90 w-full">Save Meal</Button>
-      </div>
-    </form>
-  )
-}
-
-function RotatingShowcase() {
-  // Simplified: single active index, map over items; CSS transitions handle fade/slide.
-  const items = [
+  const { t } = useLanguage()
+  const [activeTab, setActiveTab] = useState("dashboard")
+  const [notificationOpen, setNotificationOpen] = useState(false)
+  const [subscriptionStatus, setSubscriptionStatus] = useState({
+    isActive: true,
+    isExpired: false,
+    daysRemaining: 30,
+  })
+  const [notifications, setNotifications] = useState([
     {
-      key: "one",
-      title: "Hydrate Pro",
-      desc: "Smart reminders and intake tracking",
-      icon: <Droplet className="w-6 h-6 text-cyan-400" />,
-      radius: "999px",
-      bg: "rgba(34,211,238,0.25)",
-      transform: "scale(1)",
+      id: "1",
+      type: "achievement",
+      title: "Milestone Reached",
+      message: "You've completed 20 workouts! Keep up the great work!",
+      timestamp: "2024-11-09 15:30",
+      isRead: false,
     },
     {
-      key: "two",
-      title: "Fit Watch",
-      desc: "Real-time stats on your wrist",
-      icon: <Clock className="w-6 h-6 text-emerald-400" />,
-      radius: "14px",
-      bg: "rgba(16,185,129,0.25)",
-      transform: "rotate(10deg) scale(1.05)",
+      id: "2",
+      type: "reminder",
+      title: "Workout Reminder",
+      message: "Don't forget to complete your evening workout",
+      timestamp: "2024-11-09 18:00",
+      isRead: false,
     },
     {
-      key: "three",
-      title: "Gym Beats",
-      desc: "Curated playlists for workouts",
-      icon: <Music2 className="w-6 h-6 text-pink-400" />,
-      radius: "10px",
-      bg: "rgba(244,114,182,0.25)",
-      transform: "scale(1.05)",
+      id: "3",
+      type: "alert",
+      title: "Progress Update",
+      message: "You've lost 2kg this month. Great progress!",
+      timestamp: "2024-11-08 10:00",
+      isRead: true,
     },
-  ] as const
+  ])
 
-  const [index, setIndex] = useState(0)
-  useEffect(() => {
-    const id = setInterval(() => {
-      setIndex(i => (i + 1) % items.length)
-    }, 3000)
-    return () => clearInterval(id)
-  }, [])
+  const unreadCount = notifications.filter(n => !n.isRead).length
 
-  const advance = () => setIndex(i => (i + 1) % items.length)
+  // Mark notification as read when clicked
+  const markAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === id ? { ...notif, isRead: true } : notif
+      )
+    )
+  }
 
-  return (
-    <div className="mt-6 relative h-36">
-      {items.map((item, i) => {
-        const active = i === index
-        return (
-          <Card
-            key={item.key}
-            onClick={advance}
-            className={`absolute inset-0 bg-slate-900 border-slate-800 p-6 flex items-center gap-5 overflow-hidden transition-all duration-500 ease-out cursor-pointer ${active ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-3 pointer-events-none"}`}
-          >
-            <div
-              aria-hidden
-              className="pointer-events-none absolute right-4 bottom-4 w-8 h-8 transition-all duration-500 ease-in-out"
-              style={{ borderRadius: item.radius, background: item.bg, transform: active ? item.transform : "scale(0.85)", opacity: active ? 1 : 0 }}
-            />
-            <div className="w-14 h-14 rounded-2xl bg-slate-800 flex items-center justify-center shrink-0">
-              {item.icon}
-            </div>
-            <div className="flex flex-col">
-              <p className="text-base font-semibold leading-tight">{item.title}</p>
-              <p className="text-xs text-slate-400 mt-1">{item.desc}</p>
-              <p className="text-[10px] text-slate-500 mt-2">tap to next</p>
-            </div>
-          </Card>
+  // Mark all as read when dialog opens
+  const handleDialogOpen = (open: boolean) => {
+    setNotificationOpen(open)
+    if (open) {
+      setTimeout(() => {
+        setNotifications(prev => 
+          prev.map(notif => ({ ...notif, isRead: true }))
         )
-      })}
+      }, 500) // Delay to show animation first
+    }
+  }
+
+  useEffect(() => {
+    const userEmail = localStorage.getItem("userEmail")
+    if (!userEmail) router.push("/login")
+
+    // Check subscription status
+    const updateSubscriptionStatus = () => {
+      const expiry = getSubscriptionExpiry()
+      const status = checkSubscriptionStatus(expiry)
+      setSubscriptionStatus(status)
+      console.log('📊 Subscription Status:', status) // Debug log
+    }
+
+    // Initial check
+    updateSubscriptionStatus()
+
+    // Listen for storage changes (from test panel and login)
+    const handleStorageChange = () => {
+      console.log('🔄 Storage changed, updating subscription...') // Debug log
+      updateSubscriptionStatus()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Also check on component mount with small delay to ensure localStorage is ready
+    const timer = setTimeout(updateSubscriptionStatus, 100)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      clearTimeout(timer)
+    }
+  }, [router])
+
+  return (
+    <>
+    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
+      <div className="max-w-6xl mx-auto">
+        {/* Header with Notification */}
+        <div className="flex items-start justify-between mb-2">
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent mb-2">
+              {t("welcomeBackUser")}
+            </h1>
+            <p className="text-[#B6C4CF] mb-8">{t("readyForToday")}</p>
+          </div>
+          
+          {/* Notification Bell */}
+          <button
+            onClick={() => setNotificationOpen(true)}
+            className="relative p-3 rounded-xl bg-[#101A23] border border-[#2E3944] hover:border-[#47D8FF]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,178,227,0.3)] group"
+          >
+            <Bell className="w-6 h-6 text-[#10B2E3] transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-[#F43F5E] to-[#EF4444] rounded-full text-white text-xs flex items-center justify-center font-bold animate-pulse shadow-[0_0_15px_rgba(244,63,94,0.6)]">
+                {unreadCount}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Subscription Warning */}
+        {subscriptionStatus.isExpired && (
+          <SubscriptionWarning variant="expired" />
+        )}
+        {!subscriptionStatus.isExpired && subscriptionStatus.daysRemaining <= 7 && subscriptionStatus.daysRemaining > 0 && (
+          <SubscriptionWarning variant="warning" daysRemaining={subscriptionStatus.daysRemaining} />
+        )}
+
+        {!subscriptionStatus.isExpired && (
+          <Card className="bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] border-none p-8 mb-8 relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="text-white text-xl font-bold mb-2">{t("limitedOffer")}</h3>
+              <p className="text-white/90 text-sm mb-4">{t("upgradeToday")}</p>
+              <Button className="bg-white text-[#10B2E3] hover:bg-white/90 font-semibold">{t("now")}</Button>
+            </div>
+          </Card>
+        )}
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value="24" color="#10B2E3" />
+          <StatsCard icon={Calendar} label={t("activeStreak")} value={`7 ${t("days")}`} color="#15C1B4" />
+          <StatsCard icon={Target} label={t("caloriesToday")} value="1,450" color="#73E8FF" />
+          <StatsCard icon={Award} label={t("overallProgress")} value="73%" color="#10B2E3" />
+        </div>
+      </div>
+
+      {/* Notification Dialog */}
+      <Dialog open={notificationOpen} onOpenChange={handleDialogOpen}>
+        <DialogContent className="bg-[#101A23] border-[#2E3944] text-white max-w-md max-h-[80vh]">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-bold flex items-center gap-2">
+              <Bell className="w-5 h-5 text-[#10B2E3]" />
+              Notifications
+            </DialogTitle>
+          </DialogHeader>
+          
+          <ScrollArea className="max-h-[60vh] pr-4">
+            <div className="space-y-3">
+              {notifications.length > 0 ? (
+                notifications.map((notif) => (
+                  <div
+                    key={notif.id}
+                    onClick={() => markAsRead(notif.id)}
+                    className={`rounded-xl p-4 border transition-all duration-300 hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(16,178,227,0.2)] cursor-pointer group ${
+                      notif.isRead 
+                        ? "bg-[#0E151B] border-[#2E3944]" 
+                        : "bg-gradient-to-r from-[#10B2E3]/10 to-[#73E8FF]/10 border-[#10B2E3]/30"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="flex-shrink-0 mt-1">
+                        {notif.type === "achievement" && (
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-yellow-500/20 to-amber-500/20 flex items-center justify-center">
+                            <Award className="w-4 h-4 text-yellow-400 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                          </div>
+                        )}
+                        {notif.type === "reminder" && (
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
+                            <Bell className="w-4 h-4 text-blue-400 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                          </div>
+                        )}
+                        {notif.type === "alert" && (
+                          <div className="w-8 h-8 rounded-full bg-gradient-to-r from-green-500/20 to-emerald-500/20 flex items-center justify-center">
+                            <TrendingUp className="w-4 h-4 text-green-400 transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1">
+                        <h3 className="font-semibold text-white transition-colors duration-300 group-hover:text-[#10B2E3]">
+                          {notif.title}
+                        </h3>
+                        <p className="text-[#B6C4CF] text-sm mt-1">{notif.message}</p>
+                        <p className="text-[#64748B] text-xs mt-2">{notif.timestamp}</p>
+                      </div>
+
+                      {!notif.isRead && (
+                        <div className="flex-shrink-0">
+                          <span className="w-2 h-2 bg-[#10B2E3] rounded-full block animate-pulse shadow-[0_0_10px_rgba(16,178,227,0.8)]" />
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-12">
+                  <Bell className="w-12 h-12 text-[#2E3944] mx-auto mb-4" />
+                  <p className="text-[#B6C4CF]">No notifications</p>
+                </div>
+              )}
+            </div>
+          </ScrollArea>
+
+          <div className="flex gap-3 pt-4 border-t border-[#2E3944]">
+            <Button
+              onClick={() => setNotificationOpen(false)}
+              className="flex-1 bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] hover:opacity-90 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_20px_rgba(16,178,227,0.5)]"
+            >
+              Close
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} router={router} t={t} />
+    </>
   )
 }
 
-// FeatureIcon replaced by AdStrip component
-
-function SectionTitle({ title }: { title: string }) {
-  return <h2 className="text-sm font-semibold mt-8 mb-4">{title}</h2>
+function StatsCard({ icon: Icon, label, value, color }: any) {
+  return (
+    <Card className="bg-[#101A23] border-[#2E3944] p-6 hover:border-[#47D8FF]/30 transition-all">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#0E151B] border flex items-center justify-center" style={{ borderColor: color }}>
+            <Icon className="w-5 h-5" style={{ color }} />
+          </div>
+          <span className="text-xs text-[#B6C4CF] uppercase">{label}</span>
+        </div>
+        <p className="text-3xl font-bold text-white">{value}</p>
+      </div>
+    </Card>
+  )
 }
 
-function TimelineRow({ item, first }: { item: TimelineItem; first?: boolean }) {
+function BottomNav({ activeTab, setActiveTab, router, t }: any) {
+  const navItems = [
+    { id: "dashboard", icon: LayoutDashboard, label: t("dashboard"), path: "/dashboard", color: "#10B2E3" },
+    { id: "workout", icon: Dumbbell, label: t("workout"), path: "/workout", color: "#9333EA" },
+    { id: "meals", icon: Utensils, label: t("meals"), path: "/meals", color: "#F59E0B" },
+    { id: "physio", icon: HeartPulse, label: t("physiotherapy"), path: "/physio", color: "#F43F5E" },
+    { id: "profile", icon: User, label: t("profile"), path: "/profile", color: "#6366F1" }
+  ]
+
   return (
-    <div className="relative">
-      <div className="absolute left-4 top-0 bottom-0 w-px bg-slate-800" />
-      <Card className="bg-slate-900 border-slate-800 p-4 pl-12 flex items-start gap-4">
-        <div className="absolute left-2 top-4 w-4 h-4 rounded-full bg-green-500" />
-        <div className="w-8 h-8 rounded-md bg-slate-800 flex items-center justify-center">
-          <item.icon className="w-4 h-4" />
-        </div>
-        <div className="flex-1">
-          <p className="text-sm font-semibold leading-tight">{item.title}</p>
-          <p className="text-xs text-slate-400 mt-1">{item.subtitle}</p>
-        </div>
-        <span className="text-xs text-slate-500 whitespace-nowrap">{item.time}</span>
-      </Card>
+    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+      <style jsx>{`
+        @keyframes slideUp {
+          from { transform: translateY(10px) scale(0.9); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .slide-scale-active {
+          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+      `}</style>
+      <div className="max-w-md mx-auto flex items-center justify-between">
+        {navItems.map(item => (
+          <button
+            key={item.id}
+            onClick={() => { setActiveTab(item.id); if (item.path !== "/dashboard") router.push(item.path) }}
+            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
+              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
+            }`}
+            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
+          >
+            <div 
+              className={`p-2.5 rounded-xl transition-all duration-300 ${
+                activeTab === item.id ? "scale-110" : ""
+              }`}
+              style={{
+                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
+                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
+              }}
+            >
+              <item.icon className="w-5 h-5" />
+            </div>
+            <span className="text-[10px] font-medium">{item.label}</span>
+            {activeTab === item.id && (
+              <div 
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

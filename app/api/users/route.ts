@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/firebase"
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
 
+export const dynamic = 'force-dynamic'
+
 // Get all users or filter by role
 export async function GET(request: NextRequest) {
   try {

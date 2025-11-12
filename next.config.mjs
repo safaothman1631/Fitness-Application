@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // output: 'export', // Disabled - breaks API routes needed for Firebase integration
   typescript: {
     ignoreBuildErrors: true,
   },

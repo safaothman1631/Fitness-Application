@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { ArrowLeft, User, Calendar, Phone, Mail, Activity, FileText, Clock, TrendingUp } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
-import { LanguageSelector } from "@/components/language-selector"
 
 export default function PatientDetailPage() {
 	const { t } = useLanguage()
@@ -71,7 +70,6 @@ export default function PatientDetailPage() {
 	return (
 		<div className="min-h-screen relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-green-950 via-black to-teal-950" />
-			<div className="absolute inset-0 bg-[url('/modern-gym-interior.png')] bg-cover bg-center opacity-5" />
 
 			<div className="relative z-10">
 				<header className="border-b border-green-500/20 glass-effect sticky top-0 z-20">
@@ -87,7 +85,6 @@ export default function PatientDetailPage() {
 								<p className="text-xs text-green-300/70">{patient.name}</p>
 							</div>
 						</div>
-						<LanguageSelector />
 					</div>
 				</header>
 

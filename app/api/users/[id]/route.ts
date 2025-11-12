@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/firebase"
 import { doc, getDoc, updateDoc, deleteDoc } from "firebase/firestore"
 
+export const dynamic = 'force-dynamic'
+
 // Get single user
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {

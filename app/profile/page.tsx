@@ -2,25 +2,35 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import AppBottomNav from "@/components/app-bottom-nav"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
-import { Edit2, Save, Camera, Lock, Mail, Phone, Activity, Calendar, Settings as SettingsIcon } from "lucide-react"
+import { Edit2, Save, Camera, Lock, Mail, Phone, Activity, Calendar, Settings as SettingsIcon, LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, Weight, Ruler, Goal, LogOut } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
-import { User as UserIcon, Weight, Ruler, Goal } from "lucide-react"
+import { User as UserIcon } from "lucide-react"
+import { SubscriptionWarning } from "@/components/subscription-warning"
+import { SubscriptionInfoCard } from "@/components/subscription-info-card"
+import { checkSubscriptionStatus, getSubscriptionExpiry, getUserAccessKey, getUserJoinDate } from "@/lib/subscription"
 
 export default function ProfilePage() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
+  const [subscriptionStatus, setSubscriptionStatus] = useState({
+    isActive: true,
+    isExpired: false,
+    daysRemaining: 30,
+  })
+  const [userKey, setUserKey] = useState('')
+  const [joinDate, setJoinDate] = useState('')
+  const [expiryDate, setExpiryDate] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
   const [profile, setProfile] = useState({
     name: "Safa",
@@ -58,6 +68,35 @@ export default function ProfilePage() {
         setDraftAvatar(a)
       }
     } catch {}
+
+    // Check subscription status
+    const updateSubscriptionData = () => {
+      const expiry = getSubscriptionExpiry()
+      const status = checkSubscriptionStatus(expiry)
+      setSubscriptionStatus(status)
+      setUserKey(getUserAccessKey())
+      setJoinDate(getUserJoinDate())
+      setExpiryDate(expiry)
+    }
+
+    // Initial check
+    updateSubscriptionData()
+
+    // Listen for storage changes (from test panel or login)
+    const handleStorageChange = () => {
+      console.log('🔄 Profile: Storage changed, updating subscription...') // Debug log
+      updateSubscriptionData()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Also check on component mount with small delay to ensure localStorage is ready
+    const timer = setTimeout(updateSubscriptionData, 100)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      clearTimeout(timer)
+    }
   }, [])
 
   const isDirty = JSON.stringify(draft) !== JSON.stringify(profile) || draftAvatar !== avatar
@@ -103,27 +142,64 @@ export default function ProfilePage() {
     }, 800)
   }
 
-  return (
-    <div className="pb-24 max-w-md mx-auto">
-      <header className="pt-6 pb-4 px-4">
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-            <UserIcon className="w-6 h-6 text-blue-400" /> Profile
-          </h1>
-          <button
-            aria-label="Settings"
-            className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-slate-800 text-slate-200 border border-slate-700 hover:bg-slate-700"
-            onClick={() => setSettingsOpen(true)}
-            title="Settings"
-          >
-            <SettingsIcon className="w-5 h-5" />
-          </button>
-        </div>
-        <p className="text-slate-400 text-sm mt-1">Quick overview and shortcuts. Manage full settings in Profile Dashboard.</p>
-      </header>
+  const handleLogout = () => {
+    try {
+      // Clear all user data
+      const keysToRemove = [
+        "userEmail",
+        "userId", 
+        "userRole",
+        "isAuthenticated",
+        "profileData",
+        "profileAvatar",
+        "workoutTasksCompleted",
+        "mealTasksCompleted",
+        "submittedWorkouts",
+        "submittedMeals",
+        "customScheduleItems"
+      ]
+      keysToRemove.forEach(key => localStorage.removeItem(key))
+      
+      toast({ description: "Logged out successfully" })
+      
+      // Redirect to login after brief delay for toast
+      setTimeout(() => {
+        router.push('/login')
+      }, 500)
+    } catch (error) {
+      console.error("Logout error:", error)
+      router.push('/login')
+    }
+  }
 
-      <section className="px-4 space-y-5">
-        <Card className="bg-slate-900/70 border-slate-800">
+  return (
+    <>
+    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#6366F1] to-[#818CF8] bg-clip-text text-transparent mb-2">
+          Profile
+        </h1>
+        <p className="text-[#B6C4CF] mb-8">Manage your account and personalize your experience.</p>
+
+        {/* Subscription Warning */}
+        {subscriptionStatus.isExpired && (
+          <SubscriptionWarning variant="expired" />
+        )}
+        {!subscriptionStatus.isExpired && subscriptionStatus.daysRemaining <= 7 && subscriptionStatus.daysRemaining > 0 && (
+          <SubscriptionWarning variant="warning" daysRemaining={subscriptionStatus.daysRemaining} />
+        )}
+
+        {/* Subscription Info Card */}
+        <SubscriptionInfoCard
+          userKey={userKey}
+          joinDate={joinDate}
+          expiryDate={expiryDate}
+          isActive={subscriptionStatus.isActive}
+          daysRemaining={subscriptionStatus.daysRemaining}
+        />
+
+        <section className="space-y-5">
+        <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
             <CardTitle className="text-white text-sm">Account</CardTitle>
           </CardHeader>
@@ -147,7 +223,7 @@ export default function ProfilePage() {
                 </SheetTrigger>
                 <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh] h-[90vh] bg-slate-950 border-slate-800">
                   <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
-                    <SheetTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-blue-400" /> Manage Profile</SheetTitle>
+                    <SheetTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> Manage Profile</SheetTitle>
                   </SheetHeader>
                   <ScrollArea className="h-[calc(90vh-4rem)]">
                     <div className="p-5 space-y-6">
@@ -174,27 +250,27 @@ export default function ProfilePage() {
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                              <Label className="text-slate-400 text-xs">Full Name</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Full Name</Label>
                               <Input value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs flex items-center gap-1"><Mail className="w-3 h-3" /> Email</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> Email</Label>
                               <Input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs flex items-center gap-1"><Phone className="w-3 h-3" /> Phone</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> Phone</Label>
                               <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs flex items-center gap-1"><Calendar className="w-3 h-3" /> Join Date</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> Join Date</Label>
                               <Input value={draft.joinDate} onChange={e=>setDraft({...draft,joinDate:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">Goal</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Goal</Label>
                               <Input value={draft.goal} onChange={e=>setDraft({...draft,goal:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">Experience</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Experience</Label>
                               <Input value={draft.experience} onChange={e=>setDraft({...draft,experience:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
@@ -204,11 +280,11 @@ export default function ProfilePage() {
                         <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> Physical</CardTitle></CardHeader>
                         <CardContent className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label className="text-slate-400 text-xs">Weight (kg)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">Weight (kg)</Label>
                             <Input type="number" value={draft.weight} onChange={e=>setDraft({...draft,weight:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                           <div>
-                            <Label className="text-slate-400 text-xs">Height (cm)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">Height (cm)</Label>
                             <Input type="number" value={draft.height} onChange={e=>setDraft({...draft,height:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                         </CardContent>
@@ -218,15 +294,15 @@ export default function ProfilePage() {
                         <CardContent className="space-y-3">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                              <Label className="text-slate-400 text-xs">Current</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Current</Label>
                               <Input type="password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">New</Label>
+                              <Label className="text-gray-200 text-sm font-medium">New</Label>
                               <Input type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">Confirm</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Confirm</Label>
                               <Input type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
@@ -250,7 +326,7 @@ export default function ProfilePage() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] w-full sm:max-w-lg p-0 overflow-hidden">
                   <DialogHeader className="p-5 border-b border-slate-800 bg-slate-900">
-                    <DialogTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-blue-400" /> Manage Profile</DialogTitle>
+                    <DialogTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> Manage Profile</DialogTitle>
                   </DialogHeader>
                   <ScrollArea className="h-full max-h-[calc(85vh-4rem)]">
                     <div className="p-5 space-y-6">
@@ -277,27 +353,27 @@ export default function ProfilePage() {
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                              <Label className="text-slate-400 text-xs">Full Name</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Full Name</Label>
                               <Input value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs flex items-center gap-1"><Mail className="w-3 h-3" /> Email</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> Email</Label>
                               <Input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs flex items-center gap-1"><Phone className="w-3 h-3" /> Phone</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> Phone</Label>
                               <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs flex items-center gap-1"><Calendar className="w-3 h-3" /> Join Date</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> Join Date</Label>
                               <Input value={draft.joinDate} onChange={e=>setDraft({...draft,joinDate:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">Goal</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Goal</Label>
                               <Input value={draft.goal} onChange={e=>setDraft({...draft,goal:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">Experience</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Experience</Label>
                               <Input value={draft.experience} onChange={e=>setDraft({...draft,experience:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
@@ -307,11 +383,11 @@ export default function ProfilePage() {
                         <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> Physical</CardTitle></CardHeader>
                         <CardContent className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label className="text-slate-400 text-xs">Weight (kg)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">Weight (kg)</Label>
                             <Input type="number" value={draft.weight} onChange={e=>setDraft({...draft,weight:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                           <div>
-                            <Label className="text-slate-400 text-xs">Height (cm)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">Height (cm)</Label>
                             <Input type="number" value={draft.height} onChange={e=>setDraft({...draft,height:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                         </CardContent>
@@ -321,15 +397,15 @@ export default function ProfilePage() {
                         <CardContent className="space-y-3">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                              <Label className="text-slate-400 text-xs">Current</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Current</Label>
                               <Input type="password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">New</Label>
+                              <Label className="text-gray-200 text-sm font-medium">New</Label>
                               <Input type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-slate-400 text-xs">Confirm</Label>
+                              <Label className="text-gray-200 text-sm font-medium">Confirm</Label>
                               <Input type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
@@ -350,7 +426,7 @@ export default function ProfilePage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/70 border-slate-800">
+        <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
             <CardTitle className="text-white text-sm">Stats</CardTitle>
           </CardHeader>
@@ -359,24 +435,24 @@ export default function ProfilePage() {
               <div className="p-3 rounded-lg bg-slate-800/50">
                 <Weight className="w-4 h-4 mx-auto text-emerald-400" />
                 <p className="text-white font-semibold mt-1">{profile.weight}kg</p>
-                <p className="text-slate-400 text-xs">Weight</p>
+                <p className="text-gray-200 text-sm font-medium">Weight</p>
               </div>
               <div className="p-3 rounded-lg bg-slate-800/50">
                 <Ruler className="w-4 h-4 mx-auto text-cyan-400" />
                 <p className="text-white font-semibold mt-1">{profile.height}cm</p>
-                <p className="text-slate-400 text-xs">Height</p>
+                <p className="text-gray-200 text-sm font-medium">Height</p>
               </div>
               <div className="p-3 rounded-lg bg-slate-800/50">
                 {/* Goal icon fallback */}
                 <span className="block w-4 h-4 mx-auto rounded-full bg-blue-400" />
                 <p className="text-white font-semibold mt-1 truncate">{profile.goal}</p>
-                <p className="text-slate-400 text-xs">Goal</p>
+                <p className="text-gray-200 text-sm font-medium">Goal</p>
               </div>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/70 border-slate-800">
+        <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
             <CardTitle className="text-white text-sm">Shortcuts</CardTitle>
           </CardHeader>
@@ -386,16 +462,39 @@ export default function ProfilePage() {
             <Link href="/physio"><Button variant="outline" className="w-full">Physio</Button></Link>
           </CardContent>
         </Card>
-      </section>
 
-      {/* Settings Bottom Sheet */}
-      <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent side="bottom" className="bg-slate-950 border-t border-slate-800 text-white rounded-t-2xl p-0 max-h-[88vh] h-[88vh]">
+        {/* Settings Card */}
+        <Card className="bg-[#101A23] border-[#2E3944]">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-white text-sm">Preferences</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Button 
+              onClick={() => setSettingsOpen(true)}
+              variant="outline" 
+              className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 border-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white transition-all duration-300"
+            >
+              <SettingsIcon className="w-4 h-4 mr-2" />
+              Settings
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Settings Bottom Sheet */}
+        <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
+        <SheetContent 
+          side="bottom" 
+          className="bg-slate-950 border-t border-slate-800 text-white rounded-t-2xl p-0 max-h-[88vh] h-[88vh] animate-slideUp"
+        >
           <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
-            <SheetTitle className="text-white flex items-center gap-2"><SettingsIcon className="w-5 h-5 text-blue-400" /> Settings</SheetTitle>
+            <SheetTitle className="text-white flex items-center gap-2"><SettingsIcon className="w-5 h-5 text-indigo-400" /> Settings</SheetTitle>
           </SheetHeader>
           <ScrollArea className="h-[calc(88vh-4rem)]">
-            <div className="p-5 space-y-6">
+            <div className="p-5 space-y-6"
+              style={{
+                animation: "fadeIn 0.4s ease-out"
+              }}
+            >
               {/* Appearance */}
               <Card className="bg-slate-900/70 border-slate-800">
                 <CardHeader className="pb-3"><CardTitle className="text-white text-sm">Appearance</CardTitle></CardHeader>
@@ -410,7 +509,7 @@ export default function ProfilePage() {
                         key={m.key}
                         type="button"
                         onClick={() => setTheme(m.key as any)}
-                        className={`p-3 rounded-xl border text-xs font-medium ${theme===m.key?"border-blue-500 bg-blue-500/10 text-white":"border-slate-700 bg-slate-800/50 text-slate-300"}`}
+                        className={`p-3 rounded-xl border text-xs font-medium ${theme===m.key?"border-indigo-500 bg-indigo-500/10 text-white":"border-slate-700 bg-slate-800/50 text-slate-300"}`}
                       >
                         {m.label}
                       </button>
@@ -452,22 +551,90 @@ export default function ProfilePage() {
                 </CardContent>
               </Card>
 
-              {/* Logout */}
-              <div className="pt-2">
-                <Button
-                  variant="outline"
-                  onClick={() => { try { ["userRole","profileData","profileAvatar","workoutTasksCompleted","mealTasksCompleted","submittedWorkouts","submittedMeals","customScheduleItems"].forEach(k=>localStorage.removeItem(k)) } catch {}; router.push('/login') }}
-                  className="w-full border-red-600 text-red-400 hover:bg-red-600/10"
-                >
-                  Logout
-                </Button>
-              </div>
+              {/* Logout Section */}
+              <Card className="bg-red-950/20 border-red-900/30">
+                <CardHeader className="pb-3">
+                  <CardTitle className="text-white text-sm">Account Actions</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3">
+                  <div className="p-3 bg-slate-900/50 rounded-lg">
+                    <p className="text-xs text-slate-400 mb-3">
+                      Logging out will clear your session and return you to the login screen.
+                    </p>
+                    <Button
+                      onClick={handleLogout}
+                      className="w-full bg-red-600 hover:bg-red-700 text-white border-0 transition-all duration-300"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </ScrollArea>
         </SheetContent>
-      </Sheet>
+        </Sheet>
 
-      <AppBottomNav />
+      </section>
+      </div>
+    </div>
+      <BottomNav activeTab="profile" router={router} />
+    </>
+  )
+}
+
+function BottomNav({ activeTab, router }: any) {
+  const navItems = [
+    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "#10B2E3" },
+    { id: "workout", icon: Dumbbell, label: "Workout", path: "/workout", color: "#9333EA" },
+    { id: "meals", icon: Utensils, label: "Meals", path: "/meals", color: "#F59E0B" },
+    { id: "physio", icon: HeartPulse, label: "Physio", path: "/physio", color: "#F43F5E" },
+    { id: "profile", icon: User, label: "Profile", path: "/profile", color: "#6366F1" }
+  ]
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+      <style jsx>{`
+        @keyframes slideUp {
+          from { transform: translateY(10px) scale(0.9); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .slide-scale-active {
+          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+      `}</style>
+      <div className="max-w-md mx-auto flex items-center justify-between">
+        {navItems.map(item => (
+          <button
+            key={item.id}
+            onClick={() => { if (item.path !== "/profile") router.push(item.path) }}
+            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
+              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
+            }`}
+            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
+          >
+            <div 
+              className={`p-2.5 rounded-xl transition-all duration-300 ${
+                activeTab === item.id ? "scale-110" : ""
+              }`}
+              style={{
+                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
+                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
+              }}
+            >
+              <item.icon className="w-5 h-5" />
+            </div>
+            <span className="text-[10px] font-medium">{item.label}</span>
+            {activeTab === item.id && (
+              <div 
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

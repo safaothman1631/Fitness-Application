@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { LogOut, UserCircle, Calendar, Activity, TrendingUp, FileText } from "lucide-react"
 import { Logo } from "@/components/logo"
-import { LanguageSelector } from "@/components/language-selector"
 import { useLanguage } from "@/hooks/useLanguage"
 import { ManagementNotification } from "@/components/management-notification"
 
@@ -52,7 +51,6 @@ export default function PatientPanelPage() {
 	return (
 		<div className="min-h-screen relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-black to-purple-950" />
-			<div className="absolute inset-0 bg-[url('/modern-gym-interior.png')] bg-cover bg-center opacity-5" />
 
 			<div className="relative z-10">
 				<ManagementNotification isFemale={false} />
@@ -70,12 +68,9 @@ export default function PatientPanelPage() {
 								</p>
 							</div>
 						</div>
-						<div className="flex items-center gap-2 md:gap-3">
-							<LanguageSelector />
-							<Button variant="ghost" size="icon" onClick={handleLogout} className="hover:bg-blue-500/10 text-blue-300">
-								<LogOut className="w-4 h-4 md:w-5 md:h-5" />
-							</Button>
-						</div>
+						<Button variant="ghost" size="icon" onClick={handleLogout} className="hover:bg-blue-500/10 text-blue-300">
+							<LogOut className="w-4 h-4 md:w-5 md:h-5" />
+						</Button>
 					</div>
 				</header>
 

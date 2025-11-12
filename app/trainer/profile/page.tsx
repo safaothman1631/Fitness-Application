@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label"
 import FitproLayout from "@/components/fitpro-layout"
 import { useLanguage } from "@/hooks/useLanguage"
 import { AnimatedButton } from "@/components/ui/animated-button"
-import { LanguageSelector } from "@/components/language-selector"
 import { Mail, Phone, MapPin, Save, Award } from "lucide-react"
 
 export default function TrainerProfile() {
@@ -16,13 +15,8 @@ export default function TrainerProfile() {
     <FitproLayout role="trainer">
       <div className="space-y-6">
         <div>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{t("myProfileHeading")}</h1>
-              <p className="text-gray-400">{t("manageFitnessProfileDesc")}</p>
-            </div>
-            <LanguageSelector />
-          </div>
+          <h1 className="text-3xl font-bold text-white mb-2">{t("myProfileHeading")}</h1>
+          <p className="text-gray-400">{t("manageFitnessProfileDesc")}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

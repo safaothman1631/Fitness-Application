@@ -106,6 +106,8 @@ export type TranslationKey =
   | "searchWorkoutsPlaceholder"
   | "noWorkoutsFound"
   | "settings" // simple settings label separate from systemSettings
+  | "languageSettings"
+  | "selectLanguage"
   | "workouts"
   | "categories"
   | "start"
@@ -117,9 +119,15 @@ export type TranslationKey =
   | "signIn"
   | "signUp"
   | "emailAddress"
+  | "emailOrUsername"
   | "password"
   | "rememberMe"
   | "forgotPassword"
+  | "loginSuccessful"
+  | "chooseRoleOrSignIn"
+  | "pleaseEnterEmail"
+  | "pleaseEnterPassword"
+  | "help"
   | "orContinueAs"
   | "admin"
   | "physiotherapistLogin"
@@ -136,18 +144,58 @@ export type TranslationKey =
   | "copyrightNotice"
   // Dashboard
   | "welcomeBackUser"
+  | "readyForToday"
   | "trackFitnessDesc"
   | "totalWorkouts"
+  | "activeStreak"
+  | "caloriesToday"
+  | "days"
+  | "kcal"
   | "currentStreak"
   | "overallProgress"
   | "quickActions"
   | "recentActivity"
+  | "todaysTimeline"
+  | "todaysSchedule"
   | "startWorkout"
   | "setGoal"
   | "viewAchievements"
   | "completed"
   | "upperBodyWorkout"
   | "completedOnDate"
+  | "addWorkout"
+  | "logMeal"
+  | "title"
+  | "duration"
+  | "meals"
+  | "saveWorkout"
+  | "saveMeal"
+  | "minutes"
+  | "min"
+  | "limitedOffer"
+  | "upgradeToday"
+  | "now"
+  | "todaysWorkout"
+  | "workoutDetails"
+  | "breakfastItem"
+  | "breakfastDetails"
+  | "lunchItem"
+  | "lunchDetails"
+  | "snackItem"
+  | "snackDetails"
+  | "hydratePro"
+  | "hydrateProDesc"
+  | "fitWatch"
+  | "fitWatchDesc"
+  | "gymBeats"
+  | "gymBeatsDesc"
+  | "tapToNext"
+  | "fullBodyStrength"
+  | "workoutMinExercises"
+  | "mealPlan"
+  | "mealsAndSnacks"
+  | "physiotherapy"
+  | "mobilitySession"
   // Profile & Fitness Info
   | "myProfileHeading"
   | "manageFitnessProfileDesc"
@@ -376,6 +424,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   searchWorkoutsPlaceholder: "Search workouts...",
   noWorkoutsFound: "No workouts found matching your search",
   settings: "Settings",
+  languageSettings: "Language Settings",
+  selectLanguage: "Select your preferred language",
   workouts: "Workouts",
   categories: "Categories",
   start: "Start",
@@ -387,9 +437,15 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   signIn: "Sign In",
   signUp: "Sign Up",
   emailAddress: "Email Address",
+  emailOrUsername: "Email or username",
   password: "Password",
   rememberMe: "Remember me",
   forgotPassword: "Forgot?",
+  loginSuccessful: "Login successful!",
+  chooseRoleOrSignIn: "Choose your role or sign in",
+  pleaseEnterEmail: "Please enter your email address",
+  pleaseEnterPassword: "Please enter your password",
+  help: "Help",
   orContinueAs: "Or continue as",
   admin: "Admin",
   physiotherapistLogin: "Physiotherapist Login",
@@ -418,6 +474,46 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   completed: "Completed",
   upperBodyWorkout: "Upper Body Workout",
   completedOnDate: "Completed on",
+  readyForToday: "Welcome back, ready for today's plan?",
+  activeStreak: "Active Streak",
+  caloriesToday: "Calories Today",
+  days: "days",
+  kcal: "kcal",
+  todaysTimeline: "Today's Timeline",
+  todaysSchedule: "Today's Schedule",
+  addWorkout: "Add Workout",
+  logMeal: "Log Meal",
+  title: "Title",
+  duration: "Duration",
+  meals: "Meals",
+  saveWorkout: "Save Workout",
+  saveMeal: "Save Meal",
+  minutes: "minutes",
+  min: "min",
+  limitedOffer: "Limited Offer: 20% off Premium",
+  upgradeToday: "Upgrade today to unlock custom plans",
+  now: "Now",
+  todaysWorkout: "Today's Workout: Full Body Strength",
+  workoutDetails: "8 exercises • 45 min • Intermediate",
+  breakfastItem: "Breakfast",
+  breakfastDetails: "Oats + Berries • 420 kcal",
+  lunchItem: "Lunch",
+  lunchDetails: "Grilled Chicken Salad • 560 kcal",
+  snackItem: "Snack",
+  snackDetails: "Greek Yogurt • 180 kcal",
+  hydratePro: "Hydrate Pro",
+  hydrateProDesc: "Smart reminders and intake tracking",
+  fitWatch: "Fit Watch",
+  fitWatchDesc: "Real-time stats on your wrist",
+  gymBeats: "Gym Beats",
+  gymBeatsDesc: "Curated playlists for workouts",
+  tapToNext: "tap to next",
+  fullBodyStrength: "Full Body Strength",
+  workoutMinExercises: "8 exercises • 45 min",
+  mealPlan: "Meal Plan",
+  mealsAndSnacks: "3 meals • 2 snacks",
+  physiotherapy: "Physiotherapy",
+  mobilitySession: "Mobility session • 20 min",
   // Profile & Fitness Info (EN)
   myProfileHeading: "My Profile",
   manageFitnessProfileDesc: "Manage your fitness profile and goals",
@@ -555,6 +651,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,searchWorkoutsPlaceholder: "ابحث عن التمارين..."
     ,noWorkoutsFound: "لا توجد تمارين مطابقة للبحث"
     ,settings: "الإعدادات"
+    ,languageSettings: "إعدادات اللغة"
+    ,selectLanguage: "اختر لغتك المفضلة"
     ,workouts: "التمارين"
     ,categories: "الفئات"
     ,start: "ابدأ"
@@ -566,9 +664,15 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signIn: "تسجيل الدخول"
   ,signUp: "إنشاء حساب"
   ,emailAddress: "البريد الإلكتروني"
+  ,emailOrUsername: "البريد الإلكتروني أو اسم المستخدم"
   ,password: "كلمة المرور"
   ,rememberMe: "تذكرني"
   ,forgotPassword: "هل نسيت؟"
+  ,loginSuccessful: "تم تسجيل الدخول بنجاح!"
+  ,chooseRoleOrSignIn: "اختر دورك أو سجل الدخول"
+  ,pleaseEnterEmail: "الرجاء إدخال عنوان بريدك الإلكتروني"
+  ,pleaseEnterPassword: "الرجاء إدخال كلمة المرور"
+  ,help: "مساعدة"
   ,orContinueAs: "أو المتابعة كـ"
   ,admin: "مسؤول"
   ,physiotherapistLogin: "تسجيل دخول أخصائي العلاج الطبيعي"
@@ -597,6 +701,46 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,completed: "مكتمل"
   ,upperBodyWorkout: "تمرين الجزء العلوي"
   ,completedOnDate: "اكتمل في"
+  ,readyForToday: "مرحباً بعودتك، هل أنت مستعد لخطة اليوم؟"
+  ,activeStreak: "سلسلة النشاط"
+  ,caloriesToday: "سعرات اليوم"
+  ,days: "أيام"
+  ,kcal: "سعرة"
+  ,todaysTimeline: "جدول اليوم"
+  ,todaysSchedule: "برنامج اليوم"
+  ,addWorkout: "إضافة تمرين"
+  ,logMeal: "تسجيل وجبة"
+  ,title: "العنوان"
+  ,duration: "المدة"
+  ,meals: "الوجبات"
+  ,saveWorkout: "حفظ التمرين"
+  ,saveMeal: "حفظ الوجبة"
+  ,minutes: "دقائق"
+  ,min: "د"
+  ,limitedOffer: "عرض محدود: خصم 20٪ على البريميوم"
+  ,upgradeToday: "قم بالترقية اليوم لفتح الخطط المخصصة"
+  ,now: "الآن"
+  ,todaysWorkout: "تمرين اليوم: القوة للجسم بالكامل"
+  ,workoutDetails: "8 تمارين • 45 دقيقة • متوسط"
+  ,breakfastItem: "الإفطار"
+  ,breakfastDetails: "الشوفان + التوت • 420 سعرة"
+  ,lunchItem: "الغداء"
+  ,lunchDetails: "سلطة الدجاج المشوي • 560 سعرة"
+  ,snackItem: "وجبة خفيفة"
+  ,snackDetails: "الزبادي اليوناني • 180 سعرة"
+  ,hydratePro: "هيدرات برو"
+  ,hydrateProDesc: "تذكيرات ذكية وتتبع الاستهلاك"
+  ,fitWatch: "فيت ووتش"
+  ,fitWatchDesc: "إحصائيات في الوقت الفعلي على معصمك"
+  ,gymBeats: "جيم بيتس"
+  ,gymBeatsDesc: "قوائم تشغيل منسقة للتمارين"
+  ,tapToNext: "اضغط للتالي"
+  ,fullBodyStrength: "قوة الجسم بالكامل"
+  ,workoutMinExercises: "8 تمارين • 45 دقيقة"
+  ,mealPlan: "خطة الوجبات"
+  ,mealsAndSnacks: "3 وجبات • 2 وجبات خفيفة"
+  ,physiotherapy: "العلاج الطبيعي"
+  ,mobilitySession: "جلسة حركية • 20 دقيقة"
   // Profile & Fitness Info (AR placeholders)
   ,myProfileHeading: "ملفي الشخصي"
   ,manageFitnessProfileDesc: "إدارة ملفك الرياضي وأهدافك"
@@ -731,6 +875,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,searchWorkoutsPlaceholder: "گەڕانی وەرزش..."
     ,noWorkoutsFound: "هیچ وەرزشی نەدۆزرایەوە بەپێی گەڕان"
     ,settings: "ڕێکخستنەکان"
+    ,languageSettings: "ڕێکخستنەکانی زمان"
+    ,selectLanguage: "زمانی دڵخوازت دیاری بکە"
     ,workouts: "وەرزشەکان"
     ,categories: "هاوپۆلەکان"
     ,start: "دەستپێک"
@@ -742,9 +888,15 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signIn: "چوونەژوورەوە"
   ,signUp: "خۆتۆمارکردن"
   ,emailAddress: "ئیمەیڵ"
+  ,emailOrUsername: "ئیمەیڵ یان ناوی بەکارهێنەر"
   ,password: "وشەی نهێنی"
   ,rememberMe: "بیرم بهێنەوە"
   ,forgotPassword: "له‌بیرت چوو؟"
+  ,loginSuccessful: "بە سەرکەوتوویی چوویتە ژوورەوە!"
+  ,chooseRoleOrSignIn: "رۆڵەکەت هەڵبژێرە یان بچۆ ژوورەوە"
+  ,pleaseEnterEmail: "تکایە ئیمەیڵەکەت بنووسە"
+  ,pleaseEnterPassword: "تکایە وشەی نهێنیەکەت بنووسە"
+  ,help: "یارمەتی"
   ,orContinueAs: "یان بەردەوام بە وەک"
   ,admin: "ئەدمین"
   ,physiotherapistLogin: "چوونەژوورەوەی فیزیۆتەراپیست"
@@ -773,6 +925,46 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,completed: "تەواو کرا"
   ,upperBodyWorkout: "وەرزش بۆ بەشی سەرەوەی جەستە"
   ,completedOnDate: "تەواو کرا لە"
+  ,readyForToday: "بەخێربێیتەوە، ئامادەیت بۆ پلانی ئەمڕۆ؟"
+  ,activeStreak: "زنجیرەی چالاک"
+  ,caloriesToday: "کالۆری ئەمڕۆ"
+  ,days: "ڕۆژ"
+  ,kcal: "کالۆری"
+  ,todaysTimeline: "کاتی ئەمڕۆ"
+  ,todaysSchedule: "خشتەی ئەمڕۆ"
+  ,addWorkout: "زیادکردنی وەرزش"
+  ,logMeal: "تۆمارکردنی خواردن"
+  ,title: "ناونیشان"
+  ,duration: "ماوە"
+  ,meals: "خواردنەکان"
+  ,saveWorkout: "پاشەکەوتکردنی وەرزش"
+  ,saveMeal: "پاشەکەوتکردنی خواردن"
+  ,minutes: "خولەک"
+  ,min: "خ"
+  ,limitedOffer: "پێشکەشکراوی کاتی: 20% داشکاندن لە پریمیەم"
+  ,upgradeToday: "ئەمڕۆ بەرزبکەرەوە بۆ کردنەوەی پلانە تایبەتەکان"
+  ,now: "ئێستا"
+  ,todaysWorkout: "وەرزشی ئەمڕۆ: هێزی تەواوی جەستە"
+  ,workoutDetails: "8 وەرزش • 45 خولەک • ناوەند"
+  ,breakfastItem: "نانی بەیانی"
+  ,breakfastDetails: "یولاف + گڵۆپک • 420 کالۆری"
+  ,lunchItem: "نانی نیوەڕۆ"
+  ,lunchDetails: "زەڵاتەی مریشکی برژاو • 560 کالۆری"
+  ,snackItem: "خواردنەوەی سووک"
+  ,snackDetails: "ماستی یۆنانی • 180 کالۆری"
+  ,hydratePro: "هایدرەیت پرۆ"
+  ,hydrateProDesc: "بیرخستنەوەی زیرەک و شوێنکەوتنی خواردنەوە"
+  ,fitWatch: "فیت وۆچ"
+  ,fitWatchDesc: "ئاماری کاتی ڕاستەقینە لەسەر مەچەکەت"
+  ,gymBeats: "جیم بیتس"
+  ,gymBeatsDesc: "لیستی گۆرانی هەڵبژێردراو بۆ وەرزش"
+  ,tapToNext: "دەست لێبدە بۆ دواتر"
+  ,fullBodyStrength: "هێزی تەواوی جەستە"
+  ,workoutMinExercises: "8 وەرزش • 45 خولەک"
+  ,mealPlan: "پلانی خواردن"
+  ,mealsAndSnacks: "3 خواردن • 2 خواردنەوەی سووک"
+  ,physiotherapy: "فیزیۆتەراپی"
+  ,mobilitySession: "دانیشتنی جوڵە • 20 خولەک"
   // Profile & Fitness Info (KU placeholders)
   ,myProfileHeading: "پڕۆفایلی من"
   ,manageFitnessProfileDesc: "پڕۆفایل و ئامانجە تەندروستییەکانت بەڕێوەبەرێ"
@@ -907,6 +1099,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   searchWorkoutsPlaceholder: "Antrenman ara...",
   noWorkoutsFound: "Aramanıza uygun antrenman bulunamadı",
   settings: "Ayarlar",
+  languageSettings: "Dil Ayarları",
+  selectLanguage: "Tercih ettiğiniz dili seçin",
   workouts: "Antrenmanlar",
   categories: "Kategoriler",
     start: "Başlat",
@@ -918,9 +1112,15 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     signIn: "Giriş Yap",
     signUp: "Kayıt Ol",
     emailAddress: "E-posta Adresi",
+    emailOrUsername: "E-posta veya kullanıcı adı",
     password: "Parola",
     rememberMe: "Beni hatırla",
     forgotPassword: "Unuttun mu?",
+    loginSuccessful: "Giriş başarılı!",
+    chooseRoleOrSignIn: "Rolünü seç veya giriş yap",
+    pleaseEnterEmail: "Lütfen e-posta adresinizi girin",
+    pleaseEnterPassword: "Lütfen parolanızı girin",
+    help: "Yardım",
     orContinueAs: "Veya şöyle devam et",
     admin: "Yönetici",
     physiotherapistLogin: "Fizyoterapist Girişi",
@@ -949,6 +1149,46 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     completed: "Tamamlandı",
     upperBodyWorkout: "Üst Vücut Antrenmanı",
     completedOnDate: "Tamamlanma tarihi",
+    readyForToday: "Tekrar hoş geldin, bugünün planına hazır mısın?",
+    activeStreak: "Aktif Seri",
+    caloriesToday: "Bugün Kalori",
+    days: "gün",
+    kcal: "kcal",
+    todaysTimeline: "Bugünün Zaman Çizelgesi",
+    todaysSchedule: "Bugünün Programı",
+    addWorkout: "Antrenman Ekle",
+    logMeal: "Yemek Kaydet",
+    title: "Başlık",
+    duration: "Süre",
+    meals: "Yemekler",
+    saveWorkout: "Antrenmanı Kaydet",
+    saveMeal: "Yemeği Kaydet",
+    minutes: "dakika",
+    min: "dk",
+    limitedOffer: "Sınırlı Teklif: Premium'da %20 İndirim",
+    upgradeToday: "Özel planları açmak için bugün yükseltin",
+    now: "Şimdi",
+    todaysWorkout: "Bugünün Antrenmanı: Tüm Vücut Gücü",
+    workoutDetails: "8 egzersiz • 45 dakika • Orta seviye",
+    breakfastItem: "Kahvaltı",
+    breakfastDetails: "Yulaf + Meyveler • 420 kalori",
+    lunchItem: "Öğle Yemeği",
+    lunchDetails: "Izgara Tavuk Salatası • 560 kalori",
+    snackItem: "Atıştırmalık",
+    snackDetails: "Yunan Yoğurdu • 180 kalori",
+    hydratePro: "Hydrate Pro",
+    hydrateProDesc: "Akıllı hatırlatıcılar ve tüketim takibi",
+    fitWatch: "Fit Watch",
+    fitWatchDesc: "Bileğinizdeki gerçek zamanlı istatistikler",
+    gymBeats: "Gym Beats",
+    gymBeatsDesc: "Antrenmanlar için seçilmiş çalma listeleri",
+    tapToNext: "sonraki için dokun",
+    fullBodyStrength: "Tüm Vücut Gücü",
+    workoutMinExercises: "8 egzersiz • 45 dakika",
+    mealPlan: "Yemek Planı",
+    mealsAndSnacks: "3 öğün • 2 atıştırmalık",
+    physiotherapy: "Fizyoterapi",
+    mobilitySession: "Hareketlilik seansı • 20 dakika",
   // Profile & Fitness Info (TR placeholders)
     myProfileHeading: "Profilim",
     manageFitnessProfileDesc: "Fitness profilini ve hedeflerini yönet",

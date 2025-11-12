@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Physio API</title>
+</head>
+<body>
+  <h1>Test Physio Requests API</h1>
+  <div id="output"></div>
+  
+  <script>
+    const output = document.getElementById('output');
+    
+    async function testAPI() {
+      output.innerHTML = '<p>Testing API...</p>';
+      
+      try {
+        // Test GET
+        const userId = 'warning@darinfitness.com';
+        const response = await fetch(`/api/physio-requests?userId=${userId}`);
+        
+        output.innerHTML += `<p><strong>GET /api/physio-requests?userId=${userId}</strong></p>`;
+        output.innerHTML += `<p>Status: ${response.status} ${response.statusText}</p>`;
+        
+        if (!response.ok) {
+          const errorText = await response.text();
+          output.innerHTML += `<p style="color: red;">Error: ${errorText}</p>`;
+        } else {
+          const data = await response.json();
+          output.innerHTML += `<p style="color: green;">Success! Found ${data.length} requests</p>`;
+          output.innerHTML += `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+        }
+      } catch (error) {
+        output.innerHTML += `<p style="color: red;">Error: ${error.message}</p>`;
+      }
+    }
+    
+    // Run test on page load
+    testAPI();
+  </script>
+</body>
+</html>

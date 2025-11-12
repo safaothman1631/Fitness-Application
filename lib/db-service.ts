@@ -216,4 +216,64 @@ export const dbService = {
     }
     return response.json()
   },
+
+  // ===== PHYSIOTHERAPISTS =====
+  async getPhysiotherapists() {
+    const response = await fetch("/api/physiotherapists")
+    if (!response.ok) throw new Error("Failed to fetch physiotherapists")
+    return response.json()
+  },
+
+  // ===== PHYSIO REQUESTS =====
+  async getPhysioRequests(userId: string) {
+    const response = await fetch(`/api/physio-requests?userId=${userId}`)
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error("Fetch physio requests error - Status:", response.status, "Body:", errorText)
+      try {
+        const errorData = JSON.parse(errorText)
+        throw new Error(`Failed to fetch physio requests: ${errorData.error} ${errorData.details || ""}`)
+      } catch {
+        throw new Error(`Failed to fetch physio requests (Status ${response.status}): ${errorText}`)
+      }
+    }
+    return response.json()
+  },
+
+  async createPhysioRequest(requestData: any) {
+    const response = await fetch("/api/physio-requests", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(requestData),
+    })
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error("Create physio request error - Status:", response.status, "Body:", errorText)
+      try {
+        const errorData = JSON.parse(errorText)
+        throw new Error(`Failed to create physio request: ${errorData.error} ${errorData.details || ""}`)
+      } catch {
+        throw new Error(`Failed to create physio request (Status ${response.status}): ${errorText}`)
+      }
+    }
+    return response.json()
+  },
+
+  async updatePhysioRequest(id: string, updateData: any) {
+    const response = await fetch(`/api/physio-requests/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updateData),
+    })
+    if (!response.ok) throw new Error("Failed to update physio request")
+    return response.json()
+  },
+
+  async deletePhysioRequest(id: string) {
+    const response = await fetch(`/api/physio-requests/${id}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) throw new Error("Failed to delete physio request")
+    return response.json()
+  },
 }

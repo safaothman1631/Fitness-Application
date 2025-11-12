@@ -20,7 +20,6 @@ import {
 } from "lucide-react"
 import Logo from "./logo"
 import { Button } from "./ui/button"
-import { LanguageSelector } from "@/components/language-selector"
 import { getRoleConfig, type AppRole } from "@/lib/roles"
 
 interface FitproLayoutProps {
@@ -44,7 +43,6 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
         <div className="flex items-center justify-between p-4">
           <Logo />
           <div className="flex items-center gap-2">
-            <LanguageSelector />
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="text-white">
             {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -96,10 +94,7 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
         {/* Sidebar */}
         <div className="hidden lg:flex flex-col w-64 bg-slate-900/50 border-r border-slate-800 fixed h-screen">
           <div className="p-6">
-            <div className="flex items-center justify-between">
-              <Logo />
-              <LanguageSelector />
-            </div>
+            <Logo />
           </div>
 
           {/* Navigation */}

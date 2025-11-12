@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, FileText, Plus, Printer, Calendar, Activity, AlertCircle, Target } from "lucide-react"
-import { LanguageSelector } from "@/components/language-selector"
 
 export default function TreatmentProgramPage() {
 	const router = useRouter()
@@ -89,7 +88,6 @@ export default function TreatmentProgramPage() {
 	return (
 		<div className="min-h-screen relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-green-950 via-black to-teal-950" />
-			<div className="absolute inset-0 bg-[url('/modern-gym-interior.png')] bg-cover bg-center opacity-5" />
 
 			<div className="relative z-10">
 				<header className="border-b border-green-500/20 glass-effect sticky top-0 z-20">
@@ -107,13 +105,10 @@ export default function TreatmentProgramPage() {
 								<p className="text-xs text-green-300/70">{program.patientName}</p>
 							</div>
 						</div>
-						<div className="flex items-center gap-3">
-							<LanguageSelector />
-							<Button variant="outline" className="gap-2 bg-transparent border-green-500/30">
-								<Printer className="w-4 h-4" />
-										{"Print Program"}
-							</Button>
-						</div>
+						<Button variant="outline" className="gap-2 bg-transparent border-green-500/30">
+							<Printer className="w-4 h-4" />
+									{"Print Program"}
+						</Button>
 					</div>
 				</header>
 

@@ -1,0 +1,114 @@
+"use client"
+
+import { AlertTriangle, Clock, CreditCard, ArrowRight } from "lucide-react"
+import { Card } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { useLanguage } from "@/hooks/useLanguage"
+
+interface SubscriptionWarningProps {
+  daysRemaining?: number
+  variant?: "warning" | "expired"
+}
+
+export function SubscriptionWarning({ daysRemaining = 0, variant = "expired" }: SubscriptionWarningProps) {
+  const router = useRouter()
+  const { t } = useLanguage()
+
+  if (variant === "expired") {
+    return (
+      <Card className="relative overflow-hidden border-2 border-rose-400/60 bg-gradient-to-br from-rose-950/90 via-rose-900/80 to-rose-950/90 backdrop-blur-sm mb-6 animate-in fade-in slide-in-from-top-4 duration-500 shadow-xl shadow-rose-500/20">
+        {/* Animated background effect */}
+        <div className="absolute inset-0 bg-gradient-to-r from-rose-500/0 via-rose-500/10 to-rose-500/0 animate-shimmer" />
+        
+        <div className="relative p-6 md:p-8">
+          <div className="flex items-start gap-4">
+            {/* Icon */}
+            <div className="flex-shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-500 to-rose-600 flex items-center justify-center shadow-lg shadow-rose-500/50 animate-pulse">
+                <AlertTriangle className="w-8 h-8 text-white drop-shadow-lg" />
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="flex-1">
+              <h3 className="text-xl md:text-2xl font-bold text-white mb-2 flex items-center gap-2 drop-shadow-lg">
+                Subscription Expired
+                <span className="text-xs px-2 py-1 bg-rose-500/30 border border-rose-300/50 rounded-full text-rose-50 font-semibold">
+                  Action Required
+                </span>
+              </h3>
+              <p className="text-rose-50 font-medium text-sm md:text-base mb-4 leading-relaxed">
+                Your monthly subscription has ended. Renew now to continue accessing premium features including personalized meal plans and workout programs.
+              </p>
+
+              {/* Features List */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-5">
+                <div className="flex items-center gap-2 text-rose-100 text-sm font-medium">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-300 animate-pulse" />
+                  <span>Workout Programs</span>
+                </div>
+                <div className="flex items-center gap-2 text-rose-100 text-sm font-medium">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-300 animate-pulse" />
+                  <span>Meal Plans</span>
+                </div>
+                <div className="flex items-center gap-2 text-rose-100 text-sm font-medium">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-300 animate-pulse" />
+                  <span>Progress Tracking</span>
+                </div>
+                <div className="flex items-center gap-2 text-rose-100 text-sm font-medium">
+                  <div className="w-1.5 h-1.5 rounded-full bg-rose-300 animate-pulse" />
+                  <span>Expert Support</span>
+                </div>
+              </div>
+
+              {/* CTA Button */}
+              <Button
+                onClick={() => router.push("/membership")}
+                className="bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold px-6 py-6 h-auto rounded-xl shadow-lg shadow-rose-500/40 hover:shadow-rose-500/60 transition-all duration-300 hover:scale-105 group"
+              >
+                <CreditCard className="w-5 h-5 mr-2 transition-transform group-hover:rotate-12" />
+                Renew Subscription Now
+                <ArrowRight className="w-5 h-5 ml-2 transition-transform group-hover:translate-x-1" />
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Bottom accent line */}
+        <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-rose-400 to-transparent animate-pulse" />
+      </Card>
+    )
+  }
+
+  // Warning variant (for approaching expiry)
+  return (
+    <Card className="relative overflow-hidden border border-amber-500/50 bg-gradient-to-br from-amber-950/30 via-amber-900/20 to-amber-950/30 backdrop-blur-sm mb-6">
+      <div className="p-4 md:p-6">
+        <div className="flex items-start gap-3">
+          <div className="flex-shrink-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center">
+              <Clock className="w-5 h-5 text-white" />
+            </div>
+          </div>
+          
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-white mb-1">
+              Subscription Expiring Soon
+            </h3>
+            <p className="text-amber-200/70 text-sm mb-3">
+              Your subscription expires in {daysRemaining} {daysRemaining === 1 ? 'day' : 'days'}. Renew now to avoid interruption.
+            </p>
+            <Button
+              onClick={() => router.push("/membership")}
+              variant="outline"
+              className="border-amber-500/50 text-amber-300 hover:bg-amber-500/10 text-sm"
+            >
+              Renew Now
+            </Button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  )
+}

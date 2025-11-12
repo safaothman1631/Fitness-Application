@@ -4,13 +4,19 @@ import { getAuth, connectAuthEmulator } from "firebase/auth"
 import { getStorage } from "firebase/storage"
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
-  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
-  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBUXCaDOwPuO5GGwHlGJiwpnrFaFL22Nfg",
+  authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "final-database-51935.firebaseapp.com",
+  projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "final-database-51935",
+  storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "final-database-51935.firebasestorage.app",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "683176019395",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:683176019395:web:2b95be616ef73fe9406976",
 }
+
+console.log("🔑 Firebase Config Check:", {
+  apiKey: firebaseConfig.apiKey ? `${firebaseConfig.apiKey.substring(0, 10)}...` : "MISSING",
+  projectId: firebaseConfig.projectId || "MISSING",
+  fromEnv: !!process.env.NEXT_PUBLIC_FIREBASE_API_KEY
+})
 
 // Validate configuration
 if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {

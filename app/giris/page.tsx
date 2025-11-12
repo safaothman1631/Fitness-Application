@@ -10,8 +10,8 @@ import { Label } from "@/components/ui/label"
 import Logo from "@/components/logo"
 import { Eye, EyeOff, LogIn } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
-import { LanguageSelector } from "@/components/language-selector"
 import { AnimatedButton } from "@/components/ui/animated-button"
+import { initializeUserSubscription } from "@/lib/subscription"
 
 export default function LoginPage() {
     const router = useRouter()
@@ -26,11 +26,21 @@ export default function LoginPage() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
-        // Simulate login
+        
+        // Save user email
+        localStorage.setItem("userEmail", formData.email)
+        
+        // Initialize subscription based on user
+        initializeUserSubscription(formData.email)
+        
+        // Trigger storage event manually for immediate update
+        window.dispatchEvent(new Event('storage'))
+        
+        // Simulate login with shorter delay
         setTimeout(() => {
             router.push("/dashboard")
             setLoading(false)
-        }, 1000)
+        }, 300)
     }
 
     return (
@@ -49,7 +59,6 @@ export default function LoginPage() {
                     </div>
                     <h1 className="text-3xl font-bold text-white">{t("welcomeBack")}</h1>
                     <p className="text-gray-400 mt-2">{t("signInToAccount")}</p>
-                    <div className="mt-4 flex justify-center"><LanguageSelector /></div>
                 </div>
 
                 {/* Login Card */}
@@ -147,6 +156,69 @@ export default function LoginPage() {
                                 </Link>
                             </div>
                         </form>
+                    </CardContent>
+                </Card>
+
+                {/* Quick Test Accounts - Remove in production */}
+                <Card className="fitpro-card mt-4 border-cyan-500/20">
+                    <CardContent className="p-4">
+                        <p className="text-xs text-cyan-400 mb-3 font-semibold">🧪 Quick Test Accounts:</p>
+                        <div className="grid grid-cols-3 gap-2">
+                            <Button
+                                onClick={() => {
+                                    const email = "premium@darinfitness.com"
+                                    setFormData({ email, password: "123456" })
+                                    localStorage.setItem("userEmail", email)
+                                    initializeUserSubscription(email)
+                                    // Trigger storage event manually
+                                    window.dispatchEvent(new Event('storage'))
+                                    setTimeout(() => router.push("/dashboard"), 100)
+                                }}
+                                variant="outline"
+                                className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 text-xs h-auto py-2"
+                            >
+                                <div className="text-center">
+                                    <div className="font-semibold text-[11px]">Premium</div>
+                                    <div className="text-[9px] opacity-70">30 days</div>
+                                </div>
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    const email = "warning@darinfitness.com"
+                                    setFormData({ email, password: "123456" })
+                                    localStorage.setItem("userEmail", email)
+                                    initializeUserSubscription(email)
+                                    // Trigger storage event manually
+                                    window.dispatchEvent(new Event('storage'))
+                                    setTimeout(() => router.push("/dashboard"), 100)
+                                }}
+                                variant="outline"
+                                className="border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 text-xs h-auto py-2"
+                            >
+                                <div className="text-center">
+                                    <div className="font-semibold text-[11px]">Warning</div>
+                                    <div className="text-[9px] opacity-70">15 days</div>
+                                </div>
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    const email = "user@darinfitness.com"
+                                    setFormData({ email, password: "123456" })
+                                    localStorage.setItem("userEmail", email)
+                                    initializeUserSubscription(email)
+                                    // Trigger storage event manually
+                                    window.dispatchEvent(new Event('storage'))
+                                    setTimeout(() => router.push("/dashboard"), 100)
+                                }}
+                                variant="outline"
+                                className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs h-auto py-2"
+                            >
+                                <div className="text-center">
+                                    <div className="font-semibold text-[11px]">Expired</div>
+                                    <div className="text-[9px] opacity-70">0 days</div>
+                                </div>
+                            </Button>
+                        </div>
                     </CardContent>
                 </Card>
 

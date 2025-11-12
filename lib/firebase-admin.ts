@@ -33,14 +33,30 @@ try {
       databaseURL: `https://${serviceAccountKey.projectId}.firebaseio.com`,
     })
     console.log("✅ Firebase Admin SDK initialized successfully")
+  } else {
+    console.log("♻️ Using existing Firebase Admin SDK instance")
   }
 } catch (error) {
   console.error("❌ Error initializing Firebase Admin SDK:", error)
   throw error
 }
 
-// Export Firestore instance
-export const adminDb = admin.firestore()
+// Export Firestore instance with settings applied only once
+let firestoreInstance: admin.firestore.Firestore | null = null
+export const adminDb = (() => {
+  if (!firestoreInstance) {
+    firestoreInstance = admin.firestore()
+    // Only set settings on first access
+    try {
+      firestoreInstance.settings({
+        ignoreUndefinedProperties: true,
+      })
+    } catch (e) {
+      // Settings already configured, ignore
+    }
+  }
+  return firestoreInstance
+})()
 
 // Export Auth instance
 export const adminAuth = admin.auth()
@@ -52,8 +68,3 @@ export const adminStorage = admin.storage()
 export function isFirebaseAdminInitialized(): boolean {
   return getApps().length > 0
 }
-
-// Firestore settings for better performance
-adminDb.settings({
-  ignoreUndefinedProperties: true,
-})

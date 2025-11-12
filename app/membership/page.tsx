@@ -7,7 +7,6 @@ import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { ArrowLeft, Check, Crown, Zap, Star } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
-import { LanguageSelector } from "@/components/language-selector"
 
 export default function MembershipPage() {
   const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
@@ -75,7 +74,6 @@ export default function MembershipPage() {
               {t("back")}
             </Button>
           </Link>
-          <LanguageSelector />
         </div>
       </div>
 

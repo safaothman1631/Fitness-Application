@@ -7,9 +7,10 @@ import Link from "next/link"
 interface LoginErrorModalProps {
   isOpen: boolean
   onClose: () => void
+  message?: string
 }
 
-export default function LoginErrorModal({ isOpen, onClose }: LoginErrorModalProps) {
+export default function LoginErrorModal({ isOpen, onClose, message }: LoginErrorModalProps) {
   if (!isOpen) return null
 
   return (
@@ -45,7 +46,7 @@ export default function LoginErrorModal({ isOpen, onClose }: LoginErrorModalProp
           {/* Message */}
           <div className="bg-slate-800/50 border border-slate-700 rounded-xl p-4">
             <p className="text-sm text-gray-300 leading-relaxed">
-              The email or password you entered is incorrect. Please check your credentials and try again.
+              {message || "The email or password you entered is incorrect. Please check your credentials and try again."}
             </p>
           </div>
           

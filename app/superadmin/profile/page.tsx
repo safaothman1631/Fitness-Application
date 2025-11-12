@@ -7,7 +7,6 @@ import { Label } from "@/components/ui/label"
 import FitproLayout from "@/components/fitpro-layout"
 import { useLanguage } from "@/hooks/useLanguage"
 import { AnimatedButton } from "@/components/ui/animated-button"
-import { LanguageSelector } from "@/components/language-selector"
 import { Mail, Shield, Save } from "lucide-react"
 
 export default function SuperAdminProfile() {
@@ -16,13 +15,8 @@ export default function SuperAdminProfile() {
     <FitproLayout role="superadmin">
       <div className="space-y-6">
         <div>
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{t("adminProfile")}</h1>
-              <p className="text-gray-400">{t("fullSystemControl")}</p>
-            </div>
-            <LanguageSelector />
-          </div>
+          <h1 className="text-3xl font-bold text-white mb-2">{t("adminProfile")}</h1>
+          <p className="text-gray-400">{t("fullSystemControl")}</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/firebase"
 import { doc, setDoc, getDoc } from "firebase/firestore"
 
+export const dynamic = 'force-dynamic'
+
 // Save or update physiotherapist profile
 export async function POST(request: NextRequest) {
   try {

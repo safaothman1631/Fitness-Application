@@ -12,6 +12,7 @@ import AuthTopbar from "@/components/auth-topbar"
 import AuthBottomNav from "@/components/auth-bottom-nav"
 import LoginErrorModal, { LoginInputError } from "@/components/login-error"
 import { toast } from "sonner"
+import { yAxisDefaultProps } from "recharts/types/cartesian/YAxis"
 
 export default function TrainerLoginPage() {
     const router = useRouter()
@@ -83,6 +84,9 @@ export default function TrainerLoginPage() {
                     <div 
                         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-85"
                         style={{
+                            backgroundPosition: "top",
+                            
+                            backgroundSize: "300%",
                             backgroundImage: "url('/images/bg-trainer-mobile.svg')",
                             animation: "subtleFloat 20s ease-in-out infinite"
                         }}

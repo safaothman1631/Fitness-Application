@@ -1,102 +1,234 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import AppBottomNav from "@/components/app-bottom-nav"
-import { HeartPulse, Plus, CheckCircle2, Circle, Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { HeartPulse, Plus, CheckCircle2, Loader2, LayoutDashboard, Dumbbell, Utensils, User, Calendar, Award, Target } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import SubscriptionRequiredGuard from "@/components/subscription-guard"
+import { dbService } from "@/lib/db-service"
+import { toast, Toaster } from "sonner"
 
 interface PhysioRequest {
   id: string
+  userId?: string
+  userName?: string
   physioId: string
   physioName: string
   injuryType: string
   painPercent: number
   notes?: string
   status: "pending" | "accepted" | "rejected"
-  createdAt: number
+  completed?: boolean
+  createdAt: string
 }
 
-// Placeholder physiotherapist list (would come from API/dbService)
-const physiotherapists = [
-  { id: "p1", name: "Dr. Aylin" },
-  { id: "p2", name: "Dr. Kemal" },
-  { id: "p3", name: "Dr. Rana" },
-]
+interface Physiotherapist {
+  id: string
+  name: string
+  specialization?: string
+}
 
 export default function PhysioPage() {
-  const [loading, setLoading] = useState(false)
+  const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
   const [submitting, setSubmitting] = useState(false)
   const [requests, setRequests] = useState<PhysioRequest[]>([])
-  const [form, setForm] = useState({ physioId: "p1", injuryType: "", painPercent: 50, notes: "" })
-  const [completed, setCompleted] = useState<Record<string, boolean>>({})
+  const [physiotherapists, setPhysiotherapists] = useState<Physiotherapist[]>([])
+  const [form, setForm] = useState({ physioId: "", injuryType: "", painPercent: 50, notes: "" })
+  const [userId, setUserId] = useState("")
+  const [userName, setUserName] = useState("")
 
   useEffect(() => {
-    // Load persisted requests & completed flags
-    try {
-      const raw = localStorage.getItem("physioRequests")
-      if (raw) setRequests(JSON.parse(raw))
-      const doneRaw = localStorage.getItem("physioCompleted")
-      if (doneRaw) setCompleted(JSON.parse(doneRaw))
-    } catch {}
+    // Mark as mounted to prevent hydration mismatch
+    setMounted(true)
+
+    // Load user info from localStorage
+    const storedUserId = localStorage.getItem("userId")
+    const storedUserEmail = localStorage.getItem("userEmail")
+    const storedUserName = localStorage.getItem("userName") || storedUserEmail || "User"
+    
+    console.log("🔍 User Info from localStorage:", {
+      userId: storedUserId,
+      userEmail: storedUserEmail,
+      userName: storedUserName
+    })
+    
+    if (storedUserId) {
+      setUserId(storedUserId)
+      setUserName(storedUserName)
+    } else if (storedUserEmail) {
+      // Use email as userId if userId not found
+      setUserId(storedUserEmail)
+      setUserName(storedUserName)
+      console.log("⚠️ Using email as userId")
+    } else {
+      console.error("❌ No user information found in localStorage")
+      toast.error("Please login first")
+    }
+
+    // Load data from database
+    loadData()
   }, [])
 
-  const persist = (next: PhysioRequest[]) => {
-    try { localStorage.setItem("physioRequests", JSON.stringify(next)) } catch {}
-  }
-
-  const toggleCompleted = (id: string) => {
-    setCompleted(prev => {
-      const next = { ...prev, [id]: !prev[id] }
-      try { localStorage.setItem("physioCompleted", JSON.stringify(next)) } catch {}
-      return next
-    })
+  const loadData = async () => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+    
+    try {
+      setLoading(true)
+      
+      // Load physiotherapists
+      console.log("🔍 Loading physiotherapists...")
+      try {
+        const physios = await dbService.getPhysiotherapists()
+        console.log("✅ Loaded physiotherapists:", physios)
+        setPhysiotherapists(physios)
+      } catch (error) {
+        console.error("❌ Failed to load physiotherapists:", error)
+        toast.error("Failed to load physiotherapists")
+      }
+      
+      // Don't set default physioId - let user select
+      // This prevents auto-submission issues
+      
+      // Load user's requests using state or localStorage
+      const currentUserId = userId || localStorage.getItem("userId") || localStorage.getItem("userEmail")
+      if (currentUserId) {
+        console.log("🔍 Loading requests for user:", currentUserId)
+        try {
+          const userRequests = await dbService.getPhysioRequests(currentUserId)
+          console.log("✅ Loaded requests:", userRequests)
+          console.log("📊 Total requests found:", userRequests.length)
+          setRequests(userRequests)
+        } catch (error) {
+          console.error("❌ Failed to load requests:", error)
+          // Don't show error toast - just log it
+          // User can still submit new requests
+          setRequests([])
+        }
+      } else {
+        console.warn("⚠️ No userId found in state or localStorage")
+      }
+    } catch (error) {
+      console.error("❌ Error loading data:", error)
+      toast.error("Failed to load data: " + (error instanceof Error ? error.message : String(error)))
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!form.injuryType.trim()) return
+    
+    console.log("📝 Form submission started")
+    console.log("Form data:", form)
+    console.log("User ID:", userId)
+    console.log("User Name:", userName)
+    
+    if (!form.physioId) {
+      console.error("❌ No physiotherapist selected")
+      toast.error("Please select a physiotherapist")
+      return
+    }
+    
+    if (!form.injuryType.trim()) {
+      console.error("❌ No injury type entered")
+      toast.error("Please enter injury type")
+      return
+    }
+    
+    if (!userId) {
+      console.error("❌ No user ID found")
+      toast.error("Please login first")
+      return
+    }
+
+    console.log("✅ All validations passed, submitting...")
     setSubmitting(true)
-    // Simulate API call
-    setTimeout(() => {
+    try {
       const physioName = physiotherapists.find(p => p.id === form.physioId)?.name || "Unknown"
-      const newReq: PhysioRequest = {
-        id: crypto.randomUUID(),
+      
+      const requestData = {
+        userId,
+        userName,
         physioId: form.physioId,
         physioName,
         injuryType: form.injuryType.trim(),
         painPercent: form.painPercent,
-        notes: form.notes.trim() || undefined,
-        status: "pending",
-        createdAt: Date.now(),
+        notes: form.notes.trim() || "",
       }
-      const next = [newReq, ...requests]
-      setRequests(next)
-      persist(next)
-      setForm({ physioId: form.physioId, injuryType: "", painPercent: 50, notes: "" })
+      
+      console.log("📤 Sending request:", requestData)
+      const newRequest = await dbService.createPhysioRequest(requestData)
+      console.log("✅ Request created:", newRequest)
+
+      // Add to local state immediately
+      setRequests([newRequest, ...requests])
+      
+      // Clear form
+      setForm({ physioId: "", injuryType: "", painPercent: 50, notes: "" })
+      
+      // Show success message
+      toast.success("Request sent successfully!")
+      
+      // Reload data from database to ensure sync
+      console.log("🔄 Reloading requests from database...")
+      await loadData()
+    } catch (error) {
+      console.error("❌ Error creating request:", error)
+      toast.error("Failed to send request: " + (error instanceof Error ? error.message : String(error)))
+    } finally {
       setSubmitting(false)
-    }, 700)
+    }
+  }
+
+  // Prevent hydration mismatch - don't render until mounted
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#0E151B] text-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+      </div>
+    )
   }
 
   return (
-    <div className="pb-24 max-w-md mx-auto">
-      <header className="pt-6 pb-4 px-4">
-        <h1 className="text-2xl font-bold text-white flex items-center gap-2">
-          <HeartPulse className="w-6 h-6 text-pink-400" /> Physiotherapy
-          <span className="ml-2 px-2 py-0.5 rounded-full text-xs bg-slate-800 text-slate-300">{requests.length}</span>
+    <>
+    <Toaster position="top-center" richColors />
+    <SubscriptionRequiredGuard>
+    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F43F5E] to-[#FB7185] bg-clip-text text-transparent mb-2">
+          Physiotherapy
         </h1>
-        <p className="text-slate-400 text-sm mt-1">Request a queue slot and track your injury recovery.</p>
-        <p className="text-slate-500 text-xs mt-1">
-          You have {requests.length} request{requests.length === 1 ? '' : 's'} • {requests.filter(r => completed[r.id]).length} completed
-        </p>
-      </header>
+        <p className="text-[#B6C4CF] mb-8">Request a queue slot and track your injury recovery.</p>
 
-      <section className="px-4 space-y-5">
-        <Card className="bg-slate-900/70 border-slate-800">
+        <Card className="bg-gradient-to-r from-[#F43F5E] to-[#FB7185] border-none p-8 mb-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <h3 className="text-white text-xl font-bold mb-2">Recover & Heal</h3>
+            <p className="text-white/90 text-sm mb-4">Expert physiotherapy support for your recovery journey</p>
+            <div className="flex items-center gap-3 text-white/90 text-sm">
+              <span>{requests.length} Request{requests.length === 1 ? '' : 's'}</span>
+              <span>•</span>
+              <span>{requests.filter(r => r.completed).length} Completed</span>
+            </div>
+          </div>
+        </Card>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <StatsCard icon={HeartPulse} label="Total Requests" value={requests.length.toString()} color="#F43F5E" />
+          <StatsCard icon={CheckCircle2} label="Completed" value={requests.filter(r => r.completed).length.toString()} color="#FB7185" />
+          <StatsCard icon={Calendar} label="Pending" value={requests.filter(r => !r.completed).length.toString()} color="#FDA4AF" />
+          <StatsCard icon={Target} label="Recovery Rate" value={requests.length > 0 ? Math.round((requests.filter(r => r.completed).length / requests.length) * 100) + "%" : "0%"} color="#F43F5E" />
+        </div>
+
+      <section className="space-y-5">
+        <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm flex items-center gap-2"><HeartPulse className="w-4 h-4 text-pink-400" /> Send Request</CardTitle>
+            <CardTitle className="text-white text-sm flex items-center gap-2"><HeartPulse className="w-4 h-4 text-rose-400" /> Send Request</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -105,10 +237,29 @@ export default function PhysioPage() {
                 <select
                   value={form.physioId}
                   onChange={e => setForm({ ...form, physioId: e.target.value })}
-                  className="w-full h-11 rounded-lg bg-slate-800 border border-slate-700 text-sm px-3 focus:outline-none focus:ring-2 focus:ring-pink-500/40"
+                  disabled={loading || physiotherapists.length === 0}
+                  className="w-full h-11 rounded-lg bg-[#0E151B] border border-[#2E3944] text-sm px-3 text-white focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/50 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {physiotherapists.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
+                  {loading ? (
+                    <option value="">Loading physiotherapists...</option>
+                  ) : physiotherapists.length === 0 ? (
+                    <option value="">No physiotherapists available</option>
+                  ) : (
+                    <>
+                      <option value="">Select a physiotherapist</option>
+                      {physiotherapists.map(p => (
+                        <option key={p.id} value={p.id} className="bg-[#0E151B] text-white">
+                          {p.name} {p.specialization ? `- ${p.specialization}` : ''}
+                        </option>
+                      ))}
+                    </>
+                  )}
                 </select>
+                {!loading && physiotherapists.length === 0 && (
+                  <p className="text-xs text-slate-500 mt-1">
+                    No physiotherapists found. Please contact admin.
+                  </p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label className="text-xs uppercase tracking-wide text-slate-400">Injury Type</Label>
@@ -116,13 +267,13 @@ export default function PhysioPage() {
                   value={form.injuryType}
                   onChange={e => setForm({ ...form, injuryType: e.target.value })}
                   placeholder="e.g. Knee ligament strain"
-                  className="bg-slate-950 border-slate-700 h-11 text-sm"
+                  className="bg-[#0E151B] border-[#2E3944] h-11 text-sm text-white placeholder:text-slate-500 focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/50 transition-all"
                 />
               </div>
               <div className="space-y-2">
                 <Label className="text-xs uppercase tracking-wide text-slate-400 flex justify-between">
                   <span>Pain Percentage</span>
-                  <span className="text-pink-400 font-semibold">{form.painPercent}%</span>
+                  <span className="text-rose-400 font-semibold">{form.painPercent}%</span>
                 </Label>
                 <input
                   type="range"
@@ -130,7 +281,7 @@ export default function PhysioPage() {
                   max={100}
                   value={form.painPercent}
                   onChange={e => setForm({ ...form, painPercent: parseInt(e.target.value) })}
-                  className="w-full accent-pink-500"
+                  className="w-full accent-rose-500"
                 />
               </div>
               <div className="space-y-2">
@@ -140,47 +291,122 @@ export default function PhysioPage() {
                   onChange={e => setForm({ ...form, notes: e.target.value })}
                   rows={3}
                   placeholder="Extra context..."
-                  className="w-full rounded-lg bg-slate-950 border border-slate-700 text-sm p-3 resize-none"
+                  className="w-full rounded-lg bg-[#0E151B] border border-[#2E3944] text-sm p-3 resize-none text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/50 transition-all"
                 />
               </div>
-              <Button type="submit" disabled={submitting || !form.injuryType.trim()} className="w-full bg-pink-600 hover:bg-pink-500 h-11 text-sm font-semibold flex items-center justify-center gap-2">
+              <Button type="submit" disabled={submitting || !form.injuryType.trim() || !form.physioId || physiotherapists.length === 0} className="w-full bg-gradient-to-r from-[#F43F5E] to-[#FB7185] hover:from-[#E11D48] hover:to-[#F472B6] h-11 text-sm font-semibold flex items-center justify-center gap-2 text-white disabled:opacity-50 disabled:cursor-not-allowed">
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                 {submitting ? 'Sending...' : 'Send Request'}
-                <Plus className="w-4 h-4" />
+                {!submitting && <Plus className="w-4 h-4" />}
               </Button>
             </form>
           </CardContent>
         </Card>
 
-        <Card className="bg-slate-900/70 border-slate-800">
+        <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
             <CardTitle className="text-white text-sm flex items-center gap-2">
-              <HeartPulse className="w-4 h-4 text-pink-400" /> Your Requests
-              <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-300">{requests.length}</span>
+              <HeartPulse className="w-4 h-4 text-rose-400" /> Your Requests
+              <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-[#0E151B] border border-[#2E3944] text-white">{requests.length}</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {requests.map(r => {
-              const done = !!completed[r.id]
-              return (
-                <div key={r.id} className="p-3 rounded-lg bg-slate-800/50 flex items-center justify-between">
-                  <div className="text-xs">
-                    <p className={`text-white font-semibold ${done ? 'line-through text-slate-500' : ''}`}>{r.injuryType}</p>
-                    <p className="text-slate-400 mt-0.5">{r.physioName} • Pain {r.painPercent}% • {r.status}</p>
-                    {r.notes && <p className="text-slate-500 mt-0.5 line-clamp-1">{r.notes}</p>}
+            {loading ? (
+              <div className="flex items-center justify-center py-8">
+                <Loader2 className="w-6 h-6 animate-spin text-rose-500" />
+              </div>
+            ) : requests.length > 0 ? (
+              requests.map(r => (
+                  <div key={r.id} className="p-3 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-rose-500/30 transition-all">
+                    <div className="text-xs">
+                      <p className="text-white font-semibold">{r.injuryType}</p>
+                      <p className="text-slate-400 mt-0.5">{r.physioName} • Pain {r.painPercent}% • {r.status}</p>
+                      {r.notes && <p className="text-slate-500 mt-0.5 line-clamp-1">{r.notes}</p>}
+                      <p className="text-slate-600 mt-0.5">{new Date(r.createdAt).toLocaleDateString()}</p>
+                    </div>
                   </div>
-                  <button onClick={() => toggleCompleted(r.id)} className="ml-3">
-                    {done ? <CheckCircle2 className="w-5 h-5 text-green-500" /> : <Circle className="w-5 h-5 text-slate-500" />}
-                  </button>
-                </div>
-              )
-            })}
-            {!requests.length && <p className="text-slate-500 text-sm">No requests yet.</p>}
+              ))
+            ) : (
+              <p className="text-[#B6C4CF] text-sm">No requests yet.</p>
+            )}
           </CardContent>
         </Card>
       </section>
+      </div>
+    </div>
+      <BottomNav activeTab="physio" router={router} />
+    </SubscriptionRequiredGuard>
+    </>
+  )
+}
 
-      <AppBottomNav />
+function StatsCard({ icon: Icon, label, value, color }: any) {
+  return (
+    <Card className="bg-[#101A23] border-[#2E3944] p-6 hover:border-[#FB7185]/30 transition-all">
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center gap-2">
+          <div className="w-10 h-10 rounded-lg bg-[#0E151B] border flex items-center justify-center" style={{ borderColor: color }}>
+            <Icon className="w-5 h-5" style={{ color }} />
+          </div>
+          <span className="text-xs text-[#B6C4CF] uppercase">{label}</span>
+        </div>
+        <p className="text-3xl font-bold text-white">{value}</p>
+      </div>
+    </Card>
+  )
+}
+
+function BottomNav({ activeTab, router }: any) {
+  const navItems = [
+    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "#10B2E3" },
+    { id: "workout", icon: Dumbbell, label: "Workout", path: "/workout", color: "#9333EA" },
+    { id: "meals", icon: Utensils, label: "Meals", path: "/meals", color: "#F59E0B" },
+    { id: "physio", icon: HeartPulse, label: "Physio", path: "/physio", color: "#F43F5E" },
+    { id: "profile", icon: User, label: "Profile", path: "/profile", color: "#6366F1" }
+  ]
+
+  return (
+    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
+      <style jsx>{`
+        @keyframes slideUp {
+          from { transform: translateY(10px) scale(0.9); opacity: 0; }
+          to { transform: translateY(0) scale(1); opacity: 1; }
+        }
+        .slide-scale-active {
+          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+      `}</style>
+      <div className="max-w-md mx-auto flex items-center justify-between">
+        {navItems.map(item => (
+          <button
+            key={item.id}
+            onClick={() => { if (item.path !== "/physio") router.push(item.path) }}
+            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
+              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
+            }`}
+            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
+          >
+            <div 
+              className={`p-2.5 rounded-xl transition-all duration-300 ${
+                activeTab === item.id ? "scale-110" : ""
+              }`}
+              style={{
+                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
+                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
+              }}
+            >
+              <item.icon className="w-5 h-5" />
+            </div>
+            <span className="text-[10px] font-medium">{item.label}</span>
+            {activeTab === item.id && (
+              <div 
+                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
+                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
+              />
+            )}
+          </button>
+        ))}
+      </div>
     </div>
   )
 }

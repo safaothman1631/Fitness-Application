@@ -8,7 +8,11 @@
     "lint": "eslint .",
     "start": "next start",
     "db:init": "tsx lib/init-database.ts",
-    "db:test": "tsx lib/test-firebase.ts"
+    "db:test": "tsx lib/test-firebase.ts",
+    "deploy": "firebase deploy",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "firebase:login": "firebase login",
+    "firebase:serve": "firebase serve"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
@@ -60,6 +64,7 @@
     "react-dom": "19.2.0",
     "react-hook-form": "latest",
     "react-i18next": "latest",
+    "react-is": "^19.0.0",
     "react-resizable-panels": "latest",
     "recharts": "latest",
     "sonner": "latest",
@@ -73,6 +78,7 @@
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "firebase-tools": "^14.24.2",
     "postcss": "^8.5",
     "tailwindcss": "^4.1.9",
     "tsx": "^4.20.6",

@@ -4,7 +4,6 @@ import { Inter, Poppins } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/contexts/language-context"
-import { LanguageSelector } from "@/components/language-selector"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -30,10 +29,6 @@ export default function RootLayout({
       <body className={`${poppins.variable} ${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
-            {/* Global language switcher (visible across all pages) */}
-            <div className="fixed top-4 right-4 z-50">
-              <LanguageSelector />
-            </div>
             {children}
           </LanguageProvider>
           <Analytics />

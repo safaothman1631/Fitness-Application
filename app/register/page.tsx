@@ -67,7 +67,6 @@ export default function RegisterPage() {
                         <ArrowLeft className="w-4 h-4" />
                         {t("backToLogin")}
                     </Link>
-                    <LanguageSelector />
                 </div>
 
                 <div className="text-center mb-8">
