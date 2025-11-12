@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, LogIn, ArrowLeft, Shield } from "lucide-react"
 import AuthTopbar from "@/components/auth-topbar"
-import AuthBottomNav from "@/components/auth-bottom-nav"
 import LoginErrorModal, { LoginInputError } from "@/components/login-error"
 import { toast } from "sonner"
 
@@ -173,7 +172,6 @@ export default function AdminLoginPage() {
                 </div>
                 {/* Spacer after header */}
                 <div className="flex-1 overflow-y-auto pb-24" />
-                <AuthBottomNav current="Admin" />
                 
                 {/* Error Modal */}
                 <LoginErrorModal 

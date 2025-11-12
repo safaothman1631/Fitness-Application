@@ -1,13 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import FitproLayout from "@/components/fitpro-layout"
 import { Bell, Trash2, CheckCircle, AlertCircle, Info, Calendar } from "lucide-react"
+import { dbService } from "@/lib/db-service"
+import { toast } from "sonner"
 
 interface Notification {
   id: string
+  userId: string
   type: "success" | "warning" | "info"
   title: string
   message: string
@@ -15,56 +18,103 @@ interface Notification {
   read: boolean
 }
 
-export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "success",
-      title: "Workout Complete",
-      message: "You've finished your Full Body workout! Great effort! 🎉",
-      timestamp: "2 hours ago",
-      read: false,
-    },
-    {
-      id: "2",
-      type: "info",
-      title: "Reminder: Evening Workout",
-      message: "Time to start your evening yoga session",
-      timestamp: "30 minutes ago",
-      read: false,
-    },
-    {
-      id: "3",
-      type: "success",
-      title: "Achievement Unlocked",
-      message: "You've reached 100 workout sessions! 🌟",
-      timestamp: "1 day ago",
-      read: true,
-    },
-    {
-      id: "4",
-      type: "info",
-      title: "New Workout Available",
-      message: "Check out our new HIIT training program",
-      timestamp: "2 days ago",
-      read: true,
-    },
-    {
-      id: "5",
-      type: "warning",
-      title: "Membership Expiring Soon",
-      message: "Your Premium membership expires in 7 days",
-      timestamp: "3 days ago",
-      read: true,
-    },
-  ])
+// Helper function to format timestamp
+function formatTimestamp(timestamp: string): string {
+  const date = new Date(timestamp)
+  const now = new Date()
+  const diffMs = now.getTime() - date.getTime()
+  const diffMins = Math.floor(diffMs / 60000)
+  const diffHours = Math.floor(diffMs / 3600000)
+  const diffDays = Math.floor(diffMs / 86400000)
 
-  const markAsRead = (id: string) => {
-    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
+  if (diffMins < 1) return "Just now"
+  if (diffMins < 60) return `${diffMins} minute${diffMins > 1 ? "s" : ""} ago`
+  if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? "s" : ""} ago`
+  if (diffDays < 7) return `${diffDays} day${diffDays > 1 ? "s" : ""} ago`
+  return date.toLocaleDateString()
+}
+
+export default function NotificationsPage() {
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [loading, setLoading] = useState(true)
+
+  // Get user ID from localStorage
+  const getUserId = () => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("userId") || ""
+    }
+    return ""
   }
 
-  const deleteNotification = (id: string) => {
-    setNotifications((prev) => prev.filter((n) => n.id !== id))
+  // Fetch notifications from database
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      const userId = getUserId()
+      if (!userId) {
+        setLoading(false)
+        toast.error("Please log in to view notifications")
+        return
+      }
+
+      try {
+        const response = await dbService.getNotifications(userId)
+        if (response.notifications) {
+          setNotifications(response.notifications)
+        }
+      } catch (error) {
+        console.error("Error fetching notifications:", error)
+        toast.error("Failed to load notifications")
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchNotifications()
+  }, [])
+
+  const markAsRead = async (id: string) => {
+    try {
+      await dbService.markNotificationAsRead(id)
+      setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)))
+      toast.success("Marked as read")
+    } catch (error) {
+      console.error("Error marking notification as read:", error)
+      toast.error("Failed to update notification")
+    }
+  }
+
+  const markAllAsRead = async () => {
+    try {
+      const unreadNotifications = notifications.filter((n) => !n.read)
+      await Promise.all(unreadNotifications.map((n) => dbService.markNotificationAsRead(n.id)))
+      setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+      toast.success("All notifications marked as read")
+    } catch (error) {
+      console.error("Error marking all as read:", error)
+      toast.error("Failed to update notifications")
+    }
+  }
+
+  const deleteNotification = async (id: string) => {
+    try {
+      await dbService.deleteNotification(id)
+      setNotifications((prev) => prev.filter((n) => n.id !== id))
+      toast.success("Notification deleted")
+    } catch (error) {
+      console.error("Error deleting notification:", error)
+      toast.error("Failed to delete notification")
+    }
+  }
+
+  const clearAll = async () => {
+    try {
+      await Promise.all(notifications.map((n) => dbService.deleteNotification(n.id)))
+      setNotifications([])
+      toast.success("All notifications cleared")
+    } catch (error) {
+      console.error("Error clearing notifications:", error)
+      toast.error("Failed to clear notifications")
+    }
   }
 
   const getIcon = (type: string) => {
@@ -102,17 +152,32 @@ export default function NotificationsPage() {
 
         {/* Action Buttons */}
         <div className="flex gap-3">
-          <Button variant="outline" className="border-slate-700/50 text-gray-400 hover:text-white rounded-xl">
+          <Button 
+            variant="outline" 
+            className="border-slate-700/50 text-gray-400 hover:text-white rounded-xl"
+            onClick={markAllAsRead}
+            disabled={loading || notifications.length === 0 || notifications.every(n => n.read)}
+          >
             Mark all as read
           </Button>
-          <Button variant="outline" className="border-slate-700/50 text-gray-400 hover:text-red-400 rounded-xl">
+          <Button 
+            variant="outline" 
+            className="border-slate-700/50 text-gray-400 hover:text-red-400 rounded-xl"
+            onClick={clearAll}
+            disabled={loading || notifications.length === 0}
+          >
             Clear all
           </Button>
         </div>
 
         {/* Notifications List */}
         <div className="space-y-3">
-          {notifications.length > 0 ? (
+          {loading ? (
+            <Card className="fitpro-card text-center p-8">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mb-4"></div>
+              <p className="text-gray-400">Loading notifications...</p>
+            </Card>
+          ) : notifications.length > 0 ? (
             notifications.map((notification) => (
               <Card
                 key={notification.id}
@@ -135,7 +200,7 @@ export default function NotificationsPage() {
                       <div className="flex items-center justify-between">
                         <span className="text-xs text-gray-500 flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
-                          {notification.timestamp}
+                          {formatTimestamp(notification.timestamp)}
                         </span>
 
                         <div className="flex gap-2">

@@ -18,7 +18,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "profile", path: "/user-dashboard/profile", icon: "User" },
       { key: "notifications", path: "/user-dashboard/notifications", icon: "Bell" },
       { key: "settings", path: "/user-dashboard/settings", icon: "Settings" },
-      { key: "helpSupport", path: "/user-dashboard/help", icon: "HelpCircle" },
+  // Help removed
     ],
   },
   physiotherapist: {
@@ -31,7 +31,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "profile", path: "/physiotherapist/profile", icon: "User" },
       { key: "notifications", path: "/physiotherapist/notifications", icon: "Bell" },
       { key: "settings", path: "/physiotherapist/settings", icon: "Settings" },
-      { key: "helpSupport", path: "/physiotherapist/help", icon: "HelpCircle" },
+  // Help removed
     ],
   },
   trainer: {
@@ -44,7 +44,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "profile", path: "/trainer/profile", icon: "User" },
       { key: "notifications", path: "/trainer/notifications", icon: "Bell" },
       { key: "settings", path: "/trainer/settings", icon: "Settings" },
-      { key: "helpSupport", path: "/trainer/help", icon: "HelpCircle" },
+  // Help removed
     ],
   },
   superadmin: {
@@ -57,7 +57,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "profile", path: "/superadmin/profile", icon: "User" },
       { key: "notifications", path: "/superadmin/notifications", icon: "Bell" },
       { key: "systemSettings", path: "/superadmin/settings", icon: "Settings" },
-      { key: "helpSupport", path: "/superadmin/help", icon: "HelpCircle" },
+  // Help removed
     ],
   },
   admin: {
@@ -70,7 +70,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "profile", path: "/admin/profile", icon: "User" },
       { key: "notifications", path: "/admin/notifications", icon: "Bell" },
       { key: "settings", path: "/admin/settings", icon: "Settings" },
-      { key: "helpSupport", path: "/admin/help", icon: "HelpCircle" },
+  // Help removed
     ],
   },
   owner: {
@@ -82,7 +82,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "profile", path: "/owner/profile", icon: "User" },
       { key: "notifications", path: "/owner/notifications", icon: "Bell" },
       { key: "settings", path: "/owner/settings", icon: "Settings" },
-      { key: "helpSupport", path: "/owner/help", icon: "HelpCircle" },
+  // Help removed
     ],
   },
 }

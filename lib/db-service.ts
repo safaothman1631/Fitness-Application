@@ -276,4 +276,44 @@ export const dbService = {
     if (!response.ok) throw new Error("Failed to delete physio request")
     return response.json()
   },
+
+  // ===== NOTIFICATIONS =====
+  async getNotifications(userId: string) {
+    const response = await fetch(`/api/notifications?userId=${userId}`)
+    if (!response.ok) throw new Error("Failed to fetch notifications")
+    return response.json()
+  },
+
+  async createNotification(notificationData: {
+    userId: string
+    type: "success" | "warning" | "info"
+    title: string
+    message: string
+  }) {
+    const response = await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notificationData),
+    })
+    if (!response.ok) throw new Error("Failed to create notification")
+    return response.json()
+  },
+
+  async markNotificationAsRead(id: string) {
+    const response = await fetch(`/api/notifications/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ read: true }),
+    })
+    if (!response.ok) throw new Error("Failed to mark notification as read")
+    return response.json()
+  },
+
+  async deleteNotification(id: string) {
+    const response = await fetch(`/api/notifications/${id}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) throw new Error("Failed to delete notification")
+    return response.json()
+  },
 }

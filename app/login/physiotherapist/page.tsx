@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Eye, EyeOff, LogIn, Stethoscope, ChevronRight } from "lucide-react"
 import AuthTopbar from "@/components/auth-topbar"
-import AuthBottomNav from "@/components/auth-bottom-nav"
 import LoginErrorModal, { LoginInputError } from "@/components/login-error"
 import { toast } from "sonner"
 
@@ -177,7 +176,6 @@ export default function PhysiotherapistLoginPage() {
       </div>
       {/* Body area after the green header block */}
       <div className="flex-1 overflow-y-auto pb-24" />
-      <AuthBottomNav current="Physio" />
       <LoginErrorModal isOpen={showErrorModal} onClose={() => setShowErrorModal(false)} />
     </div>
   )

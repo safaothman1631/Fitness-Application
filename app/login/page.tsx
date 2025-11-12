@@ -1,17 +1,14 @@
 "use client"
-
-import { useState } from "react"
+import AuthTopbar from "@/components/auth-topbar"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Eye, EyeOff, LogIn, User } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
-import AuthTopbar from "@/components/auth-topbar"
-import AuthBottomNav from "@/components/auth-bottom-nav"
-import { initializeUserSubscription } from "@/lib/subscription"
+import { AnimatedButton } from "@/components/ui/animated-button"
 
 export default function LoginPage() {
     const router = useRouter()
@@ -20,20 +17,14 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({ email: "", password: "" })
 
+    useEffect(() => {
+        // Redirect to /giris if needed
+        // router.replace("/giris")
+    }, [router])
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setLoading(true)
-        
-        // Save user email
-        localStorage.setItem("userEmail", formData.email)
-        
-        // Initialize subscription based on user
-        initializeUserSubscription(formData.email)
-        
-        // Trigger storage event manually for immediate update
-        window.dispatchEvent(new Event('storage'))
-        
-        // Simulate login
         setTimeout(() => {
             router.push("/dashboard")
             setLoading(false)
@@ -56,7 +47,7 @@ export default function LoginPage() {
                 {/* Glow effects */}
                 <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-96 bg-[#73E8FF]/10 rounded-full blur-3xl" />
             </div>
-            
+
             <div className="relative z-10 pb-24">
                 <AuthTopbar />
                 <div className="max-w-md mx-auto pt-8 px-4 text-center">
@@ -66,7 +57,6 @@ export default function LoginPage() {
                     <h1 className="text-3xl font-bold tracking-tight mb-1 text-[#EEF4F8]">{t("welcomeBack")}</h1>
                 </div>
                 <div className="max-w-md mx-auto px-6 mt-8">
-                    {/* Login form */}
                     <Card id="login-form" className="bg-[#101A23]/95 backdrop-blur-xl border-[#10B2E3]/40 rounded-3xl shadow-2xl shadow-[#10B2E3]/10 ring-1 ring-[#47D8FF]/20">
                         <CardContent className="p-6 space-y-6">
                             <form onSubmit={handleLogin} className="space-y-6">
@@ -100,20 +90,41 @@ export default function LoginPage() {
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between">
-                                    <Link href="/forgot-password" className="text-xs text-[#10B2E3] hover:text-[#73E8FF] transition-colors">{t("forgotPassword")}</Link>
+                                    <Link href="/forgot-password" className="text-xs text-[#10B2E3] hover:text-[#73E8FF] font-semibold transition-colors">
+                                        {"Forgot your password?"}
+                                    </Link>
                                 </div>
-                                <Button type="submit" disabled={loading} className="w-full bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] hover:from-[#0B94C1] hover:to-[#47D8FF] h-12 rounded-[14px] font-semibold tracking-wide inline-flex items-center justify-center gap-2 text-[#001015] shadow-lg shadow-[#10B2E3]/30 transition-all duration-300">
+                                <AnimatedButton
+                                    type="submit"
+                                    disabled={loading}
+                                    full
+                                    className="rounded-[14px] h-12 font-semibold tracking-wide inline-flex items-center justify-center gap-2 text-[#001015] shadow-lg shadow-[#10B2E3]/30 transition-all duration-300 bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] hover:from-[#0B94C1] hover:to-[#47D8FF]"
+                                >
                                     {loading ? t("loggingIn") : t("login")}
                                     <LogIn className="w-4 h-4" />
-                                </Button>
+                                </AnimatedButton>
                             </form>
                         </CardContent>
                     </Card>
-                    <p className="text-center text-xs text-[#5E6F7C] mt-8">© {new Date().getFullYear()} FitPro. All rights reserved.</p>
+                    <div className="mt-8 flex flex-col gap-4">
+                        {/* Divider text between login and sign up */}
+                        <p className="text-center text-base text-[#B6C4CF] font-medium mb-2">
+                            {"Don't have an account yet?"}
+                        </p>
+                        <AnimatedButton
+                            type="button"
+                            full
+                            className="rounded-[14px] h-12 font-semibold tracking-wide inline-flex items-center justify-center gap-2 text-[#001015] shadow-lg shadow-[#10B2E3]/30 transition-all duration-300 bg-gradient-to-r from-[#73E8FF] to-[#10B2E3] hover:from-[#47D8FF] hover:to-[#0B94C1]"
+                            onClick={() => router.push("/register")}
+                        >
+                            {t("createAccountTitle")}
+                            <User className="w-4 h-4" />
+                        </AnimatedButton>
+                        <p className="text-center text-xs text-[#5E6F7C]">© {new Date().getFullYear()} FitPro. All rights reserved.</p>
+                    </div>
                 </div>
             </div>
             <div className="flex-1 overflow-y-auto pb-24" />
-            <AuthBottomNav current="Login" />
         </div>
     )
 }
