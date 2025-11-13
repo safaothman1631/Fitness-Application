@@ -276,4 +276,46 @@
   .animate-shimmer {
     animation: shimmer 2s infinite;
   }
+
+  /* RTL Support - Full Layout Reversal */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="ltr"] {
+    direction: ltr;
+  }
+
+  /* RTL - Reverse flex containers */
+  [dir="rtl"] .flex {
+    flex-direction: row-reverse;
+  }
+
+  /* Keep column layout normal but reverse items inside */
+  [dir="rtl"] .flex-col {
+    flex-direction: column;
+  }
+
+  /* RTL - Reverse grid flow */
+  [dir="rtl"] .grid {
+    direction: rtl;
+  }
+
+  /* Align text to right in RTL */
+  [dir="rtl"] * {
+    text-align: right;
+  }
+
+  /* Center aligned items stay centered */
+  [dir="rtl"] .text-center,
+  [dir="rtl"] button {
+    text-align: center !important;
+  }
+
+  /* Keep input text aligned right */
+  [dir="rtl"] input,
+  [dir="rtl"] textarea {
+    text-align: right;
+    direction: rtl;
+  }
 }

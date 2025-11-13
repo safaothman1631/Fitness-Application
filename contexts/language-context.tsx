@@ -13,13 +13,13 @@ interface LanguageContextType {
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined)
 
 export function LanguageProvider({ children }: { children: React.ReactNode }) {
-  const [language, setLanguageState] = useState<Language>("en")
+  const [language, setLanguageState] = useState<Language>("ku")
 
   // Load language from localStorage on mount
   useEffect(() => {
-    const saved = (localStorage.getItem("language") as Language) || "en"
+    const saved = (localStorage.getItem("language") as Language) || "ku"
     const supported: Language[] = ["en", "ar", "ku", "tr"]
-    const nextLang: Language = supported.includes(saved) ? saved : "en"
+    const nextLang: Language = supported.includes(saved) ? saved : "ku"
     setLanguageState(nextLang)
 
     // Apply direction and lang on first paint

@@ -8,21 +8,27 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
 import { Edit2, Save, Camera, Lock, Mail, Phone, Activity, Calendar, Settings as SettingsIcon, LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, Weight, Ruler, Goal, LogOut } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useRouter } from "next/navigation"
 import { useTheme } from "next-themes"
+import { PageTransition } from "@/components/page-transition"
 import { User as UserIcon } from "lucide-react"
 import { SubscriptionWarning } from "@/components/subscription-warning"
 import { SubscriptionInfoCard } from "@/components/subscription-info-card"
 import { checkSubscriptionStatus, getSubscriptionExpiry, getUserAccessKey, getUserJoinDate } from "@/lib/subscription"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
 
 export default function ProfilePage() {
   const router = useRouter()
   const { theme, setTheme } = useTheme()
   const { toast } = useToast()
+  const { language, setLanguage, t } = useLanguage()
+  const [selectedLanguage, setSelectedLanguage] = useState(language)
   const [subscriptionStatus, setSubscriptionStatus] = useState({
     isActive: true,
     isExpired: false,
@@ -126,20 +132,69 @@ export default function ProfilePage() {
     setOpen(false)
   }
 
-  const changePassword = () => {
-    const valid = newPassword.length >= 8 && newPassword === confirmPassword && newPassword !== currentPassword
-    if (!valid) {
-      toast({ description: "Password rules: 8+ chars, match, differ from current." })
+  const changePassword = async () => {
+    // Validation
+    if (!currentPassword) {
+      toast({ description: "Please enter your current password.", variant: "destructive" })
       return
     }
+    if (newPassword.length < 6) {
+      toast({ description: "New password must be at least 6 characters.", variant: "destructive" })
+      return
+    }
+    if (newPassword !== confirmPassword) {
+      toast({ description: "New passwords do not match.", variant: "destructive" })
+      return
+    }
+    if (newPassword === currentPassword) {
+      toast({ description: "New password must be different from current password.", variant: "destructive" })
+      return
+    }
+
     setChangingPassword(true)
-    setTimeout(() => {
-      setChangingPassword(false)
+    
+    try {
+      // Dynamic import of Firebase auth functions and app
+      const { getAuth, EmailAuthProvider, reauthenticateWithCredential, updatePassword } = await import("firebase/auth")
+      const { auth } = await import("@/lib/firebase")
+      
+      const user = auth.currentUser
+      
+      if (!user || !user.email) {
+        toast({ description: "User not authenticated. Please log in again.", variant: "destructive" })
+        setChangingPassword(false)
+        return
+      }
+
+      // Re-authenticate user with current password
+      const credential = EmailAuthProvider.credential(user.email, currentPassword)
+      await reauthenticateWithCredential(user, credential)
+
+      // Update password in Firebase Authentication
+      await updatePassword(user, newPassword)
+
+      // Clear form
       setCurrentPassword("")
       setNewPassword("")
       setConfirmPassword("")
-      toast({ description: "Password changed." })
-    }, 800)
+      
+      toast({ description: "✅ Password changed successfully!", variant: "default" })
+    } catch (error: any) {
+      console.error("Password change error:", error)
+      
+      // Handle specific Firebase errors
+      if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
+        toast({ description: "Current password is incorrect.", variant: "destructive" })
+      } else if (error.code === "auth/weak-password") {
+        toast({ description: "New password is too weak. Use at least 6 characters.", variant: "destructive" })
+      } else if (error.code === "auth/requires-recent-login") {
+        toast({ description: "Please log out and log in again before changing password.", variant: "destructive" })
+      } else {
+        toast({ description: "Failed to change password. Please try again.", variant: "destructive" })
+      }
+    } finally {
+      setChangingPassword(false)
+    }
   }
 
   const handleLogout = () => {
@@ -174,12 +229,14 @@ export default function ProfilePage() {
 
   return (
     <>
+    <Toaster />
+    <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-[#6366F1] to-[#818CF8] bg-clip-text text-transparent mb-2">
-          Profile
+          {t("profile")}
         </h1>
-        <p className="text-[#B6C4CF] mb-8">Manage your account and personalize your experience.</p>
+        <p className="text-[#B6C4CF] mb-8">{t("manageFitnessProfileDesc")}</p>
 
         {/* Subscription Warning */}
         {subscriptionStatus.isExpired && (
@@ -201,7 +258,7 @@ export default function ProfilePage() {
         <section className="space-y-5">
         <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">Account</CardTitle>
+            <CardTitle className="text-white text-sm">{t("account")}</CardTitle>
           </CardHeader>
           <CardContent className="flex items-center gap-4">
             <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-800 flex items-center justify-center">
@@ -219,11 +276,11 @@ export default function ProfilePage() {
             {isMobile ? (
               <Sheet open={open} onOpenChange={o => { if(!o) resetDraft(); setOpen(o) }}>
                 <SheetTrigger asChild>
-                  <Button className="h-9">Manage</Button>
+                  <Button className="h-9">{t("manageLabel")}</Button>
                 </SheetTrigger>
                 <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh] h-[90vh] bg-slate-950 border-slate-800">
                   <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
-                    <SheetTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> Manage Profile</SheetTitle>
+                    <SheetTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> {t("manageProfile")}</SheetTitle>
                   </SheetHeader>
                   <ScrollArea className="h-[calc(90vh-4rem)]">
                     <div className="p-5 space-y-6">
@@ -239,75 +296,75 @@ export default function ProfilePage() {
                         <div className="flex flex-col gap-2">
                           <label className="inline-flex items-center gap-2 text-xs font-medium text-white cursor-pointer">
                             <Camera className="w-4 h-4" />
-                            <span>Change Avatar</span>
+                            <span>{t("changeAvatar")}</span>
                             <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
                           </label>
                           <p className="text-slate-500 text-xs">PNG/JPG up to 2MB.</p>
                         </div>
                       </div>
                       <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-400" /> Personal</CardTitle></CardHeader>
+                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-400" /> {t("personal")}</CardTitle></CardHeader>
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Full Name</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("fullName")}</Label>
                               <Input value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> Email</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
                               <Input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> Phone</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
                               <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> Join Date</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> {t("joinDate")}</Label>
                               <Input value={draft.joinDate} onChange={e=>setDraft({...draft,joinDate:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Goal</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("goal")}</Label>
                               <Input value={draft.goal} onChange={e=>setDraft({...draft,goal:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Experience</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("experience")}</Label>
                               <Input value={draft.experience} onChange={e=>setDraft({...draft,experience:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
                         </CardContent>
                       </Card>
                       <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> Physical</CardTitle></CardHeader>
+                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> {t("physical")}</CardTitle></CardHeader>
                         <CardContent className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label className="text-gray-200 text-sm font-medium">Weight (kg)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">{t("weight")}</Label>
                             <Input type="number" value={draft.weight} onChange={e=>setDraft({...draft,weight:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                           <div>
-                            <Label className="text-gray-200 text-sm font-medium">Height (cm)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">{t("height")}</Label>
                             <Input type="number" value={draft.height} onChange={e=>setDraft({...draft,height:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                         </CardContent>
                       </Card>
                       <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Lock className="w-4 h-4 text-purple-400" /> Security</CardTitle></CardHeader>
+                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Lock className="w-4 h-4 text-purple-400" /> {t("security")}</CardTitle></CardHeader>
                         <CardContent className="space-y-3">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Current</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("current")}</Label>
                               <Input type="password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">New</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("new")}</Label>
                               <Input type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Confirm</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("confirm")}</Label>
                               <Input type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
                           <Button onClick={changePassword} disabled={changingPassword} variant="outline" className="w-full">
-                            {changingPassword ? "Updating..." : "Change Password"}
+                            {changingPassword ? t("updating") : t("changePasswordLabel")}
                           </Button>
                         </CardContent>
                       </Card>
@@ -326,7 +383,7 @@ export default function ProfilePage() {
                 </DialogTrigger>
                 <DialogContent className="max-h-[85vh] w-full sm:max-w-lg p-0 overflow-hidden">
                   <DialogHeader className="p-5 border-b border-slate-800 bg-slate-900">
-                    <DialogTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> Manage Profile</DialogTitle>
+                    <DialogTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> {t("manageProfile")}</DialogTitle>
                   </DialogHeader>
                   <ScrollArea className="h-full max-h-[calc(85vh-4rem)]">
                     <div className="p-5 space-y-6">
@@ -342,75 +399,75 @@ export default function ProfilePage() {
                         <div className="flex flex-col gap-2">
                           <label className="inline-flex items-center gap-2 text-xs font-medium text-white cursor-pointer">
                             <Camera className="w-4 h-4" />
-                            <span>Change Avatar</span>
+                            <span>{t("changeAvatar")}</span>
                             <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
                           </label>
                           <p className="text-slate-500 text-xs">PNG/JPG up to 2MB.</p>
                         </div>
                       </div>
                       <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-400" /> Personal</CardTitle></CardHeader>
+                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-400" /> {t("personal")}</CardTitle></CardHeader>
                         <CardContent className="space-y-4">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Full Name</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("fullName")}</Label>
                               <Input value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> Email</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
                               <Input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> Phone</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
                               <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> Join Date</Label>
+                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> {t("joinDate")}</Label>
                               <Input value={draft.joinDate} onChange={e=>setDraft({...draft,joinDate:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Goal</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("goal")}</Label>
                               <Input value={draft.goal} onChange={e=>setDraft({...draft,goal:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Experience</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("experience")}</Label>
                               <Input value={draft.experience} onChange={e=>setDraft({...draft,experience:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
                         </CardContent>
                       </Card>
                       <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> Physical</CardTitle></CardHeader>
+                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> {t("physical")}</CardTitle></CardHeader>
                         <CardContent className="grid grid-cols-2 gap-4">
                           <div>
-                            <Label className="text-gray-200 text-sm font-medium">Weight (kg)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">{t("weight")}</Label>
                             <Input type="number" value={draft.weight} onChange={e=>setDraft({...draft,weight:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                           <div>
-                            <Label className="text-gray-200 text-sm font-medium">Height (cm)</Label>
+                            <Label className="text-gray-200 text-sm font-medium">{t("height")}</Label>
                             <Input type="number" value={draft.height} onChange={e=>setDraft({...draft,height:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
                           </div>
                         </CardContent>
                       </Card>
                       <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Lock className="w-4 h-4 text-purple-400" /> Security</CardTitle></CardHeader>
+                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Lock className="w-4 h-4 text-purple-400" /> {t("security")}</CardTitle></CardHeader>
                         <CardContent className="space-y-3">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Current</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("current")}</Label>
                               <Input type="password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">New</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("new")}</Label>
                               <Input type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                             <div>
-                              <Label className="text-gray-200 text-sm font-medium">Confirm</Label>
+                              <Label className="text-gray-200 text-sm font-medium">{t("confirm")}</Label>
                               <Input type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
                             </div>
                           </div>
                           <Button onClick={changePassword} disabled={changingPassword} variant="outline" className="w-full">
-                            {changingPassword ? "Updating..." : "Change Password"}
+                            {changingPassword ? t("updating") : t("changePasswordLabel")}
                           </Button>
                         </CardContent>
                       </Card>
@@ -428,25 +485,25 @@ export default function ProfilePage() {
 
         <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">Stats</CardTitle>
+            <CardTitle className="text-white text-sm">{t("stats")}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-3 gap-3 text-center">
               <div className="p-3 rounded-lg bg-slate-800/50">
                 <Weight className="w-4 h-4 mx-auto text-emerald-400" />
                 <p className="text-white font-semibold mt-1">{profile.weight}kg</p>
-                <p className="text-gray-200 text-sm font-medium">Weight</p>
+                <p className="text-gray-200 text-sm font-medium">{t("weightLabel")}</p>
               </div>
               <div className="p-3 rounded-lg bg-slate-800/50">
                 <Ruler className="w-4 h-4 mx-auto text-cyan-400" />
                 <p className="text-white font-semibold mt-1">{profile.height}cm</p>
-                <p className="text-gray-200 text-sm font-medium">Height</p>
+                <p className="text-gray-200 text-sm font-medium">{t("heightLabel")}</p>
               </div>
               <div className="p-3 rounded-lg bg-slate-800/50">
                 {/* Goal icon fallback */}
                 <span className="block w-4 h-4 mx-auto rounded-full bg-blue-400" />
-                <p className="text-white font-semibold mt-1 truncate">{profile.goal}</p>
-                <p className="text-gray-200 text-sm font-medium">Goal</p>
+                <p className="text-white font-semibold mt-1 truncate">{t("buildMuscle")}</p>
+                <p className="text-gray-200 text-sm font-medium">{t("goalLabel")}</p>
               </div>
             </div>
           </CardContent>
@@ -454,19 +511,19 @@ export default function ProfilePage() {
 
         <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">Shortcuts</CardTitle>
+            <CardTitle className="text-white text-sm">{t("shortcuts")}</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-3 gap-3">
-            <Link href="/workout"><Button variant="outline" className="w-full">Workout</Button></Link>
-            <Link href="/meals"><Button variant="outline" className="w-full">Meals</Button></Link>
-            <Link href="/physio"><Button variant="outline" className="w-full">Physio</Button></Link>
+            <Link href="/workout"><Button variant="outline" className="w-full">{t("workoutLabel")}</Button></Link>
+            <Link href="/meals"><Button variant="outline" className="w-full">{t("mealsLabel")}</Button></Link>
+            <Link href="/physio"><Button variant="outline" className="w-full">{t("physioLabel")}</Button></Link>
           </CardContent>
         </Card>
 
         {/* Settings Card */}
         <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">Preferences</CardTitle>
+            <CardTitle className="text-white text-sm">{t("preferences")}</CardTitle>
           </CardHeader>
           <CardContent>
             <Button 
@@ -475,7 +532,7 @@ export default function ProfilePage() {
               className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 border-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white transition-all duration-300"
             >
               <SettingsIcon className="w-4 h-4 mr-2" />
-              Settings
+              {t("settings")}
             </Button>
           </CardContent>
         </Card>
@@ -487,7 +544,7 @@ export default function ProfilePage() {
           className="bg-slate-950 border-t border-slate-800 text-white rounded-t-2xl p-0 max-h-[88vh] h-[88vh] animate-slideUp"
         >
           <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
-            <SheetTitle className="text-white flex items-center gap-2"><SettingsIcon className="w-5 h-5 text-indigo-400" /> Settings</SheetTitle>
+            <SheetTitle className="text-white flex items-center gap-2"><SettingsIcon className="w-5 h-5 text-indigo-400" /> {t("settings")}</SheetTitle>
           </SheetHeader>
           <ScrollArea className="h-[calc(88vh-4rem)]">
             <div className="p-5 space-y-6"
@@ -497,13 +554,13 @@ export default function ProfilePage() {
             >
               {/* Appearance */}
               <Card className="bg-slate-900/70 border-slate-800">
-                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">Appearance</CardTitle></CardHeader>
+                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">{t("appearance")}</CardTitle></CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 gap-3">
                     {[
-                      { key: "light", label: "Light" },
-                      { key: "dark", label: "Dark" },
-                      { key: "system", label: "System" },
+                      { key: "light", label: t("light") },
+                      { key: "dark", label: t("dark") },
+                      { key: "system", label: t("system") },
                     ].map((m) => (
                       <button
                         key={m.key}
@@ -515,58 +572,86 @@ export default function ProfilePage() {
                       </button>
                     ))}
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-2">System follows your OS theme.</p>
+                  <p className="text-[11px] text-slate-500 mt-2">{t("systemFollowsOS")}</p>
                 </CardContent>
               </Card>
 
               {/* Notifications */}
               <Card className="bg-slate-900/70 border-slate-800">
-                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">Notifications</CardTitle></CardHeader>
+                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">{t("notificationsTitle")}</CardTitle></CardHeader>
                 <CardContent className="space-y-3">
                   <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-                    <span className="text-sm">Email Notifications</span>
+                    <span className="text-sm">{t("emailNotifications")}</span>
                     <input type="checkbox" checked={notifyEmail} onChange={e=>setNotifyEmail(e.target.checked)} className="w-4 h-4" />
                   </div>
                   <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-                    <span className="text-sm">Push Notifications</span>
+                    <span className="text-sm">{t("pushNotifications")}</span>
                     <input type="checkbox" checked={notifyPush} onChange={e=>setNotifyPush(e.target.checked)} className="w-4 h-4" />
                   </div>
                 </CardContent>
               </Card>
 
               {/* Language */}
-              <Card className="bg-slate-900/70 border-slate-800">
-                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">Language</CardTitle></CardHeader>
-                <CardContent>
-                  <select
-                    onChange={(e)=>{ try { localStorage.setItem("app_language", e.target.value) } catch {}; }}
-                    defaultValue={typeof window!=="undefined"?localStorage.getItem("app_language")||"en":"en"}
-                    className="bg-slate-950 border border-slate-800 text-xs rounded px-2 py-2 text-white"
+              <Card className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-800/70 border-slate-700/50 shadow-xl">
+                <CardHeader className="pb-4 border-b border-slate-700/30">
+                  <CardTitle className="text-white text-base font-semibold flex items-center gap-2">
+                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
+                    </svg>
+                    {t("language")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-6 space-y-5">
+                  <div className="space-y-3">
+                    <label className="text-slate-300 text-sm font-medium block">
+                      {t("selectLanguage")}
+                    </label>
+                    <select
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value as "en" | "tr" | "ar" | "ku")}
+                      className="w-full bg-slate-950/80 border-2 border-slate-700/60 hover:border-blue-500/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm rounded-xl px-4 py-3.5 text-white transition-all duration-200 outline-none cursor-pointer shadow-inner"
+                    >
+                      <option value="en" className="bg-slate-900">🇬🇧 English</option>
+                      <option value="tr" className="bg-slate-900">🇹🇷 Türkçe</option>
+                      <option value="ar" className="bg-slate-900">🇸🇦 العربية</option>
+                      <option value="ku" className="bg-slate-900">☀️ Kurdî</option>
+                    </select>
+                  </div>
+                  
+                  <button
+                    onClick={() => {
+                      setLanguage(selectedLanguage as "en" | "tr" | "ar" | "ku");
+                      toast({
+                        title: "✓ Language Changed",
+                        description: "Your language preference has been updated successfully.",
+                      });
+                    }}
+                    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-blue-500/30 flex items-center justify-center gap-2"
                   >
-                    <option value="en">English</option>
-                    <option value="tr">Türkçe</option>
-                    <option value="ar">العربية</option>
-                    <option value="ku">Kurdî</option>
-                  </select>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                    {t("applyLanguage")}
+                  </button>
                 </CardContent>
               </Card>
 
               {/* Logout Section */}
               <Card className="bg-red-950/20 border-red-900/30">
                 <CardHeader className="pb-3">
-                  <CardTitle className="text-white text-sm">Account Actions</CardTitle>
+                  <CardTitle className="text-white text-sm">{t("accountActions")}</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="p-3 bg-slate-900/50 rounded-lg">
                     <p className="text-xs text-slate-400 mb-3">
-                      Logging out will clear your session and return you to the login screen.
+                      {t("accountActionsDesc")}
                     </p>
                     <Button
                       onClick={handleLogout}
                       className="w-full bg-red-600 hover:bg-red-700 text-white border-0 transition-all duration-300"
                     >
                       <LogOut className="w-4 h-4 mr-2" />
-                      Logout
+                      {t("logoutButton")}
                     </Button>
                   </div>
                 </CardContent>
@@ -579,62 +664,8 @@ export default function ProfilePage() {
       </section>
       </div>
     </div>
-      <BottomNav activeTab="profile" router={router} />
+    </PageTransition>
+      <BottomNav activeTab="profile" />
     </>
-  )
-}
-
-function BottomNav({ activeTab, router }: any) {
-  const navItems = [
-    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "#10B2E3" },
-    { id: "workout", icon: Dumbbell, label: "Workout", path: "/workout", color: "#9333EA" },
-    { id: "meals", icon: Utensils, label: "Meals", path: "/meals", color: "#F59E0B" },
-    { id: "physio", icon: HeartPulse, label: "Physio", path: "/physio", color: "#F43F5E" },
-    { id: "profile", icon: User, label: "Profile", path: "/profile", color: "#6366F1" }
-  ]
-
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-      <style jsx>{`
-        @keyframes slideUp {
-          from { transform: translateY(10px) scale(0.9); opacity: 0; }
-          to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        .slide-scale-active {
-          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-      `}</style>
-      <div className="max-w-md mx-auto flex items-center justify-between">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => { if (item.path !== "/profile") router.push(item.path) }}
-            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
-              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
-            }`}
-            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
-          >
-            <div 
-              className={`p-2.5 rounded-xl transition-all duration-300 ${
-                activeTab === item.id ? "scale-110" : ""
-              }`}
-              style={{
-                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
-                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
-              }}
-            >
-              <item.icon className="w-5 h-5" />
-            </div>
-            <span className="text-[10px] font-medium">{item.label}</span>
-            {activeTab === item.id && (
-              <div 
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
   )
 }

@@ -12,12 +12,15 @@ import { Eye, EyeOff, LogIn } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
 import { AnimatedButton } from "@/components/ui/animated-button"
 import { initializeUserSubscription } from "@/lib/subscription"
+import { loginUser } from "@/lib/auth-service"
+import { toast } from "sonner"
 
 export default function LoginPage() {
     const router = useRouter()
     const { t } = useLanguage()
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -25,22 +28,79 @@ export default function LoginPage() {
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
+        
+        console.log("🚀 handleLogin called")
+        console.log("📧 Email:", formData.email)
+        console.log("🔒 Password:", formData.password ? "***" : "EMPTY")
+        
+        // Temporary alert to confirm function is called
+        alert("Login button clicked! Check console for details.")
+        
+        // Validate form data
+        if (!formData.email || !formData.password) {
+            console.error("❌ Validation failed - missing email or password")
+            toast.error("Please enter both email and password")
+            return
+        }
+        
         setLoading(true)
+        setError("")
         
-        // Save user email
-        localStorage.setItem("userEmail", formData.email)
+        console.log("🔐 Attempting login for:", formData.email)
         
-        // Initialize subscription based on user
-        initializeUserSubscription(formData.email)
-        
-        // Trigger storage event manually for immediate update
-        window.dispatchEvent(new Event('storage'))
-        
-        // Simulate login with shorter delay
-        setTimeout(() => {
-            router.push("/dashboard")
+        try {
+            // Authenticate with Firebase
+            console.log("📞 Calling loginUser...")
+            const result = await loginUser(formData.email, formData.password)
+            console.log("📦 Login result received:", result)
+            
+            console.log("Login result:", result)
+            
+            if (result.success) {
+                console.log("✅ Login successful, redirecting to:", result.redirectUrl)
+                
+                // Save user info
+                localStorage.setItem("userEmail", formData.email)
+                localStorage.setItem("userId", result.userId || "")
+                localStorage.setItem("userRole", result.role || "")
+                localStorage.setItem("isAuthenticated", "true")
+                
+                // Initialize subscription from Firestore based on userId
+                await initializeUserSubscription(result.userId, formData.email)
+                
+                // Trigger storage event manually for immediate update
+                window.dispatchEvent(new Event('storage'))
+                
+                // Show success message
+                toast.success(t("loginSuccessful") || "Login successful!")
+                
+                // Add smooth fade out transition before redirect
+                const loginCard = document.querySelector('.fitpro-card')
+                if (loginCard) {
+                    (loginCard as HTMLElement).style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out'
+                    ;(loginCard as HTMLElement).style.opacity = '0'
+                    ;(loginCard as HTMLElement).style.transform = 'scale(0.95)'
+                }
+                
+                // Redirect to appropriate dashboard with transition
+                setTimeout(() => {
+                    router.push(result.redirectUrl || "/dashboard")
+                }, 300)
+            } else {
+                console.error("❌ Login failed:", result.error)
+                // Show error message
+                setError(result.error || "Login failed. Please try again.")
+                toast.error(result.error || "Login failed. Please try again.")
+            }
+        } catch (err: any) {
+            console.error("❌ Login error:", err)
+            console.error("Error details:", err.message, err.code)
+            const errorMsg = err.message || "An unexpected error occurred. Please try again."
+            setError(errorMsg)
+            toast.error(errorMsg)
+        } finally {
             setLoading(false)
-        }, 300)
+        }
     }
 
     return (
@@ -65,6 +125,13 @@ export default function LoginPage() {
                 <Card className="fitpro-card overflow-hidden">
                     <CardContent className="p-8">
                         <form onSubmit={handleLogin} className="space-y-6">
+                            {/* Error Message */}
+                            {error && (
+                                <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3">
+                                    <p className="text-red-400 text-sm text-center">{error}</p>
+                                </div>
+                            )}
+                            
                             {/* Email */}
                             <div className="space-y-2">
                                 <Label className="text-gray-300 text-sm font-semibold">{t("emailAddress")}</Label>
@@ -74,6 +141,7 @@ export default function LoginPage() {
                                     value={formData.email}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, email: e.target.value })}
                                     className="fitpro-input rounded-xl py-3"
+                                    required
                                 />
                             </div>
 
@@ -92,6 +160,7 @@ export default function LoginPage() {
                                         value={formData.password}
                                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFormData({ ...formData, password: e.target.value })}
                                         className="fitpro-input rounded-xl py-3 pr-10"
+                                        required
                                     />
                                     <button
                                         type="button"
@@ -163,16 +232,22 @@ export default function LoginPage() {
                 <Card className="fitpro-card mt-4 border-cyan-500/20">
                     <CardContent className="p-4">
                         <p className="text-xs text-cyan-400 mb-3 font-semibold">🧪 Quick Test Accounts:</p>
-                        <div className="grid grid-cols-3 gap-2">
+                        <div className="grid grid-cols-2 gap-2">
                             <Button
                                 onClick={() => {
-                                    const email = "premium@darinfitness.com"
-                                    setFormData({ email, password: "123456" })
-                                    localStorage.setItem("userEmail", email)
-                                    initializeUserSubscription(email)
-                                    // Trigger storage event manually
-                                    window.dispatchEvent(new Event('storage'))
-                                    setTimeout(() => router.push("/dashboard"), 100)
+                                    setFormData({ email: "superadmin@fitpro.com", password: "SuperAdmin123!" })
+                                }}
+                                variant="outline"
+                                className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-xs h-auto py-2"
+                            >
+                                <div className="text-center">
+                                    <div className="font-semibold text-[11px]">SuperAdmin</div>
+                                    <div className="text-[9px] opacity-70">Full Access</div>
+                                </div>
+                            </Button>
+                            <Button
+                                onClick={() => {
+                                    setFormData({ email: "newuser@fitpro.com", password: "NewUser123!" })
                                 }}
                                 variant="outline"
                                 className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 text-xs h-auto py-2"
@@ -184,38 +259,26 @@ export default function LoginPage() {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    const email = "warning@darinfitness.com"
-                                    setFormData({ email, password: "123456" })
-                                    localStorage.setItem("userEmail", email)
-                                    initializeUserSubscription(email)
-                                    // Trigger storage event manually
-                                    window.dispatchEvent(new Event('storage'))
-                                    setTimeout(() => router.push("/dashboard"), 100)
+                                    setFormData({ email: "miduser@fitpro.com", password: "MidUser123!" })
                                 }}
                                 variant="outline"
                                 className="border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 text-xs h-auto py-2"
                             >
                                 <div className="text-center">
-                                    <div className="font-semibold text-[11px]">Warning</div>
-                                    <div className="text-[9px] opacity-70">15 days</div>
+                                    <div className="font-semibold text-[11px]">Mid User</div>
+                                    <div className="text-[9px] opacity-70">15 days left</div>
                                 </div>
                             </Button>
                             <Button
                                 onClick={() => {
-                                    const email = "user@darinfitness.com"
-                                    setFormData({ email, password: "123456" })
-                                    localStorage.setItem("userEmail", email)
-                                    initializeUserSubscription(email)
-                                    // Trigger storage event manually
-                                    window.dispatchEvent(new Event('storage'))
-                                    setTimeout(() => router.push("/dashboard"), 100)
+                                    setFormData({ email: "nosubuser@fitpro.com", password: "NoSub123!" })
                                 }}
                                 variant="outline"
                                 className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs h-auto py-2"
                             >
                                 <div className="text-center">
                                     <div className="font-semibold text-[11px]">Expired</div>
-                                    <div className="text-[9px] opacity-70">0 days</div>
+                                    <div className="text-[9px] opacity-70">No sub</div>
                                 </div>
                             </Button>
                         </div>

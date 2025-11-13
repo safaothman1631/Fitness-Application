@@ -42,6 +42,7 @@ export type TranslationKey =
   | "lunch"
   | "snacks"
   | "dinner"
+  | "snack"
   | "welcomeBack"
   | "athlete"
   | "greatWorkoutDay"
@@ -88,6 +89,7 @@ export type TranslationKey =
   | "notifications"
   | "add"
   | "update"
+  | "updating"
   | "delete"
   | "save"
   | "back"
@@ -150,6 +152,7 @@ export type TranslationKey =
   | "activeStreak"
   | "caloriesToday"
   | "days"
+  | "min"
   | "kcal"
   | "currentStreak"
   | "overallProgress"
@@ -308,6 +311,168 @@ export type TranslationKey =
   | "onlyRegisteredPhysiotherapists"
   | "accessPatientManagement"
   | "physiotherapistPortalFooter"
+  // Workout Center & Schedule
+  | "workoutCenter"
+  | "workoutCenterSubtitle"
+  | "buildYourStrength"
+  | "buildYourStrengthDesc"
+  | "todaysWorkoutWednesday"
+  | "schedule"
+  | "today"
+  | "week"
+  | "monthView"
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday"
+  | "mon"
+  | "tue"
+  | "wed"
+  | "thu"
+  | "fri"
+  | "sat"
+  | "sun"
+  | "chest"
+  | "backMuscle"
+  | "legs"
+  | "shoulders"
+  | "arms"
+  | "core"
+  | "restAndRecovery"
+  | "exercises"
+  | "exercisesCount"
+  | "rest"
+  | "todaysWorkout"
+  | "workout"
+  | "exerciseFirst"
+  | "exerciseSecond"
+  | "exerciseThird"
+  | "exerciseFourth"
+  | "exerciseFifth"
+  | "exerciseSixth"
+  | "exerciseSeventh"
+  | "exerciseEighth"
+  | "exerciseNinth"
+  | "exerciseTenth"
+  | "keepBackStraightEngageCore"
+  | "goDeepKeepChestUp"
+  | "lightStretchingYogaWalking"
+  | "sets"
+  | "reps"
+  | "duration"
+  | "meals"
+  | "calories"
+  | "carbs"
+  | "fat"
+  | "kcal"
+  | "ingredients"
+  | "recipe"
+  | "recipeInstructions"
+  | "mealType"
+  | "mealImage"
+  | "mealPhoto"
+  | "todaysMeals"
+  | "importantNotes"
+  // Meals & Nutrition
+  | "mealsAndNutrition"
+  | "trackDailyMealsDesc"
+  | "fuelYourBodyRight"
+  | "fuelYourBodyRightDesc"
+  | "protein"
+  | "caloriesTodayLabel"
+  | "dailyGoal"
+  | "mealsLogged"
+  // Physio Panel
+  | "physiotherapyTitle"
+  | "physioSubtitle"
+  | "recoverAndHeal"
+  | "recoverAndHealDesc"
+  | "completedLabel"
+  | "requestsLabel"
+  | "totalRequests"
+  | "recoveryRate"
+  | "pendingLabel"
+  | "sendRequest"
+  | "selectPhysiotherapist"
+  | "injuryType"
+  | "injuryTypePlaceholder"
+  | "painPercentage"
+  | "notesOptional"
+  | "notesPlaceholder"
+  | "yourRequests"
+  | "noRequestsYet"
+  // Profile Section
+  | "subscriptionAndAccessKey"
+  | "yourAccessKey"
+  | "personalIdentifier"
+  | "statusLabel"
+  | "remainingLabel"
+  | "joinedLabel"
+  | "expiresLabel"
+  | "accessKeyNote"
+  | "account"
+  | "manageLabel"
+  | "stats"
+  | "goalLabel"
+  | "heightLabel"
+  | "weightLabel"
+  | "shortcuts"
+  | "physioLabel"
+  | "mealsLabel"
+  | "workoutLabel"
+  | "preferences"
+  | "appearance"
+  | "light"
+  | "dark"
+  | "system"
+  | "systemFollowsOS"
+  | "pushNotifications"
+  | "applyLanguage"
+  | "accountActions"
+  | "accountActionsDesc"
+  | "logoutButton"
+  // Manage Profile Dialog
+  | "manageProfile"
+  | "changeAvatar"
+  | "avatarSizeNote"
+  | "personal"
+  | "fullName"
+  | "phoneLabel"
+  | "joinDate"
+  | "goal"
+  | "goalLabel"
+  | "experience"
+  | "physical"
+  | "security"
+  | "current"
+  | "new"
+  | "confirm"
+  | "changePasswordLabel"
+  | "currentPasswordLabel"
+  | "newPasswordLabel"
+  | "confirmPasswordLabel"
+  | "saved"
+  // Dashboard Stats
+  | "totalTime"
+  | "caloriesBurned"
+  // Workout Exercise Names
+  | "barbellBenchPress"
+  | "inclineDumbbellPress"
+  | "cableFlyes"
+  | "focusControlledMovement"
+  | "squeezeAtPeak"
+  // Notifications Dialog
+  | "notificationsTitle"
+  | "milestoneReached"
+  | "milestoneReachedDesc"
+  | "workoutReminder"
+  | "workoutReminderDesc"
+  | "progressUpdate"
+  | "progressUpdateDesc"
+  | "close"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -360,6 +525,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     lunch: "Lunch",
     snacks: "Snacks",
     dinner: "Dinner",
+    snack: "Snack",
     welcomeBack: "Welcome Back",
     athlete: "Athlete",
     greatWorkoutDay: "Great workout day ahead! Let's crush your fitness goals.",
@@ -406,6 +572,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     notifications: "Notifications",
     add: "Add",
     update: "Update",
+    updating: "Updating...",
     delete: "Delete",
     save: "Save",
     back: "Back",
@@ -624,6 +791,158 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   onlyRegisteredPhysiotherapists: "Only registered physiotherapists can access this portal",
   accessPatientManagement: "Access your patient management",
   physiotherapistPortalFooter: "© 2024 FitPro Physiotherapist Portal",
+  // Workout Center & Schedule (English)
+  workoutCenter: "Workout Center",
+  workoutCenterSubtitle: "Plan, start, and review your training sessions",
+  buildYourStrength: "Build Your Strength",
+  buildYourStrengthDesc: "Track your progress and achieve your fitness goals",
+  todaysWorkoutWednesday: "Today's Workout - Wednesday",
+  schedule: "Schedule",
+  today: "TODAY",
+  week: "WEEK",
+  monthView: "MONTH",
+  monday: "Monday",
+  tuesday: "Tuesday",
+  wednesday: "Wednesday",
+  thursday: "Thursday",
+  friday: "Friday",
+  saturday: "Saturday",
+  sunday: "Sunday",
+  mon: "Mon",
+  tue: "Tue",
+  wed: "Wed",
+  thu: "Thu",
+  fri: "Fri",
+  sat: "Sat",
+  sun: "Sun",
+  chest: "Chest",
+  backMuscle: "Back",
+  legs: "Legs",
+  shoulders: "Shoulders",
+  arms: "Arms",
+  core: "Core",
+  restAndRecovery: "Rest & Recovery",
+  exercisesCount: "exercises",
+  rest: "Rest",
+  workout: "Workout",
+  exerciseFirst: "First Exercise",
+  exerciseSecond: "Second Exercise",
+  exerciseThird: "Third Exercise",
+  exerciseFourth: "Fourth Exercise",
+  exerciseFifth: "Fifth Exercise",
+  exerciseSixth: "Sixth Exercise",
+  exerciseSeventh: "Seventh Exercise",
+  exerciseEighth: "Eighth Exercise",
+  exerciseNinth: "Ninth Exercise",
+  exerciseTenth: "Tenth Exercise",
+  sets: "sets",
+  reps: "reps",
+  calories: "Calories",
+  carbs: "Carbs",
+  fat: "Fat",
+  ingredients: "Ingredients",
+  recipe: "Recipe",
+  recipeInstructions: "Recipe Instructions",
+  mealType: "Meal Type",
+  mealImage: "Meal Image",
+  mealPhoto: "Meal photo",
+  todaysMeals: "Today's Meals",
+  importantNotes: "Important Notes",
+  // Meals & Nutrition (English)
+  mealsAndNutrition: "Meals & Nutrition",
+  trackDailyMealsDesc: "Track daily meals and macro goals",
+  fuelYourBodyRight: "Fuel Your Body Right",
+  fuelYourBodyRightDesc: "Balance your nutrition and reach your fitness goals",
+  protein: "PROTEIN",
+  caloriesTodayLabel: "CALORIES TODAY",
+  dailyGoal: "DAILY GOAL",
+  mealsLogged: "MEALS LOGGED",
+  // Physio Panel (English)
+  physiotherapyTitle: "Physiotherapy",
+  physioSubtitle: "Request a queue slot and track your injury recovery",
+  recoverAndHeal: "Recover & Heal",
+  recoverAndHealDesc: "Expert physiotherapy support for your recovery journey",
+  completedLabel: "COMPLETED",
+  requestsLabel: "Requests",
+  totalRequests: "TOTAL REQUESTS",
+  recoveryRate: "RECOVERY RATE",
+  pendingLabel: "PENDING",
+  sendRequest: "Send Request",
+  selectPhysiotherapist: "Select a physiotherapist",
+  injuryType: "INJURY TYPE",
+  injuryTypePlaceholder: "e.g. Knee ligament strain",
+  painPercentage: "PAIN PERCENTAGE",
+  notesOptional: "NOTES (OPTIONAL)",
+  notesPlaceholder: "...Extra context",
+  yourRequests: "Your Requests",
+  noRequestsYet: "No requests yet.",
+  // Profile Section (English)
+  subscriptionAndAccessKey: "Subscription & Access Key",
+  yourAccessKey: "YOUR ACCESS KEY",
+  personalIdentifier: "Personal Identifier",
+  statusLabel: "STATUS",
+  remainingLabel: "REMAINING",
+  joinedLabel: "Joined",
+  expiresLabel: "Expires",
+  accessKeyNote: "Note: Your access key is unique to your account. Keep it secure and use it when contacting support or accessing premium features.",
+  account: "Account",
+  manageLabel: "Manage",
+  stats: "Stats",
+  heightLabel: "Height",
+  weightLabel: "Weight",
+  shortcuts: "Shortcuts",
+  physioLabel: "Physio",
+  mealsLabel: "Meals",
+  workoutLabel: "Workout",
+  appearance: "Appearance",
+  light: "Light",
+  dark: "Dark",
+  system: "System",
+  systemFollowsOS: "System follows your OS theme.",
+  pushNotifications: "Push Notifications",
+  applyLanguage: "Apply Language",
+  accountActions: "Account Actions",
+  accountActionsDesc: "Logging out will clear your session and return you to the login screen.",
+  logoutButton: "Logout",
+  // Manage Profile Dialog (English)
+  manageProfile: "Manage Profile",
+  changeAvatar: "Change Avatar",
+  avatarSizeNote: "PNG/JPG up to 2MB.",
+  personal: "Personal",
+  fullName: "Full Name",
+  phoneLabel: "Phone",
+  joinDate: "Join Date",
+  goal: "Goal",
+  experience: "Experience",
+  physical: "Physical",
+  current: "Current",
+  new: "New",
+  changePasswordLabel: "Change Password",
+  currentPasswordLabel: "Current",
+  newPasswordLabel: "New",
+  confirmPasswordLabel: "Confirm",
+  saved: "Saved",
+  // Dashboard Stats (English)
+  totalTime: "TOTAL TIME",
+  caloriesBurned: "CALORIES BURNED",
+  // Workout Exercise Names (English)
+  barbellBenchPress: "Barbell Bench Press",
+  inclineDumbbellPress: "Incline Dumbbell Press",
+  cableFlyes: "Cable Flyes",
+  focusControlledMovement: "Focus on controlled movement",
+  squeezeAtPeak: "Squeeze at the peak",
+  keepBackStraightEngageCore: "Keep back straight, engage core",
+  goDeepKeepChestUp: "Go deep, keep chest up",
+  lightStretchingYogaWalking: "Light stretching, yoga, or walking",
+  // Notifications Dialog (English)
+  notificationsTitle: "Notifications",
+  milestoneReached: "Milestone Reached",
+  milestoneReachedDesc: "You've completed 20 workouts! Keep up the great work!",
+  workoutReminder: "Workout Reminder",
+  workoutReminderDesc: "Don't forget to complete your evening workout",
+  progressUpdate: "Progress Update",
+  progressUpdateDesc: "You've lost 2kg this month. Great progress!",
+  close: "Close",
   },
   // Minimal Arabic placeholders (update with full translations later)
   ar: {
@@ -639,8 +958,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     notifications: "الإشعارات",
     systemSettings: "الإعدادات",
     superadminPanel: "لوحة الإدارة العليا",
-  loading: "جارٍ التحميل"
-    ,patients: "المرضى"
+  loading: "جارٍ التحميل",
+  updating: "جارٍ التحديث...",
+    patients: "المرضى"
     ,activities: "الأنشطة"
     ,trainees: "المتدربون"
     ,analytics: "التحليلات"
@@ -660,6 +980,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signInToAccount: "سجّل الدخول إلى حسابك في فيت برو"
   ,owner: "مالك"
   ,trainer: "مدرب"
+  ,breakfast: "فطور"
+  ,lunch: "غداء"
+  ,snacks: "وجبات خفيفة"
+  ,dinner: "عشاء"
+  ,snack: "وجبة خفيفة"
   // Auth & Login (AR placeholders)
   ,signIn: "تسجيل الدخول"
   ,signUp: "إنشاء حساب"
@@ -848,6 +1173,160 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,onlyRegisteredPhysiotherapists: "فقط الأخصائيون المسجلون يمكنهم دخول هذه البوابة"
   ,accessPatientManagement: "الوصول إلى إدارة المرضى الخاصة بك"
   ,physiotherapistPortalFooter: "© 2024 فيت برو بوابة أخصائي العلاج الطبيعي"
+  // Workout Center & Schedule (Arabic)
+  ,workoutCenter: "مركز التمارين"
+  ,workoutCenterSubtitle: "خطط، ابدأ، وراجع جلساتك التدريبية"
+  ,buildYourStrength: "ابنِ قوتك"
+  ,buildYourStrengthDesc: "تتبع تقدمك وحقق أهداف اللياقة"
+  ,todaysWorkoutWednesday: "تمرين اليوم - الأربعاء"
+  ,schedule: "الجدول"
+  ,today: "اليوم"
+  ,week: "أسبوع"
+  ,monthView: "شهر"
+  ,monday: "الاثنين"
+  ,tuesday: "الثلاثاء"
+  ,wednesday: "الأربعاء"
+  ,thursday: "الخميس"
+  ,friday: "الجمعة"
+  ,saturday: "السبت"
+  ,sunday: "الأحد"
+  ,mon: "اثنين"
+  ,tue: "ثلاثاء"
+  ,wed: "أربعاء"
+  ,thu: "خميس"
+  ,fri: "جمعة"
+  ,sat: "سبت"
+  ,sun: "أحد"
+  ,chest: "صدر"
+  ,backMuscle: "ظهر"
+  ,legs: "ساقان"
+  ,shoulders: "أكتاف"
+  ,arms: "ذراعان"
+  ,core: "عضلات البطن"
+  ,restAndRecovery: "راحة وتعافي"
+  ,exercisesCount: "تمارين"
+  ,rest: "راحة"
+  ,workout: "تمرين"
+  ,exerciseFirst: "التمرين الأول"
+  ,exerciseSecond: "التمرين الثاني"
+  ,exerciseThird: "التمرين الثالث"
+  ,exerciseFourth: "التمرين الرابع"
+  ,exerciseFifth: "التمرين الخامس"
+  ,exerciseSixth: "التمرين السادس"
+  ,exerciseSeventh: "التمرين السابع"
+  ,exerciseEighth: "التمرين الثامن"
+  ,exerciseNinth: "التمرين التاسع"
+  ,exerciseTenth: "التمرين العاشر"
+  ,sets: "مجموعات"
+  ,reps: "تكرارات"
+  ,calories: "السعرات"
+  ,carbs: "الكربوهيدرات"
+  ,fat: "الدهون"
+  ,ingredients: "المكونات"
+  ,recipe: "الوصفة"
+  ,recipeInstructions: "تعليمات الوصفة"
+  ,mealType: "نوع الوجبة"
+  ,mealImage: "صورة الوجبة"
+  ,mealPhoto: "صورة الوجبة"
+  ,todaysMeals: "وجبات اليوم"
+  ,importantNotes: "ملاحظات مهمة"
+  // Meals & Nutrition (Arabic)
+  ,mealsAndNutrition: "الوجبات والتغذية"
+  ,trackDailyMealsDesc: "تتبع الوجبات اليومية وأهداف المغذيات الكبرى"
+  ,fuelYourBodyRight: "غذِّ جسمك بشكل صحيح"
+  ,fuelYourBodyRightDesc: "وازن تغذيتك وحقق أهداف اللياقة"
+  ,protein: "البروتين"
+  ,caloriesTodayLabel: "السعرات اليوم"
+  ,dailyGoal: "الهدف اليومي"
+  ,mealsLogged: "الوجبات المسجلة"
+  // Physio Panel (Arabic)
+  ,physiotherapyTitle: "العلاج الطبيعي"
+  ,physioSubtitle: "اطلب موعداً وتتبع تعافيك من الإصابة"
+  ,recoverAndHeal: "تعافَ واشفَ"
+  ,recoverAndHealDesc: "دعم خبراء العلاج الطبيعي لرحلة تعافيك"
+  ,completedLabel: "مكتمل"
+  ,requestsLabel: "الطلبات"
+  ,totalRequests: "إجمالي الطلبات"
+  ,recoveryRate: "معدل التعافي"
+  ,pendingLabel: "قيد الانتظار"
+  ,sendRequest: "إرسال طلب"
+  ,selectPhysiotherapist: "اختر أخصائي علاج طبيعي"
+  ,injuryType: "نوع الإصابة"
+  ,injuryTypePlaceholder: "مثلاً: إجهاد رباط الركبة"
+  ,painPercentage: "نسبة الألم"
+  ,notesOptional: "ملاحظات (اختياري)"
+  ,notesPlaceholder: "...سياق إضافي"
+  ,yourRequests: "طلباتك"
+  ,noRequestsYet: "لا توجد طلبات بعد."
+  // Profile Section (Arabic)
+  ,subscriptionAndAccessKey: "الاشتراك ومفتاح الوصول"
+  ,yourAccessKey: "مفتاح الوصول الخاص بك"
+  ,personalIdentifier: "المعرّف الشخصي"
+  ,statusLabel: "الحالة"
+  ,remainingLabel: "المتبقي"
+  ,joinedLabel: "انضممت"
+  ,expiresLabel: "ينتهي"
+  ,accessKeyNote: "ملاحظة: مفتاح الوصول فريد لحسابك. احتفظ به آمناً واستخدمه عند الاتصال بالدعم أو الوصول للميزات المميزة."
+  ,account: "الحساب"
+  ,manageLabel: "إدارة"
+  ,stats: "الإحصائيات"
+  ,heightLabel: "الطول"
+  ,weightLabel: "الوزن"
+  ,shortcuts: "الاختصارات"
+  ,physioLabel: "علاج طبيعي"
+  ,mealsLabel: "وجبات"
+  ,workoutLabel: "تمرين"
+  ,appearance: "المظهر"
+  ,light: "فاتح"
+  ,dark: "داكن"
+  ,system: "نظام"
+  ,systemFollowsOS: "يتبع النظام موضوع نظام التشغيل."
+  ,pushNotifications: "إشعارات الدفع"
+  ,applyLanguage: "تطبيق اللغة"
+  ,accountActions: "إجراءات الحساب"
+  ,accountActionsDesc: "تسجيل الخروج سيمسح جلستك ويعيدك إلى شاشة تسجيل الدخول."
+  ,logoutButton: "تسجيل الخروج"
+  // Manage Profile Dialog (Arabic)
+  ,manageProfile: "إدارة الملف الشخصي"
+  ,changeAvatar: "تغيير الصورة"
+  ,avatarSizeNote: "PNG/JPG حتى 2MB."
+  ,personal: "شخصي"
+  ,fullName: "الاسم الكامل"
+  ,phoneLabel: "الهاتف"
+  ,joinDate: "تاريخ الانضمام"
+  ,goal: "الهدف"
+  ,experience: "الخبرة"
+  ,physical: "جسدي"
+  ,weight: "الوزن"
+  ,height: "الطول"
+  ,current: "الحالية"
+  ,new: "الجديدة"
+  ,changePasswordLabel: "تغيير كلمة المرور"
+  ,currentPasswordLabel: "الحالية"
+  ,newPasswordLabel: "الجديدة"
+  ,confirmPasswordLabel: "تأكيد"
+  ,saved: "محفوظ"
+  // Dashboard Stats (Arabic)
+  ,totalTime: "الوقت الإجمالي"
+  ,caloriesBurned: "السعرات المحروقة"
+  // Workout Exercise Names (Arabic - kept in English)
+  ,barbellBenchPress: "Barbell Bench Press"
+  ,inclineDumbbellPress: "Incline Dumbbell Press"
+  ,cableFlyes: "Cable Flyes"
+  ,focusControlledMovement: "ركز على الحركة المنضبطة"
+  ,squeezeAtPeak: "اضغط في القمة"
+  ,keepBackStraightEngageCore: "حافظ على استقامة الظهر، شد عضلات البطن"
+  ,goDeepKeepChestUp: "انزل عميقاً، أبقِ الصدر مرفوعاً"
+  ,lightStretchingYogaWalking: "تمدد خفيف، يوغا، أو مشي"
+  // Notifications Dialog (Arabic)
+  ,notificationsTitle: "الإشعارات"
+  ,milestoneReached: "إنجاز تم الوصول إليه"
+  ,milestoneReachedDesc: "أكملت 20 تمريناً! استمر في العمل الرائع!"
+  ,workoutReminder: "تذكير بالتمرين"
+  ,workoutReminderDesc: "لا تنسَ إكمال تمرين المساء"
+  ,progressUpdate: "تحديث التقدم"
+  ,progressUpdateDesc: "فقدت 2 كجم هذا الشهر. تقدم رائع!"
+  ,close: "إغلاق"
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -863,8 +1342,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     notifications: "ئاگانامەکان",
     systemSettings: "ڕێکخستنەکانی سیستەم",
     superadminPanel: "پەنێڵی سوپرئادمین",
-  loading: "بارکردن"
-    ,patients: "نەخوشەکان"
+  loading: "بارکردن",
+  updating: "نوێکردنەوە...",
+    patients: "نەخوشەکان"
     ,activities: "چالاکیەکان"
     ,trainees: "فێركراوەکان"
     ,analytics: "ئەنالیتیکس"
@@ -884,6 +1364,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signInToAccount: "چوونەژوورەوە بۆ هەژماری فیتپرو"
   ,owner: "خاوەن"
   ,trainer: "ڕاهێنەر"
+  ,breakfast: "تایە بەیانی"
+  ,lunch: "نانی نیوەڕۆ"
+  ,snacks: "خواردنی سووک"
+  ,dinner: "نانی ئێوارە"
+  ,snack: "خواردنی سووک"
   // Auth & Login (KU placeholders)
   ,signIn: "چوونەژوورەوە"
   ,signUp: "خۆتۆمارکردن"
@@ -940,7 +1425,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,saveWorkout: "پاشەکەوتکردنی وەرزش"
   ,saveMeal: "پاشەکەوتکردنی خواردن"
   ,minutes: "خولەک"
-  ,min: "خ"
+  ,min: "خولەک"
   ,limitedOffer: "پێشکەشکراوی کاتی: 20% داشکاندن لە پریمیەم"
   ,upgradeToday: "ئەمڕۆ بەرزبکەرەوە بۆ کردنەوەی پلانە تایبەتەکان"
   ,now: "ئێستا"
@@ -1072,6 +1557,163 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,onlyRegisteredPhysiotherapists: "تەنیا فیزیۆتەراپیستانی تۆماربوو دەستگەیشتن هەیە"
     ,accessPatientManagement: "دەستگەیشتن بە بەڕێوەبردنی نەخوشەکانت"
     ,physiotherapistPortalFooter: "© 2024 فیتپرو پورتالی فیزیۆتەراپیست"
+    // Workout Center & Schedule (Kurdish)
+    ,workoutCenter: "ناوەندی وەرزش"
+    ,workoutCenterSubtitle: "پلان دروست بکە، دەست پێ بکە و پێداچوونەوەی ڕاهێنانەکانت بکە"
+    ,buildYourStrength: "هێزەکەت بنیات بنێ"
+    ,buildYourStrengthDesc: "پێداچوونەوە بکە بۆ پێشکەوتنەکەت و ئامانجە تەندروستییەکانت بگەیەنە"
+    ,todaysWorkoutWednesday: "وەرزشی ئەمڕۆ - چوارشەممە"
+    ,schedule: "خشتە"
+    ,today: "ئەمڕۆ"
+    ,week: "هەفتە"
+    ,monthView: "مانگ"
+    ,monday: "دووشەممە"
+    ,tuesday: "سێشەممە"
+    ,wednesday: "چوارشەممە"
+    ,thursday: "پێنجشەممە"
+    ,friday: "هەینی"
+    ,saturday: "شەممە"
+    ,sunday: "یەکشەممە"
+    ,mon: "دوو"
+    ,tue: "سێ"
+    ,wed: "چوار"
+    ,thu: "پێنج"
+    ,fri: "هەینی"
+    ,sat: "شەممە"
+    ,sun: "یەک"
+    ,chest: "سنگ"
+    ,backMuscle: "پشت"
+    ,legs: "قاچەکان"
+    ,shoulders: "شان"
+    ,arms: "باڵ"
+    ,core: "ناوەند"
+    ,restAndRecovery: "پشوو و چاککردنەوە"
+    ,exercisesCount: "وەرزش"
+    ,rest: "پشوو"
+    ,workout: "وەرزش"
+    ,exerciseFirst: "یاری یەکەم"
+    ,exerciseSecond: "یاری دووەم"
+    ,exerciseThird: "یاری سێیەم"
+    ,exerciseFourth: "یاری چوارەم"
+    ,exerciseFifth: "یاری پێنجەم"
+    ,exerciseSixth: "یاری شەشەم"
+    ,exerciseSeventh: "یاری حەوتەم"
+    ,exerciseEighth: "یاری هەشتەم"
+    ,exerciseNinth: "یاری نۆیەم"
+    ,exerciseTenth: "یاری دەیەم"
+    ,sets: "سێت"
+    ,reps: "دووبارە"
+    ,calories: "کالۆری"
+    ,carbs: "کاربۆ"
+    ,fat: "چەوری"
+    ,ingredients: "پێکهاتەکان"
+    ,recipe: "ڕێچکە"
+    ,recipeInstructions: "ڕێنماییەکانی ڕێچکە"
+    ,mealType: "جۆری خواردن"
+    ,mealImage: "وێنەی خواردن"
+    ,mealPhoto: "وێنەی خواردن"
+    ,todaysMeals: "خواردنی ئەمڕۆ"
+    ,importantNotes: "تێبینییە گرنگەکان"
+    // Meals & Nutrition (Kurdish)
+    ,mealsAndNutrition: "خواردن و خۆراکی تەندروستی"
+    ,trackDailyMealsDesc: "پێداچوونەوە بکە بۆ خواردنی ڕۆژانە و ئامانجی ماکرۆکان"
+    ,fuelYourBodyRight: "سووتەمەنی جەستەت بە باشی دابین بکە"
+    ,fuelYourBodyRightDesc: "هاوسەنگی بخە بەسەر خۆراکەکەتدا و ئامانجە تەندروستییەکانت بگەیەنە"
+    ,protein: "پرۆتین"
+    ,caloriesTodayLabel: "کالۆریی ئەمڕۆ"
+    ,dailyGoal: "ئامانجی ڕۆژانە"
+    ,mealsLogged: "خواردنی تۆمارکراو"
+    // Physio Panel (Kurdish)
+    ,physiotherapyTitle: "فیزیۆتەراپی"
+    ,physioSubtitle: "داوای نۆبە بکە و پێداچوونەوە بکە بۆ چاکبوونەوەی برینەکەت"
+    ,recoverAndHeal: "چاکبوونەوە و ساڕێژبوون"
+    ,recoverAndHealDesc: "پشتگیری پسپۆڕانەی فیزیۆتەراپی بۆ گەشتی چاکبوونەوەت"
+    ,completedLabel: "تەواوکراوەکان"
+    ,requestsLabel: "داواکاریەکان"
+    ,totalRequests: "کۆی داواکاریەکان"
+    ,recoveryRate: "ڕێژەی چاکبوونەوە"
+    ,pendingLabel: "چاوەڕوان"
+    ,sendRequest: "ناردنی داواکاری"
+    ,selectPhysiotherapist: "فیزیۆتەراپیستێک هەڵبژێرە"
+    ,injuryType: "جۆری برین"
+    ,injuryTypePlaceholder: "وەک: برینی بەستەری ئەژنۆ"
+    ,painPercentage: "ڕێژەی ئازار"
+    ,notesOptional: "تێبینیەکان (دڵخواز)"
+    ,notesPlaceholder: "زانیاری زیاتر..."
+    ,yourRequests: "داواکاریەکانت"
+    ,noRequestsYet: "هێشتا داواکاریەک نییە"
+    // Profile Section (Kurdish)
+    ,subscriptionAndAccessKey: "بەشداری و کلیلی دەستگەیشتن"
+    ,yourAccessKey: "کلیلی دەستگەیشتنت"
+    ,personalIdentifier: "ناسنامەی تایبەتی"
+    ,statusLabel: "بارودۆخ"
+    ,remainingLabel: "ماوە"
+    ,joinedLabel: "بەشداربوویت"
+    ,expiresLabel: "بەسەردەچێت"
+    ,accessKeyNote: "تێبینی: کلیلی دەستگەیشتنەکەت تایبەتە بە هەژمارەکەت. پارێزگاری لێ بکە و بەکاری بهێنە کاتێک پەیوەندی دەکەیت بە پشتیوانی یان دەستگەیشتن بە تایبەتمەندیە پریمیەمەکان."
+    ,account: "هەژمار"
+    ,manageLabel: "بەڕێوەبردن"
+    ,stats: "ئامارەکان"
+    ,goalLabel: "ئامانج"
+    ,heightLabel: "باڵا"
+    ,weightLabel: "کێش"
+    ,shortcuts: "کورتکردنەوەکان"
+    ,physioLabel: "فیزیۆ"
+    ,mealsLabel: "خواردن"
+    ,workoutLabel: "وەرزش"
+    ,preferences: "هەڵبژاردنەکان"
+    ,appearance: "دەرکەوتن"
+    ,light: "ڕووناک"
+    ,dark: "تاریک"
+    ,system: "سیستەم"
+    ,systemFollowsOS: "سیستەم شوێن ڕوکاری سیستەمی کارگێڕەکەت دەکەوێت."
+    ,pushNotifications: "ئاگانامەی پێش"
+    ,applyLanguage: "جێبەجێکردنی زمان"
+    ,accountActions: "کردارەکانی هەژمار"
+    ,accountActionsDesc: "دەرچوون دەبێتە هۆی پاککردنەوەی دانیشتنەکەت و گەڕانەوەت بۆ پەڕەی چوونەژوورەوە."
+    ,logoutButton: "دەرچوون"
+    // Manage Profile Dialog (Kurdish)
+    ,manageProfile: "بەڕێوەبردنی پڕۆفایل"
+    ,changeAvatar: "گۆڕینی وێنە"
+    ,avatarSizeNote: "PNG/JPG تا 2MB."
+    ,personal: "تایبەتی"
+    ,fullName: "ناوی تەواو"
+    ,phoneLabel: "تەلەفۆن"
+    ,joinDate: "بەرواری پەیوەندی"
+    ,goal: "ئامانج"
+    ,experience: "ئەزموون"
+    ,physical: "جەستەیی"
+    ,weight: "کێلۆ"
+    ,height: "باڵایی"
+    ,current: "ئێستا"
+    ,new: "نوێ"
+    ,confirm: "دڵنیاکردنەوە"
+    ,changePasswordLabel: "گۆڕینی وشەی نهێنی"
+    ,currentPasswordLabel: "ئێستا"
+    ,newPasswordLabel: "نوێ"
+    ,confirmPasswordLabel: "پشتڕاستکردنەوە"
+    ,saved: "پاشەکەوتکرا"
+    // Dashboard Stats (Kurdish)
+    ,totalTime: "کاتی گشتی"
+    ,caloriesBurned: "کالۆری سووتاو"
+    // Workout Exercise Names (Kurdish - kept in English)
+    ,barbellBenchPress: "Barbell Bench Press"
+    ,inclineDumbbellPress: "Incline Dumbbell Press"
+    ,cableFlyes: "Cable Flyes"
+    ,focusControlledMovement: "سەرنج بدە بە جووڵەی کۆنترۆڵکراو"
+    ,squeezeAtPeak: "لە بەرزترین خاڵدا فشاری بدە"
+    ,keepBackStraightEngageCore: "پشتت ڕاست بگرە، ناوەند بەهێز بکە"
+    ,goDeepKeepChestUp: "قووڵ ببەرەوە خوارەوە، سنگ بەرز بگرەوە"
+    ,lightStretchingYogaWalking: "درێژکردنەوەی سووک، یۆگا، یان ڕێگرتن"
+    // Notifications Dialog (Kurdish)
+    ,notificationsTitle: "ئاگانامەکان"
+    ,milestoneReached: "گەیشتن بە خاڵی گرنگ"
+    ,milestoneReachedDesc: "تۆ 20 وەرزشت تەواو کرد! بەردەوام بە لەسەر کارە نایابەکەت!"
+    ,workoutReminder: "بیرخستنەوەی وەرزش"
+    ,workoutReminderDesc: "لەبیرت مەکەیت بۆ تەواوکردنی وەرزشی ئێوارەکەت"
+    ,progressUpdate: "نوێکردنەوەی پێشکەوتن"
+    ,progressUpdateDesc: "تۆ 2kg لەم مانگەدا لەدەست داوە. پێشکەوتنێکی نایاب!"
+    ,close: "داخستن"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -1088,6 +1730,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     systemSettings: "Sistem Ayarları",
     superadminPanel: "Süper Admin Paneli",
     loading: "Yükleniyor",
+    updating: "Güncelleniyor...",
     patients: "Hastalar",
   activities: "Aktiviteler",
   trainees: "Öğrenciler",
@@ -1135,6 +1778,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     signInAsOwner: "Sahip olarak giriş yap",
     dontHaveAccount: "Hesabın yok mu?",
     copyrightNotice: "© 2024 FitPro. Tüm hakları saklıdır.",
+  breakfast: "Kahvaltı",
+  lunch: "Öğle Yemeği",
+  snacks: "Atıştırmalıklar",
+  dinner: "Akşam Yemeği",
+  snack: "Atıştırmalık",
   // Dashboard (TR placeholders)
     welcomeBackUser: "Tekrar Hoş Geldin, Kullanıcı",
     trackFitnessDesc: "Fitness yolculuğunu takip et ve hedeflerine ulaş",
@@ -1296,5 +1944,159 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   onlyRegisteredPhysiotherapists: "Yalnızca kayıtlı fizyoterapistler bu portala erişebilir",
   accessPatientManagement: "Hasta yönetimine eriş",
   physiotherapistPortalFooter: "© 2024 FitPro Fizyoterapist Portalı",
+  // Workout Center & Schedule (Turkish)
+  workoutCenter: "Antrenman Merkezi",
+  workoutCenterSubtitle: "Antrenman seanslarını planla, başlat ve gözden geçir",
+  buildYourStrength: "Gücünü Oluştur",
+  buildYourStrengthDesc: "İlerlemenizi takip edin ve fitness hedeflerinize ulaşın",
+  todaysWorkoutWednesday: "Bugünün Antrenmanı - Çarşamba",
+  schedule: "Program",
+  today: "BUGÜN",
+  week: "HAFTA",
+  monthView: "AY",
+  monday: "Pazartesi",
+  tuesday: "Salı",
+  wednesday: "Çarşamba",
+  thursday: "Perşembe",
+  friday: "Cuma",
+  saturday: "Cumartesi",
+  sunday: "Pazar",
+  mon: "Pzt",
+  tue: "Sal",
+  wed: "Çar",
+  thu: "Per",
+  fri: "Cum",
+  sat: "Cmt",
+  sun: "Paz",
+  chest: "Göğüs",
+  backMuscle: "Sırt",
+  legs: "Bacaklar",
+  shoulders: "Omuzlar",
+  arms: "Kollar",
+  core: "Karın",
+  restAndRecovery: "Dinlenme ve Toparlanma",
+  exercisesCount: "egzersizler",
+  rest: "Dinlenme",
+  workout: "Antrenman",
+  exerciseFirst: "Birinci Egzersiz",
+  exerciseSecond: "İkinci Egzersiz",
+  exerciseThird: "Üçüncü Egzersiz",
+  exerciseFourth: "Dördüncü Egzersiz",
+  exerciseFifth: "Beşinci Egzersiz",
+  exerciseSixth: "Altıncı Egzersiz",
+  exerciseSeventh: "Yedinci Egzersiz",
+  exerciseEighth: "Sekizinci Egzersiz",
+  exerciseNinth: "Dokuzuncu Egzersiz",
+  exerciseTenth: "Onuncu Egzersiz",
+  sets: "setler",
+  reps: "tekrarlar",
+  calories: "Kaloriler",
+  carbs: "Karbonhidratlar",
+  fat: "Yağ",
+  ingredients: "Malzemeler",
+  recipe: "Tarif",
+  recipeInstructions: "Tarif Talimatları",
+  mealType: "Öğün Türü",
+  mealImage: "Öğün Resmi",
+  mealPhoto: "Öğün fotoğrafı",
+  todaysMeals: "Bugünün Öğünleri",
+  importantNotes: "Önemli Notlar",
+  // Meals & Nutrition (Turkish)
+  mealsAndNutrition: "Yemekler ve Beslenme",
+  trackDailyMealsDesc: "Günlük yemekleri ve makro hedefleri takip et",
+  fuelYourBodyRight: "Vücudunu Doğru Besle",
+  fuelYourBodyRightDesc: "Beslenmeni dengele ve fitness hedeflerine ulaş",
+  protein: "PROTEİN",
+  caloriesTodayLabel: "BUGÜNÜN KALORİLERİ",
+  dailyGoal: "GÜNLÜK HEDEF",
+  mealsLogged: "KAYITLI ÖĞÜNLER",
+  // Physio Panel (Turkish)
+  physiotherapyTitle: "Fizyoterapi",
+  physioSubtitle: "Sıra talebi yap ve sakatlık iyileşmeni takip et",
+  recoverAndHeal: "İyileş ve Sağal",
+  recoverAndHealDesc: "İyileşme yolculuğun için uzman fizyoterapi desteği",
+  completedLabel: "TAMAMLANDI",
+  requestsLabel: "Talepler",
+  totalRequests: "TOPLAM TALEPLER",
+  recoveryRate: "İYİLEŞME ORANI",
+  pendingLabel: "BEKLİYOR",
+  sendRequest: "Talep Gönder",
+  selectPhysiotherapist: "Fizyoterapist seç",
+  injuryType: "SAKATLIK TÜRÜ",
+  injuryTypePlaceholder: "ör. Diz bağ zorlanması",
+  painPercentage: "AĞRI YÜZDESİ",
+  notesOptional: "NOTLAR (OPSİYONEL)",
+  notesPlaceholder: "...Ekstra bilgi",
+  yourRequests: "Talepleriniz",
+  noRequestsYet: "Henüz talep yok.",
+  // Profile Section (Turkish)
+  subscriptionAndAccessKey: "Abonelik ve Erişim Anahtarı",
+  yourAccessKey: "ERİŞİM ANAHTARIN",
+  personalIdentifier: "Kişisel Tanımlayıcı",
+  statusLabel: "DURUM",
+  remainingLabel: "KALAN",
+  joinedLabel: "Katıldı",
+  expiresLabel: "Sona Eriyor",
+  accessKeyNote: "Not: Erişim anahtarınız hesabınıza özeldir. Güvenli tutun ve destek ile iletişime geçerken veya premium özelliklere erişirken kullanın.",
+  account: "Hesap",
+  manageLabel: "Yönet",
+  stats: "İstatistikler",
+  heightLabel: "Boy",
+  weightLabel: "Kilo",
+  shortcuts: "Kısayollar",
+  physioLabel: "Fizyoterapi",
+  mealsLabel: "Yemekler",
+  workoutLabel: "Antrenman",
+  appearance: "Görünüm",
+  light: "Açık",
+  dark: "Koyu",
+  system: "Sistem",
+  systemFollowsOS: "Sistem, işletim sisteminizin temasını takip eder.",
+  pushNotifications: "Bildirimler",
+  applyLanguage: "Dili Uygula",
+  accountActions: "Hesap İşlemleri",
+  accountActionsDesc: "Çıkış yapmak oturumunuzu temizler ve giriş ekranına döndürür.",
+  logoutButton: "Çıkış Yap",
+  // Manage Profile Dialog (Turkish)
+  manageProfile: "Profili Yönet",
+  changeAvatar: "Avatarı Değiştir",
+  avatarSizeNote: "2MB'a kadar PNG/JPG.",
+  personal: "Kişisel",
+  fullName: "Tam Ad",
+  phoneLabel: "Telefon",
+  joinDate: "Katılım Tarihi",
+  goal: "Hedef",
+  experience: "Deneyim",
+  physical: "Fiziksel",
+  weight: "Kilo",
+  height: "Boy",
+  current: "Mevcut",
+  new: "Yeni",
+  changePasswordLabel: "Parola Değiştir",
+  currentPasswordLabel: "Mevcut",
+  newPasswordLabel: "Yeni",
+  confirmPasswordLabel: "Onayla",
+  saved: "Kaydedildi",
+  // Dashboard Stats (Turkish)
+  totalTime: "TOPLAM SÜRE",
+  caloriesBurned: "YAKILAN KALORİ",
+  // Workout Exercise Names (Turkish - kept in English)
+  barbellBenchPress: "Barbell Bench Press",
+  inclineDumbbellPress: "Incline Dumbbell Press",
+  cableFlyes: "Cable Flyes",
+  focusControlledMovement: "Kontrollü harekete odaklan",
+  squeezeAtPeak: "Tepe noktasında sıkın",
+  keepBackStraightEngageCore: "Sırtı düz tut, karın kaslarını sıkı tut",
+  goDeepKeepChestUp: "Derine in, göğsü yukarıda tut",
+  lightStretchingYogaWalking: "Hafif germe, yoga veya yürüyüş",
+  // Notifications Dialog (Turkish)
+  notificationsTitle: "Bildirimler",
+  milestoneReached: "Kilometre Taşına Ulaşıldı",
+  milestoneReachedDesc: "20 antrenmanı tamamladın! Harika işe devam et!",
+  workoutReminder: "Antrenman Hatırlatıcısı",
+  workoutReminderDesc: "Akşam antrenmanını tamamlamayı unutma",
+  progressUpdate: "İlerleme Güncellemesi",
+  progressUpdateDesc: "Bu ay 2kg kaybettin. Harika ilerleme!",
+  close: "Kapat",
   },
 }

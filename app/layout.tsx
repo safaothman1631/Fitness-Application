@@ -4,6 +4,9 @@ import { Inter, Poppins } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 import { ThemeProvider } from "@/components/theme-provider"
 import { LanguageProvider } from "@/contexts/language-context"
+import { GlobalToaster } from "@/components/global-toaster"
+import { FloatingLanguageSelector } from "@/components/floating-language-selector"
+import { FloatingNotificationButton } from "@/components/floating-notification-button"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" })
@@ -25,12 +28,15 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html suppressHydrationWarning>
       <body className={`${poppins.variable} ${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
             {children}
+            <FloatingLanguageSelector />
+            <FloatingNotificationButton />
           </LanguageProvider>
+          <GlobalToaster />
           <Analytics />
         </ThemeProvider>
       </body>

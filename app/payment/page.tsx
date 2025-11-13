@@ -22,13 +22,21 @@ function PaymentContent() {
     setCycle(searchParams.get("cycle") || "monthly")
   }, [searchParams])
 
-  const prices: Record<string, { monthly: number; yearly: number }> = {
-    free: { monthly: 0, yearly: 0 },
-    premium: { monthly: 99, yearly: 990 },
-    pro: { monthly: 199, yearly: 1990 },
+  const prices: Record<string, number> = {
+    pro: 99,
+    "pro-plus": 249,
+    elite: 449,
+    legend: 799,
   }
 
-  const selectedPrice = prices[plan]?.[cycle as "monthly" | "yearly"] || 0
+  const planNames: Record<string, string> = {
+    pro: "Pro (1 Month)",
+    "pro-plus": "Pro Plus (3 Months)",
+    elite: "Elite (6 Months)",
+    legend: "Legend (1 Year)",
+  }
+
+  const selectedPrice = prices[plan] || 99
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -112,7 +120,7 @@ function PaymentContent() {
               </Card>
 
               <Button type="submit" className="w-full h-12 text-lg bg-gradient-to-r from-primary to-secondary hover:opacity-90" disabled={processing}>
-                {processing ? "Processing..." : `Pay ${selectedPrice}₺`}
+                {processing ? "Processing..." : `Pay $${Math.round(selectedPrice * 1.2)}`}
               </Button>
               <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
                 <Lock className="w-4 h-4" />
@@ -127,26 +135,25 @@ function PaymentContent() {
               <div className="space-y-4">
                 <div className="flex items-center justify-between pb-4 border-b border-border">
                   <div>
-                    <h3 className="font-semibold text-lg capitalize">{plan} Plan</h3>
-                    <p className="text-sm text-muted-foreground">{cycle === "monthly" ? "Monthly" : "Yearly"} subscription</p>
+                    <h3 className="font-semibold text-lg">{planNames[plan] || "Pro (1 Month)"}</h3>
+                    <p className="text-sm text-muted-foreground">One-time payment</p>
                   </div>
                   <div className="text-right">
-                    <p className="text-2xl font-bold">{selectedPrice}₺</p>
-                    <p className="text-sm text-muted-foreground">{cycle === "monthly" ? "/month" : "/year"}</p>
+                    <p className="text-2xl font-bold">${selectedPrice}</p>
                   </div>
                 </div>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>
-                    <span>{selectedPrice}₺</span>
+                    <span>${selectedPrice}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Tax (20%)</span>
-                    <span>{Math.round(selectedPrice * 0.2)}₺</span>
+                    <span>${Math.round(selectedPrice * 0.2)}</span>
                   </div>
                   <div className="flex justify-between pt-2 border-t border-border font-semibold text-base">
                     <span>Total</span>
-                    <span>{Math.round(selectedPrice * 1.2)}₺</span>
+                    <span>${Math.round(selectedPrice * 1.2)}</span>
                   </div>
                 </div>
               </div>

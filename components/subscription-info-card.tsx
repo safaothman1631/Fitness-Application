@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Key, Calendar, Shield, CheckCircle2, XCircle, Clock, Copy, Check } from "lucide-react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
+import { useLanguage } from "@/hooks/useLanguage"
 
 interface SubscriptionInfoCardProps {
   userKey: string
@@ -21,6 +22,8 @@ export function SubscriptionInfoCard({
   daysRemaining 
 }: SubscriptionInfoCardProps) {
   const [copied, setCopied] = useState(false)
+  const { t, language } = useLanguage()
+  const isRTL = language === "ar" || language === "ku"
 
   const copyKey = () => {
     navigator.clipboard.writeText(userKey)
@@ -91,21 +94,21 @@ export function SubscriptionInfoCard({
       <CardHeader className="pb-3 relative z-10">
         <CardTitle className="text-white text-base flex items-center gap-2">
           <Shield className="w-5 h-5 text-indigo-400" />
-          Subscription & Access Key
+          {t("subscriptionAndAccessKey")}
         </CardTitle>
       </CardHeader>
 
       <CardContent className="space-y-4 relative z-10">
         {/* Access Key Section */}
-        <div className={`p-4 rounded-xl bg-gradient-to-r ${colors.bg} border ${colors.border} transition-all duration-500`}>
+        <div className={`p-4 rounded-xl bg-gradient-to-r ${colors.bg} border ${colors.border} transition-all duration-500`} dir={isRTL ? "rtl" : "ltr"}>
           <div className="flex items-start justify-between gap-3 mb-3">
             <div className="flex items-center gap-2">
               <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${colors.primary} flex items-center justify-center shadow-lg ${colors.glow} transition-all duration-500`}>
                 <Key className="w-5 h-5 text-white" />
               </div>
               <div>
-                <p className={`text-xs ${colors.icon} opacity-70 uppercase tracking-wider font-semibold`}>Your Access Key</p>
-                <p className={`text-sm ${colors.icon} opacity-50 mt-0.5`}>Personal Identifier</p>
+                <p className={`text-xs ${colors.icon} opacity-70 uppercase tracking-wider font-semibold`}>{t("yourAccessKey")}</p>
+                <p className={`text-sm ${colors.icon} opacity-50 mt-0.5`}>{t("personalIdentifier")}</p>
               </div>
             </div>
           </div>
@@ -138,7 +141,7 @@ export function SubscriptionInfoCard({
         </div>
 
         {/* Subscription Status */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3" dir={isRTL ? "rtl" : "ltr"}>
           {/* Status Badge */}
           <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
@@ -147,10 +150,10 @@ export function SubscriptionInfoCard({
               ) : (
                 <XCircle className="w-4 h-4 text-red-400" />
               )}
-              <span className="text-xs text-slate-400 uppercase tracking-wide">Status</span>
+              <span className="text-xs text-slate-400 uppercase tracking-wide">{t("statusLabel")}</span>
             </div>
             <p className={`font-semibold text-sm ${isActive ? "text-green-400" : "text-red-400"}`}>
-              {isActive ? "Active" : "Expired"}
+              {isActive ? t("active") : t("expired")}
             </p>
           </div>
 
@@ -158,25 +161,25 @@ export function SubscriptionInfoCard({
           <div className="p-3 rounded-lg bg-slate-900/50 border border-slate-700/50">
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-blue-400" />
-              <span className="text-xs text-slate-400 uppercase tracking-wide">Remaining</span>
+              <span className="text-xs text-slate-400 uppercase tracking-wide">{t("remainingLabel")}</span>
             </div>
             <p className={`font-semibold text-sm ${
               daysRemaining > 7 ? "text-green-400" : 
               daysRemaining > 0 ? "text-yellow-400" : 
               "text-red-400"
             }`}>
-              {daysRemaining > 0 ? `${daysRemaining} Days` : "Expired"}
+              {daysRemaining > 0 ? `${t("days")} ${daysRemaining}` : t("expired")}
             </p>
           </div>
         </div>
 
         {/* Date Information */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3" dir={isRTL ? "rtl" : "ltr"}>
           {/* Join Date */}
           <div className="p-3 rounded-lg bg-slate-900/30 border border-slate-700/30">
             <div className="flex items-center gap-2 mb-1">
               <Calendar className="w-3.5 h-3.5 text-cyan-400" />
-              <span className="text-xs text-slate-400">Joined</span>
+              <span className="text-xs text-slate-400">{t("joinedLabel")}</span>
             </div>
             <p className="text-sm text-white font-medium">{formatDate(joinDate)}</p>
           </div>
@@ -185,7 +188,7 @@ export function SubscriptionInfoCard({
           <div className="p-3 rounded-lg bg-slate-900/30 border border-slate-700/30">
             <div className="flex items-center gap-2 mb-1">
               <Calendar className="w-3.5 h-3.5 text-orange-400" />
-              <span className="text-xs text-slate-400">Expires</span>
+              <span className="text-xs text-slate-400">{t("expiresLabel")}</span>
             </div>
             <p className="text-sm text-white font-medium">
               {expiryDate ? formatDate(expiryDate) : "Not set"}
@@ -194,10 +197,9 @@ export function SubscriptionInfoCard({
         </div>
 
         {/* Info Note */}
-        <div className="p-3 rounded-lg bg-blue-950/20 border border-blue-500/20">
+        <div className="p-3 rounded-lg bg-blue-950/20 border border-blue-500/20" dir={isRTL ? "rtl" : "ltr"}>
           <p className="text-xs text-blue-300/70 leading-relaxed">
-            <span className="font-semibold text-blue-300">💡 Note:</span> Your access key is unique to your account. 
-            Keep it secure and use it when contacting support or accessing premium features.
+            {t("accessKeyNote")}
           </p>
         </div>
       </CardContent>

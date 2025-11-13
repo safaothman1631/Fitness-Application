@@ -9,6 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import SubscriptionRequiredGuard from "@/components/subscription-guard"
+import { PageTransition } from "@/components/page-transition"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
+import type { TranslationKey } from "@/lib/translations"
 
 type ViewMode = "day" | "week" | "month"
 
@@ -34,14 +38,28 @@ export default function MealsPage() {
   const router = useRouter()
   const [isSuperadmin, setIsSuperadmin] = useState(false)
   const [view, setView] = useState<ViewMode>("week")
+  const [viewTransition, setViewTransition] = useState(true)
   const [completed, setCompleted] = useState<Record<string, boolean>>({})
   const [submittedToday, setSubmittedToday] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [mealSchedule, setMealSchedule] = useState<DayMeal[]>([])
   const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
+  const [mounted, setMounted] = useState(false)
+  const { t, language } = useLanguage()
+  const isRTL = language === "ar" || language === "ku"
+
+  // Get meal ordinal translation key (reusing exercise keys)
+  const getMealOrdinal = (num: number): TranslationKey => {
+    const ordinals: TranslationKey[] = [
+      "exerciseFirst", "exerciseSecond", "exerciseThird", "exerciseFourth", "exerciseFifth",
+      "exerciseSixth", "exerciseSeventh", "exerciseEighth", "exerciseNinth", "exerciseTenth"
+    ]
+    return ordinals[num - 1] || "exerciseFirst"
+  }
 
   useEffect(() => {
+    setMounted(true)
     const role = typeof window !== "undefined" ? localStorage.getItem("userRole") : null
     setIsSuperadmin(role === "superadmin")
     try {
@@ -333,6 +351,17 @@ export default function MealsPage() {
     })
   }
 
+  const handleViewChange = (newView: ViewMode) => {
+    if (newView === view) return
+    // Fade out
+    setViewTransition(false)
+    setTimeout(() => {
+      setView(newView)
+      // Fade in
+      setTimeout(() => setViewTransition(true), 50)
+    }, 200)
+  }
+
   const todayMeals = [
     { id: "m1", name: "Breakfast Oats", calories: 320, time: "08:00" },
     { id: "m2", name: "Grilled Chicken", calories: 540, time: "13:00" },
@@ -376,19 +405,24 @@ export default function MealsPage() {
     setTimeout(() => setSubmitting(false), 400)
   }
 
+  if (!mounted) {
+    return null
+  }
+
   return (
     <SubscriptionRequiredGuard>
+    <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] bg-clip-text text-transparent mb-2">
-          Meals & Nutrition
+          {t("mealsAndNutrition")}
         </h1>
-        <p className="text-[#B6C4CF] mb-8">Track daily meals and macro goals.</p>
+        <p className="text-[#B6C4CF] mb-8">{t("trackDailyMealsDesc")}</p>
 
         <Card className="bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] border-none p-8 mb-8 relative overflow-hidden">
           <div className="relative z-10">
-            <h3 className="text-white text-xl font-bold mb-2">Fuel Your Body Right</h3>
-            <p className="text-white/90 text-sm mb-4">Balance your nutrition and reach your fitness goals</p>
+            <h3 className="text-white text-xl font-bold mb-2">{t("fuelYourBodyRight")}</h3>
+            <p className="text-white/90 text-sm mb-4">{t("fuelYourBodyRightDesc")}</p>
             {isSuperadmin && (
               <Button className="bg-white text-[#F59E0B] hover:bg-white/90 font-semibold flex items-center gap-2"><Plus className="w-4 h-4" /> Add Meal</Button>
             )}
@@ -396,31 +430,39 @@ export default function MealsPage() {
         </Card>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={Flame} label="Calories Today" value="1,450" color="#F59E0B" />
-          <StatsCard icon={Apple} label="Protein" value="92g" color="#FB923C" />
-          <StatsCard icon={Utensils} label="Meals Logged" value="3" color="#FCD34D" />
-          <StatsCard icon={Target} label="Daily Goal" value="85%" color="#F59E0B" />
+          <StatsCard icon={Flame} label={t("caloriesTodayLabel")} value="1,450" color="#F59E0B" />
+          <StatsCard icon={Apple} label={t("protein")} value="92g" color="#FB923C" />
+          <StatsCard icon={Utensils} label={t("mealsLogged")} value="3" color="#FCD34D" />
+          <StatsCard icon={Target} label={t("dailyGoal")} value="85%" color="#F59E0B" />
         </div>
 
       <section className="space-y-4">
         {/* Schedule selector */}
         <Card className="bg-[#101A23] border-[#2E3944]">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-white text-sm flex items-center gap-2"><CalendarDays className="w-4 h-4 text-amber-400" /> Schedule</CardTitle>
+          <CardHeader className={`pb-2 ${isRTL ? 'text-right' : ''}`}>
+            <CardTitle className={`text-white text-sm flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}><CalendarDays className="w-4 h-4 text-amber-400" /> {t("schedule")}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="flex items-center gap-2 mb-3">
+            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
               {(["day","week","month"] as ViewMode[]).map(v => (
                 <button
                   key={v}
-                  onClick={() => setView(v)}
+                  onClick={() => handleViewChange(v)}
                   className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] text-white border-amber-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-amber-500/30"}`}
                 >
-                  {v === "day" ? "TODAY" : v.toUpperCase()}
+                  {v === "day" ? t("today") : v === "week" ? t("week") : t("monthView")}
                 </button>
               ))}
             </div>
 
+            <div 
+              style={{
+                opacity: viewTransition ? 1 : 0,
+                transform: viewTransition ? 'scale(1)' : 'scale(0.98)',
+                filter: viewTransition ? 'blur(0px)' : 'blur(8px)',
+                transition: 'opacity 0.3s ease-out, transform 0.3s ease-out, filter 0.3s ease-out'
+              }}
+            >
             {view === "day" && (
               <div className="space-y-2">
                 {(() => {
@@ -431,23 +473,28 @@ export default function MealsPage() {
                   return (
                     <button
                       onClick={() => setSelectedDay(todayMeals.day)}
-                      className="w-full flex items-center justify-between p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 group"
+                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
-                          <Utensils className="w-5 h-5 text-white" />
+                      {/* Right column: Play button + calories */}
+                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                        <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                          <Play className={`w-4 h-4 text-amber-400 ${isRTL ? 'rotate-180' : ''}`} />
                         </div>
-                        <div className="text-left">
-                          <p className="text-white font-semibold text-sm">Today's Meals - {todayMeals.day}</p>
-                          <p className="text-[#B6C4CF] text-xs">{mealCount} meals • {totalCalories} kcal</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs">
+                        <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs whitespace-nowrap">
                           {totalCalories} cal
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
-                          <Play className="w-4 h-4 text-amber-400" />
+                      </div>
+                      
+                      {/* Center: Text content */}
+                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <p className="text-white font-semibold text-sm">{t("todaysMeals")} - {t(todayMeals.day.toLowerCase() as any)}</p>
+                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} • {totalCalories} {t("kcal")}</p>
+                      </div>
+                      
+                      {/* Left column: Icon */}
+                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
+                          <Utensils className="w-5 h-5 text-white" />
                         </div>
                       </div>
                     </button>
@@ -465,23 +512,28 @@ export default function MealsPage() {
                     <button
                       key={i}
                       onClick={() => setSelectedDay(dayMeal.day)}
-                      className="w-full flex items-center justify-between p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 group"
+                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
                     >
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
-                          <Utensils className="w-5 h-5 text-white" />
+                      {/* Right column: Play button + calories */}
+                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                        <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                          <Play className={`w-4 h-4 text-amber-400 ${isRTL ? 'rotate-180' : ''}`} />
                         </div>
-                        <div className="text-left">
-                          <p className="text-white font-semibold text-sm">{dayMeal.day}</p>
-                          <p className="text-[#B6C4CF] text-xs">{mealCount} meals • {totalCalories} kcal</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs">
+                        <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs whitespace-nowrap">
                           {totalCalories} cal
                         </div>
-                        <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
-                          <Play className="w-4 h-4 text-amber-400" />
+                      </div>
+                      
+                      {/* Center: Text content */}
+                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <p className="text-white font-semibold text-sm">{t(dayMeal.day.toLowerCase() as any)}</p>
+                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} • {totalCalories} {t("kcal")}</p>
+                      </div>
+                      
+                      {/* Left column: Icon */}
+                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
+                          <Utensils className="w-5 h-5 text-white" />
                         </div>
                       </div>
                     </button>
@@ -494,13 +546,13 @@ export default function MealsPage() {
             {view === "month" && (
               <div className="space-y-3">
                 <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-slate-500 font-semibold mb-2">
-                  <div>Mon</div>
-                  <div>Tue</div>
-                  <div>Wed</div>
-                  <div>Thu</div>
-                  <div>Fri</div>
-                  <div>Sat</div>
-                  <div>Sun</div>
+                  <div>{t("mon")}</div>
+                  <div>{t("tue")}</div>
+                  <div>{t("wed")}</div>
+                  <div>{t("thu")}</div>
+                  <div>{t("fri")}</div>
+                  <div>{t("sat")}</div>
+                  <div>{t("sun")}</div>
                 </div>
                 <div className="grid grid-cols-7 gap-1">
                   {Array.from({ length: 30 }, (_, i) => {
@@ -526,6 +578,7 @@ export default function MealsPage() {
                 </div>
               </div>
             )}
+            </div>
           </CardContent>
         </Card>
 
@@ -551,8 +604,8 @@ export default function MealsPage() {
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>
         <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-2xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
-              {selectedDay} Meals
+            <DialogTitle className={`text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent ${isRTL ? 'text-right pr-12' : ''}`}>
+              {selectedDay && t(selectedDay.toLowerCase() as any)} {t("meals")}
             </DialogTitle>
           </DialogHeader>
           <ScrollArea className="max-h-[70vh] pr-4">
@@ -568,25 +621,25 @@ export default function MealsPage() {
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-4">
                         <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-2">
-                            <span className="text-amber-400 font-bold text-lg">{idx + 1}.</span>
+                          <div className="flex items-center gap-2 mb-3">
+                            <span className="text-amber-400 font-bold text-lg">{t(getMealOrdinal(idx + 1))}</span>
                             <h3 className="text-white font-semibold text-lg">{meal.name}</h3>
                           </div>
-                          <div className="flex flex-wrap gap-3 mb-2">
+                          <div className="flex flex-wrap gap-3 mb-3">
                             <div className="px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-sm">
-                              {meal.calories} kcal
+                              {meal.calories} {t("kcal")}
                             </div>
                             <div className="px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 text-sm">
-                              P: {meal.protein}g
+                              {t("protein")}: {meal.protein}g
                             </div>
                             <div className="px-3 py-1 rounded-full bg-green-500/10 text-green-400 text-sm">
-                              C: {meal.carbs}g
+                              {t("carbs")}: {meal.carbs}g
                             </div>
                             <div className="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-sm">
-                              F: {meal.fat}g
+                              {t("fat")}: {meal.fat}g
                             </div>
                             <div className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-sm">
-                              {meal.mealType}
+                              {t(meal.mealType.toLowerCase() as any)}
                             </div>
                           </div>
                         </div>
@@ -610,7 +663,7 @@ export default function MealsPage() {
       <Dialog open={!!selectedMeal} onOpenChange={(open) => !open && setSelectedMeal(null)}>
         <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-3xl max-h-[90vh]">
           <DialogHeader>
-            <DialogTitle className="text-2xl font-bold text-white">
+            <DialogTitle className={`text-2xl font-bold text-white ${isRTL ? 'text-right pr-12' : ''}`}>
               {selectedMeal?.name}
             </DialogTitle>
           </DialogHeader>
@@ -622,19 +675,19 @@ export default function MealsPage() {
                   <CardContent className="p-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                       <div>
-                        <p className="text-slate-400 text-xs mb-1">Calories</p>
+                        <p className="text-slate-400 text-xs mb-1">{t("calories")}</p>
                         <p className="text-white font-bold text-2xl">{selectedMeal.calories}</p>
                       </div>
                       <div>
-                        <p className="text-slate-400 text-xs mb-1">Protein</p>
+                        <p className="text-slate-400 text-xs mb-1">{t("protein")}</p>
                         <p className="text-blue-400 font-bold text-2xl">{selectedMeal.protein}g</p>
                       </div>
                       <div>
-                        <p className="text-slate-400 text-xs mb-1">Carbs</p>
+                        <p className="text-slate-400 text-xs mb-1">{t("carbs")}</p>
                         <p className="text-green-400 font-bold text-2xl">{selectedMeal.carbs}g</p>
                       </div>
                       <div>
-                        <p className="text-slate-400 text-xs mb-1">Fat</p>
+                        <p className="text-slate-400 text-xs mb-1">{t("fat")}</p>
                         <p className="text-yellow-400 font-bold text-2xl">{selectedMeal.fat}g</p>
                       </div>
                     </div>
@@ -645,13 +698,13 @@ export default function MealsPage() {
                 {selectedMeal.imageUrl && (
                   <Card className="bg-slate-900/70 border-slate-800">
                     <CardHeader>
-                      <CardTitle className="text-white text-lg">Meal Image</CardTitle>
+                      <CardTitle className="text-white text-lg">{t("mealImage")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
                         <div className="text-center">
                           <ImageIcon className="w-12 h-12 text-blue-400 mx-auto mb-2" />
-                          <p className="text-slate-400 text-sm">Meal photo</p>
+                          <p className="text-slate-400 text-sm">{t("mealPhoto")}</p>
                           <p className="text-blue-400 text-xs mt-1">{selectedMeal.imageUrl}</p>
                         </div>
                       </div>
@@ -663,7 +716,7 @@ export default function MealsPage() {
                 {selectedMeal.ingredients && selectedMeal.ingredients.length > 0 && (
                   <Card className="bg-slate-900/70 border-slate-800">
                     <CardHeader>
-                      <CardTitle className="text-white text-lg">Ingredients</CardTitle>
+                      <CardTitle className="text-white text-lg">{t("ingredients")}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <ul className="space-y-2">
@@ -682,8 +735,8 @@ export default function MealsPage() {
                 {selectedMeal.recipe && (
                   <Card className="bg-green-500/10 border-green-500/30">
                     <CardHeader>
-                      <CardTitle className="text-green-400 text-lg flex items-center gap-2">
-                        📝 Recipe Instructions
+                      <CardTitle className={`text-green-400 text-lg flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                        📝 {t("recipeInstructions")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -696,8 +749,8 @@ export default function MealsPage() {
                 <Card className="bg-amber-500/10 border-amber-500/30">
                   <CardContent className="p-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-sm">Meal Type</span>
-                      <span className="text-amber-400 font-semibold">{selectedMeal.mealType}</span>
+                      <span className="text-slate-400 text-sm">{t("mealType")}</span>
+                      <span className="text-amber-400 font-semibold">{t(selectedMeal.mealType.toLowerCase() as any)}</span>
                     </div>
                   </CardContent>
                 </Card>
@@ -708,7 +761,8 @@ export default function MealsPage() {
       </Dialog>
 
     </div>
-      <BottomNav activeTab="meals" router={router} />
+    </PageTransition>
+      <BottomNav activeTab="meals" />
     </SubscriptionRequiredGuard>
   )
 }
@@ -726,60 +780,5 @@ function StatsCard({ icon: Icon, label, value, color }: any) {
         <p className="text-3xl font-bold text-white">{value}</p>
       </div>
     </Card>
-  )
-}
-
-function BottomNav({ activeTab, router }: any) {
-  const navItems = [
-    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "#10B2E3" },
-    { id: "workout", icon: Dumbbell, label: "Workout", path: "/workout", color: "#9333EA" },
-    { id: "meals", icon: Utensils, label: "Meals", path: "/meals", color: "#F59E0B" },
-    { id: "physio", icon: HeartPulse, label: "Physio", path: "/physio", color: "#F43F5E" },
-    { id: "profile", icon: User, label: "Profile", path: "/profile", color: "#6366F1" }
-  ]
-
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-      <style jsx>{`
-        @keyframes slideUp {
-          from { transform: translateY(10px) scale(0.9); opacity: 0; }
-          to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        .slide-scale-active {
-          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-      `}</style>
-      <div className="max-w-md mx-auto flex items-center justify-between">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => { if (item.path !== "/meals") router.push(item.path) }}
-            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
-              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
-            }`}
-            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
-          >
-            <div 
-              className={`p-2.5 rounded-xl transition-all duration-300 ${
-                activeTab === item.id ? "scale-110" : ""
-              }`}
-              style={{
-                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
-                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
-              }}
-            >
-              <item.icon className="w-5 h-5" />
-            </div>
-            <span className="text-[10px] font-medium">{item.label}</span>
-            {activeTab === item.id && (
-              <div 
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
   )
 }

@@ -10,6 +10,9 @@ import { Label } from "@/components/ui/label"
 import SubscriptionRequiredGuard from "@/components/subscription-guard"
 import { dbService } from "@/lib/db-service"
 import { toast, Toaster } from "sonner"
+import { PageTransition } from "@/components/page-transition"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
 
 interface PhysioRequest {
   id: string
@@ -41,6 +44,7 @@ export default function PhysioPage() {
   const [form, setForm] = useState({ physioId: "", injuryType: "", painPercent: 50, notes: "" })
   const [userId, setUserId] = useState("")
   const [userName, setUserName] = useState("")
+  const { t } = useLanguage()
 
   useEffect(() => {
     // Mark as mounted to prevent hydration mismatch
@@ -199,41 +203,42 @@ export default function PhysioPage() {
     <>
     <Toaster position="top-center" richColors />
     <SubscriptionRequiredGuard>
+    <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F43F5E] to-[#FB7185] bg-clip-text text-transparent mb-2">
-          Physiotherapy
+          {t("physiotherapyTitle")}
         </h1>
-        <p className="text-[#B6C4CF] mb-8">Request a queue slot and track your injury recovery.</p>
+        <p className="text-[#B6C4CF] mb-8">{t("physioSubtitle")}</p>
 
         <Card className="bg-gradient-to-r from-[#F43F5E] to-[#FB7185] border-none p-8 mb-8 relative overflow-hidden">
           <div className="relative z-10">
-            <h3 className="text-white text-xl font-bold mb-2">Recover & Heal</h3>
-            <p className="text-white/90 text-sm mb-4">Expert physiotherapy support for your recovery journey</p>
+            <h3 className="text-white text-xl font-bold mb-2">{t("recoverAndHeal")}</h3>
+            <p className="text-white/90 text-sm mb-4">{t("recoverAndHealDesc")}</p>
             <div className="flex items-center gap-3 text-white/90 text-sm">
-              <span>{requests.length} Request{requests.length === 1 ? '' : 's'}</span>
+              <span>{requests.length} {t("requestsLabel")}</span>
               <span>•</span>
-              <span>{requests.filter(r => r.completed).length} Completed</span>
+              <span>{requests.filter(r => r.completed).length} {t("completedLabel")}</span>
             </div>
           </div>
         </Card>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={HeartPulse} label="Total Requests" value={requests.length.toString()} color="#F43F5E" />
-          <StatsCard icon={CheckCircle2} label="Completed" value={requests.filter(r => r.completed).length.toString()} color="#FB7185" />
-          <StatsCard icon={Calendar} label="Pending" value={requests.filter(r => !r.completed).length.toString()} color="#FDA4AF" />
-          <StatsCard icon={Target} label="Recovery Rate" value={requests.length > 0 ? Math.round((requests.filter(r => r.completed).length / requests.length) * 100) + "%" : "0%"} color="#F43F5E" />
+          <StatsCard icon={HeartPulse} label={t("totalRequests")} value={requests.length.toString()} color="#F43F5E" />
+          <StatsCard icon={CheckCircle2} label={t("completedLabel")} value={requests.filter(r => r.completed).length.toString()} color="#FB7185" />
+          <StatsCard icon={Calendar} label={t("pendingLabel")} value={requests.filter(r => !r.completed).length.toString()} color="#FDA4AF" />
+          <StatsCard icon={Target} label={t("recoveryRate")} value={requests.length > 0 ? Math.round((requests.filter(r => r.completed).length / requests.length) * 100) + "%" : "0%"} color="#F43F5E" />
         </div>
 
       <section className="space-y-5">
         <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm flex items-center gap-2"><HeartPulse className="w-4 h-4 text-rose-400" /> Send Request</CardTitle>
+            <CardTitle className="text-white text-sm flex items-center gap-2"><HeartPulse className="w-4 h-4 text-rose-400" /> {t("sendRequest")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-wide text-slate-400">Physiotherapist</Label>
+                <Label className="text-xs uppercase tracking-wide text-slate-400">{t("physiotherapist")}</Label>
                 <select
                   value={form.physioId}
                   onChange={e => setForm({ ...form, physioId: e.target.value })}
@@ -246,7 +251,7 @@ export default function PhysioPage() {
                     <option value="">No physiotherapists available</option>
                   ) : (
                     <>
-                      <option value="">Select a physiotherapist</option>
+                      <option value="">{t("selectPhysiotherapist")}</option>
                       {physiotherapists.map(p => (
                         <option key={p.id} value={p.id} className="bg-[#0E151B] text-white">
                           {p.name} {p.specialization ? `- ${p.specialization}` : ''}
@@ -262,17 +267,17 @@ export default function PhysioPage() {
                 )}
               </div>
               <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-wide text-slate-400">Injury Type</Label>
+                <Label className="text-xs uppercase tracking-wide text-slate-400">{t("injuryType")}</Label>
                 <Input
                   value={form.injuryType}
                   onChange={e => setForm({ ...form, injuryType: e.target.value })}
-                  placeholder="e.g. Knee ligament strain"
+                  placeholder={t("injuryTypePlaceholder")}
                   className="bg-[#0E151B] border-[#2E3944] h-11 text-sm text-white placeholder:text-slate-500 focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/50 transition-all"
                 />
               </div>
               <div className="space-y-2">
                 <Label className="text-xs uppercase tracking-wide text-slate-400 flex justify-between">
-                  <span>Pain Percentage</span>
+                  <span>{t("painPercentage")}</span>
                   <span className="text-rose-400 font-semibold">{form.painPercent}%</span>
                 </Label>
                 <input
@@ -285,18 +290,18 @@ export default function PhysioPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label className="text-xs uppercase tracking-wide text-slate-400">Notes (optional)</Label>
+                <Label className="text-xs uppercase tracking-wide text-slate-400">{t("notesOptional")}</Label>
                 <textarea
                   value={form.notes}
                   onChange={e => setForm({ ...form, notes: e.target.value })}
                   rows={3}
-                  placeholder="Extra context..."
+                  placeholder={t("notesPlaceholder")}
                   className="w-full rounded-lg bg-[#0E151B] border border-[#2E3944] text-sm p-3 resize-none text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-rose-500/40 focus:border-rose-500/50 transition-all"
                 />
               </div>
               <Button type="submit" disabled={submitting || !form.injuryType.trim() || !form.physioId || physiotherapists.length === 0} className="w-full bg-gradient-to-r from-[#F43F5E] to-[#FB7185] hover:from-[#E11D48] hover:to-[#F472B6] h-11 text-sm font-semibold flex items-center justify-center gap-2 text-white disabled:opacity-50 disabled:cursor-not-allowed">
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                {submitting ? 'Sending...' : 'Send Request'}
+                {submitting ? 'Sending...' : t("sendRequest")}
                 {!submitting && <Plus className="w-4 h-4" />}
               </Button>
             </form>
@@ -306,7 +311,7 @@ export default function PhysioPage() {
         <Card className="bg-[#101A23] border-[#2E3944]">
           <CardHeader className="pb-3">
             <CardTitle className="text-white text-sm flex items-center gap-2">
-              <HeartPulse className="w-4 h-4 text-rose-400" /> Your Requests
+              <HeartPulse className="w-4 h-4 text-rose-400" /> {t("yourRequests")}
               <span className="ml-1 px-2 py-0.5 rounded-full text-[10px] bg-[#0E151B] border border-[#2E3944] text-white">{requests.length}</span>
             </CardTitle>
           </CardHeader>
@@ -327,14 +332,15 @@ export default function PhysioPage() {
                   </div>
               ))
             ) : (
-              <p className="text-[#B6C4CF] text-sm">No requests yet.</p>
+              <p className="text-[#B6C4CF] text-sm">{t("noRequestsYet")}</p>
             )}
           </CardContent>
         </Card>
       </section>
       </div>
     </div>
-      <BottomNav activeTab="physio" router={router} />
+    </PageTransition>
+      <BottomNav activeTab="physio" />
     </SubscriptionRequiredGuard>
     </>
   )
@@ -353,60 +359,5 @@ function StatsCard({ icon: Icon, label, value, color }: any) {
         <p className="text-3xl font-bold text-white">{value}</p>
       </div>
     </Card>
-  )
-}
-
-function BottomNav({ activeTab, router }: any) {
-  const navItems = [
-    { id: "dashboard", icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", color: "#10B2E3" },
-    { id: "workout", icon: Dumbbell, label: "Workout", path: "/workout", color: "#9333EA" },
-    { id: "meals", icon: Utensils, label: "Meals", path: "/meals", color: "#F59E0B" },
-    { id: "physio", icon: HeartPulse, label: "Physio", path: "/physio", color: "#F43F5E" },
-    { id: "profile", icon: User, label: "Profile", path: "/profile", color: "#6366F1" }
-  ]
-
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-      <style jsx>{`
-        @keyframes slideUp {
-          from { transform: translateY(10px) scale(0.9); opacity: 0; }
-          to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        .slide-scale-active {
-          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-      `}</style>
-      <div className="max-w-md mx-auto flex items-center justify-between">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => { if (item.path !== "/physio") router.push(item.path) }}
-            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
-              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
-            }`}
-            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
-          >
-            <div 
-              className={`p-2.5 rounded-xl transition-all duration-300 ${
-                activeTab === item.id ? "scale-110" : ""
-              }`}
-              style={{
-                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
-                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
-              }}
-            >
-              <item.icon className="w-5 h-5" />
-            </div>
-            <span className="text-[10px] font-medium">{item.label}</span>
-            {activeTab === item.id && (
-              <div 
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
   )
 }

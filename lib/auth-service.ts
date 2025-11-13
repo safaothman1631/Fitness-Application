@@ -77,6 +77,8 @@ export async function loginUser(
     }
   } catch (error: any) {
     console.error("Login error:", error)
+    console.error("Error code:", error.code)
+    console.error("Error message:", error.message)
     
     // Handle specific Firebase auth errors
     let errorMessage = "Login failed. Please check your credentials."
@@ -91,6 +93,12 @@ export async function loginUser(
       errorMessage = "This account has been disabled."
     } else if (error.code === "auth/too-many-requests") {
       errorMessage = "Too many failed attempts. Please try again later."
+    } else if (error.code === "auth/invalid-credential") {
+      errorMessage = "Incorrect email or password. Please try again."
+    } else if (error.code === "auth/network-request-failed") {
+      errorMessage = "Network error. Please check your connection."
+    } else if (error.message) {
+      errorMessage = error.message
     }
 
     return {

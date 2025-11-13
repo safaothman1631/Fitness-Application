@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import TransitionLink from "@/components/transition-link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
 import { LayoutGrid, Dumbbell, Apple, HeartPulse, User } from "lucide-react"
@@ -59,7 +59,7 @@ export default function AppBottomNav() {
           {tabs.map((t, i) => {
             const active = pathname.startsWith(t.href)
             return (
-              <Link
+              <TransitionLink
                 key={t.key}
                 href={t.href}
                 className="relative flex flex-col items-center justify-center py-3 text-xs group transition-all duration-300"
@@ -117,7 +117,7 @@ export default function AppBottomNav() {
                 
                 {/* Hover effect */}
                 <div className={`absolute inset-0 rounded-lg transition-all duration-300 ${active ? "" : "group-hover:bg-slate-800/30"}`} />
-              </Link>
+              </TransitionLink>
             )
           })}
         </div>

@@ -1,4 +1,9 @@
 "use client"
+import { signInWithEmailAndPassword } from "firebase/auth"
+import { doc, getDoc } from "firebase/firestore"
+import { auth, db } from "@/lib/firebase"
+import { initializeUserSubscription } from "@/lib/subscription"
+import { toast } from "sonner"
 import AuthTopbar from "@/components/auth-topbar"
 import { useEffect, useState } from "react"
 import Link from "next/link"
@@ -16,19 +21,84 @@ export default function LoginPage() {
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
     const [formData, setFormData] = useState({ email: "", password: "" })
+    const [fieldError, setFieldError] = useState({ email: false, password: false })
 
     useEffect(() => {
         // Redirect to /giris if needed
         // router.replace("/giris")
     }, [router])
 
+    const [loginError, setLoginError] = useState("")
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
+        let errorObj = { email: false, password: false }
+        setLoginError("")
+        
+        if (!formData.email) errorObj.email = true
+        if (!formData.password) errorObj.password = true
+        setFieldError(errorObj)
+        if (errorObj.email || errorObj.password) return
+        
         setLoading(true)
-        setTimeout(() => {
-            router.push("/dashboard")
+        
+        try {
+            // Authenticate with Firebase
+            const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password)
+            const user = userCredential.user
+            
+            // Get user data from Firestore to determine role
+            const userDoc = await getDoc(doc(db, "users", user.uid))
+            let role = "user"
+            let redirectUrl = "/dashboard"
+            
+            if (userDoc.exists()) {
+                const userData = userDoc.data()
+                role = userData.role || "user"
+                
+                // Determine redirect URL based on role
+                const roleRedirects: Record<string, string> = {
+                    superadmin: "/superadmin",
+                    admin: "/admin",
+                    physiotherapist: "/physiotherapist",
+                    trainer: "/trainer",
+                    owner: "/owner",
+                    patient: "/patient-panel",
+                    user: "/dashboard",
+                }
+                redirectUrl = roleRedirects[role] || "/dashboard"
+            }
+            
+            // Save to localStorage
+            localStorage.setItem("userEmail", formData.email)
+            localStorage.setItem("userId", user.uid)
+            localStorage.setItem("userRole", role)
+            localStorage.setItem("isAuthenticated", "true")
+            
+            // Initialize subscription from Firestore
+            await initializeUserSubscription(user.uid, formData.email)
+            
+            toast.success("Login successful!")
+            
+            // Add smooth fade out transition before redirect
+            const loginForm = document.getElementById('login-form')
+            if (loginForm) {
+                loginForm.style.transition = 'opacity 0.3s ease-out, transform 0.3s ease-out'
+                loginForm.style.opacity = '0'
+                loginForm.style.transform = 'scale(0.95)'
+            }
+            
+            // Redirect to appropriate dashboard with transition
+            setTimeout(() => {
+                router.push(redirectUrl)
+            }, 300)
+            
+        } catch (error: any) {
+            console.error("Login error:", error)
+            setLoginError("Incorrect email or password. Please try again.")
+            toast.error("Incorrect email or password. Please try again.")
+        } finally {
             setLoading(false)
-        }, 300)
+        }
     }
 
     return (
@@ -66,9 +136,17 @@ export default function LoginPage() {
                                         type="email"
                                         value={formData.email}
                                         placeholder={t("emailOrUsername")}
-                                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        onChange={(e) => {
+                                            setFormData({ ...formData, email: e.target.value })
+                                            if (fieldError.email) setFieldError({ ...fieldError, email: false })
+                                        }}
                                         className="bg-[#0E151B] border-[#2E3944] text-[#EEF4F8] text-sm rounded-[14px] focus:ring-2 focus:ring-[#47D8FF]/40 focus:border-[#10B2E3]"
                                     />
+                                    {fieldError.email && (
+                                        <div className="mt-2 rounded-2xl border border-red-700 bg-[#241B22] px-6 py-3 text-red-400 text-base">
+                                            Please enter your email
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="space-y-2">
                                     <Label className="text-xs uppercase tracking-wide text-[#B6C4CF]">{t("password")}</Label>
@@ -77,7 +155,10 @@ export default function LoginPage() {
                                             type={showPassword ? "text" : "password"}
                                             value={formData.password}
                                             placeholder={t("password")}
-                                            onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                                            onChange={(e) => {
+                                                setFormData({ ...formData, password: e.target.value })
+                                                if (fieldError.password) setFieldError({ ...fieldError, password: false })
+                                            }}
                                             className="bg-[#0E151B] border-[#2E3944] text-[#EEF4F8] pr-10 text-sm rounded-[14px] focus:ring-2 focus:ring-[#47D8FF]/40 focus:border-[#10B2E3]"
                                         />
                                         <button
@@ -88,12 +169,22 @@ export default function LoginPage() {
                                             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                                         </button>
                                     </div>
+                                    {fieldError.password && (
+                                        <div className="mt-2 rounded-2xl border border-red-700 bg-[#241B22] px-6 py-3 text-red-400 text-base">
+                                            Please enter your password
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="flex items-center justify-between">
                                     <Link href="/forgot-password" className="text-xs text-[#10B2E3] hover:text-[#73E8FF] font-semibold transition-colors">
                                         {"Forgot your password?"}
                                     </Link>
                                 </div>
+                                {loginError && (
+                                    <div className="mb-4 rounded-2xl border border-red-700 bg-[#241B22] px-6 py-3 text-red-400 text-base text-center">
+                                        {loginError}
+                                    </div>
+                                )}
                                 <AnimatedButton
                                     type="submit"
                                     disabled={loading}

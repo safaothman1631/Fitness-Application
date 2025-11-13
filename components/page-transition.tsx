@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 
 interface PageTransitionProps {
   children: React.ReactNode
@@ -8,24 +9,24 @@ interface PageTransitionProps {
 }
 
 export function PageTransition({ children, className = "" }: PageTransitionProps) {
-  const [isLoaded, setIsLoaded] = useState(false)
+  const pathname = usePathname()
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    // Small delay to ensure smooth transition
+    setMounted(false)
     const timer = setTimeout(() => {
-      setIsLoaded(true)
+      setMounted(true)
     }, 50)
-
+    
     return () => clearTimeout(timer)
-  }, [])
+  }, [pathname])
 
   return (
     <div
-      className={`transition-all duration-[400ms] ease-out ${className}`}
+      className={`transition-all duration-500 ${className}`}
       style={{
-        opacity: isLoaded ? 1 : 0,
-        filter: isLoaded ? "blur(0px)" : "blur(8px)",
-        transform: isLoaded ? "scale(1)" : "scale(1.02)"
+        opacity: mounted ? 1 : 0,
+        transform: mounted ? "translateY(0px) scale(1)" : "translateY(20px) scale(0.98)",
       }}
     >
       {children}

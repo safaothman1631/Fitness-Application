@@ -10,10 +10,12 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SubscriptionWarning } from "@/components/subscription-warning"
 import { checkSubscriptionStatus, getSubscriptionExpiry } from "@/lib/subscription"
+import { PageTransition } from "@/components/page-transition"
+import { BottomNav } from "@/components/bottom-nav"
 
 export default function UserDashboard() {
   const router = useRouter()
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [subscriptionStatus, setSubscriptionStatus] = useState({
@@ -105,29 +107,15 @@ export default function UserDashboard() {
 
   return (
     <>
+    <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
-        {/* Header with Notification */}
-        <div className="flex items-start justify-between mb-2">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent mb-2">
-              {t("welcomeBackUser")}
-            </h1>
-            <p className="text-[#B6C4CF] mb-8">{t("readyForToday")}</p>
-          </div>
-          
-          {/* Notification Bell */}
-          <button
-            onClick={() => setNotificationOpen(true)}
-            className="relative p-3 rounded-xl bg-[#101A23] border border-[#2E3944] hover:border-[#47D8FF]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,178,227,0.3)] group"
-          >
-            <Bell className="w-6 h-6 text-[#10B2E3] transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
-            {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-[#F43F5E] to-[#EF4444] rounded-full text-white text-xs flex items-center justify-center font-bold animate-pulse shadow-[0_0_15px_rgba(244,63,94,0.6)]">
-                {unreadCount}
-              </span>
-            )}
-          </button>
+        {/* Header */}
+        <div className="mb-2">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent mb-2">
+            {t("welcomeBackUser")}
+          </h1>
+          <p className="text-[#B6C4CF] mb-8">{t("readyForToday")}</p>
         </div>
 
         {/* Subscription Warning */}
@@ -234,7 +222,8 @@ export default function UserDashboard() {
         </DialogContent>
       </Dialog>
     </div>
-      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} router={router} t={t} />
+    </PageTransition>
+      <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </>
   )
 }
@@ -252,60 +241,5 @@ function StatsCard({ icon: Icon, label, value, color }: any) {
         <p className="text-3xl font-bold text-white">{value}</p>
       </div>
     </Card>
-  )
-}
-
-function BottomNav({ activeTab, setActiveTab, router, t }: any) {
-  const navItems = [
-    { id: "dashboard", icon: LayoutDashboard, label: t("dashboard"), path: "/dashboard", color: "#10B2E3" },
-    { id: "workout", icon: Dumbbell, label: t("workout"), path: "/workout", color: "#9333EA" },
-    { id: "meals", icon: Utensils, label: t("meals"), path: "/meals", color: "#F59E0B" },
-    { id: "physio", icon: HeartPulse, label: t("physiotherapy"), path: "/physio", color: "#F43F5E" },
-    { id: "profile", icon: User, label: t("profile"), path: "/profile", color: "#6366F1" }
-  ]
-
-  return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)]">
-      <style jsx>{`
-        @keyframes slideUp {
-          from { transform: translateY(10px) scale(0.9); opacity: 0; }
-          to { transform: translateY(0) scale(1); opacity: 1; }
-        }
-        .slide-scale-active {
-          animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-      `}</style>
-      <div className="max-w-md mx-auto flex items-center justify-between">
-        {navItems.map(item => (
-          <button
-            key={item.id}
-            onClick={() => { setActiveTab(item.id); if (item.path !== "/dashboard") router.push(item.path) }}
-            className={`flex flex-col items-center gap-1 min-w-[60px] transition-all duration-300 relative ${
-              activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
-            }`}
-            style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
-          >
-            <div 
-              className={`p-2.5 rounded-xl transition-all duration-300 ${
-                activeTab === item.id ? "scale-110" : ""
-              }`}
-              style={{
-                backgroundColor: activeTab === item.id ? `${item.color}20` : "transparent",
-                boxShadow: activeTab === item.id ? `0 0 20px ${item.color}40` : "none"
-              }}
-            >
-              <item.icon className="w-5 h-5" />
-            </div>
-            <span className="text-[10px] font-medium">{item.label}</span>
-            {activeTab === item.id && (
-              <div 
-                className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full"
-                style={{ backgroundColor: item.color, boxShadow: `0 0 8px ${item.color}` }}
-              />
-            )}
-          </button>
-        ))}
-      </div>
-    </div>
   )
 }

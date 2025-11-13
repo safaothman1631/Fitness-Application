@@ -125,18 +125,18 @@ export function getUserJoinDate(): string {
 
 /**
  * Initialize subscription for specific user accounts
- * Call this after login to set up user-specific subscriptions
+ * Call this after login to set up user-specific subscriptions from Firestore
  */
-export function initializeUserSubscription(email: string): void {
+export async function initializeUserSubscription(userId?: string, email?: string): Promise<void> {
   if (typeof window === 'undefined') return
 
-  console.log('🔐 Initializing subscription for:', email)
+  console.log('🔐 Initializing subscription for user:', userId || email)
 
   // Check if already initialized for this user
   const lastEmail = localStorage.getItem('lastUserEmail')
   
   // If switching users, clear old subscription data
-  if (lastEmail && lastEmail !== email) {
+  if (email && lastEmail && lastEmail !== email) {
     console.log('👤 Switching users, clearing old data...')
     localStorage.removeItem('subscriptionExpiry')
     localStorage.removeItem('userAccessKey')
@@ -144,45 +144,62 @@ export function initializeUserSubscription(email: string): void {
   }
 
   // Set current user email
-  localStorage.setItem('lastUserEmail', email)
+  if (email) {
+    localStorage.setItem('lastUserEmail', email)
+  }
 
-  // Set subscription based on email
-  if (email === 'premium@darinfitness.com') {
-    // Premium user - 30 days subscription
+  // If we have userId, fetch subscription data from Firestore
+  if (userId) {
+    try {
+      const { doc, getDoc } = await import('firebase/firestore')
+      const { db } = await import('@/lib/firebase')
+      
+      const userDoc = await getDoc(doc(db, 'users', userId))
+      
+      if (userDoc.exists()) {
+        const userData = userDoc.data()
+        
+        // Set subscription expiry from Firestore
+        if (userData.subscriptionEnd) {
+          setSubscriptionExpiry(userData.subscriptionEnd)
+          console.log('✅ Subscription loaded from Firestore:', userData.subscriptionEnd)
+        }
+        
+        // Set join date from Firestore
+        if (userData.joinDate) {
+          localStorage.setItem('userJoinDate', userData.joinDate)
+        }
+        
+        console.log('📊 Subscription status:', userData.subscriptionStatus)
+        console.log('📦 Days remaining:', checkSubscriptionStatus(userData.subscriptionEnd).daysRemaining)
+        
+        return
+      }
+    } catch (error) {
+      console.error('❌ Error fetching subscription from Firestore:', error)
+    }
+  }
+
+  // Fallback: Set subscription based on email (for backward compatibility)
+  if (email === 'premium@darinfitness.com' || email === 'newuser@fitpro.com') {
     const expiry = new Date()
     expiry.setDate(expiry.getDate() + 30)
     setSubscriptionExpiry(expiry)
-    console.log('✅ Premium user initialized with 30 days:', expiry.toISOString())
-    
-    // Set join date to 3 months ago
-    const joinDate = new Date()
-    joinDate.setMonth(joinDate.getMonth() - 3)
-    localStorage.setItem('userJoinDate', joinDate.toISOString())
-  } else if (email === 'warning@darinfitness.com') {
-    // Warning user - 15 days subscription (yellow zone)
+    console.log('✅ Premium user initialized with 30 days')
+  } else if (email === 'warning@darinfitness.com' || email === 'miduser@fitpro.com') {
     const expiry = new Date()
     expiry.setDate(expiry.getDate() + 15)
     setSubscriptionExpiry(expiry)
-    console.log('⚠️ Warning user initialized with 15 days:', expiry.toISOString())
-    
-    // Set join date to 2 months ago
-    const joinDate = new Date()
-    joinDate.setMonth(joinDate.getMonth() - 2)
-    localStorage.setItem('userJoinDate', joinDate.toISOString())
-  } else {
-    // Free user - expired subscription (including user@darinfitness.com)
+    console.log('⚠️ Mid-tier user initialized with 15 days')
+  } else if (email === 'superadmin@fitpro.com') {
     const expiry = new Date()
-    expiry.setDate(expiry.getDate() - 5) // Expired 5 days ago
+    expiry.setDate(expiry.getDate() + 365)
     setSubscriptionExpiry(expiry)
-    console.log('❌ Expired user initialized with -5 days:', expiry.toISOString())
-    
-    // Set join date to 1 month ago
-    const joinDate = new Date()
-    joinDate.setMonth(joinDate.getMonth() - 1)
-    localStorage.setItem('userJoinDate', joinDate.toISOString())
+    console.log('👑 Superadmin initialized with 365 days')
+  } else {
+    const expiry = new Date()
+    expiry.setDate(expiry.getDate() - 5)
+    setSubscriptionExpiry(expiry)
+    console.log('❌ Expired user initialized')
   }
-
-  // Verify what was set
-  const storedExpiry = localStorage.getItem('subscriptionExpiry')
-  console.log('📦 Stored subscription expiry:', storedExpiry)
 }

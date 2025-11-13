@@ -1,32 +1,37 @@
 "use client"
 
-import { useState } from "react"
-import Link from "next/link"
+import TransitionLink from "@/components/transition-link"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
-import { ArrowLeft, Check, Crown, Zap, Star } from "lucide-react"
+import { ArrowLeft, Check, Crown, Zap } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
 
 export default function MembershipPage() {
-  const [billingCycle, setBillingCycle] = useState<"monthly" | "yearly">("monthly")
   const { t } = useLanguage()
 
   const plans = [
     {
-      name: t("freePlan"),
-      icon: Star,
-      price: { monthly: 0, yearly: 0 },
+      name: "Pro",
+      duration: "1 Month",
+      icon: Zap,
+      price: 99,
       description: t("idealForBeginners"),
-      features: [t("exerciseLibraryFull"), t("progressTracking"), t("videoGuidance")],
-      limitations: [t("limitations")],
-      color: "from-gray-500 to-gray-600",
+      features: [
+        t("exerciseLibraryFull"),
+        t("progressTracking"),
+        t("videoGuidance"),
+        t("goalOriented"),
+      ],
+      limitations: [],
+      color: "from-blue-500 to-cyan-500",
       popular: false,
     },
     {
-      name: t("premiumPlan"),
+      name: "Pro Plus",
+      duration: "3 Months",
       icon: Zap,
-      price: { monthly: 99, yearly: 990 },
+      price: 249,
       description: t("mostPopularChoice"),
       features: [
         t("exerciseLibraryFull"),
@@ -41,9 +46,10 @@ export default function MembershipPage() {
       popular: true,
     },
     {
-      name: t("proPlan"),
+      name: "Elite",
+      duration: "6 Months",
       icon: Crown,
-      price: { monthly: 199, yearly: 1990 },
+      price: 449,
       description: t("forProfessionalAthletes"),
       features: [
         t("exerciseLibraryFull"),
@@ -53,6 +59,27 @@ export default function MembershipPage() {
         t("achievementBadges"),
         t("analytics"),
         t("helpSupport"),
+      ],
+      limitations: [],
+      color: "from-purple-500 to-pink-500",
+      popular: false,
+    },
+    {
+      name: "Legend",
+      duration: "1 Year",
+      icon: Crown,
+      price: 799,
+      description: "Ultimate fitness transformation",
+      features: [
+        t("exerciseLibraryFull"),
+        t("personalizedPrograms"),
+        t("progressTracking"),
+        t("videoGuidance"),
+        t("achievementBadges"),
+        t("analytics"),
+        t("helpSupport"),
+        "Priority customer support",
+        "Exclusive community access",
       ],
       limitations: [],
       color: "from-yellow-500 to-orange-500",
@@ -68,51 +95,28 @@ export default function MembershipPage() {
           <h1 className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-primary via-secondary to-accent bg-clip-text text-transparent">
             {t("membershipPlans")}
           </h1>
-          <Link href="/">
+          <TransitionLink href="/">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="h-4 w-4 mr-2" />
               {t("back")}
             </Button>
-          </Link>
+          </TransitionLink>
         </div>
       </div>
 
       {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        {/* Billing Cycle Toggle */}
-        <div className="flex items-center justify-center gap-4 mb-12">
-          <span className={`font-medium ${billingCycle === "monthly" ? "text-white" : "text-gray-400"}`}>
-            {t("monthly")}
-          </span>
-          <button
-            onClick={() => setBillingCycle(billingCycle === "monthly" ? "yearly" : "monthly")}
-            className="relative inline-flex h-8 w-14 items-center rounded-full bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-gray-950"
-            role="switch"
-            aria-checked={billingCycle === "yearly"}
-          >
-            <span
-              className={`inline-block h-6 w-6 transform rounded-full bg-white transition-transform ${
-                billingCycle === "yearly" ? "translate-x-7" : "translate-x-1"
-              }`}
-            />
-          </button>
-          <span className={`font-medium ${billingCycle === "yearly" ? "text-white" : "text-gray-400"}`}>
-            {t("yearly")}
-          </span>
-          {billingCycle === "yearly" && (
-            <Badge className="ml-2 bg-green-500/20 text-green-300 border-green-500/30">
-              {t("savePercent")}
-            </Badge>
-          )}
+        {/* Header Text */}
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Choose Your Plan</h2>
+          <p className="text-gray-400 text-lg">Select the perfect plan for your fitness journey</p>
         </div>
 
         {/* Plans Grid */}
-        <div className="grid md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-6 max-w-7xl mx-auto">
           {plans.map((plan) => {
             const Icon = plan.icon
-            const price = plan.price[billingCycle]
-            const displayPrice = price === 0 ? t("freePlan") : `$${price}`
-            const periodLabel = billingCycle === "monthly" ? "/month" : "/year"
+            const displayPrice = `$${plan.price}`
 
             return (
               <Card
@@ -150,9 +154,9 @@ export default function MembershipPage() {
 
                   {/* Price */}
                   <div className="mb-6">
-                    <div className="flex items-baseline gap-1">
+                    <div className="flex flex-col gap-1">
                       <span className="text-4xl font-bold text-white">{displayPrice}</span>
-                      {price > 0 && <span className="text-gray-400">{periodLabel}</span>}
+                      <span className="text-gray-400 text-sm">{plan.duration}</span>
                     </div>
                   </div>
 
@@ -165,9 +169,9 @@ export default function MembershipPage() {
                         : "bg-white/10 hover:bg-white/20 text-white"
                     }`}
                   >
-                    <Link href={plan.name === t("freePlan") ? "/" : "/payment"}>
-                      {plan.name === t("freePlan") ? t("getStarted") : t("subscribeNow")}
-                    </Link>
+                    <TransitionLink href="/payment">
+                      {t("subscribeNow")}
+                    </TransitionLink>
                   </Button>
 
                   {/* Features */}

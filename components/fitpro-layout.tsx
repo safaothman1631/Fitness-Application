@@ -21,6 +21,7 @@ import {
 import Logo from "./logo"
 import { Button } from "./ui/button"
 import { getRoleConfig, type AppRole } from "@/lib/roles"
+import { PageTransition } from "./page-transition"
 
 interface FitproLayoutProps {
   children: React.ReactNode
@@ -42,7 +43,11 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
       <div className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur border-b border-slate-800 h-16" />
 
       {/* Main Content Only - sidebar removed */}
-      <main className="p-4 lg:p-8 min-h-screen">{children}</main>
+      <main className="p-4 lg:p-8 min-h-screen">
+        <PageTransition>
+          {children}
+        </PageTransition>
+      </main>
     </div>
   )
 }
