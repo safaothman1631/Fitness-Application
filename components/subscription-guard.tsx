@@ -6,9 +6,12 @@ import { checkSubscriptionStatus, getSubscriptionExpiry } from "@/lib/subscripti
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Lock, ArrowLeft } from "lucide-react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export default function SubscriptionRequiredGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter()
+  const { t, language } = useLanguage()
+  const isRTL = language === "ar" || language === "ku"
   
   useEffect(() => {
     const expiry = getSubscriptionExpiry()
@@ -27,7 +30,7 @@ export default function SubscriptionRequiredGuard({ children }: { children: Reac
 
   if (!status.isActive) {
     return (
-      <div className="min-h-screen bg-[#0E151B] text-white flex items-center justify-center p-4">
+      <div className="min-h-screen bg-[#0E151B] text-white flex items-center justify-center p-4" dir={isRTL ? "rtl" : "ltr"}>
         <Card className="max-w-md w-full bg-gradient-to-br from-rose-950/90 via-rose-900/80 to-rose-950/90 border-2 border-rose-400/60 backdrop-blur-sm shadow-2xl shadow-rose-500/20">
           <div className="p-8 text-center space-y-6">
             {/* Icon */}
@@ -38,12 +41,12 @@ export default function SubscriptionRequiredGuard({ children }: { children: Reac
             </div>
 
             {/* Message */}
-            <div>
+            <div className={isRTL ? "text-center" : ""}>
               <h2 className="text-2xl font-bold text-white mb-3 drop-shadow-lg">
-                Premium Feature Locked
+                {t("premiumFeatureLocked")}
               </h2>
               <p className="text-rose-50 font-medium leading-relaxed">
-                This feature requires an active subscription. Please renew your subscription to continue accessing premium content.
+                {t("featureRequiresSubscription")}
               </p>
             </div>
 
@@ -53,20 +56,20 @@ export default function SubscriptionRequiredGuard({ children }: { children: Reac
                 onClick={() => router.push("/membership")}
                 className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold h-12 rounded-xl shadow-lg shadow-rose-500/40 hover:shadow-rose-500/60 transition-all"
               >
-                Renew Subscription
+                {t("renewSubscription")}
               </Button>
               <Button
                 onClick={() => router.push("/dashboard")}
                 variant="outline"
-                className="w-full border-rose-300/50 bg-rose-950/50 text-rose-50 hover:bg-rose-900/50 hover:border-rose-300/70 font-semibold h-12 rounded-xl"
+                className={`w-full border-rose-300/50 bg-rose-950/50 text-rose-50 hover:bg-rose-900/50 hover:border-rose-300/70 font-semibold h-12 rounded-xl ${isRTL ? "flex-row-reverse" : ""}`}
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Dashboard
+                <ArrowLeft className={`w-4 h-4 ${isRTL ? "ml-2 rotate-180" : "mr-2"}`} />
+                {t("backToDashboard")}
               </Button>
             </div>
 
             <p className="text-sm text-rose-100/70 font-medium">
-              Redirecting to dashboard in 3 seconds...
+              {t("redirectingToDashboard")}
             </p>
           </div>
         </Card>

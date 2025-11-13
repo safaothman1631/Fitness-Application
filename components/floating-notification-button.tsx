@@ -5,11 +5,19 @@ import { Bell } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { usePathname } from "next/navigation"
 
 export function FloatingNotificationButton() {
+  const pathname = usePathname()
   const { language } = useLanguage()
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [unreadCount] = useState(2)
+  
+  // Hide on login and register pages
+  const hideOnPages = ['/login', '/register', '/giris', '/kayit']
+  if (hideOnPages.some(page => pathname?.startsWith(page))) {
+    return null
+  }
   
   // Check if RTL language
   const isRTL = language === "ar" || language === "ku"

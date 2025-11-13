@@ -61,19 +61,41 @@ export default function ProfilePage() {
   const [notifyPush, setNotifyPush] = useState(true)
 
   useEffect(() => {
+    // Load user data from localStorage
     try {
+      const userStr = localStorage.getItem("user")
+      if (userStr) {
+        const user = JSON.parse(userStr)
+        const userData = {
+          name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || "User",
+          email: user.email || "",
+          phone: user.phone || "",
+          joinDate: user.joinDate ? new Date(user.joinDate).toLocaleDateString() : "",
+          weight: user.weight || profile.weight,
+          height: user.height || profile.height,
+          goal: user.goal || profile.goal,
+          experience: user.experience || profile.experience,
+        }
+        setProfile(prev => ({ ...prev, ...userData }))
+        setDraft(prev => ({ ...prev, ...userData }))
+      }
+      
+      // Load saved profile data if exists (overrides user data)
       const p = localStorage.getItem("profileData")
       if (p) {
         const parsed = JSON.parse(p)
-        setProfile(parsed)
-        setDraft(parsed)
+        setProfile(prev => ({ ...prev, ...parsed }))
+        setDraft(prev => ({ ...prev, ...parsed }))
       }
+      
       const a = localStorage.getItem("profileAvatar")
       if (a) {
         setAvatar(a)
         setDraftAvatar(a)
       }
-    } catch {}
+    } catch (error) {
+      console.error("Error loading user data:", error)
+    }
 
     // Check subscription status
     const updateSubscriptionData = () => {
@@ -598,7 +620,7 @@ export default function ProfilePage() {
                     <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
                     </svg>
-                    {t("language")}
+                    {t("languageSettings")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-6 space-y-5">

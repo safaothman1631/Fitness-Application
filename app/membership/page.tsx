@@ -8,12 +8,25 @@ import { ArrowLeft, Check, Crown, Zap } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
 
 export default function MembershipPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  const isRTL = language === "ar" || language === "ku"
+
+  // Set document direction
+  if (typeof document !== 'undefined') {
+    document.documentElement.dir = isRTL ? 'rtl' : 'ltr'
+  }
+
+  // Convert numbers to Arabic/Kurdish numerals for RTL
+  const convertToArabicNumerals = (num: number): string => {
+    if (!isRTL) return num.toString()
+    const arabicNumerals = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩']
+    return num.toString().split('').map(digit => arabicNumerals[parseInt(digit)]).join('')
+  }
 
   const plans = [
     {
       name: "Pro",
-      duration: "1 Month",
+      duration: t("oneMonth"),
       icon: Zap,
       price: 99,
       description: t("idealForBeginners"),
@@ -29,7 +42,7 @@ export default function MembershipPage() {
     },
     {
       name: "Pro Plus",
-      duration: "3 Months",
+      duration: t("threeMonths"),
       icon: Zap,
       price: 249,
       description: t("mostPopularChoice"),
@@ -47,7 +60,7 @@ export default function MembershipPage() {
     },
     {
       name: "Elite",
-      duration: "6 Months",
+      duration: t("sixMonths"),
       icon: Crown,
       price: 449,
       description: t("forProfessionalAthletes"),
@@ -66,10 +79,10 @@ export default function MembershipPage() {
     },
     {
       name: "Legend",
-      duration: "1 Year",
+      duration: t("oneYear"),
       icon: Crown,
       price: 799,
-      description: "Ultimate fitness transformation",
+      description: t("ultimateFitnessTransformation"),
       features: [
         t("exerciseLibraryFull"),
         t("personalizedPrograms"),
@@ -78,8 +91,8 @@ export default function MembershipPage() {
         t("achievementBadges"),
         t("analytics"),
         t("helpSupport"),
-        "Priority customer support",
-        "Exclusive community access",
+        t("priorityCustomerSupport"),
+        t("exclusiveCommunityAccess"),
       ],
       limitations: [],
       color: "from-yellow-500 to-orange-500",
@@ -96,8 +109,8 @@ export default function MembershipPage() {
             {t("membershipPlans")}
           </h1>
           <TransitionLink href="/">
-            <Button variant="ghost" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
+            <Button variant="ghost" size="sm" className="flex items-center gap-2">
+              <ArrowLeft className={`h-4 w-4 ${isRTL ? "rotate-180" : ""}`} />
               {t("back")}
             </Button>
           </TransitionLink>
@@ -107,16 +120,17 @@ export default function MembershipPage() {
       {/* Main Content */}
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header Text */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Choose Your Plan</h2>
-          <p className="text-gray-400 text-lg">Select the perfect plan for your fitness journey</p>
+        <div className={`text-center mb-12 ${isRTL ? "text-right" : ""}`}>
+          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">{t("chooseYourPlan")}</h2>
+          <p className="text-gray-400 text-lg">{t("selectPerfectPlan")}</p>
         </div>
 
         {/* Plans Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-6 max-w-7xl mx-auto">
           {plans.map((plan) => {
             const Icon = plan.icon
-            const displayPrice = `$${plan.price}`
+            const priceNumber = convertToArabicNumerals(plan.price)
+            const displayPrice = isRTL ? `${priceNumber}$` : `$${plan.price}`
 
             return (
               <Card
@@ -131,32 +145,43 @@ export default function MembershipPage() {
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 )}
 
-                <div className="relative p-6 sm:p-8">
+                <div className={`relative p-6 sm:p-8 ${isRTL ? "text-right" : ""}`}>
                   {/* Popular Badge */}
                   {plan.popular && (
-                    <Badge className="mb-4 bg-primary/80 text-white border-0">
-                      {t("mostPopularBadge")}
-                    </Badge>
+                    <div className={`mb-4 flex ${isRTL ? "justify-end" : "justify-start"}`}>
+                      <Badge className="bg-primary/80 text-white border-0">
+                        {t("mostPopularBadge")}
+                      </Badge>
+                    </div>
                   )}
 
                   {/* Plan Header */}
-                  <div className="mb-6">
-                    <div className="flex items-center gap-3 mb-3">
-                      <div
-                        className={`h-12 w-12 rounded-lg bg-gradient-to-br ${plan.color} flex items-center justify-center`}
-                      >
-                        <Icon className="h-6 w-6 text-white" />
-                      </div>
-                      <h3 className="text-2xl font-bold text-white">{plan.name}</h3>
+                  <div className={`mb-6 ${isRTL ? "clear-both" : ""}`}>
+                    <div className={`flex items-center gap-3 mb-3 ${isRTL ? "flex-row justify-end" : ""}`}>
+                      {isRTL ? (
+                        <>
+                          <h3 className="text-2xl font-bold text-white">{plan.name}</h3>
+                          <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${plan.color} flex items-center justify-center`}>
+                            <Icon className="h-6 w-6 text-white" />
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <div className={`h-12 w-12 rounded-lg bg-gradient-to-br ${plan.color} flex items-center justify-center`}>
+                            <Icon className="h-6 w-6 text-white" />
+                          </div>
+                          <h3 className="text-2xl font-bold text-white">{plan.name}</h3>
+                        </>
+                      )}
                     </div>
-                    <p className="text-gray-400 text-sm">{plan.description}</p>
+                    <p className={`text-gray-400 text-sm`}>{plan.description}</p>
                   </div>
 
                   {/* Price */}
                   <div className="mb-6">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-4xl font-bold text-white">{displayPrice}</span>
-                      <span className="text-gray-400 text-sm">{plan.duration}</span>
+                    <div className={`flex flex-col gap-1 ${isRTL ? "items-end" : "items-start"}`}>
+                      <span className={`text-4xl font-bold text-white ${isRTL ? "text-right w-full" : "text-left"}`}>{displayPrice}</span>
+                      <span className={`text-gray-400 text-sm ${isRTL ? "text-right w-full" : "text-left"}`}>{plan.duration}</span>
                     </div>
                   </div>
 
@@ -177,9 +202,9 @@ export default function MembershipPage() {
                   {/* Features */}
                   <div className="space-y-3 mb-6">
                     {plan.features.map((feature, index) => (
-                      <div key={index} className="flex items-start gap-3">
+                      <div key={index} className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse justify-end" : ""}`}>
                         <Check className="h-5 w-5 text-green-400 flex-shrink-0 mt-0.5" />
-                        <span className="text-sm text-gray-300">{feature}</span>
+                        <span className={`text-sm text-gray-300 flex-1`}>{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -187,11 +212,11 @@ export default function MembershipPage() {
                   {/* Limitations */}
                   {plan.limitations.length > 0 && (
                     <div className="pt-6 border-t border-white/10 space-y-2">
-                      <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">{t("limitations")}</p>
+                      <p className={`text-xs font-semibold text-gray-400 uppercase tracking-wider`}>{t("limitations")}</p>
                       {plan.limitations.map((limitation, index) => (
-                        <div key={index} className="flex items-start gap-3">
+                        <div key={index} className={`flex items-start gap-3 ${isRTL ? "flex-row-reverse justify-end" : ""}`}>
                           <div className="h-5 w-5 rounded-full border border-gray-600 flex-shrink-0 mt-0.5" />
-                          <span className="text-sm text-gray-500">{limitation}</span>
+                          <span className={`text-sm text-gray-500 flex-1`}>{limitation}</span>
                         </div>
                       ))}
                     </div>
@@ -204,7 +229,7 @@ export default function MembershipPage() {
 
         {/* FAQ Section */}
         <div className="mt-16 max-w-2xl mx-auto">
-          <h2 className="text-3xl font-bold text-white mb-8 text-center">{t("faqTitle")}</h2>
+          <h2 className={`text-3xl font-bold text-white mb-8 text-center`}>{t("faqTitle")}</h2>
           <div className="space-y-4">
             {[
               { q: t("faqChangePlanQ"), a: t("faqChangePlanA") },
@@ -214,10 +239,10 @@ export default function MembershipPage() {
             ].map((faq, index) => (
               <Card
                 key={index}
-                className="border-white/10 bg-white/5 backdrop-blur-xl p-6 hover:border-white/20 transition-colors"
+                className={`border-white/10 bg-white/5 backdrop-blur-xl p-6 hover:border-white/20 transition-colors ${isRTL ? "text-right" : ""}`}
               >
-                <h4 className="font-semibold text-white mb-2">{faq.q}</h4>
-                <p className="text-gray-400 text-sm">{faq.a}</p>
+                <h4 className={`font-semibold text-white mb-2`}>{faq.q}</h4>
+                <p className={`text-gray-400 text-sm`}>{faq.a}</p>
               </Card>
             ))}
           </div>

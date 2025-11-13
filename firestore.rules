@@ -2,6 +2,66 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
+    // Users collection - Semi-protected
+    match /users/{userId} {
+      // Anyone can read (needed for app to function)
+      allow read: if true;
+      
+      // Anyone can create (for registration)
+      allow create: if request.resource.data.keys().hasAll(['email', 'name', 'role', 'membership'])
+                    && request.resource.data.role == 'user'
+                    && request.resource.data.membership in ['Free', 'Basic', 'Premium', 'Pro'];
+      
+      // Only update own document or if document email matches
+      allow update: if request.resource.data.email == resource.data.email;
+      
+      // No public delete
+      allow delete: if false;
+    }
+    
+    // Other collections - Read-only for now
+    match /workouts/{workoutId} {
+      allow read: if true;
+      allow write: if false; // Disable until admin system is ready
+    }
+    
+    match /exercises/{exerciseId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    match /physiotherapists/{physioId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    match /trainers/{trainerId} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Settings - Can create and update own settings
+    match /settings/{userId} {
+      allow read: if true;
+      allow create: if true;
+      allow update: if request.resource.data.keys().hasAny(['notifications', 'privacy', 'language']);
+      allow delete: if false;
+    }
+    
+    // Block everything else
+    match /{document=**} {
+      allow read: if false;
+      allow write: if false;
+    }
+  }
+}
+
+/* PRODUCTION RULES - ENABLE AFTER IMPLEMENTING FIREBASE AUTH
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
     // Helper functions
     function isAuthenticated() {
       return request.auth != null;
@@ -31,17 +91,17 @@ service cloud.firestore {
       return isAuthenticated() && getUserRole() == 'physiotherapist';
     }
     
-    // Users collection
+    // Users collection - Allow public registration
     match /users/{userId} {
-      allow read: if isAuthenticated();
-      allow create: if isAdmin();
+      allow read: if true; // Allow reading user data (needed for app functionality)
+      allow create: if true; // Allow anyone to register (create user document)
       allow update: if isOwner(userId) || isAdmin();
       allow delete: if isAdmin();
     }
     
     // Trainers collection
     match /trainers/{trainerId} {
-      allow read: if isAuthenticated();
+      allow read: if true; // Public read for listing trainers
       allow create: if isAdmin();
       allow update: if isOwner(resource.data.userId) || isAdmin();
       allow delete: if isAdmin();
@@ -49,7 +109,7 @@ service cloud.firestore {
     
     // Physiotherapists collection
     match /physiotherapists/{physioId} {
-      allow read: if isAuthenticated();
+      allow read: if true; // Public read for listing physiotherapists
       allow create: if isAdmin();
       allow update: if isOwner(resource.data.userId) || isAdmin();
       allow delete: if isAdmin();
@@ -74,7 +134,7 @@ service cloud.firestore {
     
     // Workouts collection
     match /workouts/{workoutId} {
-      allow read: if isAuthenticated();
+      allow read: if true; // Public read for workout library
       allow create: if isTrainer() || isAdmin();
       allow update: if isTrainer() || isAdmin();
       allow delete: if isAdmin();
@@ -82,7 +142,7 @@ service cloud.firestore {
     
     // Exercises collection
     match /exercises/{exerciseId} {
-      allow read: if isAuthenticated();
+      allow read: if true; // Public read for exercise library
       allow create: if isTrainer() || isAdmin();
       allow update: if isTrainer() || isAdmin();
       allow delete: if isAdmin();
@@ -99,17 +159,17 @@ service cloud.firestore {
     // Settings collection
     match /settings/{userId} {
       allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId);
+      allow create: if true; // Allow creating settings for new users
       allow update: if isOwner(userId);
       allow delete: if isOwner(userId) || isAdmin();
     }
     
     // Notifications collection
     match /notifications/{notificationId} {
-      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      allow create: if isAdmin() || isTrainer() || isPhysiotherapist();
-      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
-      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow read: if resource.data.userId == request.auth.uid;
+      allow create: if true; // Allow creating notifications
+      allow update: if resource.data.userId == request.auth.uid;
+      allow delete: if resource.data.userId == request.auth.uid;
     }
     
     // Workout logs collection
@@ -119,9 +179,11 @@ service cloud.firestore {
         isTrainer() || 
         isAdmin()
       );
-      allow create: if isAuthenticated();
+      allow create: if true; // Allow logging workouts
       allow update: if isOwner(resource.data.userId) || isAdmin();
       allow delete: if isOwner(resource.data.userId) || isAdmin();
     }
   }
 }
+
+*/

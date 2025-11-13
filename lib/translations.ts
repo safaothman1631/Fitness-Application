@@ -23,6 +23,8 @@ export type TranslationKey =
   | "goalOrientedDesc"
   | "achievementBadges"
   | "achievementBadgesDesc"
+  | "priorityCustomerSupport"
+  | "exclusiveCommunityAccess"
   | "startToday"
   | "first7DaysFree"
   | "allRightsReserved"
@@ -56,6 +58,8 @@ export type TranslationKey =
   | "editProfile"
   | "firstName"
   | "lastName"
+  | "firstNamePlaceholder"
+  | "lastNamePlaceholder"
   | "email"
   | "phone"
   | "dateOfBirth"
@@ -104,6 +108,9 @@ export type TranslationKey =
   | "reports"
   | "management"
   | "helpSupport"
+  | "helpDescription"
+  | "helpContactInfo"
+  | "close"
   | "availableWorkouts"
   | "searchWorkoutsPlaceholder"
   | "noWorkoutsFound"
@@ -129,6 +136,16 @@ export type TranslationKey =
   | "chooseRoleOrSignIn"
   | "pleaseEnterEmail"
   | "pleaseEnterPassword"
+  | "incorrectCredentials"
+  | "resetPassword"
+  | "resetPasswordTitle"
+  | "resetPasswordDesc"
+  | "enterEmailToReset"
+  | "sendResetLink"
+  | "sendingResetLink"
+  | "resetLinkSent"
+  | "checkYourEmail"
+  | "resetEmailSentMessage"
   | "help"
   | "orContinueAs"
   | "admin"
@@ -253,6 +270,11 @@ export type TranslationKey =
   | "idealForBeginners"
   | "mostPopularChoice"
   | "forProfessionalAthletes"
+  | "ultimateFitnessTransformation"
+  | "oneMonth"
+  | "threeMonths"
+  | "sixMonths"
+  | "oneYear"
   | "mostPopularBadge"
   | "limitations"
   | "faqTitle"
@@ -267,6 +289,47 @@ export type TranslationKey =
   | "faqPaymentMethodsA"
   | "faqDataSecureQ"
   | "faqDataSecureA"
+  // Payment Page
+  | "payment"
+  | "paymentInformation"
+  | "cardInformation"
+  | "cardholderName"
+  | "cardNumber"
+  | "expiration"
+  | "cvv"
+  | "billingAddress"
+  | "address"
+  | "city"
+  | "postalCode"
+  | "processing"
+  | "pay"
+  | "securePayment"
+  | "securePaymentSSL"
+  | "orderSummary"
+  | "oneTimePayment"
+  | "subtotal"
+  | "tax"
+  | "total"
+  | "includedInPlan"
+  | "completeExerciseLibrary"
+  | "detailedProgressTracking"
+  | "prioritySupport"
+  | "securePaymentInfo"
+  | "cardInfoNotStored"
+  // Payment Placeholders
+  | "cardholderNamePlaceholder"
+  | "streetNeighborhoodPlaceholder"
+  | "cityPlaceholder"
+  | "postalCodePlaceholder"
+  // Membership Page
+  | "chooseYourPlan"
+  | "selectPerfectPlan"
+  // Premium Feature Locked
+  | "premiumFeatureLocked"
+  | "featureRequiresSubscription"
+  | "renewSubscription"
+  | "backToDashboard"
+  | "redirectingToDashboard"
   // Signup / Registration
   | "backToLogin"
   | "createAccountTitle"
@@ -279,8 +342,24 @@ export type TranslationKey =
   | "passwordsDoNotMatch"
   | "pleaseFillAllFields"
   | "pleaseAgreeTerms"
+  | "registrationFailed"
+  | "emailAlreadyInUse"
+  | "passwordTooWeak"
+  | "invalidEmail"
   | "alreadyHaveAccount"
   | "signInLink"
+  // Subscription Warning
+  | "subscriptionExpired"
+  | "actionRequired"
+  | "subscriptionExpiredMessage"
+  | "workoutPrograms"
+  | "mealPlans"
+  | "progressTracking"
+  | "expertSupport"
+  | "renewSubscriptionNow"
+  | "subscriptionExpiringSoon"
+  | "subscriptionExpiresInDays"
+  | "renewNow"
   // Extended Profile / Admin / Trainer
   | "professionalInformation"
   | "yearsOfExperience"
@@ -494,18 +573,20 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     rating: "Rating",
     featuresTitle: "Why Choose FitPro",
     professionalSolutions: "Professional fitness solutions tailored for your goals",
-    videoGuidance: "Video Guidance",
+    videoGuidance: "Video Guidance 🎥",
     videoGuidanceDesc: "Follow professional trainers with detailed video instructions for every exercise",
-    personalizedPrograms: "Personalized Programs",
+    personalizedPrograms: "Personalized Programs 🧩",
     personalizedProgramsDesc: "Custom workout plans designed based on your fitness level and goals",
-    progressTracking: "Progress Tracking",
+    progressTracking: "Progress Tracking 📈",
     progressTrackingDesc: "Monitor your improvement with detailed statistics and progress charts",
-    exerciseLibraryFull: "Complete Exercise Library",
+    exerciseLibraryFull: "Complete Exercise Library 📘",
     exerciseLibraryFullDesc: "Access thousands of exercises with proper form demonstrations",
-    goalOriented: "Goal-Oriented",
+    goalOriented: "Goal-Oriented 🎯",
     goalOrientedDesc: "Set and achieve your fitness objectives with structured guidance",
-    achievementBadges: "Achievement Badges",
+    achievementBadges: "Achievement Badges 🏆",
     achievementBadgesDesc: "Earn badges and rewards as you reach your fitness milestones",
+    priorityCustomerSupport: "Priority customer support 💬",
+    exclusiveCommunityAccess: "Exclusive community access 👥",
     startToday: "Start Your Transformation Today",
     first7DaysFree: "Get 7 days free access to all Premium features. No credit card required.",
     allRightsReserved: "All rights reserved",
@@ -539,6 +620,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     editProfile: "Edit Profile",
     firstName: "First Name",
     lastName: "Last Name",
+    firstNamePlaceholder: "Enter your first name",
+    lastNamePlaceholder: "Enter your last name",
     email: "Email",
     phone: "Phone",
     dateOfBirth: "Date of Birth",
@@ -583,10 +666,12 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   patients: "Patients",
   activities: "Activities",
   trainees: "Trainees",
-  analytics: "Analytics",
+  analytics: "📊 Analytics",
   reports: "Reports",
   management: "Management",
-  helpSupport: "Help & Support",
+  helpSupport: "🆘 Help & Support",
+  helpDescription: "If you need assistance, please contact our support team at support@fitpro.com. We are here to help you with any issues or questions.",
+  helpContactInfo: "For urgent matters, please email support@fitpro.com or call +1 (555) 123-4567.",
   availableWorkouts: "Available Workouts",
   searchWorkoutsPlaceholder: "Search workouts...",
   noWorkoutsFound: "No workouts found matching your search",
@@ -607,11 +692,21 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   emailOrUsername: "Email or username",
   password: "Password",
   rememberMe: "Remember me",
-  forgotPassword: "Forgot?",
+  forgotPassword: "Did you forget your account password?",
   loginSuccessful: "Login successful!",
   chooseRoleOrSignIn: "Choose your role or sign in",
   pleaseEnterEmail: "Please enter your email address",
   pleaseEnterPassword: "Please enter your password",
+  incorrectCredentials: "Incorrect email or password. Please try again.",
+  resetPassword: "Reset Password",
+  resetPasswordTitle: "Forgot Your Password?",
+  resetPasswordDesc: "No worries! Enter your email address and we'll send you a link to reset your password.",
+  enterEmailToReset: "Enter your email address",
+  sendResetLink: "Send Reset Link",
+  sendingResetLink: "Sending...",
+  resetLinkSent: "Reset Link Sent!",
+  checkYourEmail: "Check Your Email",
+  resetEmailSentMessage: "We've sent a password reset link to your email. Please check your inbox and follow the instructions.",
   help: "Help",
   orContinueAs: "Or continue as",
   admin: "Admin",
@@ -626,7 +721,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   signInAsSuperAdmin: "Sign In as SuperAdmin",
   signInAsOwner: "Sign In as Owner",
   dontHaveAccount: "Don't have an account?",
-  copyrightNotice: "© 2024 FitPro. All rights reserved.",
+  copyrightNotice: "© 2025 FitPro. All rights reserved.",
   // Dashboard (EN)
   welcomeBackUser: "Welcome Back, User",
   trackFitnessDesc: "Track your fitness journey and achieve your goals",
@@ -734,6 +829,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   idealForBeginners: "Ideal for beginners",
   mostPopularChoice: "Most popular choice",
   forProfessionalAthletes: "For professional athletes",
+  ultimateFitnessTransformation: "Ultimate fitness transformation",
+  oneMonth: "1 Month",
+  threeMonths: "3 Months",
+  sixMonths: "6 Months",
+  oneYear: "1 Year",
   mostPopularBadge: "Most Popular",
   limitations: "Limitations",
   faqTitle: "Frequently Asked Questions",
@@ -748,6 +848,47 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   faqPaymentMethodsA: "We accept all major credit cards (Visa, Mastercard, American Express) and PayPal.",
   faqDataSecureQ: "Is my data secure?",
   faqDataSecureA: "Your data is protected with 256-bit SSL encryption and backed up daily for security.",
+  // Payment Page
+  payment: "Payment",
+  paymentInformation: "Payment Information",
+  cardInformation: "Card Information",
+  cardholderName: "Cardholder Name",
+  cardNumber: "Card Number",
+  expiration: "Expiration",
+  cvv: "CVV",
+  billingAddress: "Billing Address",
+  address: "Address",
+  city: "City",
+  postalCode: "Postal Code",
+  processing: "Processing...",
+  pay: "Pay",
+  securePayment: "Secure Payment",
+  securePaymentSSL: "Secure payment - Protected with SSL encryption",
+  orderSummary: "Order Summary",
+  oneTimePayment: "One-time payment",
+  subtotal: "Subtotal",
+  tax: "Tax",
+  total: "Total",
+  includedInPlan: "Included in this Plan:",
+  completeExerciseLibrary: "Complete exercise library",
+  detailedProgressTracking: "Detailed progress tracking",
+  prioritySupport: "Priority support",
+  securePaymentInfo: "Your payment information is protected with 256-bit SSL encryption. Card information is not stored.",
+  cardInfoNotStored: "Card information is not stored",
+  // Payment Placeholders
+  cardholderNamePlaceholder: "First Last Name",
+  streetNeighborhoodPlaceholder: "Street, Neighborhood",
+  cityPlaceholder: "Istanbul",
+  postalCodePlaceholder: "34000",
+  // Membership Page
+  chooseYourPlan: "Choose Your Plan",
+  selectPerfectPlan: "Select the perfect plan for your fitness journey",
+  // Premium Feature Locked
+  premiumFeatureLocked: "Premium Feature Locked",
+  featureRequiresSubscription: "This feature requires an active subscription. Please renew your subscription to continue accessing premium content.",
+  renewSubscription: "Renew Subscription",
+  backToDashboard: "Back to Dashboard",
+  redirectingToDashboard: "Redirecting to dashboard in 3 seconds...",
   // Signup
   backToLogin: "Back to Login",
   createAccountTitle: "Create Account",
@@ -760,8 +901,23 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   passwordsDoNotMatch: "Passwords do not match",
   pleaseFillAllFields: "Please fill in all fields",
   pleaseAgreeTerms: "Please agree to the terms and conditions",
+  registrationFailed: "Registration failed. Please try again.",
+  emailAlreadyInUse: "This email is already registered",
+  passwordTooWeak: "Password should be at least 6 characters",
+  invalidEmail: "Invalid email address",
   alreadyHaveAccount: "Already have an account?",
   signInLink: "Sign in",
+  // Subscription Warning
+  subscriptionExpired: "Subscription Expired",
+  actionRequired: "Action Required",
+  subscriptionExpiredMessage: "Your monthly subscription has ended. Renew now to continue accessing premium features including personalized meal plans and workout programs.",
+  workoutPrograms: "Workout Programs 💪",
+  mealPlans: "Meal Plans 🍽️",
+  expertSupport: "Expert Support 👨‍⚕️",
+  renewSubscriptionNow: "Renew Subscription Now",
+  subscriptionExpiringSoon: "Subscription Expiring Soon",
+  subscriptionExpiresInDays: "Your subscription expires in",
+  renewNow: "Renew Now",
   // Extended Profile
   professionalInformation: "Professional Information",
   yearsOfExperience: "Years of Experience",
@@ -963,10 +1119,12 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     patients: "المرضى"
     ,activities: "الأنشطة"
     ,trainees: "المتدربون"
-    ,analytics: "التحليلات"
+    ,analytics: "التحليلات 📊"
     ,reports: "التقارير"
     ,management: "الإدارة"
-    ,helpSupport: "المساعدة والدعم"
+    ,helpSupport: "المساعدة والدعم 🆘"
+    ,helpDescription: "إذا كنت بحاجة إلى مساعدة، يرجى التواصل مع فريق الدعم لدينا على support@fitpro.com. نحن هنا لمساعدتك في أي مشاكل أو أسئلة."
+    ,helpContactInfo: "للأمور العاجلة، يرجى إرسال بريد إلكتروني إلى support@fitpro.com أو الاتصال على +1 (555) 123-4567."
     ,availableWorkouts: "التمارين المتاحة"
     ,searchWorkoutsPlaceholder: "ابحث عن التمارين..."
     ,noWorkoutsFound: "لا توجد تمارين مطابقة للبحث"
@@ -988,15 +1146,29 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   // Auth & Login (AR placeholders)
   ,signIn: "تسجيل الدخول"
   ,signUp: "إنشاء حساب"
+  ,firstName: "الاسم الأول"
+  ,lastName: "الاسم الأخير"
+  ,firstNamePlaceholder: "أدخل اسمك الأول"
+  ,lastNamePlaceholder: "أدخل اسمك الأخير"
   ,emailAddress: "البريد الإلكتروني"
   ,emailOrUsername: "البريد الإلكتروني أو اسم المستخدم"
   ,password: "كلمة المرور"
   ,rememberMe: "تذكرني"
-  ,forgotPassword: "هل نسيت؟"
+  ,forgotPassword: "هل نسيت كلمة مرور حسابك؟"
   ,loginSuccessful: "تم تسجيل الدخول بنجاح!"
   ,chooseRoleOrSignIn: "اختر دورك أو سجل الدخول"
   ,pleaseEnterEmail: "الرجاء إدخال عنوان بريدك الإلكتروني"
   ,pleaseEnterPassword: "الرجاء إدخال كلمة المرور"
+  ,incorrectCredentials: "البريد الإلكتروني أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى."
+  ,resetPassword: "إعادة تعيين كلمة المرور"
+  ,resetPasswordTitle: "هل نسيت كلمة المرور؟"
+  ,resetPasswordDesc: "لا تقلق! أدخل عنوان بريدك الإلكتروني وسنرسل لك رابطاً لإعادة تعيين كلمة المرور."
+  ,enterEmailToReset: "أدخل عنوان بريدك الإلكتروني"
+  ,sendResetLink: "إرسال رابط إعادة التعيين"
+  ,sendingResetLink: "جارٍ الإرسال..."
+  ,resetLinkSent: "تم إرسال رابط إعادة التعيين!"
+  ,checkYourEmail: "تحقق من بريدك الإلكتروني"
+  ,resetEmailSentMessage: "لقد أرسلنا رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. يرجى التحقق من صندوق الوارد واتباع التعليمات."
   ,help: "مساعدة"
   ,orContinueAs: "أو المتابعة كـ"
   ,admin: "مسؤول"
@@ -1011,7 +1183,24 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signInAsSuperAdmin: "تسجيل الدخول كسوبر أدمن"
   ,signInAsOwner: "تسجيل الدخول كمالك"
   ,dontHaveAccount: "ليس لديك حساب؟"
-  ,copyrightNotice: "© 2024 فيت برو. جميع الحقوق محفوظة."
+  ,copyrightNotice: "© 2025 فيت برو. جميع الحقوق محفوظة."
+  // Feature Descriptions (Arabic)
+  ,featuresTitle: "لماذا فيت برو"
+  ,professionalSolutions: "حلول لياقة احترافية مصممة خصيصاً لأهدافك"
+  ,videoGuidance: "إرشاد بالفيديو 🎥"
+  ,videoGuidanceDesc: "تابع المدربين المحترفين مع تعليمات فيديو مفصلة لكل تمرين"
+  ,personalizedPrograms: "برامج شخصية 🧩"
+  ,personalizedProgramsDesc: "خطط تمارين مخصصة مصممة بناءً على مستوى لياقتك وأهدافك"
+  ,progressTracking: "تتبع التقدم 📈"
+  ,progressTrackingDesc: "راقب تحسنك مع إحصائيات مفصلة ومخططات التقدم"
+  ,exerciseLibraryFull: "مكتبة تمارين كاملة 📘"
+  ,exerciseLibraryFullDesc: "الوصول إلى آلاف التمارين مع عروض توضيحية للشكل الصحيح"
+  ,goalOriented: "موجه نحو الهدف 🎯"
+  ,goalOrientedDesc: "حدد وحقق أهدافك الرياضية مع إرشادات منظمة"
+  ,achievementBadges: "شارات الإنجاز 🏆"
+  ,achievementBadgesDesc: "احصل على شارات ومكافآت عند بلوغ معالم اللياقة الخاصة بك"
+  ,priorityCustomerSupport: "دعم العملاء ذو الأولوية 💬"
+  ,exclusiveCommunityAccess: "الوصول الحصري للمجتمع 👥"
   // Dashboard (AR placeholders)
   ,welcomeBackUser: "مرحباً بعودتك"
   ,trackFitnessDesc: "تتبع رحلتك الرياضية وحقق أهدافك"
@@ -1090,8 +1279,6 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,workoutRemindersDesc: "تذكيرك بإكمال التمارين"
     ,progressUpdates: "تحديثات التقدم"
     ,progressUpdatesDesc: "إشعار حول تقدمك"
-    ,achievementBadges: "شارات الإنجاز"
-    ,achievementBadgesDesc: "الاحتفال بإنجازاتك"
     ,emailNotifications: "إشعارات البريد الإلكتروني"
     ,emailNotificationsDesc: "تلقي ملخصات أسبوعية"
     ,updatePassword: "تحديث كلمة المرور"
@@ -1119,6 +1306,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,idealForBeginners: "مثالي للمبتدئين"
       ,mostPopularChoice: "الأكثر شعبية"
       ,forProfessionalAthletes: "للاعبين المحترفين"
+      ,ultimateFitnessTransformation: "التحول النهائي للياقة البدنية"
+      ,oneMonth: "شهر واحد"
+      ,threeMonths: "٣ أشهر"
+      ,sixMonths: "٦ أشهر"
+      ,oneYear: "سنة واحدة"
       ,mostPopularBadge: "الأكثر شعبية"
       ,limitations: "القيود"
       ,faqTitle: "الأسئلة الشائعة"
@@ -1133,6 +1325,47 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,faqPaymentMethodsA: "نقبل جميع البطاقات الرئيسية (Visa, Mastercard, American Express) و PayPal."
       ,faqDataSecureQ: "هل بياناتي آمنة؟"
       ,faqDataSecureA: "بياناتك محمية بتشفير SSL 256-bit ويتم نسخها احتياطيًا يوميًا."
+      // Payment Page (Arabic)
+      ,payment: "الدفع"
+      ,paymentInformation: "معلومات الدفع"
+      ,cardInformation: "معلومات البطاقة"
+      ,cardholderName: "اسم حامل البطاقة"
+      ,cardNumber: "رقم البطاقة"
+      ,expiration: "تاريخ الانتهاء"
+      ,cvv: "رمز الأمان"
+      ,billingAddress: "عنوان إرسال الفواتير"
+      ,address: "العنوان"
+      ,city: "المدينة"
+      ,postalCode: "الرمز البريدي"
+      ,processing: "جارٍ المعالجة..."
+      ,pay: "ادفع"
+      ,securePayment: "دفع آمن"
+      ,securePaymentSSL: "دفع آمن - محمي بتشفير SSL"
+      ,orderSummary: "ملخص الطلب"
+      ,oneTimePayment: "دفعة واحدة"
+      ,subtotal: "المجموع الفرعي"
+      ,tax: "الضريبة"
+      ,total: "الإجمالي"
+      ,includedInPlan: "مشمول في الخطة:"
+      ,completeExerciseLibrary: "مكتبة تمارين كاملة"
+      ,detailedProgressTracking: "تتبع مفصل للتقدم"
+      ,prioritySupport: "دعم ذو أولوية"
+      ,securePaymentInfo: "معلومات الدفع الخاصة بك محمية بتشفير SSL 256-bit. لا يتم تخزين معلومات البطاقة."
+      ,cardInfoNotStored: "لا يتم تخزين معلومات البطاقة"
+      // Payment Placeholders (Arabic)
+      ,cardholderNamePlaceholder: "الاسم الأول الاسم الأخير"
+      ,streetNeighborhoodPlaceholder: "الشارع، الحي"
+      ,cityPlaceholder: "إسطنبول"
+      ,postalCodePlaceholder: "٣٤٠٠٠"
+      // Membership Page (Arabic)
+      ,chooseYourPlan: "اختر خطتك"
+      ,selectPerfectPlan: "اختر الخطة المثالية لرحلتك الرياضية"
+      // Premium Feature Locked (Arabic)
+      ,premiumFeatureLocked: "ميزة بريميوم مقفلة"
+      ,featureRequiresSubscription: "تتطلب هذه الميزة اشتراكًا نشطًا. يرجى تجديد اشتراكك للاستمرار في الوصول إلى المحتوى المميز."
+      ,renewSubscription: "تجديد الاشتراك"
+      ,backToDashboard: "العودة إلى لوحة التحكم"
+      ,redirectingToDashboard: "إعادة التوجيه إلى لوحة التحكم خلال ٣ ثوانٍ..."
       ,backToLogin: "العودة لتسجيل الدخول"
       ,createAccountTitle: "إنشاء حساب"
       ,signupSubtitle: "ابدأ رحلتك الرياضية مع FitPro"
@@ -1144,8 +1377,23 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,passwordsDoNotMatch: "كلمات المرور غير متطابقة"
       ,pleaseFillAllFields: "يرجى ملء جميع الحقول"
       ,pleaseAgreeTerms: "يرجى الموافقة على الشروط"
+      ,registrationFailed: "فشل التسجيل. يرجى المحاولة مرة أخرى."
+      ,emailAlreadyInUse: "هذا البريد الإلكتروني مسجل بالفعل"
+      ,passwordTooWeak: "كلمة المرور يجب أن تكون 6 أحرف على الأقل"
+      ,invalidEmail: "عنوان البريد الإلكتروني غير صالح"
       ,alreadyHaveAccount: "لديك حساب بالفعل؟"
       ,signInLink: "سجّل الدخول"
+      // Subscription Warning (Arabic)
+      ,subscriptionExpired: "انتهى الاشتراك"
+      ,actionRequired: "يتطلب إجراء"
+      ,subscriptionExpiredMessage: "انتهى اشتراكك الشهري. جدّد الآن للاستمرار في الوصول إلى الميزات المميزة بما في ذلك خطط الوجبات الشخصية وبرامج التمارين."
+      ,workoutPrograms: "برامج التمارين 💪"
+      ,mealPlans: "خطط الوجبات 🍽️"
+      ,expertSupport: "دعم الخبراء 👨‍⚕️"
+      ,renewSubscriptionNow: "جدّد الاشتراك الآن"
+      ,subscriptionExpiringSoon: "الاشتراك ينتهي قريباً"
+      ,subscriptionExpiresInDays: "ينتهي اشتراكك خلال"
+      ,renewNow: "جدّد الآن"
       ,professionalInformation: "المعلومات المهنية"
       ,yearsOfExperience: "سنوات الخبرة"
       ,certification: "الشهادة"
@@ -1306,6 +1554,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,newPasswordLabel: "الجديدة"
   ,confirmPasswordLabel: "تأكيد"
   ,saved: "محفوظ"
+  ,welcomeBack: "مرحباً بعودتك"
   // Dashboard Stats (Arabic)
   ,totalTime: "الوقت الإجمالي"
   ,caloriesBurned: "السعرات المحروقة"
@@ -1347,10 +1596,12 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     patients: "نەخوشەکان"
     ,activities: "چالاکیەکان"
     ,trainees: "فێركراوەکان"
-    ,analytics: "ئەنالیتیکس"
+    ,analytics: "ئەنالیتیکس 📊"
     ,reports: "ڕاپۆرتەکان"
     ,management: "بەڕێوەبردن"
-    ,helpSupport: "یارمەتی و پاڵپشتی"
+    ,helpSupport: "یارمەتی و پاڵپشتی 🆘"
+    ,helpDescription: "ئەگەر پێویستیت بە یارمەتیە، تکایە پەیوەندی بە تیمی پاڵپشتیمان بکە لە support@fitpro.com. ئێمە لێرەین بۆ یارمەتیدانت لە هەر کێشە یان پرسیارێک."
+    ,helpContactInfo: "بۆ کێشە پەلەیەکان، تکایە ئیمەیڵ بنێرە بۆ support@fitpro.com یان پەیوەندی بکە بە +1 (555) 123-4567."
     ,availableWorkouts: "وەرزشی بەردەست"
     ,searchWorkoutsPlaceholder: "گەڕانی وەرزش..."
     ,noWorkoutsFound: "هیچ وەرزشی نەدۆزرایەوە بەپێی گەڕان"
@@ -1372,15 +1623,29 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   // Auth & Login (KU placeholders)
   ,signIn: "چوونەژوورەوە"
   ,signUp: "خۆتۆمارکردن"
+  ,firstName: "ناوی یەکەم"
+  ,lastName: "ناوی کۆتایی"
+  ,firstNamePlaceholder: "ناوی یەکەمت بنووسە"
+  ,lastNamePlaceholder: "ناوی کۆتاییت بنووسە"
   ,emailAddress: "ئیمەیڵ"
   ,emailOrUsername: "ئیمەیڵ یان ناوی بەکارهێنەر"
   ,password: "وشەی نهێنی"
   ,rememberMe: "بیرم بهێنەوە"
-  ,forgotPassword: "له‌بیرت چوو؟"
+  ,forgotPassword: "ئایا پاسوۆردی هەژمارەکەت بیرت چووە؟"
   ,loginSuccessful: "بە سەرکەوتوویی چوویتە ژوورەوە!"
   ,chooseRoleOrSignIn: "رۆڵەکەت هەڵبژێرە یان بچۆ ژوورەوە"
   ,pleaseEnterEmail: "تکایە ئیمەیڵەکەت بنووسە"
   ,pleaseEnterPassword: "تکایە وشەی نهێنیەکەت بنووسە"
+  ,incorrectCredentials: "ئیمەیڵ یان وشەی نهێنی هەڵەیە. تکایە دووبارە هەوڵ بدەرەوە."
+  ,resetPassword: "دووبارە دانانەوەی پاسوۆرد"
+  ,resetPasswordTitle: "پاسوۆردەکەت بیرت چووە؟"
+  ,resetPasswordDesc: "نیگەران مەبە! ئیمەیڵەکەت بنووسە و لینکێکت بۆ دەنێرین بۆ دووبارە دانانەوەی پاسوۆردەکەت."
+  ,enterEmailToReset: "ئیمەیڵەکەت بنووسە"
+  ,sendResetLink: "لینکی دووبارە دانانەوە بنێرە"
+  ,sendingResetLink: "دەنێردرێت..."
+  ,resetLinkSent: "لینکی دووبارە دانانەوە نێردرا!"
+  ,checkYourEmail: "ئیمەیڵەکەت چێک بکە"
+  ,resetEmailSentMessage: "لینکێکی دووبارە دانانەوەی پاسوۆردمان بۆ ئیمەیڵەکەت ناردووە. تکایە inbox ەکەت چێک بکە و ڕێنماییەکان جێبەجێ بکە."
   ,help: "یارمەتی"
   ,orContinueAs: "یان بەردەوام بە وەک"
   ,admin: "ئەدمین"
@@ -1395,7 +1660,24 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signInAsSuperAdmin: "چوونەژوورەوە وەک سوپر ئەدمین"
   ,signInAsOwner: "چوونەژوورەوە وەک خاوەن"
   ,dontHaveAccount: "هەژمارت نییە؟"
-  ,copyrightNotice: "© 2024 فیتپرو. هەموو مافەکان پارێزراون."
+  ,copyrightNotice: "© 2025 فیتپرو. هەموو مافەکان پارێزراون."
+  // Feature Descriptions (Kurdish)
+  ,featuresTitle: "بۆچی فیتپرۆ"
+  ,professionalSolutions: "چارەسەری پڕۆفیشناڵی تەندروستی تایبەتکراو بۆ ئامانجەکانت"
+  ,videoGuidance: "ڕێنمایی ڤیدیۆیی 🎥"
+  ,videoGuidanceDesc: "شوێن ڕاهێنەرە پسپۆڕەکان بکەوە لەگەڵ ڕێنماییی ڤیدیۆیی ورد بۆ هەموو وەرزشێک"
+  ,personalizedPrograms: "بەرنامە تایبەتی‌کراوەکان 🧩"
+  ,personalizedProgramsDesc: "پلانی وەرزشی تایبەتی دروستکراو لەسەر بنەمای ئاستی تەندروستی و ئامانجەکانت"
+  ,progressTracking: "شوێنکەوتنی پێشکەوتن 📈"
+  ,progressTrackingDesc: "چاودێری پێشکەوتنەکەت بکە لەگەڵ ئاماری ورد و هێلکاری پێشکەوتن"
+  ,exerciseLibraryFull: "کۆگەی تەواوی وەرزشی 📘"
+  ,exerciseLibraryFullDesc: "دەستگەیشتن بە بە هەزاران وەرزش لەگەڵ پیشاندانی شێوازی دروست"
+  ,goalOriented: "سەرلەبەرامبەر ئامانج 🎯"
+  ,goalOrientedDesc: "ئامانجەکانی تەندروستی خۆت دابنێ و بەدیبهێنە لەگەڵ ڕێنماییی ڕێکخراو"
+  ,achievementBadges: "خەڵاتەکانی دەستووردان 🏆"
+  ,achievementBadgesDesc: "خەڵات و پاداشت بەدەست بهێنە کاتێک بە ئامانجەکانی تەندروستیت دەگەیت"
+  ,priorityCustomerSupport: "پشتیوانی بەرامبەرەکان بە پێشگرتن 💬"
+  ,exclusiveCommunityAccess: "دەستگەیشتن بە کۆمەڵگای تایبەتی 👥"
   // Dashboard (KU placeholders)
   ,welcomeBackUser: "بەخێربێیتەوە، بەکارهێنەر"
   ,trackFitnessDesc: "گەشتە تەندروستیەکەت ببینە و ئامانجەکانت بگەیەنە"
@@ -1474,8 +1756,6 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,workoutRemindersDesc: "بیرت بکرێنەوە بۆ تەواوکردنی وەرزش"
     ,progressUpdates: "نوێکارییەکانی پێشکەوتن"
     ,progressUpdatesDesc: "ئاگانامە دەربارەی پێشکەوتنت"
-    ,achievementBadges: "خەڵاتەکانی دەستووردان"
-    ,achievementBadgesDesc: "جژنکردنی کارەکانت"
     ,emailNotifications: "ئاگانامەی ئیمەیڵ"
     ,emailNotificationsDesc: "پوختەی هەفتانەی تەندروستی وەرگرە"
     ,updatePassword: "نوێکردنەوەی وشەی نهێنی"
@@ -1503,6 +1783,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,idealForBeginners: "گونجاو بۆ دەستپێکەران"
       ,mostPopularChoice: "زۆرترین هەڵبژاردە"
       ,forProfessionalAthletes: "بۆ وەرزشکارانی پڕۆفیشنال"
+      ,ultimateFitnessTransformation: "گۆڕانی کۆتایی تەندروستی"
+      ,oneMonth: "١ مانگ"
+      ,threeMonths: "٣ مانگ"
+      ,sixMonths: "٦ مانگ"
+      ,oneYear: "١ ساڵ"
       ,mostPopularBadge: "زۆرترین بەناوبانگ"
       ,limitations: "سنوورەکان"
       ,faqTitle: "پرسیارە دووبارە بووەکان"
@@ -1517,6 +1802,47 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,faqPaymentMethodsA: "هەموو کارتە گەورەکان دەگرینەوە و PayPal."
       ,faqDataSecureQ: "داتاکەم ئاسایە؟"
       ,faqDataSecureA: "داتاکەت بە SSL 256-bit پارێزراوە و ڕۆژانە باکئەپ دەکرێت."
+      // Payment Page (Kurdish)
+      ,payment: "پارەدان"
+      ,paymentInformation: "زانیاری پارەدان"
+      ,cardInformation: "زانیاری کارت"
+      ,cardholderName: "ناوی خاوەنی کارت"
+      ,cardNumber: "ژمارەی کارت"
+      ,expiration: "بەسەرچوون"
+      ,cvv: "کۆدی ئاسایش"
+      ,billingAddress: "ناونیشانی وەسڵ"
+      ,address: "ناونیشان"
+      ,city: "شار"
+      ,postalCode: "کۆدی پۆستە"
+      ,processing: "پڕۆسەکردن..."
+      ,pay: "پارەدان"
+      ,securePayment: "پارەدانی پارێزراو"
+      ,securePaymentSSL: "پارەدانی پارێزراو - پارێزراوە بە شفرەکردنی SSL"
+      ,orderSummary: "کورتەی داواکاری"
+      ,oneTimePayment: "پارەدانی یەکجارەکی"
+      ,subtotal: "کۆی گشتی"
+      ,tax: "باج"
+      ,total: "کۆی گشتی"
+      ,includedInPlan: "لەم پلانەدا:"
+      ,completeExerciseLibrary: "کۆگەی تەواوی وەرزشی"
+      ,detailedProgressTracking: "شوێنکەوتنی ورد بۆ پێشکەوتن"
+      ,prioritySupport: "پشتیوانی پێشگرتن"
+      ,securePaymentInfo: "زانیاری پارەدانەکەت بە شفرەکردنی SSL 256-bit پارێزراوە. زانیاری کارت هەڵناگیرێت."
+      ,cardInfoNotStored: "زانیاری کارت هەڵناگیرێت"
+      // Payment Placeholders (Kurdish)
+      ,cardholderNamePlaceholder: "ناوی یەکەم ناوی کۆتایی"
+      ,streetNeighborhoodPlaceholder: "شەقام، گەڕەک"
+      ,cityPlaceholder: "هەولێر"
+      ,postalCodePlaceholder: "٤٤٠٠١"
+      // Membership Page (Kurdish)
+      ,chooseYourPlan: "پلانەکەت هەڵبژێرە"
+      ,selectPerfectPlan: "باشترین پلان هەڵبژێرە بۆ گەشتی تەندروستیت"
+      // Premium Feature Locked (Kurdish)
+      ,premiumFeatureLocked: "تایبەتمەندی پریمیەم داخراوە"
+      ,featureRequiresSubscription: "ئەم تایبەتمەندیە پێویستی بە بەشداریی چالاک هەیە. تکایە بەشداریەکەت نوێ بکەرەوە بۆ بەردەوامبوون لە دەستگەیشتن بە ناوەڕۆکی پریمیەم."
+      ,renewSubscription: "نوێکردنەوەی بەشداری"
+      ,backToDashboard: "گەڕانەوە بۆ داشبۆرد"
+      ,redirectingToDashboard: "گواستنەوە بۆ داشبۆرد لە ماوەی ٣ چرکەدا..."
       ,backToLogin: "گەڕانەوە بۆ چوونەژوورەوە"
       ,createAccountTitle: "دروستکردنی هەژمار"
       ,signupSubtitle: "دەست بکە بە گەشتێکی تەندروستی لەگەڵ FitPro"
@@ -1528,8 +1854,23 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,passwordsDoNotMatch: "وشە نهێنییەکان ناکۆن"
       ,pleaseFillAllFields: "تکایە هەموو خانەکان پڕبکە"
       ,pleaseAgreeTerms: "تکایە ڕازی بە مەرجەکان ببە"
+      ,registrationFailed: "تۆمارکردن سەرکەوتوو نەبوو. تکایە دووبارە هەوڵبدەرەوە."
+      ,emailAlreadyInUse: "ئەم ئیمەیڵە پێشتر تۆمارکراوە"
+      ,passwordTooWeak: "وشەی نهێنی دەبێت لانیکەم ٦ پیت بێت"
+      ,invalidEmail: "ئیمەیڵەکە دروست نییە"
       ,alreadyHaveAccount: "پێشتر هەژمارت هەیە؟"
       ,signInLink: "چوونەژوورەوە"
+      // Subscription Warning (Kurdish)
+      ,subscriptionExpired: "بەشداریت بەسەرچووە"
+      ,actionRequired: "کردار پێویستە"
+      ,subscriptionExpiredMessage: "بەشداریی مانگانەت کۆتایی هاتووە. نوێکردنەوە بکە بۆ بەردەوامی دەستگەیشتن بە تایبەتمەندیە پریمیەمەکان وەک پلانی خۆراک و پڕۆگرامی وەرزش."
+      ,workoutPrograms: "پڕۆگرامی وەرزش 💪"
+      ,mealPlans: "پلانی خۆراک 🍽️"
+      ,expertSupport: "پشتگیری پسپۆڕان 👨‍⚕️"
+      ,renewSubscriptionNow: "نوێکردنەوەی بەشداری ئێستا"
+      ,subscriptionExpiringSoon: "بەشداری بە زوویی بەسەردەچێت"
+      ,subscriptionExpiresInDays: "بەشداریەکەت لە ماوەی"
+      ,renewNow: "نوێکردنەوە ئێستا"
       ,professionalInformation: "زانیاری پڕۆفیشنال"
       ,yearsOfExperience: "ساڵانی ئەزموون"
       ,certification: "بەڵگەنامە"
@@ -1693,6 +2034,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,newPasswordLabel: "نوێ"
     ,confirmPasswordLabel: "پشتڕاستکردنەوە"
     ,saved: "پاشەکەوتکرا"
+    ,welcomeBack: "بەخێربێیتەوە"
     // Dashboard Stats (Kurdish)
     ,totalTime: "کاتی گشتی"
     ,caloriesBurned: "کالۆری سووتاو"
@@ -1734,10 +2076,12 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     patients: "Hastalar",
   activities: "Aktiviteler",
   trainees: "Öğrenciler",
-  analytics: "Analitik",
+  analytics: "📊 Analitik",
   reports: "Raporlar",
   management: "Yönetim",
-  helpSupport: "Yardım ve Destek",
+  helpSupport: "🆘 Yardım ve Destek",
+  helpDescription: "Yardıma ihtiyacınız varsa, lütfen destek ekibimizle support@fitpro.com adresinden iletişime geçin. Herhangi bir sorun veya sorunuz için buradayız.",
+  helpContactInfo: "Acil durumlar için lütfen support@fitpro.com adresine e-posta gönderin veya +1 (555) 123-4567 numaralı telefonu arayın.",
   availableWorkouts: "Mevcut Antrenmanlar",
   searchWorkoutsPlaceholder: "Antrenman ara...",
   noWorkoutsFound: "Aramanıza uygun antrenman bulunamadı",
@@ -1754,15 +2098,29 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   // Auth & Login (TR placeholders)
     signIn: "Giriş Yap",
     signUp: "Kayıt Ol",
+    firstName: "Ad",
+    lastName: "Soyad",
+    firstNamePlaceholder: "Adınızı girin",
+    lastNamePlaceholder: "Soyadınızı girin",
     emailAddress: "E-posta Adresi",
     emailOrUsername: "E-posta veya kullanıcı adı",
     password: "Parola",
     rememberMe: "Beni hatırla",
-    forgotPassword: "Unuttun mu?",
+    forgotPassword: "Hesap şifrenizi mi unuttunuz?",
     loginSuccessful: "Giriş başarılı!",
     chooseRoleOrSignIn: "Rolünü seç veya giriş yap",
     pleaseEnterEmail: "Lütfen e-posta adresinizi girin",
     pleaseEnterPassword: "Lütfen parolanızı girin",
+    incorrectCredentials: "E-posta veya parola yanlış. Lütfen tekrar deneyin.",
+    resetPassword: "Parolayı Sıfırla",
+    resetPasswordTitle: "Parolanızı mı Unuttunuz?",
+    resetPasswordDesc: "Endişelenmeyin! E-posta adresinizi girin, size parolanızı sıfırlamak için bir bağlantı gönderelim.",
+    enterEmailToReset: "E-posta adresinizi girin",
+    sendResetLink: "Sıfırlama Bağlantısı Gönder",
+    sendingResetLink: "Gönderiliyor...",
+    resetLinkSent: "Sıfırlama Bağlantısı Gönderildi!",
+    checkYourEmail: "E-postanızı Kontrol Edin",
+    resetEmailSentMessage: "E-postanıza bir parola sıfırlama bağlantısı gönderdik. Lütfen gelen kutunuzu kontrol edin ve talimatları izleyin.",
     help: "Yardım",
     orContinueAs: "Veya şöyle devam et",
     admin: "Yönetici",
@@ -1777,7 +2135,24 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     signInAsSuperAdmin: "Süper Admin olarak giriş yap",
     signInAsOwner: "Sahip olarak giriş yap",
     dontHaveAccount: "Hesabın yok mu?",
-    copyrightNotice: "© 2024 FitPro. Tüm hakları saklıdır.",
+    copyrightNotice: "© 2025 FitPro. Tüm hakları saklıdır.",
+  // Feature Descriptions (Turkish)
+  featuresTitle: "Neden FitPro",
+  professionalSolutions: "Hedeflerinize özel profesyonel fitness çözümleri",
+  videoGuidance: "Video Rehberliği 🎥",
+  videoGuidanceDesc: "Her egzersiz için detaylı video talimatlarıyla profesyonel antrenörleri takip edin",
+  personalizedPrograms: "Kişiselleştirilmiş Programlar 🧩",
+  personalizedProgramsDesc: "Fitness seviyeniz ve hereflerinize göre tasarlanmış özel antrenman planları",
+  progressTracking: "İlerleme Takibi 📈",
+  progressTrackingDesc: "Detaylı istatistikler ve ilerleme grafikleriyle gelişiminizi izleyin",
+  exerciseLibraryFull: "Tam Egzersiz Kütüphanesi 📘",
+  exerciseLibraryFullDesc: "Doğru form gösterimleriyle binlerce egzersize erişin",
+  goalOriented: "Hedefe Yönelik 🎯",
+  goalOrientedDesc: "Yapılandırılmış rehberlikle fitness hedeflerinizi belirleyin ve başarın",
+  achievementBadges: "Başarı Rozetleri 🏆",
+  achievementBadgesDesc: "Fitness kilometre taşlarınıza ulaştıkça rozet ve ödüller kazanın",
+  priorityCustomerSupport: "Öncelikli müşteri desteği 💬",
+  exclusiveCommunityAccess: "Özel topluluk erişimi 👥",
   breakfast: "Kahvaltı",
   lunch: "Öğle Yemeği",
   snacks: "Atıştırmalıklar",
@@ -1861,8 +2236,6 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   workoutRemindersDesc: "Antrenmanları tamamlamanız için hatırlatmalar alın",
   progressUpdates: "İlerleme Güncellemeleri",
   progressUpdatesDesc: "Fitness ilerlemeniz hakkında bildirim alın",
-  achievementBadges: "Başarı Rozetleri",
-  achievementBadgesDesc: "Başarılarınızı kutlayın",
   emailNotifications: "E-posta Bildirimleri",
   emailNotificationsDesc: "Haftalık özetler alın",
   updatePassword: "Parolayı Güncelle",
@@ -1890,6 +2263,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   idealForBeginners: "Yeni başlayanlar için ideal",
   mostPopularChoice: "En popüler tercih",
   forProfessionalAthletes: "Profesyonel sporcular için",
+  ultimateFitnessTransformation: "Nihai fitness dönüşümü",
+  oneMonth: "1 Ay",
+  threeMonths: "3 Ay",
+  sixMonths: "6 Ay",
+  oneYear: "1 Yıl",
   mostPopularBadge: "En Popüler",
   limitations: "Kısıtlamalar",
   faqTitle: "Sıkça Sorulan Sorular",
@@ -1904,6 +2282,47 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   faqPaymentMethodsA: "Tüm büyük kredi kartları (Visa, Mastercard, American Express) ve PayPal'ı kabul ediyoruz.",
   faqDataSecureQ: "Verilerim güvende mi?",
   faqDataSecureA: "Verileriniz 256-bit SSL şifreleme ile korunur ve günlük yedeklenir.",
+  // Payment Page (Turkish)
+  payment: "Ödeme",
+  paymentInformation: "Ödeme Bilgileri",
+  cardInformation: "Kart Bilgileri",
+  cardholderName: "Kart Sahibinin Adı",
+  cardNumber: "Kart Numarası",
+  expiration: "Son Kullanma Tarihi",
+  cvv: "Güvenlik Kodu",
+  billingAddress: "Fatura Adresi",
+  address: "Adres",
+  city: "Şehir",
+  postalCode: "Posta Kodu",
+  processing: "İşleniyor...",
+  pay: "Öde",
+  securePayment: "Güvenli Ödeme",
+  securePaymentSSL: "Güvenli Ödeme - SSL Şifreleme ile Korunur",
+  orderSummary: "Sipariş Özeti",
+  oneTimePayment: "Tek Seferlik Ödeme",
+  subtotal: "Ara Toplam",
+  tax: "Vergi",
+  total: "Toplam",
+  includedInPlan: "Planda Dahil:",
+  completeExerciseLibrary: "Tam Egzersiz Kütüphanesi",
+  detailedProgressTracking: "Detaylı İlerleme Takibi",
+  prioritySupport: "Öncelikli Destek",
+  securePaymentInfo: "Ödeme bilgileriniz 256-bit SSL şifreleme ile korunur. Kart bilgileri saklanmaz.",
+  cardInfoNotStored: "Kart bilgileri saklanmaz",
+  // Payment Placeholders (Turkish)
+  cardholderNamePlaceholder: "Ad Soyad",
+  streetNeighborhoodPlaceholder: "Sokak, Mahalle",
+  cityPlaceholder: "İstanbul",
+  postalCodePlaceholder: "34000",
+  // Membership Page (Turkish)
+  chooseYourPlan: "Planını Seç",
+  selectPerfectPlan: "Fitness yolculuğunuz için mükemmel planı seçin",
+  // Premium Feature Locked (Turkish)
+  premiumFeatureLocked: "Premium Özellik Kilitli",
+  featureRequiresSubscription: "Bu özellik aktif bir abonelik gerektirir. Premium içeriğe erişmeye devam etmek için lütfen aboneliğinizi yenileyin.",
+  renewSubscription: "Aboneliği Yenile",
+  backToDashboard: "Panele Dön",
+  redirectingToDashboard: "3 saniye içinde panele yönlendiriliyorsunuz...",
   backToLogin: "Girişe Dön",
   createAccountTitle: "Hesap Oluştur",
   signupSubtitle: "FitPro ile fitness yolculuğuna başla",
@@ -1915,8 +2334,23 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   passwordsDoNotMatch: "Parolalar eşleşmiyor",
   pleaseFillAllFields: "Lütfen tüm alanları doldurun",
   pleaseAgreeTerms: "Lütfen şartları kabul edin",
+  registrationFailed: "Kayıt başarısız oldu. Lütfen tekrar deneyin.",
+  emailAlreadyInUse: "Bu e-posta zaten kayıtlı",
+  passwordTooWeak: "Parola en az 6 karakter olmalıdır",
+  invalidEmail: "Geçersiz e-posta adresi",
   alreadyHaveAccount: "Zaten hesabın var mı?",
   signInLink: "Giriş yap",
+  // Subscription Warning (Turkish)
+  subscriptionExpired: "Abonelik Süresi Doldu",
+  actionRequired: "İşlem Gerekli",
+  subscriptionExpiredMessage: "Aylık aboneliğiniz sona erdi. Premium özelliklere, kişiselleştirilmiş yemek planlarına ve egzersiz programlarına erişmeye devam etmek için şimdi yenileyin.",
+  workoutPrograms: "Egzersiz Programları 💪",
+  mealPlans: "Yemek Planları 🍽️",
+  expertSupport: "Uzman Desteği 👨‍⚕️",
+  renewSubscriptionNow: "Aboneliği Şimdi Yenile",
+  subscriptionExpiringSoon: "Abonelik Yakında Sona Eriyor",
+  subscriptionExpiresInDays: "Aboneliğiniz",
+  renewNow: "Şimdi Yenile",
   professionalInformation: "Profesyonel Bilgiler",
   yearsOfExperience: "Deneyim Yılı",
   certification: "Sertifikasyon",
@@ -2077,6 +2511,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   newPasswordLabel: "Yeni",
   confirmPasswordLabel: "Onayla",
   saved: "Kaydedildi",
+  welcomeBack: "Tekrar Hoş Geldiniz",
   // Dashboard Stats (Turkish)
   totalTime: "TOPLAM SÜRE",
   caloriesBurned: "YAKILAN KALORİ",
