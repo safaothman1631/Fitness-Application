@@ -8,7 +8,7 @@ All users are now stored in **Firebase Authentication** and **Firestore Database
 
 ## 1. 👑 SUPERADMIN (Full System Access)
 - **Email:** `superadmin@fitpro.com`
-- **Password:** `SuperAdmin123!`
+- **Password:** `11111111`
 - **Role:** superadmin
 - **Membership:** Pro
 - **Subscription:** Active (1 year remaining)
@@ -18,7 +18,7 @@ All users are now stored in **Firebase Authentication** and **Firestore Database
 
 ## 2. 🌟 NEW PREMIUM USER (Full Subscription)
 - **Email:** `newuser@fitpro.com`
-- **Password:** `NewUser123!`
+- **Password:** `11111111`
 - **Role:** user
 - **Membership:** Premium
 - **Subscription:** Active (30 days remaining)
@@ -28,7 +28,7 @@ All users are now stored in **Firebase Authentication** and **Firestore Database
 
 ## 3. ⚠️ MID USER (Half Subscription)
 - **Email:** `miduser@fitpro.com`
-- **Password:** `MidUser123!`
+- **Password:** `11111111`
 - **Role:** user
 - **Membership:** Basic
 - **Subscription:** Active (15 days remaining - halfway)
@@ -38,7 +38,7 @@ All users are now stored in **Firebase Authentication** and **Firestore Database
 
 ## 4. ❌ NO SUBSCRIPTION USER (Expired)
 - **Email:** `nosubuser@fitpro.com`
-- **Password:** `NoSub123!`
+- **Password:** `11111111`
 - **Role:** user
 - **Membership:** Basic
 - **Subscription:** Expired (30 days ago)

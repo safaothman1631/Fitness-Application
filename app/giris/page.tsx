@@ -235,7 +235,7 @@ export default function LoginPage() {
                         <div className="grid grid-cols-2 gap-2">
                             <Button
                                 onClick={() => {
-                                    setFormData({ email: "superadmin@fitpro.com", password: "SuperAdmin123!" })
+                                    setFormData({ email: "superadmin@fitpro.com", password: "11111111" })
                                 }}
                                 variant="outline"
                                 className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10 text-xs h-auto py-2"
@@ -247,7 +247,7 @@ export default function LoginPage() {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setFormData({ email: "newuser@fitpro.com", password: "NewUser123!" })
+                                    setFormData({ email: "newuser@fitpro.com", password: "11111111" })
                                 }}
                                 variant="outline"
                                 className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 text-xs h-auto py-2"
@@ -259,7 +259,7 @@ export default function LoginPage() {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setFormData({ email: "miduser@fitpro.com", password: "MidUser123!" })
+                                    setFormData({ email: "miduser@fitpro.com", password: "11111111" })
                                 }}
                                 variant="outline"
                                 className="border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 text-xs h-auto py-2"
@@ -271,7 +271,7 @@ export default function LoginPage() {
                             </Button>
                             <Button
                                 onClick={() => {
-                                    setFormData({ email: "nosubuser@fitpro.com", password: "NoSub123!" })
+                                    setFormData({ email: "nosubuser@fitpro.com", password: "11111111" })
                                 }}
                                 variant="outline"
                                 className="border-red-500/30 text-red-400 hover:bg-red-500/10 text-xs h-auto py-2"

@@ -28,7 +28,7 @@ const auth = admin.auth();
 const testUsers = [
   {
     email: 'superadmin@fitpro.com',
-    password: 'SuperAdmin123!',
+    password: '11111111',
     userData: {
       name: 'Super Administrator',
       phone: '+1234567890',
@@ -48,7 +48,7 @@ const testUsers = [
   },
   {
     email: 'newuser@fitpro.com',
-    password: 'NewUser123!',
+    password: '11111111',
     userData: {
       name: 'New User Premium',
       phone: '+1234567891',
@@ -69,7 +69,7 @@ const testUsers = [
   },
   {
     email: 'miduser@fitpro.com',
-    password: 'MidUser123!',
+    password: '11111111',
     userData: {
       name: 'Mid User Basic',
       phone: '+1234567892',
@@ -90,7 +90,7 @@ const testUsers = [
   },
   {
     email: 'nosubuser@fitpro.com',
-    password: 'NoSub123!',
+    password: '11111111',
     userData: {
       name: 'No Subscription User',
       phone: '+1234567893',
