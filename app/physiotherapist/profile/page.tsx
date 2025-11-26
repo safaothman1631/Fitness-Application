@@ -204,15 +204,8 @@ export default function PhysiotherapistProfile() {
 								<Label className="text-gray-300 mb-2 block">{t("email")}</Label>
 								<Input
 									value={profileData.email}
-<<<<<<< HEAD
 									disabled
-									className="fitpro-input rounded-xl opacity-60 cursor-not-allowed"
-=======
-									onChange={(e) => setProfileData({ ...profileData, email: e.target.value })}
-									disabled={!isEditingProfile}
-									className="fitpro-input rounded-xl"
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-									type="email"
+									className="fitpro-input rounded-xl opacity-60 cursor-not-allowed"									type="email"
 								/>
 							</div>
 

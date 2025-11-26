@@ -84,12 +84,7 @@ export default function LoginPage() {
                 
                 // Redirect to appropriate dashboard with transition
                 setTimeout(() => {
-<<<<<<< HEAD
-                    router.replace(result.redirectUrl || "/dashboard")
-=======
-                    router.push(result.redirectUrl || "/dashboard")
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-                }, 300)
+                    router.replace(result.redirectUrl || "/dashboard")                }, 300)
             } else {
                 console.error("❌ Login failed:", result.error)
                 // Show error message

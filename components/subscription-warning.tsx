@@ -63,24 +63,11 @@ export function SubscriptionWarning({ daysRemaining = 0, variant = "expired" }: 
                   </div>
                 </div>
 
-<<<<<<< HEAD
                 {/* Info Label */}
                 <div className="w-full bg-gradient-to-r from-rose-500/20 to-rose-600/20 border-2 border-rose-400/40 text-white font-bold px-6 py-4 h-auto rounded-xl shadow-lg backdrop-blur-sm flex items-center justify-center gap-3 flex-row-reverse">
                   <CreditCard className="w-5 h-5" />
                   <span className="text-base">{t("renewSubscriptionNow")}</span>
-                </div>
-=======
-                {/* CTA Button */}
-                <Button
-                  onClick={() => router.push("/membership")}
-                  className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold px-6 py-6 h-auto rounded-xl shadow-lg shadow-rose-500/40 hover:shadow-rose-500/60 transition-all duration-300 hover:scale-105 group flex items-center justify-center gap-2 flex-row-reverse"
-                >
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:-translate-x-1 rotate-180" />
-                  {t("renewSubscriptionNow")}
-                  <CreditCard className="w-5 h-5 transition-transform group-hover:rotate-12" />
-                </Button>
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-              </div>
+                </div>              </div>
             </div>
           ) : (
             // LTR Layout: Icon on left, Content on right
@@ -122,24 +109,11 @@ export function SubscriptionWarning({ daysRemaining = 0, variant = "expired" }: 
                   </div>
                 </div>
 
-<<<<<<< HEAD
                 {/* Info Label */}
                 <div className="w-full bg-gradient-to-r from-rose-500/20 to-rose-600/20 border-2 border-rose-400/40 text-white font-bold px-6 py-4 h-auto rounded-xl shadow-lg backdrop-blur-sm flex items-center justify-center gap-3">
                   <CreditCard className="w-5 h-5" />
                   <span className="text-base">{t("renewSubscriptionNow")}</span>
-                </div>
-=======
-                {/* CTA Button */}
-                <Button
-                  onClick={() => router.push("/membership")}
-                  className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold px-6 py-6 h-auto rounded-xl shadow-lg shadow-rose-500/40 hover:shadow-rose-500/60 transition-all duration-300 hover:scale-105 group flex items-center justify-center gap-2"
-                >
-                  <CreditCard className="w-5 h-5 transition-transform group-hover:rotate-12" />
-                  {t("renewSubscriptionNow")}
-                  <ArrowRight className="w-5 h-5 transition-transform group-hover:translate-x-1" />
-                </Button>
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-              </div>
+                </div>              </div>
             </div>
           )}
         </div>
@@ -168,21 +142,10 @@ export function SubscriptionWarning({ daysRemaining = 0, variant = "expired" }: 
             <p className="text-amber-200/70 text-sm mb-3">
               {t("subscriptionExpiresInDays")} {daysRemaining} {daysRemaining === 1 ? (language === "ar" ? "يوم" : language === "ku" ? "ڕۆژ" : language === "tr" ? "gün" : "day") : (language === "ar" ? "أيام" : language === "ku" ? "ڕۆژ" : language === "tr" ? "gün" : "days")}.
             </p>
-<<<<<<< HEAD
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-amber-500/10 border border-amber-500/40 rounded-lg text-amber-300 text-sm font-medium">
               <Clock className="w-4 h-4" />
               <span>{t("renewNow")}</span>
-            </div>
-=======
-            <Button
-              onClick={() => router.push("/membership")}
-              variant="outline"
-              className="border-amber-500/50 text-amber-300 hover:bg-amber-500/10 text-sm"
-            >
-              {t("renewNow")}
-            </Button>
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-          </div>
+            </div>          </div>
         </div>
       </div>
     </Card>

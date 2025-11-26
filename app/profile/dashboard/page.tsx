@@ -177,21 +177,7 @@ export default function ProfilePage() {
                   <Mail className="w-4 h-4" />
                   Email Address
                 </Label>
-<<<<<<< HEAD
-                <p className="text-white font-semibold opacity-80">{profile.email}</p>
-=======
-                {isEditing ? (
-                  <Input
-                    type="email"
-                    value={tempProfile.email}
-                    onChange={(e) => setTempProfile({ ...tempProfile, email: e.target.value })}
-                    className="fitpro-input rounded-xl"
-                  />
-                ) : (
-                  <p className="text-white font-semibold">{profile.email}</p>
-                )}
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-              </div>
+                <p className="text-white font-semibold opacity-80">{profile.email}</p>              </div>
 
               {/* Phone */}
               <div>

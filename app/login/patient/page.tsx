@@ -18,12 +18,7 @@ export default function PatientLoginPage() {
   useEffect(() => {
     const existing = localStorage.getItem("patient")
     if (existing) {
-<<<<<<< HEAD
-      router.replace("/patient-panel")
-=======
-      router.push("/patient-panel")
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-    }
+      router.replace("/patient-panel")    }
   }, [router])
 
   const handleLogin = () => {
@@ -31,12 +26,7 @@ export default function PatientLoginPage() {
     setLoading(true)
     const payload = { name, email, loginTime: new Date().toISOString(), patientId: "P-" + Date.now().toString().slice(-6) }
     localStorage.setItem("patient", JSON.stringify(payload))
-<<<<<<< HEAD
-    router.replace("/patient-panel")
-=======
-    router.push("/patient-panel")
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-  }
+    router.replace("/patient-panel")  }
 
   return (
     <div className="min-h-screen flex flex-col bg-slate-950 text-white">

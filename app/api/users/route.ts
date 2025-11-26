@@ -38,7 +38,6 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("📝 Creating user with data:", { ...body, password: body.password ? "***" : undefined })
     
-<<<<<<< HEAD
     const { email, name, firstName, lastName, phone, role, membership, subscriptionStatus, subscriptionEnd, password } = body
 
     if (!email || !name || !password) {
@@ -99,41 +98,7 @@ export async function POST(request: NextRequest) {
     // Return user data without password
     const userData = {
       id: firebaseUser.uid,
-      uid: firebaseUser.uid,
-=======
-    const { email, name, firstName, lastName, phone, role, membership, subscriptionStatus, subscriptionEndDate, password } = body
-
-    if (!email || !name) {
-      console.error("❌ Missing required fields:", { email: !!email, name: !!name })
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
-    }
-
-    console.log("🔥 Attempting to connect to Firestore...")
-    const usersRef = collection(db, "users")
-    
-    console.log("💾 Adding document to Firestore...")
-    const docRef = await addDoc(usersRef, {
-      email,
-      name,
-      firstName: firstName || "",
-      lastName: lastName || "",
-      phone: phone || "",
-      role: role || "user",
-      membership: membership || "Free",
-      subscriptionStatus: subscriptionStatus || "inactive",
-      subscriptionEndDate: subscriptionEndDate || null,
-      isActive: true,
-      joinDate: new Date().toISOString(),
-      createdAt: new Date().toISOString(),
-    })
-
-    console.log("✅ User created successfully with ID:", docRef.id)
-
-    // Return user data without password
-    const userData = {
-      id: docRef.id,
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-      email,
+      uid: firebaseUser.uid,      email,
       name,
       firstName,
       lastName,
@@ -141,76 +106,8 @@ export async function POST(request: NextRequest) {
       role: role || "user",
       membership: membership || "Free",
       subscriptionStatus: subscriptionStatus || "inactive",
-<<<<<<< HEAD
-      subscriptionEnd,
-=======
-      subscriptionEndDate,
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-      isActive: true,
+      subscriptionEnd,      isActive: true,
       joinDate: new Date().toISOString(),
     }
 
-<<<<<<< HEAD
     console.log("✅ User created successfully:", userData.email)
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-    return NextResponse.json(userData, { status: 201 })
-  } catch (error: any) {
-    console.error("❌ Error creating user:", error)
-    console.error("Error details:", {
-      message: error.message,
-      code: error.code,
-      stack: error.stack
-    })
-    return NextResponse.json({ 
-      error: "Failed to create user",
-      details: error.message 
-    }, { status: 500 })
-  }
-}
-<<<<<<< HEAD
-
-// Delete user
-export async function DELETE(request: NextRequest) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const userId = searchParams.get("id")
-
-    if (!userId) {
-      return NextResponse.json({ error: "User ID is required" }, { status: 400 })
-    }
-
-    console.log("🗑️ Deleting user:", userId)
-
-    try {
-      // Delete from Firebase Authentication
-      await adminAuth.deleteUser(userId)
-      console.log("✅ User deleted from Firebase Auth")
-    } catch (authError: any) {
-      console.error("❌ Firebase Auth deletion error:", authError)
-      if (authError.code !== 'auth/user-not-found') {
-        throw authError
-      }
-    }
-
-    try {
-      // Delete from Firestore
-      await adminDb.collection("users").doc(userId).delete()
-      console.log("✅ User deleted from Firestore")
-    } catch (firestoreError) {
-      console.error("❌ Firestore deletion error:", firestoreError)
-      throw firestoreError
-    }
-
-    console.log("✅ User deleted successfully:", userId)
-    return NextResponse.json({ success: true, message: "User deleted successfully" })
-  } catch (error: any) {
-    console.error("❌ Error deleting user:", error)
-    return NextResponse.json({ 
-      error: "Failed to delete user",
-      details: error.message 
-    }, { status: 500 })
-  }
-}
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf

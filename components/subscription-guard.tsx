@@ -52,20 +52,10 @@ export default function SubscriptionRequiredGuard({ children }: { children: Reac
 
             {/* Actions */}
             <div className="space-y-3">
-<<<<<<< HEAD
               <div className="w-full bg-gradient-to-r from-rose-500/20 to-rose-600/20 border-2 border-rose-400/40 text-white font-bold px-6 py-3 h-12 rounded-xl shadow-lg backdrop-blur-sm flex items-center justify-center gap-2">
                 <Lock className="w-4 h-4" />
                 <span>{t("renewSubscription")}</span>
-              </div>
-=======
-              <Button
-                onClick={() => router.push("/membership")}
-                className="w-full bg-gradient-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-bold h-12 rounded-xl shadow-lg shadow-rose-500/40 hover:shadow-rose-500/60 transition-all"
-              >
-                {t("renewSubscription")}
-              </Button>
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-              <Button
+              </div>              <Button
                 onClick={() => router.push("/dashboard")}
                 variant="outline"
                 className={`w-full border-rose-300/50 bg-rose-950/50 text-rose-50 hover:bg-rose-900/50 hover:border-rose-300/70 font-semibold h-12 rounded-xl ${isRTL ? "flex-row-reverse" : ""}`}

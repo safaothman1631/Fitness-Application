@@ -5,28 +5,7 @@ export interface SubscriptionStatus {
   isExpired: boolean
   daysRemaining: number
   expiryDate: Date | null
-<<<<<<< HEAD
-  type: 'FREE' | 'PRO' // جۆری بەشداریکردن
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-}
-
-/**
- * Check subscription status based on expiry date
- * Returns subscription status object
- */
-export function checkSubscriptionStatus(expiryDateString: string | null): SubscriptionStatus {
-  if (!expiryDateString) {
-    return {
-      isActive: false,
-      isExpired: true,
-      daysRemaining: 0,
-      expiryDate: null,
-<<<<<<< HEAD
-      type: 'FREE', // بەشداری نییە = FREE
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-    }
+  type: 'FREE' | 'PRO' // جۆری بەشداریکردن    }
   }
 
   const expiryDate = new Date(expiryDateString)
@@ -37,7 +16,6 @@ export function checkSubscriptionStatus(expiryDateString: string | null): Subscr
   const diffTime = expiryDate.getTime() - today.getTime()
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 
-<<<<<<< HEAD
   const isActive = diffDays > 0
   const isExpired = diffDays <= 0
   const daysRemaining = Math.max(0, diffDays)
@@ -50,15 +28,7 @@ export function checkSubscriptionStatus(expiryDateString: string | null): Subscr
     isExpired,
     daysRemaining,
     expiryDate,
-    type,
-=======
-  return {
-    isActive: diffDays > 0,
-    isExpired: diffDays <= 0,
-    daysRemaining: Math.max(0, diffDays),
-    expiryDate,
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-  }
+    type,  }
 }
 
 /**
@@ -72,7 +42,6 @@ export function getSubscriptionExpiry(): string | null {
 /**
  * Set subscription expiry date in localStorage
  */
-<<<<<<< HEAD
 export function setSubscriptionExpiry(date: Date | string | any): void {
   if (typeof window === 'undefined') return
   
@@ -90,13 +59,7 @@ export function setSubscriptionExpiry(date: Date | string | any): void {
     console.warn('Invalid date format:', date)
     return
   }
-  
-=======
-export function setSubscriptionExpiry(date: Date | string): void {
-  if (typeof window === 'undefined') return
-  const dateString = typeof date === 'string' ? date : date.toISOString()
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-  localStorage.setItem('subscriptionExpiry', dateString)
+    localStorage.setItem('subscriptionExpiry', dateString)
 }
 
 /**

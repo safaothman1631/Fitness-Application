@@ -1,76 +1,7 @@
 "use client"
 
 import { useState } from "react"
-<<<<<<< HEAD
-import AuthGuard from "@/components/auth-guard"
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import FitproLayout from "@/components/fitpro-layout"
-import { Flame, TrendingUp, Award, Calendar, Activity, Zap } from "lucide-react"
-
-export default function ProgressPage() {
-  const [progressData] = useState([
-    { week: "1", strength: 20, cardio: 25, flexibility: 15 },
-    { week: "2", strength: 35, cardio: 32, flexibility: 28 },
-    { week: "3", strength: 28, cardio: 38, flexibility: 22 },
-    { week: "4", strength: 45, cardio: 42, flexibility: 35 },
-    { week: "5", strength: 52, cardio: 48, flexibility: 40 },
-    { week: "6", strength: 65, cardio: 58, flexibility: 52 },
-  ])
-
-  const [weeklyData] = useState([
-    { day: "Monday", workouts: 1, duration: 45 },
-    { day: "Tuesday", workouts: 1, duration: 30 },
-    { day: "Wednesday", workouts: 0, duration: 0 },
-    { day: "Thursday", workouts: 1, duration: 60 },
-    { day: "Friday", workouts: 1, duration: 45 },
-    { day: "Saturday", workouts: 1, duration: 75 },
-    { day: "Sunday", workouts: 1, duration: 40 },
-  ])
-
-  const [stats] = useState([
-    {
-      icon: Flame,
-      label: "Current Streak",
-      value: "6",
-      unit: "days",
-      color: "text-orange-500",
-      bgColor: "bg-orange-500/10",
-    },
-    {
-      icon: Award,
-      label: "Total Workouts",
-      value: "124",
-      unit: "completed",
-      color: "text-blue-500",
-      bgColor: "bg-blue-500/10",
-    },
-    {
-      icon: Activity,
-      label: "Total Duration",
-      value: "87.5",
-      unit: "hours",
-      color: "text-cyan-500",
-      bgColor: "bg-cyan-500/10",
-    },
-    {
-      icon: Zap,
-      label: "Avg Per Week",
-      value: "280",
-      unit: "minutes",
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
-    },
-  ])
-
-  return (
-<<<<<<< HEAD
-    <AuthGuard requiredRole="user">
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-    <FitproLayout role="user">
+import AuthGuard from "@/components/auth-guard"    <FitproLayout role="user">
       <div className="space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Progress</h1>

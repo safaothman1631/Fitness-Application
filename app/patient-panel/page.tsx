@@ -2,62 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-<<<<<<< HEAD
-import AuthGuard from "@/components/auth-guard"
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { LogOut, UserCircle, Calendar, Activity, TrendingUp, FileText } from "lucide-react"
-import { Logo } from "@/components/logo"
-import { useLanguage } from "@/hooks/useLanguage"
-import { ManagementNotification } from "@/components/management-notification"
-
-export default function PatientPanelPage() {
-	const router = useRouter()
-	const { t } = useLanguage()
-	const [isPatient, setIsPatient] = useState(false)
-	const [patientData, setPatientData] = useState<any>(null)
-
-	useEffect(() => {
-		const patientAuth = localStorage.getItem("patient")
-		if (!patientAuth) {
-			router.push("/login")
-			return
-		}
-		try {
-			const auth = JSON.parse(patientAuth)
-			setIsPatient(true)
-			setPatientData(auth)
-		} catch (error) {
-			console.error("Authentication error:", error)
-			router.push("/login")
-		}
-	}, [router])
-
-	const handleLogout = () => {
-		localStorage.removeItem("patient")
-		router.push("/login")
-	}
-
-	if (!isPatient) {
-		return (
-			<div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-950 via-black to-purple-950">
-				<div className="text-center">
-					<div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-					<p className="text-blue-400">{t("loading")}</p>
-				</div>
-			</div>
-		)
-	}
-
-	return (
-<<<<<<< HEAD
-		<AuthGuard requiredRole="patient">
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-		<div className="min-h-screen relative overflow-hidden">
+import AuthGuard from "@/components/auth-guard"		<div className="min-h-screen relative overflow-hidden">
 			<div className="absolute inset-0 bg-gradient-to-br from-blue-950 via-black to-purple-950" />
 
 			<div className="relative z-10">

@@ -1,43 +1,7 @@
 "use client"
 
 import { useState } from "react"
-<<<<<<< HEAD
-import AuthGuard from "@/components/auth-guard"
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import FitproLayout from "@/components/fitpro-layout"
-import { Lock, Bell, Eye, EyeOff, Save, Moon, Sun, Monitor, LogOut } from "lucide-react"
-import { useTheme } from "next-themes"
-import { useRouter } from "next/navigation"
-
-export default function SettingsPage() {
-  const [showPassword, setShowPassword] = useState(false)
-  const [settings, setSettings] = useState({
-    emailNotifications: true,
-    pushNotifications: true,
-    smsNotifications: false,
-    privateProfile: false,
-  })
-  const { theme, setTheme } = useTheme()
-  const router = useRouter()
-
-  const logout = () => {
-    try {
-      ["userRole","profileData","profileAvatar","workoutTasksCompleted","mealTasksCompleted","submittedWorkouts","submittedMeals","customScheduleItems"].forEach(k=>localStorage.removeItem(k))
-    } catch {}
-    router.push("/login")
-  }
-
-  return (
-<<<<<<< HEAD
-    <AuthGuard requiredRole="user">
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-    <FitproLayout role="user">
+import AuthGuard from "@/components/auth-guard"    <FitproLayout role="user">
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
           <h1 className="text-3xl font-bold text-white mb-2">Settings</h1>

@@ -68,12 +68,7 @@ export default function TrainerLoginPage() {
                 localStorage.setItem("isAuthenticated", "true")
                 localStorage.setItem("userRole", "trainer")
                 toast.success("Login successful!")
-<<<<<<< HEAD
-                router.replace("/trainer")
-=======
-                router.push("/trainer")
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-            } else {
+                router.replace("/trainer")            } else {
                 setShowErrorModal(true)
             }
             setLoading(false)

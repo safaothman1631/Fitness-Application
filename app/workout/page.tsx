@@ -2,38 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-<<<<<<< HEAD
-import AuthGuard from "@/components/auth-guard"
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-import { Dumbbell, Clock, Plus, ListOrdered, Flame, CalendarDays, CheckCircle2, Circle, LayoutDashboard, Utensils, HeartPulse, User, Calendar, Award, Target, Play, Image as ImageIcon, Film } from "lucide-react"
-import { submitWorkout, hasSubmittedWorkoutToday } from "@/lib/submissions"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import SubscriptionRequiredGuard from "@/components/subscription-guard"
-import { PageTransition } from "@/components/page-transition"
-import { useLanguage } from "@/hooks/useLanguage"
-import { BottomNav } from "@/components/bottom-nav"
-import type { TranslationKey } from "@/lib/translations"
-
-type ViewMode = "day" | "week" | "month"
-
-interface Exercise {
-  id: string
-  name: string
-  sets: number
-  reps: string
-  duration?: string
-  notes?: string
-  videoUrl?: string
-<<<<<<< HEAD
-  videoUrls?: string[]
-  videos?: Array<{ name: string; url: string; sets: string; reps: string; notes: string }>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-  gifUrl?: string
+import AuthGuard from "@/components/auth-guard"  gifUrl?: string
   imageUrl?: string
   muscleGroup: string
 }
@@ -77,7 +46,6 @@ export default function WorkoutPage() {
     } catch {}
     setSubmittedToday(hasSubmittedWorkoutToday())
     
-<<<<<<< HEAD
     // Load workout programs from Firestore
     fetchUserWorkoutPrograms()
   }, [])
@@ -164,205 +132,6 @@ export default function WorkoutPage() {
 
   // Empty workout schedule - will be fetched from database
   const defaultWorkoutSchedule: DayWorkout[] = []
-=======
-    // Load workout schedule (from localStorage for now, later from Firestore)
-    try {
-      const saved = localStorage.getItem("weeklyWorkoutSchedule")
-      if (saved) {
-        setWorkoutSchedule(JSON.parse(saved))
-      } else {
-        // Default workout schedule
-        setWorkoutSchedule(defaultWorkoutSchedule)
-      }
-    } catch {
-      setWorkoutSchedule(defaultWorkoutSchedule)
-    }
-  }, [])
-
-  // Default workout schedule - will be managed by superadmin
-  const defaultWorkoutSchedule: DayWorkout[] = [
-    {
-      day: "Monday",
-      exercises: [
-        {
-          id: "mon1",
-          name: t("barbellBenchPress"),
-          sets: 4,
-          reps: "8-10",
-          notes: t("focusControlledMovement"),
-          muscleGroup: "Chest",
-          videoUrl: "https://example.com/bench-press.mp4",
-          imageUrl: "/exercises/bench-press.jpg"
-        },
-        {
-          id: "mon2",
-          name: t("inclineDumbbellPress"),
-          sets: 3,
-          reps: "10-12",
-          muscleGroup: "Chest",
-          gifUrl: "/exercises/incline-press.gif"
-        },
-        {
-          id: "mon3",
-          name: t("cableFlyes"),
-          sets: 3,
-          reps: "12-15",
-          notes: t("squeezeAtPeak"),
-          muscleGroup: "Chest"
-        }
-      ]
-    },
-    {
-      day: "Tuesday",
-      exercises: [
-        {
-          id: "tue1",
-          name: "Deadlift",
-          sets: 4,
-          reps: "6-8",
-          notes: t("keepBackStraightEngageCore"),
-          muscleGroup: "Back",
-          videoUrl: "https://example.com/deadlift.mp4"
-        },
-        {
-          id: "tue2",
-          name: "Pull-ups",
-          sets: 3,
-          reps: "8-10",
-          muscleGroup: "Back"
-        },
-        {
-          id: "tue3",
-          name: "Barbell Rows",
-          sets: 4,
-          reps: "8-10",
-          muscleGroup: "Back"
-        }
-      ]
-    },
-    {
-      day: "Wednesday",
-      exercises: [
-        {
-          id: "wed1",
-          name: "Squats",
-          sets: 4,
-          reps: "8-10",
-          notes: t("goDeepKeepChestUp"),
-          muscleGroup: "Legs",
-          videoUrl: "https://example.com/squats.mp4"
-        },
-        {
-          id: "wed2",
-          name: "Leg Press",
-          sets: 3,
-          reps: "12-15",
-          muscleGroup: "Legs"
-        },
-        {
-          id: "wed3",
-          name: "Leg Curls",
-          sets: 3,
-          reps: "12-15",
-          muscleGroup: "Legs"
-        }
-      ]
-    },
-    {
-      day: "Thursday",
-      exercises: [
-        {
-          id: "thu1",
-          name: "Shoulder Press",
-          sets: 4,
-          reps: "8-10",
-          muscleGroup: "Shoulders"
-        },
-        {
-          id: "thu2",
-          name: "Lateral Raises",
-          sets: 3,
-          reps: "12-15",
-          muscleGroup: "Shoulders"
-        },
-        {
-          id: "thu3",
-          name: "Face Pulls",
-          sets: 3,
-          reps: "15-20",
-          muscleGroup: "Shoulders"
-        }
-      ]
-    },
-    {
-      day: "Friday",
-      exercises: [
-        {
-          id: "fri1",
-          name: "Barbell Curl",
-          sets: 3,
-          reps: "10-12",
-          muscleGroup: "Arms"
-        },
-        {
-          id: "fri2",
-          name: "Tricep Dips",
-          sets: 3,
-          reps: "10-12",
-          muscleGroup: "Arms"
-        },
-        {
-          id: "fri3",
-          name: "Hammer Curls",
-          sets: 3,
-          reps: "12-15",
-          muscleGroup: "Arms"
-        }
-      ]
-    },
-    {
-      day: "Saturday",
-      exercises: [
-        {
-          id: "sat1",
-          name: "Plank",
-          sets: 3,
-          duration: "60 seconds",
-          reps: "Hold",
-          muscleGroup: "Core"
-        },
-        {
-          id: "sat2",
-          name: "Russian Twists",
-          sets: 3,
-          reps: "20 each side",
-          muscleGroup: "Core"
-        },
-        {
-          id: "sat3",
-          name: "Leg Raises",
-          sets: 3,
-          reps: "15-20",
-          muscleGroup: "Core"
-        }
-      ]
-    },
-    {
-      day: "Sunday",
-      exercises: [
-        {
-          id: "sun1",
-          name: "Rest Day",
-          sets: 0,
-          reps: "Active Recovery",
-          notes: t("lightStretchingYogaWalking"),
-          muscleGroup: "Recovery"
-        }
-      ]
-    }
-  ]
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-
   const toggleTask = (id: string) => {
     setCompleted((prev) => {
       const next = { ...prev, [id]: !prev[id] }
@@ -406,62 +175,7 @@ export default function WorkoutPage() {
   }
 
   return (
-<<<<<<< HEAD
-    <AuthGuard requiredRole="user">
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-    <SubscriptionRequiredGuard>
-    <PageTransition>
-    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#9333EA] to-[#C084FC] bg-clip-text text-transparent mb-2">
-          {t("workoutCenter")}
-        </h1>
-        <p className="text-[#B6C4CF] mb-8">{t("workoutCenterSubtitle")}</p>
-
-        <Card className="bg-gradient-to-r from-[#9333EA] to-[#C084FC] border-none p-8 mb-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-white text-xl font-bold mb-2">{t("buildYourStrength")}</h3>
-            <p className="text-white/90 text-sm mb-4">{t("buildYourStrengthDesc")}</p>
-            {isSuperadmin && (
-              <Button className="bg-white text-[#9333EA] hover:bg-white/90 font-semibold flex items-center gap-2"><Plus className="w-4 h-4" /> New Workout</Button>
-            )}
-          </div>
-        </Card>
-
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value="24" color="#9333EA" isRTL={isRTL} />
-          <StatsCard icon={Calendar} label={t("activeStreak")} value={`7 ${t("days")}`} color="#A855F7" isRTL={isRTL} />
-          <StatsCard icon={Flame} label={t("caloriesBurned")} value="1,450" color="#C084FC" isRTL={isRTL} />
-          <StatsCard icon={Clock} label={t("totalTime")} value={`42 ${t("min")}`} color="#9333EA" isRTL={isRTL} />
-        </div>
-
-      <section className="space-y-4">
-        {/* Schedule selector */}
-        <Card className="bg-[#101A23] border-[#2E3944]">
-          <CardHeader className={`pb-2 ${isRTL ? 'text-right' : ''}`}>
-            <CardTitle className={`text-white text-sm flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}><CalendarDays className="w-4 h-4 text-purple-400" /> {t("schedule")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-<<<<<<< HEAD
-              {(["day","week"] as ViewMode[]).map(v => (
-                <button
-                  key={v}
-                  onClick={() => handleViewChange(v)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-cyan-400 to-blue-500 text-white border-cyan-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-cyan-500/30"}`}
-                >
-                  {v === "day" ? t("today") : t("week")}
-=======
-              {(["day","week","month"] as ViewMode[]).map(v => (
-                <button
-                  key={v}
-                  onClick={() => handleViewChange(v)}
-                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-[#9333EA] to-[#C084FC] text-white border-purple-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-purple-500/30"}`}
-                >
-                  {v === "day" ? t("today") : v === "week" ? t("week") : t("monthView")}
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-                </button>
+    <AuthGuard requiredRole="user">                </button>
               ))}
             </div>
 
@@ -477,7 +191,6 @@ export default function WorkoutPage() {
               <div className="space-y-2">
                 {(() => {
                   const todayWorkout = getTodayWorkout()
-<<<<<<< HEAD
                   
                   if (!todayWorkout || todayWorkout.exercises.length === 0) {
                     return (
@@ -507,205 +220,12 @@ export default function WorkoutPage() {
                       </Card>
                     )
                   }
-                  
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-                  const exerciseCount = todayWorkout.exercises.length
-                  const isRestDay = todayWorkout.exercises[0]?.muscleGroup === "Recovery"
-                  
-                  return (
-                    <button
-                      onClick={() => setSelectedDay(todayWorkout.day)}
-                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
-                    >
-                      {/* Right column for RTL: Play button + muscle tag */}
-                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
-                        <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
-                          <Play className={`w-4 h-4 text-purple-400 ${isRTL ? 'rotate-180' : ''}`} />
-                        </div>
-                        {!isRestDay && todayWorkout.exercises[0]?.muscleGroup && (
-                          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs whitespace-nowrap">
-                            {t(todayWorkout.exercises[0].muscleGroup.toLowerCase() === "chest" ? "chest" : 
-                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
-                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "legs" ? "legs" : 
-                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
-                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Center: Text content */}
-                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        <p className="text-white font-semibold text-sm">{t("todaysWorkout")} - {t(todayWorkout.day.toLowerCase() as any)}</p>
-                        <p className="text-[#B6C4CF] text-xs">
-                          {isRestDay ? t("restAndRecovery") : `${exerciseCount} ${t("exercisesCount")}`}
-                        </p>
-                      </div>
-                      
-                      {/* Left column for RTL: Icon */}
-                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
-                          {isRestDay ? (
-                            <Calendar className="w-5 h-5 text-slate-400" />
-                          ) : (
-                            <Dumbbell className="w-5 h-5 text-white" />
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  )
-                })()}
-              </div>
-            )}
-
-            {view === "week" && (
-              <div className="space-y-2">
-                {workoutSchedule.map((dayWorkout, i) => {
-                  const exerciseCount = dayWorkout.exercises.length
-                  const isRestDay = dayWorkout.exercises[0]?.muscleGroup === "Recovery"
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedDay(dayWorkout.day)}
-                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
-                    >
-                      {/* Right column for RTL: Play button + muscle tag */}
-                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
-                        <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
-                          <Play className={`w-4 h-4 text-purple-400 ${isRTL ? 'rotate-180' : ''}`} />
-                        </div>
-                        {!isRestDay && dayWorkout.exercises[0]?.muscleGroup && (
-                          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs whitespace-nowrap">
-                            {t(dayWorkout.exercises[0].muscleGroup.toLowerCase() === "chest" ? "chest" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "legs" ? "legs" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Center: Text content */}
-                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        <p className="text-white font-semibold text-sm">{t(dayWorkout.day.toLowerCase() as any)}</p>
-                        <p className="text-[#B6C4CF] text-xs">
-                          {isRestDay ? t("restAndRecovery") : `${exerciseCount} ${t("exercisesCount")}`}
-                        </p>
-                      </div>
-                      
-                      {/* Left column for RTL: Icon */}
-                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
-                          {isRestDay ? (
-                            <Calendar className="w-5 h-5 text-slate-400" />
-                          ) : (
-                            <Dumbbell className="w-5 h-5 text-white" />
-                          )}
-                        </div>
-                      </div>
-                    </button>
-                  )
-                })}
-<<<<<<< HEAD
-                {!workoutSchedule.length && (
-                  <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
-                    <CardContent className="text-center py-20 px-6">
-                      <div className="relative inline-block mb-6">
-                        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-2xl shadow-purple-500/20 border border-purple-500/30">
-                          <Dumbbell className="w-14 h-14 text-purple-400" />
-                        </div>
-                        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
-                          <span className="text-white text-xl">💪</span>
-                        </div>
-                      </div>
-                      <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-                        {language === 'ku' ? 'خشتەی وەرزش نییە' : language === 'ar' ? 'لا يوجد جدول تمارين' : 'No Workout Schedule'}
-                      </h3>
-                      <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
-                        {language === 'ku' ? 'مەشقگەرەکەت خشتەی وەرزشت بۆ دیاری دەکات' : language === 'ar' ? 'سيقوم مدربك بتعيين جدول التمارين لك' : 'Your trainer will assign a workout schedule to you'}
-                      </p>
-                      <p className="text-gray-500 text-sm mb-8">
-                        {language === 'ku' ? 'دواتر سەردانی بکەرەوە یان پەیوەندی بە مەشقگەرەکەتەوە بکە' : language === 'ar' ? 'تحقق لاحقًا أو اتصل بمدربك' : 'Check back later or contact your trainer'}
-                      </p>
-                      <div className="flex flex-wrap gap-3 justify-center text-sm text-gray-500">
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
-                          <Clock className="w-4 h-4 text-cyan-400" />
-                          <span>{language === 'ku' ? 'بەزووانە چاوەڕێبە' : language === 'ar' ? 'انتظر قليلاً' : 'Coming Soon'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
-                          <Target className="w-4 h-4 text-green-400" />
-                          <span>{language === 'ku' ? 'پلان تایبەت' : language === 'ar' ? 'خطة مخصصة' : 'Personalized Plan'}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-=======
-                {!workoutSchedule.length && <p className="text-slate-500 text-sm">No workout schedule available.</p>}
-              </div>
-            )}
-
-            {view === "month" && (
-              <div className="space-y-3">
-                <div className={`grid grid-cols-7 gap-1 text-center text-[10px] text-slate-500 font-semibold mb-2 ${isRTL ? 'direction-rtl' : ''}`}>
-                  {isRTL ? (
-                    <>
-                      <div>{t("sun")}</div>
-                      <div>{t("sat")}</div>
-                      <div>{t("fri")}</div>
-                      <div>{t("thu")}</div>
-                      <div>{t("wed")}</div>
-                      <div>{t("tue")}</div>
-                      <div>{t("mon")}</div>
-                    </>
-                  ) : (
-                    <>
-                      <div>{t("mon")}</div>
-                      <div>{t("tue")}</div>
-                      <div>{t("wed")}</div>
-                      <div>{t("thu")}</div>
-                      <div>{t("fri")}</div>
-                      <div>{t("sat")}</div>
-                      <div>{t("sun")}</div>
-                    </>
-                  )}
-                </div>
-                <div className="grid grid-cols-7 gap-1">
-                  {Array.from({ length: 30 }, (_, i) => {
-                    const dayNum = i + 1
-                    const dayIndex = i % 7
-                    const workout = workoutSchedule[dayIndex]
-                    const exerciseCount = workout?.exercises.length || 0
-                    const isRestDay = workout?.exercises[0]?.muscleGroup === "Recovery"
-                    return (
-                      <button
-                        key={i}
-                        onClick={() => workout && setSelectedDay(workout.day)}
-                        className="aspect-square p-1 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 flex flex-col items-center justify-center text-center"
-                      >
-                        <p className="text-white text-[9px] font-bold mb-0.5">{dayNum}</p>
-                        <div className={`w-6 h-6 rounded-md flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
-                          {isRestDay ? (
-                            <Calendar className="w-3 h-3 text-slate-400" />
-                          ) : (
-                            <Dumbbell className="w-3 h-3 text-white" />
-                          )}
-                        </div>
-                        <p className="text-slate-400 text-[7px] mt-0.5">
-                          {isRestDay ? t("rest") : `${exerciseCount}ex`}
-                        </p>
-                      </button>
-                    )
-                  })}
-                </div>
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-              </div>
+                                </div>
             )}
             </div>
           </CardContent>
         </Card>
 
-<<<<<<< HEAD
 =======
         {/* Submit (user performs; superadmin & trainer will view externally) */}
         {view === "day" && (
@@ -783,12 +303,7 @@ export default function WorkoutPage() {
                                 <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center border-2 border-slate-900">
                                   {exercise.videoUrls.length}
                                 </div>
-                              )}
-=======
-                            <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
-                              <Film className="w-5 h-5 text-red-400" />
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-                            </div>
+                              )}                            </div>
                           )}
                           {exercise.gifUrl && (
                             <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
@@ -860,7 +375,6 @@ export default function WorkoutPage() {
                       <CardTitle className="text-white text-lg">Exercise Demo</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
-<<<<<<< HEAD
                       {selectedExercise.videos && selectedExercise.videos.length > 0 ? (
                         <div className="space-y-6">
                           {selectedExercise.videos.map((video, index) => (
@@ -942,19 +456,7 @@ export default function WorkoutPage() {
                             Your browser does not support the video tag.
                           </video>
                         </div>
-                      ) : null}
-=======
-                      {selectedExercise.videoUrl && (
-                        <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
-                          <div className="text-center">
-                            <Film className="w-12 h-12 text-purple-400 mx-auto mb-2" />
-                            <p className="text-slate-400 text-sm">Video demonstration</p>
-                            <p className="text-purple-400 text-xs mt-1">{selectedExercise.videoUrl}</p>
-                          </div>
-                        </div>
-                      )}
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
-                      {selectedExercise.gifUrl && (
+                      ) : null}                      {selectedExercise.gifUrl && (
                         <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
                           <div className="text-center">
                             <Play className="w-12 h-12 text-green-400 mx-auto mb-2" />
