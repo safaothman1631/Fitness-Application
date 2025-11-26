@@ -1,0 +1,112 @@
+<!-- SuperAdmin Login Background - 4K (3840x2160)
+     Palette: Deep navy/charcoal base, teal + violet accents
+     Features: Clean center, subtle holographic panels, network lines, ribbons, soft vignette, gentle noise -->
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070B10"/>
+      <stop offset="100%" stop-color="#0E141B"/>
+    </linearGradient>
+    <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#0A0D11" stop-opacity="0.70"/>
+      <stop offset="45%" stop-color="#0A0D11" stop-opacity="0.40"/>
+      <stop offset="85%" stop-color="#0A0D11" stop-opacity="0.10"/>
+      <stop offset="100%" stop-color="#0A0D11" stop-opacity="0.00"/>
+    </radialGradient>
+    <linearGradient id="accent-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#17C9D7"/>
+      <stop offset="100%" stop-color="#1FA6A8"/>
+    </linearGradient>
+    <linearGradient id="accent-violet" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7E3FF2"/>
+      <stop offset="100%" stop-color="#17C9D7"/>
+    </linearGradient>
+    <linearGradient id="ribbon-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#17C9D7" stop-opacity="0.0"/>
+      <stop offset="35%" stop-color="#17C9D7" stop-opacity="0.35"/>
+      <stop offset="65%" stop-color="#7E3FF2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7E3FF2" stop-opacity="0.0"/>
+    </linearGradient>
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="9" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.035"/></feComponentTransfer>
+    </filter>
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#FFFFFF" opacity="0.025"/>
+    </pattern>
+    <style>
+      .panel { fill: rgba(255,255,255,0.035); stroke: rgba(23,201,215,0.25); stroke-width: 1; }
+      .panel-bright { fill: rgba(255,255,255,0.055); stroke: rgba(126,63,242,0.35); }
+      .net-line { stroke-linecap: round; stroke-width: 1.4; opacity: 0.55; }
+      .node { filter: url(#soft-glow); }
+      .node-core { fill: #17C9D7; opacity: 0.9; }
+      .node-core.v { fill: #7E3FF2; opacity: 0.9; }
+      .node-halo { fill: #17C9D7; opacity: 0.25; }
+      .node-halo.v { fill: #7E3FF2; opacity: 0.22; }
+      .low-opacity { opacity: 0.5; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="3840" height="2160" fill="url(#bg)"/>
+
+  <g opacity="0.55">
+    <path d="M -200 350 C 800 150, 1500 220, 2400 340 C 3000 430, 3500 520, 4200 480 L 4200 680 C 3500 700, 3000 620, 2400 520 C 1500 360, 800 300, -200 520 Z"
+          fill="url(#ribbon-grad)"/>
+    <path d="M -300 1700 C 500 1600, 1200 1500, 1900 1550 C 2600 1600, 3200 1750, 4200 1700 L 4200 1880 C 3200 1960, 2600 1880, 1900 1780 C 1200 1680, 500 1760, -300 1880 Z"
+          fill="url(#ribbon-grad)"/>
+  </g>
+
+  <g filter="url(#soft-glow)">
+    <rect class="panel" x="220" y="180" width="520" height="300" rx="20"/>
+    <rect class="panel" x="3100" y="1520" width="520" height="360" rx="22"/>
+    <rect class="panel-bright" x="280" y="1480" width="640" height="360" rx="24"/>
+    <rect class="panel" x="3000" y="260" width="460" height="260" rx="18"/>
+  </g>
+
+  <g>
+    <path d="M520 180 L1040 220 L1680 160 L2320 220 L3000 180 L3520 240" stroke="url(#accent-teal)" class="net-line" fill="none"/>
+    <path d="M520 200 L1040 260 L1680 210 L2320 260 L3000 220 L3520 280" stroke="url(#accent-violet)" class="net-line" fill="none" opacity="0.45"/>
+    <path d="M520 1960 L1200 2000 L1900 1980 L2600 2020 L3200 1960" stroke="url(#accent-violet)" class="net-line" fill="none"/>
+    <path d="M520 1980 L1200 2040 L1900 2000 L2600 2060 L3200 1980" stroke="url(#accent-teal)" class="net-line" fill="none" opacity="0.45"/>
+    <path d="M180 240 L520 180 L1040 220 L150 660" stroke="url(#accent-teal)" class="net-line" fill="none" opacity="0.6"/>
+    <path d="M200 980 L520 1960 L1200 2000 L3600 1200" stroke="url(#accent-violet)" class="net-line" fill="none" opacity="0.5"/>
+    <path d="M220 1680 L520 1960 L3200 1960 L3720 860" stroke="url(#accent-teal)" class="net-line" fill="none" opacity="0.45"/>
+    <path d="M3000 180 L3640 420 L3720 860" stroke="url(#accent-violet)" class="net-line" fill="none" opacity="0.55"/>
+  </g>
+
+  <g class="node">
+    <g><circle class="node-halo" cx="520" cy="180" r="10"/><circle class="node-core" cx="520" cy="180" r="3"/></g>
+    <g><circle class="node-halo v" cx="1040" cy="220" r="9"/><circle class="node-core v" cx="1040" cy="220" r="3"/></g>
+    <g><circle class="node-halo" cx="1680" cy="160" r="11"/><circle class="node-core" cx="1680" cy="160" r="3.2"/></g>
+    <g><circle class="node-halo v" cx="2320" cy="220" r="9"/><circle class="node-core v" cx="2320" cy="220" r="3"/></g>
+    <g><circle class="node-halo" cx="3000" cy="180" r="10"/><circle class="node-core" cx="3000" cy="180" r="3"/></g>
+    <g><circle class="node-halo v" cx="3520" cy="240" r="9"/><circle class="node-core v" cx="3520" cy="240" r="3"/></g>
+
+    <g><circle class="node-halo" cx="520" cy="1960" r="10"/><circle class="node-core" cx="520" cy="1960" r="3"/></g>
+    <g><circle class="node-halo v" cx="1200" cy="2000" r="9"/><circle class="node-core v" cx="1200" cy="2000" r="3"/></g>
+    <g><circle class="node-halo" cx="1900" cy="1980" r="10"/><circle class="node-core" cx="1900" cy="1980" r="3"/></g>
+    <g><circle class="node-halo v" cx="2600" cy="2020" r="9"/><circle class="node-core v" cx="2600" cy="2020" r="3"/></g>
+    <g><circle class="node-halo" cx="3200" cy="1960" r="10"/><circle class="node-core" cx="3200" cy="1960" r="3"/></g>
+
+    <g><circle class="node-halo" cx="180" cy="240" r="10"/><circle class="node-core" cx="180" cy="240" r="3"/></g>
+    <g><circle class="node-halo v" cx="120" cy="660" r="9"/><circle class="node-core v" cx="120" cy="660" r="3"/></g>
+    <g><circle class="node-halo" cx="200" cy="980" r="10"/><circle class="node-core" cx="200" cy="980" r="3"/></g>
+    <g><circle class="node-halo v" cx="140" cy="1320" r="9"/><circle class="node-core v" cx="140" cy="1320" r="3"/></g>
+    <g><circle class="node-halo" cx="220" cy="1680" r="10"/><circle class="node-core" cx="220" cy="1680" r="3"/></g>
+
+    <g><circle class="node-halo" cx="3640" cy="420" r="10"/><circle class="node-core" cx="3640" cy="420" r="3"/></g>
+    <g><circle class="node-halo v" cx="3720" cy="860" r="9"/><circle class="node-core v" cx="3720" cy="860" r="3"/></g>
+    <g><circle class="node-halo" cx="3600" cy="1200" r="10"/><circle class="node-core" cx="3600" cy="1200" r="3"/></g>
+    <g><circle class="node-halo v" cx="3700" cy="1560" r="9"/><circle class="node-core v" cx="3700" cy="1560" r="3"/></g>
+    <g><circle class="node-halo" cx="3620" cy="1900" r="10"/><circle class="node-core" cx="3620" cy="1900" r="3"/></g>
+  </g>
+
+  <rect x="0" y="0" width="3840" height="2160" fill="url(#vignette)"/>
+  <rect x="0" y="0" width="3840" height="2160" fill="url(#scanlines)"/>
+  <rect x="0" y="0" width="3840" height="2160" filter="url(#film-grain)" opacity="0.20"/>
+</svg>

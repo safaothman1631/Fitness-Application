@@ -1,0 +1,30 @@
+[
+  {
+    "id": 101,
+    "name": "Tomato",
+    "type": "vegetable",
+    "category": "fresh vegetable",
+    "calories": 18,
+    "protein": 0.9,
+    "carbs": 3.9,
+    "fat": 0.2,
+    "vitamins": { "A": 42, "C": 14 },
+    "country": "Turkey",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/vegetables%2Ftomato.png?alt=media",
+    "description": "Juicy red vegetable used in salads, sauces and cooking."
+  },
+  {
+    "id": 102,
+    "name": "Potato",
+    "type": "vegetable",
+    "category": "root",
+    "calories": 77,
+    "protein": 2.0,
+    "carbs": 17,
+    "fat": 0.1,
+    "vitamins": { "C": 20 },
+    "country": "Netherlands",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/vegetables%2Fpotato.png?alt=media",
+    "description": "Starchy root vegetable, often boiled, baked or fried."
+  }
+]

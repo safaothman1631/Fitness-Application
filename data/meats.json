@@ -1,0 +1,30 @@
+[
+  {
+    "id": 201,
+    "name": "Chicken Breast (grilled)",
+    "type": "meat",
+    "category": "poultry",
+    "calories": 165,
+    "protein": 31,
+    "carbs": 0,
+    "fat": 3.6,
+    "vitamins": { "B3": 13.7, "B6": 0.6 },
+    "country": "Global",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Fchicken_breast.png?alt=media",
+    "description": "Lean source of protein, often used in healthy meals and fitness diets."
+  },
+  {
+    "id": 202,
+    "name": "Beef Steak (grilled)",
+    "type": "meat",
+    "category": "red meat",
+    "calories": 271,
+    "protein": 25,
+    "carbs": 0,
+    "fat": 19,
+    "vitamins": { "B12": 1.7 },
+    "country": "Argentina",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Fbeef_steak.png?alt=media",
+    "description": "Grilled beef steak, rich in protein and iron."
+  }
+]

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 501,
+    "name": "Margherita Pizza",
+    "type": "meal",
+    "category": "fast food",
+    "calories": 266,
+    "protein": 11,
+    "carbs": 33,
+    "fat": 10,
+    "vitamins": {},
+    "country": "Italy",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meals%2Fmargherita_pizza.png?alt=media",
+    "description": "Classic Italian pizza topped with tomato sauce, mozzarella cheese and basil."
+  },
+  {
+    "id": 502,
+    "name": "Chicken Biryani",
+    "type": "meal",
+    "category": "rice dish",
+    "calories": 290,
+    "protein": 14,
+    "carbs": 34,
+    "fat": 11,
+    "vitamins": {},
+    "country": "India",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meals%2Fchicken_biryani.png?alt=media",
+    "description": "Spiced rice dish cooked with marinated chicken and aromatic spices."
+  }
+]

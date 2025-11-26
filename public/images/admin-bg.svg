@@ -1,0 +1,93 @@
+<!-- Admin Login Background - 4K (3840x2160)
+     Palette: dark blue/teal
+     Features: subtle shield facets, tech lines, clean center, enterprise tone -->
+<svg xmlns="http://www.w3.org/2000/svg" width="3840" height="2160" viewBox="0 0 3840 2160">
+  <defs>
+    <!-- Base gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#07111A"/>
+      <stop offset="100%" stop-color="#0D1621"/>
+    </linearGradient>
+
+    <!-- Center vignette -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#0A1017" stop-opacity="0.70"/>
+      <stop offset="45%" stop-color="#0A1017" stop-opacity="0.42"/>
+      <stop offset="85%" stop-color="#0A1017" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0A1017" stop-opacity="0.00"/>
+    </radialGradient>
+
+    <!-- Accents -->
+    <linearGradient id="accent-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#17C9D7"/>
+      <stop offset="100%" stop-color="#1FA6A8"/>
+    </linearGradient>
+    <linearGradient id="accent-blue" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2A74FF"/>
+      <stop offset="100%" stop-color="#17C9D7"/>
+    </linearGradient>
+
+    <!-- Shield facet gradient -->
+    <linearGradient id="facet" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#17C9D7" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#2A74FF" stop-opacity="0.06"/>
+    </linearGradient>
+
+    <!-- Soft glow -->
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Grain -->
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="17" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.03"/></feComponentTransfer>
+    </filter>
+
+    <!-- Scanlines -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#FFFFFF" opacity="0.02"/>
+    </pattern>
+
+    <style>
+      .net { stroke-linecap: round; opacity: 0.5; }
+      .facet { fill: url(#facet); stroke: rgba(23,201,215,0.2); stroke-width: 1; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="3840" height="2160" fill="url(#bg)"/>
+
+  <!-- Subtle shield facets (kept off-center, implied shape) -->
+  <g class="facet" filter="url(#glow)">
+    <polygon points="340 360, 780 240, 1100 420, 720 520" />
+    <polygon points="3000 380, 3400 240, 3640 520, 3220 600" />
+    <polygon points="420 1480, 900 1420, 1100 1700, 600 1760" />
+    <polygon points="2980 1560, 3460 1500, 3680 1760, 3120 1820" />
+  </g>
+
+  <!-- Tech network lines along edges -->
+  <g>
+    <path d="M520 240 L1060 300 L1680 260 L2300 300 L2920 260 L3480 320" stroke="url(#accent-teal)" stroke-width="1.6" class="net" fill="none"/>
+    <path d="M520 260 L1060 320 L1680 280 L2300 320 L2920 280 L3480 340" stroke="url(#accent-blue)" stroke-width="1.2" class="net" fill="none" opacity="0.45"/>
+    <path d="M520 1940 L1200 1980 L1900 1960 L2600 2000 L3200 1940" stroke="url(#accent-blue)" stroke-width="1.6" class="net" fill="none"/>
+    <path d="M520 1960 L1200 2020 L1900 2000 L2600 2060 L3200 1980" stroke="url(#accent-teal)" stroke-width="1.2" class="net" fill="none" opacity="0.45"/>
+  </g>
+
+  <!-- Corner glows -->
+  <g opacity="0.25" filter="url(#glow)">
+    <circle cx="400" cy="360" r="140" fill="#17C9D7"/>
+    <circle cx="3440" cy="360" r="120" fill="#2A74FF"/>
+    <circle cx="420" cy="1820" r="120" fill="#2A74FF"/>
+    <circle cx="3400" cy="1860" r="140" fill="#17C9D7"/>
+  </g>
+
+  <!-- Center vignette -->
+  <rect width="3840" height="2160" fill="url(#vignette)"/>
+
+  <!-- Scanlines + grain -->
+  <rect width="3840" height="2160" fill="url(#scanlines)"/>
+  <rect width="3840" height="2160" filter="url(#film-grain)" opacity="0.18"/>
+</svg>

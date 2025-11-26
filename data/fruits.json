@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "name": "Red Apple",
+    "type": "fruit",
+    "category": "fresh fruit",
+    "calories": 52,
+    "protein": 0.3,
+    "carbs": 14,
+    "fat": 0.2,
+    "vitamins": { "A": 1, "C": 7 },
+    "country": "USA",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/fruits%2Fred_apple.png?alt=media",
+    "description": "Sweet and crunchy red apple, commonly eaten fresh."
+  },
+  {
+    "id": 2,
+    "name": "Banana",
+    "type": "fruit",
+    "category": "tropical fruit",
+    "calories": 89,
+    "protein": 1.1,
+    "carbs": 23,
+    "fat": 0.3,
+    "vitamins": { "B6": 0.37, "C": 9 },
+    "country": "Ecuador",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/fruits%2Fbanana.png?alt=media",
+    "description": "Soft, sweet tropical fruit rich in potassium."
+  },
+  {
+    "id": 3,
+    "name": "Orange",
+    "type": "fruit",
+    "category": "citrus",
+    "calories": 47,
+    "protein": 0.9,
+    "carbs": 12,
+    "fat": 0.1,
+    "vitamins": { "C": 53 },
+    "country": "Spain",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/fruits%2Forange.png?alt=media",
+    "description": "Citrus fruit known for its juicy segments and high vitamin C content."
+  }
+]

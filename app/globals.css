@@ -1,0 +1,321 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Cyan Blue LED Theme - Light Mode */
+  --brand: #22C6F8; /* Primary Cyan Blue 500 */
+  --brand-foreground: #001015;
+  --background: #F7FAFC; /* Neutral 50 */
+  --foreground: #0A0F14; /* Neutral 1000 */
+  --card: #FFFFFF; /* Neutral 0 */
+  --card-foreground: #0A0F14;
+  --popover: #FFFFFF;
+  --popover-foreground: #0A0F14;
+  --primary: #22C6F8; /* Primary 500 */
+  --primary-foreground: #001015;
+  --secondary: #15C1B4; /* Secondary 500 */
+  --secondary-foreground: #001514;
+  --muted: #EEF4F8; /* Neutral 100 */
+  --muted-foreground: #455662; /* Neutral 700 */
+  --accent: #73E8FF; /* Accent 500 */
+  --accent-foreground: #001015;
+  --destructive: #EF4444; /* Error */
+  --destructive-foreground: #FFFFFF;
+  --border: #D6E0E8; /* Neutral 200 */
+  --input: #EEF4F8; /* Neutral 100 */
+  --ring: #73E8FF; /* Accent 500 for focus */
+  --chart-1: #22C6F8;
+  --chart-2: #15C1B4;
+  --chart-3: #73E8FF;
+  --chart-4: #0B94C1;
+  --chart-5: #0FA5A0;
+  --radius: 1rem;
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #0A0F14;
+  --sidebar-primary: #22C6F8;
+  --sidebar-primary-foreground: #001015;
+  --sidebar-accent: #EEF4F8;
+  --sidebar-accent-foreground: #0A0F14;
+  --sidebar-border: #D6E0E8;
+  --sidebar-ring: #73E8FF;
+  /* Semantic colors */
+  --success: #23D6A1;
+  --warning: #F59E0B;
+  --info: #10B2E3;
+}
+
+.dark {
+  /* Cyan Blue LED Theme - Dark Mode */
+  --background: #0E151B; /* Neutral 950 */
+  --foreground: #EEF4F8; /* Neutral 100 */
+  --card: #101A23; /* Surface dark */
+  --card-foreground: #EEF4F8;
+  --popover: #101A23;
+  --popover-foreground: #EEF4F8;
+  --primary: #10B2E3; /* Primary 600 for dark */
+  --primary-foreground: #001015;
+  --secondary: #0FA5A0; /* Secondary 600 for dark */
+  --secondary-foreground: #001514;
+  --muted: #18232C; /* Neutral 900 */
+  --muted-foreground: #B6C4CF; /* Neutral 300 */
+  --accent: #47D8FF; /* Accent 600 for dark */
+  --accent-foreground: #001015;
+  --destructive: #EF4444;
+  --destructive-foreground: #EEF4F8;
+  --border: #2E3944; /* Neutral 800 */
+  --input: #18232C;
+  --ring: #47D8FF;
+  --chart-1: #10B2E3;
+  --chart-2: #0FA5A0;
+  --chart-3: #47D8FF;
+  --chart-4: #0C7498;
+  --chart-5: #0C8684;
+  --sidebar: #101A23;
+  --sidebar-foreground: #EEF4F8;
+  --sidebar-primary: #10B2E3;
+  --sidebar-primary-foreground: #001015;
+  --sidebar-accent: #18232C;
+  --sidebar-accent-foreground: #EEF4F8;
+  --sidebar-border: #2E3944;
+  --sidebar-ring: #47D8FF;
+  /* Keep brand and semantic identical in dark */
+  --brand: #10B2E3;
+  --brand-foreground: #001015;
+  --success: #23D6A1;
+  --warning: #F59E0B;
+  --info: #10B2E3;
+}
+
+@theme inline {
+  --font-sans: "Geist", "Geist Fallback";
+  --font-mono: "Geist Mono", "Geist Mono Fallback";
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* expose brand token to Tailwind utilities (bg-brand, text-brand, etc.) */
+  --color-brand: var(--brand);
+  --color-brand-foreground: var(--brand-foreground);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Adding custom glassmorphism and gradient effects */
+@layer utilities {
+  .interactive-input {
+    @apply transition duration-200 focus:ring-2 focus:ring-blue-500/40 focus:border-blue-500;
+  }
+  .glass-effect {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .gradient-border {
+    position: relative;
+    background: var(--card);
+    border-radius: var(--radius-lg);
+  }
+
+  .gradient-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: var(--radius-lg);
+    padding: 2px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+  }
+
+  @keyframes slide-up {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .animate-slide-up {
+    animation: slide-up 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes subtleFloat {
+    0%, 100% {
+      transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+      transform: translate(3%, -3%) scale(1.005) rotate(0.5deg);
+    }
+    50% {
+      transform: translate(-2%, 3%) scale(1.003) rotate(-0.5deg);
+    }
+    75% {
+      transform: translate(-3%, -2%) scale(1.004) rotate(0.3deg);
+    }
+  }
+
+  /* Professional button animations */
+  @keyframes buttonGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.6), 0 0 50px rgba(59, 130, 246, 0.3);
+    }
+  }
+
+  @keyframes buttonPulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+  }
+
+  @keyframes iconSpin {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes iconBounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .animate-button-glow {
+    animation: buttonGlow 2s ease-in-out infinite;
+  }
+
+  .animate-button-pulse {
+    animation: buttonPulse 1s ease-in-out infinite;
+  }
+
+  .animate-icon-spin {
+    animation: iconSpin 1s linear infinite;
+  }
+
+  .animate-icon-bounce {
+    animation: iconBounce 0.6s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    animation: shimmer 2s infinite;
+  }
+
+  /* RTL Support - Full Layout Reversal */
+  [dir="rtl"] {
+    direction: rtl;
+  }
+
+  [dir="ltr"] {
+    direction: ltr;
+  }
+
+  /* RTL - Reverse flex containers */
+  [dir="rtl"] .flex {
+    flex-direction: row-reverse;
+  }
+
+  /* Keep column layout normal but reverse items inside */
+  [dir="rtl"] .flex-col {
+    flex-direction: column;
+  }
+
+  /* RTL - Reverse grid flow */
+  [dir="rtl"] .grid {
+    direction: rtl;
+  }
+
+  /* Align text to right in RTL */
+  [dir="rtl"] * {
+    text-align: right;
+  }
+
+  /* Center aligned items stay centered */
+  [dir="rtl"] .text-center,
+  [dir="rtl"] button {
+    text-align: center !important;
+  }
+
+  /* Keep input text aligned right */
+  [dir="rtl"] input,
+  [dir="rtl"] textarea {
+    text-align: right;
+    direction: rtl;
+  }
+}

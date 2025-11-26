@@ -1,0 +1,118 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-foreground: #f8fafc;
+  --primary: #0ea5e9;
+  --primary-foreground: #f8fafc;
+  --secondary: #3b82f6;
+  --secondary-foreground: #f8fafc;
+  --accent: #06b6d4;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #f8fafc;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #0ea5e9;
+  --radius: 0.625rem;
+}
+
+.dark {
+  --background: #0f172a;
+  --foreground: #f8fafc;
+  --card: #1e293b;
+  --card-foreground: #f8fafc;
+  --primary: #0ea5e9;
+  --primary-foreground: #0f172a;
+  --secondary: #3b82f6;
+  --secondary-foreground: #f8fafc;
+  --accent: #06b6d4;
+  --accent-foreground: #0f172a;
+  --destructive: #ef4444;
+  --destructive-foreground: #f8fafc;
+  --border: #1e293b;
+  --input: #1e293b;
+  --ring: #0ea5e9;
+}
+
+@theme inline {
+  --font-sans: 'Inter', 'Poppins';
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply scroll-smooth;
+  }
+  body {
+    @apply bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 text-foreground;
+  }
+}
+
+/* FitPro Custom Styles */
+.fitpro-gradient {
+  @apply bg-gradient-to-br from-blue-600 to-cyan-500;
+}
+
+.fitpro-card {
+  @apply bg-slate-800/40 backdrop-blur border border-slate-700/50 rounded-2xl;
+}
+
+.fitpro-input {
+  @apply bg-slate-900/50 border-slate-700/50 text-white placeholder-slate-500 focus:border-blue-500 focus:ring-blue-500/20;
+}
+
+.fitpro-button {
+  @apply bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold transition-all;
+}
+
+.fitpro-section-header {
+  @apply text-2xl font-bold text-white mb-6;
+}
+
+/* Trainer Custom Styles (Rose/Red theme) */
+.trainer-gradient {
+  @apply bg-gradient-to-br from-rose-600 to-pink-500;
+}
+
+.trainer-card {
+  @apply bg-slate-800/40 backdrop-blur border border-rose-700/30 rounded-2xl;
+}
+
+.trainer-input {
+  @apply bg-slate-900/50 border-slate-700/50 text-white placeholder-slate-500 focus:border-rose-500 focus:ring-rose-500/20;
+}
+
+.trainer-button {
+  @apply bg-rose-600 hover:bg-rose-700 text-white rounded-xl font-semibold transition-all;
+}
+
+.trainer-section-header {
+  @apply text-2xl font-bold text-white mb-6;
+}

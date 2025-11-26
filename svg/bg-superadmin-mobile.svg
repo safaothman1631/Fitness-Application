@@ -1,0 +1,145 @@
+<!-- SuperAdmin Login Background - Mobile Portrait (1080x2400)
+     Palette: deep charcoal + midnight blue with teal/violet accents
+     Features: clean center, holographic panels, network lines, flowing ribbons, vignette, subtle scanlines + grain -->
+<svg xmlns="http://www.w3.org/2000/svg" width="1080" height="2400" viewBox="0 0 1080 2400">
+  <defs>
+    <!-- Base gradient -->
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#070B10"/>
+      <stop offset="100%" stop-color="#0E141B"/>
+    </linearGradient>
+
+    <!-- Center vignette (keeps form area readable) -->
+    <radialGradient id="vignette" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#0A0D11" stop-opacity="0.72"/>
+      <stop offset="50%" stop-color="#0A0D11" stop-opacity="0.44"/>
+      <stop offset="90%" stop-color="#0A0D11" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="#0A0D11" stop-opacity="0.00"/>
+    </radialGradient>
+
+    <!-- Accents -->
+    <linearGradient id="accent-teal" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#17C9D7"/>
+      <stop offset="100%" stop-color="#1FA6A8"/>
+    </linearGradient>
+    <linearGradient id="accent-violet" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7E3FF2"/>
+      <stop offset="100%" stop-color="#17C9D7"/>
+    </linearGradient>
+
+    <!-- Flowing ribbon gradient -->
+    <linearGradient id="ribbon-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#17C9D7" stop-opacity="0"/>
+      <stop offset="35%" stop-color="#17C9D7" stop-opacity="0.35"/>
+      <stop offset="65%" stop-color="#7E3FF2" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7E3FF2" stop-opacity="0"/>
+    </linearGradient>
+
+    <!-- Soft glow for nodes/panels -->
+    <filter id="soft-glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+
+    <!-- Fine noise to reduce banding -->
+    <filter id="film-grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="29" stitchTiles="stitch" result="noise"/>
+      <feColorMatrix type="saturate" values="0" in="noise" result="mono"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.03"/></feComponentTransfer>
+    </filter>
+
+    <!-- Subtle scanline pattern -->
+    <pattern id="scanlines" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="4" height="1" fill="#FFFFFF" opacity="0.02"/>
+    </pattern>
+
+    <style>
+      .panel { fill: rgba(255,255,255,0.035); stroke: rgba(23,201,215,0.25); stroke-width: 1; }
+      .panel-bright { fill: rgba(255,255,255,0.055); stroke: rgba(126,63,242,0.35); }
+      .net-line { stroke-linecap: round; stroke-width: 1.4; opacity: 0.55; }
+      .node { filter: url(#soft-glow); }
+      .node-core { fill: #17C9D7; opacity: 0.9; }
+      .node-core.v { fill: #7E3FF2; opacity: 0.9; }
+      .node-halo { fill: #17C9D7; opacity: 0.25; }
+      .node-halo.v { fill: #7E3FF2; opacity: 0.22; }
+    </style>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="2400" fill="url(#bg)"/>
+
+  <!-- Decorative flowing ribbons (kept away from center) -->
+  <g opacity="0.55">
+    <!-- Top ribbon -->
+    <path d="M -140 240 C 220 140, 560 180, 900 230 C 1080 260, 1200 300, 1200 320 L 1200 400 C 1200 380, 1080 350, 900 310 C 560 240, 220 210, -140 320 Z"
+          fill="url(#ribbon-grad)"/>
+    <!-- Bottom ribbon -->
+    <path d="M -160 1980 C 220 1920, 560 1880, 900 1900 C 1100 1914, 1200 2020, 1200 2040 L 1200 2140 C 1200 2110, 1100 2050, 900 2020 C 560 1970, 220 2020, -160 2120 Z"
+          fill="url(#ribbon-grad)"/>
+  </g>
+
+  <!-- Holographic panels (subtle, off-center) -->
+  <g filter="url(#soft-glow)">
+    <rect class="panel" x="60" y="160" width="260" height="160" rx="16"/>
+    <rect class="panel" x="780" y="220" width="240" height="130" rx="14"/>
+    <rect class="panel-bright" x="70" y="1780" width="300" height="180" rx="18"/>
+    <rect class="panel" x="760" y="1860" width="270" height="160" rx="16"/>
+  </g>
+
+  <!-- Network lines around periphery -->
+  <g>
+    <!-- Top band -->
+    <path d="M120 180 L360 210 L600 190 L840 210 L1040 190" stroke="url(#accent-teal)" class="net-line" fill="none"/>
+    <path d="M120 200 L360 230 L600 210 L840 230 L1040 210" stroke="url(#accent-violet)" class="net-line" fill="none" opacity="0.45"/>
+
+    <!-- Bottom band -->
+    <path d="M120 2140 L420 2170 L720 2150 L960 2180" stroke="url(#accent-violet)" class="net-line" fill="none"/>
+    <path d="M120 2160 L420 2190 L720 2170 L960 2200" stroke="url(#accent-teal)" class="net-line" fill="none" opacity="0.45"/>
+
+    <!-- Diagonals (edge only) -->
+    <path d="M90 280 L360 210 L540 230 L140 560" stroke="url(#accent-teal)" class="net-line" fill="none" opacity="0.6"/>
+    <path d="M940 260 L1040 380 L980 720" stroke="url(#accent-violet)" class="net-line" fill="none" opacity="0.55"/>
+    <path d="M140 1760 L220 1920 L720 2150 L980 1600" stroke="url(#accent-teal)" class="net-line" fill="none" opacity="0.45"/>
+  </g>
+
+  <!-- Nodes with glow (kept away from center) -->
+  <g class="node">
+    <!-- Top nodes -->
+    <g><circle class="node-halo" cx="120" cy="180" r="9"/><circle class="node-core" cx="120" cy="180" r="3"/></g>
+    <g><circle class="node-halo v" cx="360" cy="210" r="8"/><circle class="node-core v" cx="360" cy="210" r="2.6"/></g>
+    <g><circle class="node-halo" cx="600" cy="190" r="9"/><circle class="node-core" cx="600" cy="190" r="3"/></g>
+    <g><circle class="node-halo v" cx="840" cy="210" r="8"/><circle class="node-core v" cx="840" cy="210" r="2.6"/></g>
+    <g><circle class="node-halo" cx="1040" cy="190" r="9"/><circle class="node-core" cx="1040" cy="190" r="3"/></g>
+
+    <!-- Bottom nodes -->
+    <g><circle class="node-halo" cx="120" cy="2140" r="9"/><circle class="node-core" cx="120" cy="2140" r="3"/></g>
+    <g><circle class="node-halo v" cx="420" cy="2170" r="8"/><circle class="node-core v" cx="420" cy="2170" r="2.6"/></g>
+    <g><circle class="node-halo" cx="720" cy="2150" r="9"/><circle class="node-core" cx="720" cy="2150" r="3"/></g>
+    <g><circle class="node-halo v" cx="960" cy="2180" r="8"/><circle class="node-core v" cx="960" cy="2180" r="2.6"/></g>
+
+    <!-- Side nodes -->
+    <g><circle class="node-halo" cx="90" cy="280" r="9"/><circle class="node-core" cx="90" cy="280" r="3"/></g>
+    <g><circle class="node-halo v" cx="140" cy="560" r="8"/><circle class="node-core v" cx="140" cy="560" r="2.6"/></g>
+    <g><circle class="node-halo" cx="180" cy="840" r="9"/><circle class="node-core" cx="180" cy="840" r="3"/></g>
+    <g><circle class="node-halo v" cx="160" cy="1120" r="8"/><circle class="node-core v" cx="160" cy="1120" r="2.6"/></g>
+    <g><circle class="node-halo" cx="160" cy="1400" r="9"/><circle class="node-core" cx="160" cy="1400" r="3"/></g>
+
+    <g><circle class="node-halo" cx="980" cy="720" r="9"/><circle class="node-core" cx="980" cy="720" r="3"/></g>
+    <g><circle class="node-halo v" cx="1020" cy="1040" r="8"/><circle class="node-core v" cx="1020" cy="1040" r="2.6"/></g>
+    <g><circle class="node-halo" cx="980" cy="1360" r="9"/><circle class="node-core" cx="980" cy="1360" r="3"/></g>
+    <g><circle class="node-halo v" cx="1010" cy="1680" r="8"/><circle class="node-core v" cx="1010" cy="1680" r="2.6"/></g>
+    <g><circle class="node-halo" cx="980" cy="2000" r="9"/><circle class="node-core" cx="980" cy="2000" r="3"/></g>
+  </g>
+
+  <!-- Soft center vignette overlay -->
+  <rect width="1080" height="2400" fill="url(#vignette)"/>
+
+  <!-- Scanlines (very subtle) -->
+  <rect width="1080" height="2400" fill="url(#scanlines)"/>
+
+  <!-- Film grain overlay -->
+  <rect width="1080" height="2400" filter="url(#film-grain)" opacity="0.18"/>
+
+  <!-- Optional: safe area guide for form (uncomment to visualize) -->
+  <!-- <rect x="120" y="540" width="840" height="1320" fill="none" stroke="#17C9D7" stroke-dasharray="10 12" opacity="0.2"/> -->
+</svg>

@@ -1,0 +1,30 @@
+[
+  {
+    "id": 401,
+    "name": "Water",
+    "type": "drink",
+    "category": "non-caloric",
+    "calories": 0,
+    "protein": 0,
+    "carbs": 0,
+    "fat": 0,
+    "vitamins": {},
+    "country": "Global",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Fwater.png?alt=media",
+    "description": "Plain drinking water, essential for hydration."
+  },
+  {
+    "id": 402,
+    "name": "Orange Juice",
+    "type": "drink",
+    "category": "juice",
+    "calories": 45,
+    "protein": 0.7,
+    "carbs": 10,
+    "fat": 0.2,
+    "vitamins": { "C": 50 },
+    "country": "Brazil",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Forange_juice.png?alt=media",
+    "description": "Juice made from fresh oranges, rich in vitamin C."
+  }
+]
