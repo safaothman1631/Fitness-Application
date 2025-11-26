@@ -268,23 +268,47 @@ import AuthGuard from "@/components/auth-guard"
                   </CardContent>
                 </Card>
 
-                {/* Image */}
-                {selectedMeal.imageUrl && (
-                  <Card className="bg-slate-900/70 border-slate-800">
-                    <CardHeader>
-                      <CardTitle className="text-white text-lg">{t("mealImage")}</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
-                        <div className="text-center">
-                          <ImageIcon className="w-12 h-12 text-blue-400 mx-auto mb-2" />
-                          <p className="text-slate-400 text-sm">{t("mealPhoto")}</p>
-                          <p className="text-blue-400 text-xs mt-1">{selectedMeal.imageUrl}</p>
+                {/* Image Gallery */}
+                {selectedMeal.imageUrl && (() => {
+                  const imageUrls = selectedMeal.imageUrl.split(',').filter(Boolean)
+                  return (
+                    <Card className="bg-slate-900/70 border-slate-800">
+                      <CardHeader>
+                        <CardTitle className="text-white text-lg flex items-center gap-2">
+                          <ImageIcon className="w-5 h-5 text-amber-400" />
+                          {t("mealImage")} 
+                          {imageUrls.length > 1 && (
+                            <span className="text-sm text-slate-400">({imageUrls.length} وێنە)</span>
+                          )}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className={`grid gap-3 ${imageUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                          {imageUrls.map((url, idx) => (
+                            <div key={idx} className="relative group">
+                              <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-amber-500/50 transition-all">
+                                <img 
+                                  src={url} 
+                                  alt={`${selectedMeal.name} - ${idx + 1}`}
+                                  className="w-full h-full object-cover"
+                                  onError={(e) => {
+                                    e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23334155" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="48" text-anchor="middle" dy=".3em" fill="%239ca3af"%3E🍽️%3C/text%3E%3C/svg%3E'
+                                  }}
+                                />
+                              </div>
+                              {/* Image number badge */}
+                              {imageUrls.length > 1 && (
+                                <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-lg">
+                                  {idx + 1}
+                                </div>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                      </CardContent>
+                    </Card>
+                  )
+                })()}
 
                 {/* Ingredients */}
                 {selectedMeal.ingredients && selectedMeal.ingredients.length > 0 && (

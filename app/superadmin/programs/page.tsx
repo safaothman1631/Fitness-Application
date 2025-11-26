@@ -83,6 +83,7 @@ export default function ProgramsPage() {
   const [isLoadingMealImages, setIsLoadingMealImages] = useState(false)
   const [mealImagePage, setMealImagePage] = useState(1)
   const mealImagesPerPage = 12
+  const [selectedImages, setSelectedImages] = useState<string[]>([])
   const [isSaving, setIsSaving] = useState(false)
   const [showSuccessDialog, setShowSuccessDialog] = useState(false)
   const [savedProgramData, setSavedProgramData] = useState<any>(null)
@@ -3043,54 +3044,98 @@ export default function ProgramsPage() {
                   🖼️ وێنەی خواردن (ئیختیاری)
                 </Label>
                 
-                {/* Selected Image Preview */}
-                {mealFormData.imageUrl && (
-                  <Card className="bg-slate-800/50 border-slate-700">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-16 h-16 rounded-lg overflow-hidden bg-slate-900 flex-shrink-0">
-                          <img 
-                            src={mealFormData.imageUrl} 
-                            alt="Meal" 
-                            className="w-full h-full object-cover"
-                            onError={(e) => {
-                              e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="64" height="64"%3E%3Crect fill="%23334155" width="64" height="64"/%3E%3C/svg%3E'
-                            }}
-                          />
+                {/* Selected Images Preview */}
+                {mealFormData.imageUrl && (() => {
+                  const imageUrls = mealFormData.imageUrl.split(',').filter(Boolean)
+                  return (
+                    <Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-2 border-green-500/30 shadow-lg shadow-green-500/10">
+                      <CardContent className="p-4">
+                        <div className="space-y-3">
+                          {/* Header */}
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-2">
+                              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                              <p className="text-green-400 text-sm font-bold">
+                                {imageUrls.length} وێنە هەڵبژێردراوە ✓
+                              </p>
+                            </div>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setMealFormData({ ...mealFormData, imageUrl: '' })}
+                              className="border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 h-8 px-3"
+                            >
+                              <X className="w-4 h-4 mr-1" />
+                              لابردنی هەموو
+                            </Button>
+                          </div>
+                          
+                          {/* Images Grid */}
+                          <div className="grid grid-cols-4 gap-2">
+                            {imageUrls.map((url, idx) => (
+                              <div key={idx} className="relative group">
+                                <div className="aspect-square rounded-lg overflow-hidden bg-slate-900 border-2 border-green-500/50 shadow-md">
+                                  <img 
+                                    src={url} 
+                                    alt={`Image ${idx + 1}`} 
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="80" height="80"%3E%3Crect fill="%23334155" width="80" height="80"/%3E%3Ctext x="50%25" y="50%25" font-size="24" text-anchor="middle" dy=".3em" fill="%239ca3af"%3E🍽️%3C/text%3E%3C/svg%3E'
+                                    }}
+                                  />
+                                </div>
+                                {/* Remove individual image */}
+                                <button
+                                  onClick={() => {
+                                    const newUrls = imageUrls.filter((_, i) => i !== idx)
+                                    setMealFormData({ ...mealFormData, imageUrl: newUrls.join(',') })
+                                  }}
+                                  className="absolute -top-1 -right-1 w-6 h-6 rounded-full bg-red-500 flex items-center justify-center shadow-lg opacity-0 group-hover:opacity-100 transition-opacity"
+                                >
+                                  <X className="w-3 h-3 text-white" />
+                                </button>
+                                {/* Number Badge */}
+                                <div className="absolute bottom-1 left-1 w-5 h-5 rounded-full bg-green-500 flex items-center justify-center text-white text-xs font-bold">
+                                  {idx + 1}
+                                </div>
+                              </div>
+                            ))}
+                          </div>
                         </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="text-white text-sm font-bold truncate">وێنە هەڵبژێردراوە</p>
-                          <p className="text-xs text-gray-400 truncate">{mealFormData.imageUrl}</p>
-                        </div>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => setMealFormData({ ...mealFormData, imageUrl: '' })}
-                          className="border-red-700/50 text-red-400 hover:bg-red-500/20 h-8 w-8 p-0"
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                      </CardContent>
+                    </Card>
+                  )
+                })()}
                 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-3">
+                  {/* Gallery Button - Featured */}
                   <Button
                     type="button"
-                    onClick={() => setShowMealImageBrowser(true)}
+                    onClick={() => {
+                      // When opening dialog, load previously selected images
+                      const currentUrls = mealFormData.imageUrl ? mealFormData.imageUrl.split(',').filter(Boolean) : []
+                      setSelectedImages(currentUrls)
+                      setShowMealImageBrowser(true)
+                    }}
                     variant="outline"
-                    className="border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 h-11"
+                    className="w-full border-2 border-yellow-500/40 bg-gradient-to-r from-yellow-500/10 to-orange-500/10 text-yellow-400 hover:bg-yellow-500/20 hover:border-yellow-500/60 h-12 font-bold transition-all shadow-lg shadow-yellow-500/10"
                   >
-                    <Activity className="w-4 h-4 mr-2" />
-                    هەڵبژاردن لە گالەری
+                    <Activity className="w-5 h-5 mr-2" />
+                    📸 هەڵبژاردن لە گالەری ({availableMealImages.length} وێنە)
                   </Button>
-                  <Input
-                    value={mealFormData.imageUrl}
-                    onChange={(e) => setMealFormData({ ...mealFormData, imageUrl: e.target.value })}
-                    placeholder="یان لینک بنووسە..."
-                    className="bg-slate-800/50 border-slate-700 text-white h-11"
-                  />
+                  
+                  {/* Manual URL Input - Secondary */}
+                  <div className="relative">
+                    <Input
+                      value={mealFormData.imageUrl}
+                      onChange={(e) => setMealFormData({ ...mealFormData, imageUrl: e.target.value })}
+                      placeholder="🔗 یان لینکی وێنە بنووسە..."
+                      className="bg-slate-800/50 border-slate-700 text-white h-11 pl-10"
+                    />
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">
+                      🌐
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -3639,18 +3684,26 @@ export default function ProgramsPage() {
                       .filter(image => image.displayName.toLowerCase().includes(mealImageSearchQuery.toLowerCase()))
                       .slice((mealImagePage - 1) * mealImagesPerPage, mealImagePage * mealImagesPerPage)
                       .map((image, index) => {
-                        const isSelected = mealFormData.imageUrl === image.url
+                        const isSelected = selectedImages.includes(image.url)
                         return (
                           <Card 
                             key={index} 
                             className={`border transition-all overflow-hidden group cursor-pointer ${
                               isSelected 
-                                ? 'bg-green-500/20 border-green-500/50 ring-2 ring-green-500' 
-                                : 'bg-slate-800/50 border-slate-700 hover:border-yellow-500/50'
+                                ? 'bg-green-500/20 border-green-500/50 ring-2 ring-green-500 scale-95' 
+                                : 'bg-slate-800/50 border-slate-700 hover:border-yellow-500/50 hover:scale-105'
                             }`}
                             onClick={() => {
-                              setMealFormData({ ...mealFormData, imageUrl: image.url })
-                              setShowMealImageBrowser(false)
+                              // Toggle selection for multiple images
+                              setSelectedImages(prev => {
+                                if (prev.includes(image.url)) {
+                                  // Remove from selection
+                                  return prev.filter(url => url !== image.url)
+                                } else {
+                                  // Add to selection
+                                  return [...prev, image.url]
+                                }
+                              })
                             }}
                           >
                             <CardContent className="p-0">
@@ -3739,19 +3792,80 @@ export default function ProgramsPage() {
               </>
             )}
 
-            <div className="flex gap-3 pt-4 border-t border-slate-700">
-              <Button
-                onClick={() => {
-                  setShowMealImageBrowser(false)
-                  setMealImageSearchQuery('')
-                  setMealImagePage(1)
-                }}
-                variant="outline"
-                className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-11"
-              >
-                <X className="w-4 h-4 mr-2" />
-                {mealFormData.imageUrl ? 'داخستن' : 'پاشگەزبوونەوە'}
-              </Button>
+            {/* Action Buttons */}
+            <div className="space-y-3 pt-4 border-t border-slate-700 mt-4">
+              {/* Selection Counter */}
+              {selectedImages.length > 0 && (
+                <div className="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                        <Check className="w-5 h-5 text-white" />
+                      </div>
+                      <span className="text-green-400 font-bold">
+                        {selectedImages.length} وێنە هەڵبژێردراوە
+                      </span>
+                    </div>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setSelectedImages([])}
+                      className="border-red-500/30 text-red-400 hover:bg-red-500/20"
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      پاککردنەوەی هەموو
+                    </Button>
+                  </div>
+                </div>
+              )}
+              
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                {selectedImages.length > 0 ? (
+                  <>
+                    <Button
+                      onClick={() => {
+                        // Save selected images as comma-separated URLs
+                        setMealFormData({ ...mealFormData, imageUrl: selectedImages.join(',') })
+                        setShowMealImageBrowser(false)
+                        setMealImageSearchQuery('')
+                        setMealImagePage(1)
+                        setSelectedImages([])
+                      }}
+                      className="flex-1 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 text-white h-12 font-bold shadow-lg shadow-green-500/20"
+                    >
+                      <Check className="w-5 h-5 mr-2" />
+                      پەسەندکردن ({selectedImages.length} وێنە)
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        setShowMealImageBrowser(false)
+                        setMealImageSearchQuery('')
+                        setMealImagePage(1)
+                        setSelectedImages([])
+                      }}
+                      variant="outline"
+                      className="border-slate-700 text-gray-300 hover:bg-slate-800 h-12 px-6"
+                    >
+                      <X className="w-4 h-4 mr-2" />
+                      پاشگەزبوونەوە
+                    </Button>
+                  </>
+                ) : (
+                  <Button
+                    onClick={() => {
+                      setShowMealImageBrowser(false)
+                      setMealImageSearchQuery('')
+                      setMealImagePage(1)
+                    }}
+                    variant="outline"
+                    className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    پاشگەزبوونەوە
+                  </Button>
+                )}
+              </div>
             </div>
           </DialogContent>
         </Dialog>

@@ -2,9 +2,11 @@
 import React, { useState, useEffect } from "react"
 import { Input } from "@/components/ui/input"
 import { Card } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { X, Flame, Beef, Wheat, Droplet } from "lucide-react"
 
 interface Food {
-  id: number
+  id: string
   name: string
   type: string
   category: string
@@ -12,7 +14,7 @@ interface Food {
   protein: number
   carbs: number
   fat: number
-  vitamins: Record<string, number>
+  vitamins: string
   country: string
   image: string
   description: string
@@ -36,6 +38,7 @@ export default function FoodsPage() {
   const [type, setType] = useState("")
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(false)
+  const [selectedFood, setSelectedFood] = useState<Food | null>(null)
 
   useEffect(() => {
     async function fetchFoods() {
@@ -79,7 +82,11 @@ export default function FoodsPage() {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {foods.map(food => (
-            <Card key={food.id} className="p-4 flex gap-4 items-start hover:shadow-lg transition-shadow">
+            <Card 
+              key={food.id} 
+              className="p-4 flex gap-4 items-start hover:shadow-lg transition-all cursor-pointer hover:scale-105"
+              onClick={() => setSelectedFood(food)}
+            >
               <img
                 src={food.image}
                 alt={food.name}
@@ -102,6 +109,89 @@ export default function FoodsPage() {
       {!loading && foods.length === 0 && (
         <div className="text-center py-8 text-slate-500">No foods found</div>
       )}
+
+      {/* Food Detail Dialog */}
+      <Dialog open={!!selectedFood} onOpenChange={(open) => !open && setSelectedFood(null)}>
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
+              {selectedFood?.name}
+            </DialogTitle>
+          </DialogHeader>
+          
+          {selectedFood && (
+            <div className="space-y-6">
+              {/* Food Image */}
+              <div className="relative w-full h-64 rounded-xl overflow-hidden bg-slate-900">
+                <img
+                  src={selectedFood.image}
+                  alt={selectedFood.name}
+                  className="w-full h-full object-cover"
+                  onError={e => (e.currentTarget.src = "/placeholder.jpg")}
+                />
+                <div className="absolute top-4 right-4 flex gap-2">
+                  <span className="px-3 py-1 rounded-full bg-amber-500/90 text-white text-sm font-semibold">
+                    {selectedFood.type}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-blue-500/90 text-white text-sm">
+                    {selectedFood.category}
+                  </span>
+                </div>
+              </div>
+
+              {/* Description */}
+              <div className="bg-slate-900/70 rounded-lg p-4">
+                <p className="text-slate-300 leading-relaxed">{selectedFood.description}</p>
+                <div className="mt-3 flex items-center gap-2 text-sm text-slate-400">
+                  <span className="px-2 py-1 rounded bg-slate-800">🌍 {selectedFood.country}</span>
+                </div>
+              </div>
+
+              {/* Nutrition Facts */}
+              <Card className="bg-gradient-to-br from-slate-900 to-slate-800 border-slate-700">
+                <div className="p-6">
+                  <h3 className="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <Flame className="w-5 h-5 text-orange-400" />
+                    Nutrition Facts
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                      <Flame className="w-6 h-6 text-orange-400 mx-auto mb-2" />
+                      <p className="text-2xl font-bold text-white">{selectedFood.calories}</p>
+                      <p className="text-xs text-slate-400 mt-1">Calories</p>
+                    </div>
+                    <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                      <Beef className="w-6 h-6 text-red-400 mx-auto mb-2" />
+                      <p className="text-2xl font-bold text-red-400">{selectedFood.protein}g</p>
+                      <p className="text-xs text-slate-400 mt-1">Protein</p>
+                    </div>
+                    <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                      <Wheat className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+                      <p className="text-2xl font-bold text-amber-400">{selectedFood.carbs}g</p>
+                      <p className="text-xs text-slate-400 mt-1">Carbs</p>
+                    </div>
+                    <div className="bg-slate-800/50 rounded-lg p-4 text-center">
+                      <Droplet className="w-6 h-6 text-yellow-400 mx-auto mb-2" />
+                      <p className="text-2xl font-bold text-yellow-400">{selectedFood.fat}g</p>
+                      <p className="text-xs text-slate-400 mt-1">Fat</p>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+
+              {/* Vitamins */}
+              {selectedFood.vitamins && (
+                <Card className="bg-slate-900/70 border-slate-800">
+                  <div className="p-4">
+                    <h3 className="text-lg font-semibold text-white mb-3">💊 Vitamins & Minerals</h3>
+                    <p className="text-slate-300">{selectedFood.vitamins}</p>
+                  </div>
+                </Card>
+              )}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
