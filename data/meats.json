@@ -26,5 +26,61 @@
     "country": "Argentina",
     "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Fbeef_steak.png?alt=media",
     "description": "Grilled beef steak, rich in protein and iron."
+  },
+  {
+    "id": 203,
+    "name": "Salmon (baked)",
+    "type": "meat",
+    "category": "fish",
+    "calories": 206,
+    "protein": 22,
+    "carbs": 0,
+    "fat": 13,
+    "vitamins": { "B12": 2.8, "D": 66 },
+    "country": "Norway",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Fsalmon.png?alt=media",
+    "description": "Rich source of omega-3 fatty acids and protein."
+  },
+  {
+    "id": 204,
+    "name": "Turkey Breast",
+    "type": "meat",
+    "category": "poultry",
+    "calories": 135,
+    "protein": 30,
+    "carbs": 0,
+    "fat": 1,
+    "vitamins": { "B3": 11.8 },
+    "country": "USA",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Fturkey.png?alt=media",
+    "description": "Very lean poultry, lower in fat than chicken."
+  },
+  {
+    "id": 205,
+    "name": "Tuna (canned in water)",
+    "type": "meat",
+    "category": "fish",
+    "calories": 116,
+    "protein": 26,
+    "carbs": 0,
+    "fat": 1,
+    "vitamins": { "B12": 2.5, "D": 39 },
+    "country": "Japan",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Ftuna.png?alt=media",
+    "description": "Convenient protein source, rich in omega-3."
+  },
+  {
+    "id": 206,
+    "name": "Lamb Chop (grilled)",
+    "type": "meat",
+    "category": "red meat",
+    "calories": 294,
+    "protein": 25,
+    "carbs": 0,
+    "fat": 21,
+    "vitamins": { "B12": 2.3 },
+    "country": "New Zealand",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/meats%2Flamb.png?alt=media",
+    "description": "Tender grilled lamb, rich in protein and B vitamins."
   }
 ]

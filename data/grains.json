@@ -12,5 +12,61 @@
     "country": "India",
     "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/grains%2Fwhite_rice.png?alt=media",
     "description": "Staple grain eaten worldwide, often served as a side dish."
+  },
+  {
+    "id": 302,
+    "name": "Brown Rice (cooked)",
+    "type": "grain",
+    "category": "whole grain",
+    "calories": 111,
+    "protein": 2.6,
+    "carbs": 23,
+    "fat": 0.9,
+    "vitamins": { "B3": 1.5 },
+    "country": "China",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/grains%2Fbrown_rice.png?alt=media",
+    "description": "Whole grain rice with more fiber and nutrients than white rice."
+  },
+  {
+    "id": 303,
+    "name": "Quinoa (cooked)",
+    "type": "grain",
+    "category": "whole grain",
+    "calories": 120,
+    "protein": 4.4,
+    "carbs": 21,
+    "fat": 1.9,
+    "vitamins": { "B2": 0.1 },
+    "country": "Peru",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/grains%2Fquinoa.png?alt=media",
+    "description": "Complete protein grain, rich in all essential amino acids."
+  },
+  {
+    "id": 304,
+    "name": "Oats (cooked)",
+    "type": "grain",
+    "category": "cereal",
+    "calories": 71,
+    "protein": 2.5,
+    "carbs": 12,
+    "fat": 1.5,
+    "vitamins": { "B1": 0.1 },
+    "country": "Scotland",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/grains%2Foats.png?alt=media",
+    "description": "Heart-healthy grain high in fiber and beta-glucan."
+  },
+  {
+    "id": 305,
+    "name": "Whole Wheat Bread",
+    "type": "grain",
+    "category": "bread",
+    "calories": 247,
+    "protein": 13,
+    "carbs": 41,
+    "fat": 3.4,
+    "vitamins": { "B3": 4.7 },
+    "country": "Global",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/grains%2Fwheat_bread.png?alt=media",
+    "description": "Bread made from whole wheat flour with more fiber."
   }
 ]

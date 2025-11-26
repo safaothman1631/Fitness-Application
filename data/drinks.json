@@ -26,5 +26,61 @@
     "country": "Brazil",
     "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Forange_juice.png?alt=media",
     "description": "Juice made from fresh oranges, rich in vitamin C."
+  },
+  {
+    "id": 403,
+    "name": "Green Tea",
+    "type": "drink",
+    "category": "tea",
+    "calories": 2,
+    "protein": 0,
+    "carbs": 0,
+    "fat": 0,
+    "vitamins": {},
+    "country": "Japan",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Fgreen_tea.png?alt=media",
+    "description": "Antioxidant-rich tea with minimal calories."
+  },
+  {
+    "id": 404,
+    "name": "Almond Milk (unsweetened)",
+    "type": "drink",
+    "category": "plant milk",
+    "calories": 30,
+    "protein": 1,
+    "carbs": 1,
+    "fat": 2.5,
+    "vitamins": { "E": 50 },
+    "country": "USA",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Falmond_milk.png?alt=media",
+    "description": "Low-calorie plant-based milk alternative."
+  },
+  {
+    "id": 405,
+    "name": "Protein Shake (vanilla)",
+    "type": "drink",
+    "category": "supplement",
+    "calories": 120,
+    "protein": 24,
+    "carbs": 3,
+    "fat": 1.5,
+    "vitamins": {},
+    "country": "USA",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Fprotein_shake.png?alt=media",
+    "description": "High-protein drink for post-workout recovery."
+  },
+  {
+    "id": 406,
+    "name": "Coconut Water",
+    "type": "drink",
+    "category": "natural drink",
+    "calories": 19,
+    "protein": 0.7,
+    "carbs": 3.7,
+    "fat": 0.2,
+    "vitamins": { "C": 2 },
+    "country": "Philippines",
+    "image": "https://firebasestorage.googleapis.com/v0/b/YOUR_BUCKET/o/drinks%2Fcoconut_water.png?alt=media",
+    "description": "Natural electrolyte-rich hydrating drink."
   }
 ]
