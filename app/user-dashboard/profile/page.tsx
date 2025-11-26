@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import FitproLayout from "@/components/fitpro-layout"
+<<<<<<< HEAD
 import { Mail, Phone, MapPin, Zap, Save, Heart, User } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
 import { AnimatedButton } from "@/components/ui/animated-button"
@@ -116,6 +117,14 @@ export default function UserProfile() {
     ? userData.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
     : userData.email?.[0]?.toUpperCase() || "U"
 
+=======
+import { Mail, Phone, MapPin, Zap, Save, Heart } from "lucide-react"
+import { useLanguage } from "@/hooks/useLanguage"
+import { AnimatedButton } from "@/components/ui/animated-button"
+
+export default function UserProfile() {
+  const { t } = useLanguage()
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   return (
     <FitproLayout role="user">
       <div className="space-y-6">
@@ -128,6 +137,7 @@ export default function UserProfile() {
           {/* Profile Card */}
           <Card className="fitpro-card md:col-span-1 transition-all duration-500 hover:scale-105 hover:shadow-[0_0_40px_rgba(59,130,246,0.3)] group">
             <CardContent className="p-6 text-center">
+<<<<<<< HEAD
               <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center mx-auto mb-4 text-3xl text-white font-bold transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]">
                 {initials}
               </div>
@@ -159,6 +169,26 @@ export default function UserProfile() {
                     {userData.location}
                   </div>
                 )}
+=======
+              <div className="w-24 h-24 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4 text-3xl text-blue-400 font-bold transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-[0_0_30px_rgba(59,130,246,0.5)]">
+                JD
+              </div>
+              <h2 className="text-xl font-bold text-white mb-1 transition-all duration-300 group-hover:text-blue-400">John Doe</h2>
+              <p className="text-gray-400 text-sm mb-4">{t("premiumMember")}</p>
+              <div className="space-y-2 text-left text-sm">
+                <div className="flex items-center gap-2 text-gray-400 transition-all duration-300 hover:text-blue-400 hover:translate-x-1">
+                  <Phone className="w-4 h-4" />
+                  +92-300-5555555
+                </div>
+                <div className="flex items-center gap-2 text-gray-400 transition-all duration-300 hover:text-blue-400 hover:translate-x-1">
+                  <Mail className="w-4 h-4" />
+                  john@example.com
+                </div>
+                <div className="flex items-center gap-2 text-gray-400 transition-all duration-300 hover:text-blue-400 hover:translate-x-1">
+                  <MapPin className="w-4 h-4" />
+                  Lahore, Pakistan
+                </div>
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
             </CardContent>
           </Card>
@@ -172,6 +202,7 @@ export default function UserProfile() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="transition-all duration-300 focus-within:scale-105">
                   <Label className="text-gray-300 mb-2 block">{t("firstName")}</Label>
+<<<<<<< HEAD
                   <Input 
                     value={userData.firstName} 
                     onChange={(e) => setUserData({...userData, firstName: e.target.value})}
@@ -185,11 +216,19 @@ export default function UserProfile() {
                     onChange={(e) => setUserData({...userData, lastName: e.target.value})}
                     className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" 
                   />
+=======
+                  <Input defaultValue="John" className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" />
+                </div>
+                <div className="transition-all duration-300 focus-within:scale-105">
+                  <Label className="text-gray-300 mb-2 block">{t("lastName")}</Label>
+                  <Input defaultValue="Doe" className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                 </div>
               </div>
 
               <div className="transition-all duration-300 focus-within:scale-105">
                 <Label className="text-gray-300 mb-2 block">{t("email")}</Label>
+<<<<<<< HEAD
                 <Input 
                   value={userData.email} 
                   disabled
@@ -197,19 +236,27 @@ export default function UserProfile() {
                   type="email" 
                 />
                 <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+=======
+                <Input defaultValue="john@example.com" className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" type="email" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
 
               <div className="transition-all duration-300 focus-within:scale-105">
                 <Label className="text-gray-300 mb-2 block">{t("phone")}</Label>
+<<<<<<< HEAD
                 <Input 
                   value={userData.phone} 
                   onChange={(e) => setUserData({...userData, phone: e.target.value})}
                   className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" 
                 />
+=======
+                <Input defaultValue="+92-300-5555555" className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
 
               <div className="transition-all duration-300 focus-within:scale-105">
                 <Label className="text-gray-300 mb-2 block">Location</Label>
+<<<<<<< HEAD
                 <Input 
                   value={userData.location} 
                   onChange={(e) => setUserData({...userData, location: e.target.value})}
@@ -225,6 +272,14 @@ export default function UserProfile() {
               >
                 <Save className="w-4 h-4" />
                 {saving ? "Saving..." : t("saveChanges")}
+=======
+                <Input defaultValue="Lahore, Pakistan" className="fitpro-input rounded-xl transition-all duration-300 focus:shadow-[0_0_20px_rgba(59,130,246,0.3)] focus:scale-105" />
+              </div>
+
+              <AnimatedButton full className="gap-2">
+                <Save className="w-4 h-4" />
+                {t("saveChanges")}
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </AnimatedButton>
             </CardContent>
           </Card>
@@ -242,6 +297,7 @@ export default function UserProfile() {
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label className="text-gray-300 mb-2 block">{t("height")} (cm)</Label>
+<<<<<<< HEAD
                 <Input 
                   value={userData.height} 
                   onChange={(e) => setUserData({...userData, height: e.target.value})}
@@ -257,11 +313,19 @@ export default function UserProfile() {
                   className="fitpro-input rounded-xl" 
                   type="number"
                 />
+=======
+                <Input defaultValue="180" className="fitpro-input rounded-xl" />
+              </div>
+              <div>
+                <Label className="text-gray-300 mb-2 block">{t("weight")} (kg)</Label>
+                <Input defaultValue="82" className="fitpro-input rounded-xl" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
             </div>
 
             <div>
               <Label className="text-gray-300 mb-2 block">{t("primaryGoal")}</Label>
+<<<<<<< HEAD
               <select 
                 value={userData.goal}
                 onChange={(e) => setUserData({...userData, goal: e.target.value})}
@@ -271,11 +335,19 @@ export default function UserProfile() {
                 <option value="weightLoss">{t("weightLoss")}</option>
                 <option value="endurance">{t("endurance")}</option>
                 <option value="flexibility">{t("flexibility")}</option>
+=======
+              <select className="fitpro-input rounded-xl w-full py-2">
+                <option>{t("buildMuscle")}</option>
+                <option selected>{t("weightLoss")}</option>
+                <option>{t("endurance")}</option>
+                <option>{t("flexibility")}</option>
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </select>
             </div>
 
             <div>
               <Label className="text-gray-300 mb-2 block">{t("activityLevel")}</Label>
+<<<<<<< HEAD
               <select 
                 value={userData.activityLevel}
                 onChange={(e) => setUserData({...userData, activityLevel: e.target.value})}
@@ -296,6 +368,19 @@ export default function UserProfile() {
             >
               <Save className="w-4 h-4" />
               {saving ? "Saving..." : t("saveFitnessInfo")}
+=======
+              <select className="fitpro-input rounded-xl w-full py-2">
+                <option>{t("sedentary")}</option>
+                <option selected>{t("lightlyActive")}</option>
+                <option>{t("moderatelyActive")}</option>
+                <option>{t("veryActive")}</option>
+              </select>
+            </div>
+
+            <AnimatedButton full className="gap-2">
+              <Save className="w-4 h-4" />
+              {t("saveFitnessInfo")}
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
             </AnimatedButton>
           </CardContent>
         </Card>

@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { Apple, Sandwich, Utensils, Flame, Plus, Timer, CalendarDays, CheckCircle2, Circle, LayoutDashboard, Dumbbell, HeartPulse, User, Calendar, Award, Target, Play, Image as ImageIcon, Clock } from "lucide-react"
 import { submitMeal, hasSubmittedMealToday } from "@/lib/submissions"
 import { Button } from "@/components/ui/button"
@@ -82,14 +85,274 @@ export default function MealsPage() {
     }
   }, [])
 
+<<<<<<< HEAD
   // Empty meal schedule - will be fetched from database
   const defaultMealSchedule: DayMeal[] = []
+=======
+  // Default meal schedule - managed by superadmin
+  const defaultMealSchedule: DayMeal[] = [
+    {
+      day: "Monday",
+      meals: [
+        {
+          id: "mon-b",
+          name: "Protein Oatmeal Bowl",
+          calories: 450,
+          protein: 25,
+          carbs: 60,
+          fat: 12,
+          ingredients: ["Oats", "Protein powder", "Banana", "Almond butter", "Berries"],
+          recipe: "Mix oats with protein powder, top with sliced banana, berries, and a drizzle of almond butter",
+          imageUrl: "/meals/oatmeal.jpg",
+          mealType: "Breakfast"
+        },
+        {
+          id: "mon-l",
+          name: "Grilled Chicken & Brown Rice",
+          calories: 650,
+          protein: 50,
+          carbs: 70,
+          fat: 15,
+          ingredients: ["Chicken breast", "Brown rice", "Broccoli", "Olive oil"],
+          recipe: "Grill chicken breast, serve with steamed broccoli and brown rice",
+          imageUrl: "/meals/chicken-rice.jpg",
+          mealType: "Lunch"
+        },
+        {
+          id: "mon-d",
+          name: "Salmon with Sweet Potato",
+          calories: 580,
+          protein: 45,
+          carbs: 50,
+          fat: 20,
+          ingredients: ["Salmon fillet", "Sweet potato", "Asparagus", "Lemon"],
+          recipe: "Bake salmon with lemon, roast sweet potato and asparagus",
+          imageUrl: "/meals/salmon.jpg",
+          mealType: "Dinner"
+        }
+      ]
+    },
+    {
+      day: "Tuesday",
+      meals: [
+        {
+          id: "tue-b",
+          name: "Greek Yogurt Parfait",
+          calories: 380,
+          protein: 30,
+          carbs: 45,
+          fat: 10,
+          ingredients: ["Greek yogurt", "Granola", "Honey", "Mixed berries"],
+          mealType: "Breakfast"
+        },
+        {
+          id: "tue-l",
+          name: "Turkey Wrap",
+          calories: 520,
+          protein: 40,
+          carbs: 55,
+          fat: 15,
+          ingredients: ["Whole wheat wrap", "Turkey breast", "Avocado", "Lettuce", "Tomato"],
+          mealType: "Lunch"
+        },
+        {
+          id: "tue-d",
+          name: "Beef Stir-fry",
+          calories: 620,
+          protein: 48,
+          carbs: 60,
+          fat: 18,
+          ingredients: ["Lean beef", "Mixed vegetables", "Quinoa", "Soy sauce"],
+          mealType: "Dinner"
+        }
+      ]
+    },
+    {
+      day: "Wednesday",
+      meals: [
+        {
+          id: "wed-b",
+          name: "Scrambled Eggs & Toast",
+          calories: 420,
+          protein: 28,
+          carbs: 40,
+          fat: 16,
+          ingredients: ["Eggs", "Whole grain toast", "Spinach", "Cheese"],
+          mealType: "Breakfast"
+        },
+        {
+          id: "wed-l",
+          name: "Tuna Salad Bowl",
+          calories: 480,
+          protein: 42,
+          carbs: 35,
+          fat: 18,
+          ingredients: ["Tuna", "Mixed greens", "Chickpeas", "Olive oil", "Lemon"],
+          mealType: "Lunch"
+        },
+        {
+          id: "wed-d",
+          name: "Chicken Pasta",
+          calories: 680,
+          protein: 52,
+          carbs: 75,
+          fat: 20,
+          ingredients: ["Chicken", "Whole wheat pasta", "Marinara sauce", "Vegetables"],
+          mealType: "Dinner"
+        }
+      ]
+    },
+    {
+      day: "Thursday",
+      meals: [
+        {
+          id: "thu-b",
+          name: "Protein Smoothie Bowl",
+          calories: 400,
+          protein: 32,
+          carbs: 50,
+          fat: 10,
+          ingredients: ["Protein powder", "Banana", "Berries", "Almond milk", "Granola"],
+          mealType: "Breakfast"
+        },
+        {
+          id: "thu-l",
+          name: "Quinoa Buddha Bowl",
+          calories: 550,
+          protein: 25,
+          carbs: 65,
+          fat: 20,
+          ingredients: ["Quinoa", "Chickpeas", "Avocado", "Kale", "Tahini"],
+          mealType: "Lunch"
+        },
+        {
+          id: "thu-d",
+          name: "Pork Tenderloin & Veggies",
+          calories: 590,
+          protein: 48,
+          carbs: 45,
+          fat: 22,
+          ingredients: ["Pork tenderloin", "Roasted vegetables", "Brown rice"],
+          mealType: "Dinner"
+        }
+      ]
+    },
+    {
+      day: "Friday",
+      meals: [
+        {
+          id: "fri-b",
+          name: "Avocado Toast with Eggs",
+          calories: 460,
+          protein: 22,
+          carbs: 42,
+          fat: 24,
+          ingredients: ["Avocado", "Sourdough bread", "Eggs", "Cherry tomatoes"],
+          mealType: "Breakfast"
+        },
+        {
+          id: "fri-l",
+          name: "Shrimp & Veggie Skillet",
+          calories: 480,
+          protein: 45,
+          carbs: 40,
+          fat: 15,
+          ingredients: ["Shrimp", "Bell peppers", "Zucchini", "Quinoa"],
+          mealType: "Lunch"
+        },
+        {
+          id: "fri-d",
+          name: "Grilled Steak & Potatoes",
+          calories: 720,
+          protein: 55,
+          carbs: 60,
+          fat: 28,
+          ingredients: ["Sirloin steak", "Roasted potatoes", "Green beans"],
+          mealType: "Dinner"
+        }
+      ]
+    },
+    {
+      day: "Saturday",
+      meals: [
+        {
+          id: "sat-b",
+          name: "Pancakes & Berries",
+          calories: 520,
+          protein: 20,
+          carbs: 75,
+          fat: 15,
+          ingredients: ["Whole wheat pancakes", "Mixed berries", "Maple syrup", "Greek yogurt"],
+          mealType: "Breakfast"
+        },
+        {
+          id: "sat-l",
+          name: "Chicken Caesar Salad",
+          calories: 550,
+          protein: 45,
+          carbs: 35,
+          fat: 25,
+          ingredients: ["Chicken breast", "Romaine lettuce", "Parmesan", "Caesar dressing"],
+          mealType: "Lunch"
+        },
+        {
+          id: "sat-d",
+          name: "Pizza Night (Healthy)",
+          calories: 650,
+          protein: 38,
+          carbs: 70,
+          fat: 22,
+          ingredients: ["Whole wheat crust", "Chicken", "Vegetables", "Mozzarella"],
+          mealType: "Dinner"
+        }
+      ]
+    },
+    {
+      day: "Sunday",
+      meals: [
+        {
+          id: "sun-b",
+          name: "Breakfast Burrito",
+          calories: 580,
+          protein: 35,
+          carbs: 55,
+          fat: 22,
+          ingredients: ["Eggs", "Whole wheat tortilla", "Black beans", "Avocado", "Salsa"],
+          mealType: "Breakfast"
+        },
+        {
+          id: "sun-l",
+          name: "Meal Prep Bowl",
+          calories: 520,
+          protein: 40,
+          carbs: 50,
+          fat: 18,
+          ingredients: ["Chicken", "Brown rice", "Mixed vegetables", "Teriyaki sauce"],
+          mealType: "Lunch"
+        },
+        {
+          id: "sun-d",
+          name: "Light Soup & Salad",
+          calories: 420,
+          protein: 25,
+          carbs: 45,
+          fat: 15,
+          ingredients: ["Vegetable soup", "Grilled chicken", "Garden salad"],
+          mealType: "Dinner"
+        }
+      ]
+    }
+  ]
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 
   // Get today's meals
   const getTodayMeals = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const today = days[new Date().getDay()]
+<<<<<<< HEAD
     if (mealSchedule.length === 0) return { day: days[new Date().getDay()], meals: [] }
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     return mealSchedule.find(d => d.day === today) || mealSchedule[0]
   }
 
@@ -112,6 +375,41 @@ export default function MealsPage() {
     }, 200)
   }
 
+<<<<<<< HEAD
+=======
+  const todayMeals = [
+    { id: "m1", name: "Breakfast Oats", calories: 320, time: "08:00" },
+    { id: "m2", name: "Grilled Chicken", calories: 540, time: "13:00" },
+    { id: "m3", name: "Greek Yogurt", calories: 180, time: "16:30" },
+  ]
+  const macros = {
+    protein: 92,
+    carbs: 140,
+    fat: 46,
+    calories: todayMeals.reduce((a, m) => a + m.calories, 0)
+  }
+
+  const daySchedule = [
+    { time: "08:00", title: "Breakfast" },
+    { time: "13:00", title: "Lunch" },
+    { time: "19:00", title: "Dinner" },
+  ]
+  const weekSchedule = [
+    { day: "Mon", title: "High Protein" },
+    { day: "Tue", title: "Low Carb" },
+    { day: "Wed", title: "Balanced" },
+    { day: "Thu", title: "High Fiber" },
+    { day: "Fri", title: "Refuel" },
+    { day: "Sat", title: "Free" },
+    { day: "Sun", title: "Prep" },
+  ]
+  const monthSchedule = [
+    { date: "Nov 10", title: "Meal Prep Week" },
+    { date: "Nov 17", title: "Cut Phase" },
+    { date: "Nov 24", title: "Refuel Weekend" },
+  ]
+
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   const handleSubmitDay = () => {
     if (submitting) return
     setSubmitting(true)
@@ -128,7 +426,10 @@ export default function MealsPage() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="user">
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <SubscriptionRequiredGuard>
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
@@ -149,10 +450,17 @@ export default function MealsPage() {
         </Card>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<<<<<<< HEAD
           <StatsCard icon={Flame} label={t("caloriesTodayLabel")} value="0" color="#F59E0B" />
           <StatsCard icon={Apple} label={t("protein")} value="0g" color="#FB923C" />
           <StatsCard icon={Utensils} label={t("mealsLogged")} value="0" color="#FCD34D" />
           <StatsCard icon={Target} label={t("dailyGoal")} value="0%" color="#F59E0B" />
+=======
+          <StatsCard icon={Flame} label={t("caloriesTodayLabel")} value="1,450" color="#F59E0B" />
+          <StatsCard icon={Apple} label={t("protein")} value="92g" color="#FB923C" />
+          <StatsCard icon={Utensils} label={t("mealsLogged")} value="3" color="#FCD34D" />
+          <StatsCard icon={Target} label={t("dailyGoal")} value="85%" color="#F59E0B" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
         </div>
 
       <section className="space-y-4">
@@ -163,13 +471,21 @@ export default function MealsPage() {
           </CardHeader>
           <CardContent>
             <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+<<<<<<< HEAD
               {(["day","week"] as ViewMode[]).map(v => (
+=======
+              {(["day","week","month"] as ViewMode[]).map(v => (
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                 <button
                   key={v}
                   onClick={() => handleViewChange(v)}
                   className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] text-white border-amber-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-amber-500/30"}`}
                 >
+<<<<<<< HEAD
                   {v === "day" ? t("today") : t("week")}
+=======
+                  {v === "day" ? t("today") : v === "week" ? t("week") : t("monthView")}
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                 </button>
               ))}
             </div>
@@ -186,6 +502,7 @@ export default function MealsPage() {
               <div className="space-y-2">
                 {(() => {
                   const todayMeals = getTodayMeals()
+<<<<<<< HEAD
                   
                   if (!todayMeals || todayMeals.meals.length === 0) {
                     return (
@@ -216,6 +533,8 @@ export default function MealsPage() {
                     )
                   }
                   
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                   const mealCount = todayMeals.meals.length
                   const totalCalories = todayMeals.meals.reduce((sum, m) => sum + m.calories, 0)
                   
@@ -254,7 +573,11 @@ export default function MealsPage() {
 
             {view === "week" && (
               <div className="space-y-2">
+<<<<<<< HEAD
                 {mealSchedule.length > 0 ? mealSchedule.map((dayMeal, i) => {
+=======
+                {mealSchedule.map((dayMeal, i) => {
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                   const mealCount = dayMeal.meals.length
                   const totalCalories = dayMeal.meals.reduce((sum, m) => sum + m.calories, 0)
                   return (
@@ -287,6 +610,7 @@ export default function MealsPage() {
                       </div>
                     </button>
                   )
+<<<<<<< HEAD
                 }) : (
                   <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
                     <CardContent className="text-center py-20 px-6">
@@ -320,11 +644,70 @@ export default function MealsPage() {
                     </CardContent>
                   </Card>
                 )}
+=======
+                })}
+                {!mealSchedule.length && <p className="text-slate-500 text-sm">No meal schedule available.</p>}
+              </div>
+            )}
+
+            {view === "month" && (
+              <div className="space-y-3">
+                <div className="grid grid-cols-7 gap-1 text-center text-[10px] text-slate-500 font-semibold mb-2">
+                  <div>{t("mon")}</div>
+                  <div>{t("tue")}</div>
+                  <div>{t("wed")}</div>
+                  <div>{t("thu")}</div>
+                  <div>{t("fri")}</div>
+                  <div>{t("sat")}</div>
+                  <div>{t("sun")}</div>
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {Array.from({ length: 30 }, (_, i) => {
+                    const dayNum = i + 1
+                    const dayIndex = i % 7
+                    const dayMeal = mealSchedule[dayIndex]
+                    const mealCount = dayMeal?.meals.length || 0
+                    const totalCalories = dayMeal?.meals.reduce((sum, m) => sum + m.calories, 0) || 0
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => dayMeal && setSelectedDay(dayMeal.day)}
+                        className="aspect-square p-1 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 flex flex-col items-center justify-center text-center"
+                      >
+                        <p className="text-white text-[9px] font-bold mb-0.5">{dayNum}</p>
+                        <div className="w-6 h-6 rounded-md flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
+                          <Utensils className="w-3 h-3 text-white" />
+                        </div>
+                        <p className="text-amber-400 text-[7px] mt-0.5">{mealCount}m</p>
+                      </button>
+                    )
+                  })}
+                </div>
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
             )}
             </div>
           </CardContent>
         </Card>
+<<<<<<< HEAD
+=======
+
+        {/* Submit (user performs; superadmin & trainer will view externally) */}
+        {view === "day" && (
+          <div className="mt-2">
+            <Button
+              disabled={submittedToday || submitting}
+              onClick={handleSubmitDay}
+              className="w-full bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] disabled:opacity-50 disabled:cursor-not-allowed hover:from-[#D97706] hover:to-[#FBBF24] text-white"
+            >
+              {submittedToday ? "Submitted" : submitting ? "Submitting..." : "Submit Today's Meals"}
+            </Button>
+            {submittedToday && <p className="text-[11px] text-[#B6C4CF] mt-2 text-center">You already submitted today. Trainers & superadmin can view it.</p>}
+          </div>
+        )}
+
+
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       </section>
       </div>
 
@@ -492,7 +875,10 @@ export default function MealsPage() {
     </PageTransition>
       <BottomNav activeTab="meals" />
     </SubscriptionRequiredGuard>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

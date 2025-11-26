@@ -39,6 +39,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
   }
 }
 
+<<<<<<< HEAD
 // Partial update user (PATCH)
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -60,6 +61,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
   }
 }
 
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 // Delete user
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {

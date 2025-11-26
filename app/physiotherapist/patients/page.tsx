@@ -258,9 +258,13 @@ export default function PatientsPage() {
 									placeholder="Enter email"
 									className="fitpro-input rounded-xl"
 									type="email"
+<<<<<<< HEAD
 									disabled={!!editingPatientId}
 								/>
 								{editingPatientId && <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>}
+=======
+								/>
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 							</div>
 							<div>
 								<Label className="text-gray-300 mb-2 block">Phone</Label>

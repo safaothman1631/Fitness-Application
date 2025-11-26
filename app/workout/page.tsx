@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { Dumbbell, Clock, Plus, ListOrdered, Flame, CalendarDays, CheckCircle2, Circle, LayoutDashboard, Utensils, HeartPulse, User, Calendar, Award, Target, Play, Image as ImageIcon, Film } from "lucide-react"
 import { submitWorkout, hasSubmittedWorkoutToday } from "@/lib/submissions"
 import { Button } from "@/components/ui/button"
@@ -25,8 +28,11 @@ interface Exercise {
   duration?: string
   notes?: string
   videoUrl?: string
+<<<<<<< HEAD
   videoUrls?: string[]
   videos?: Array<{ name: string; url: string; sets: string; reps: string; notes: string }>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   gifUrl?: string
   imageUrl?: string
   muscleGroup: string
@@ -71,6 +77,7 @@ export default function WorkoutPage() {
     } catch {}
     setSubmittedToday(hasSubmittedWorkoutToday())
     
+<<<<<<< HEAD
     // Load workout programs from Firestore
     fetchUserWorkoutPrograms()
   }, [])
@@ -157,6 +164,204 @@ export default function WorkoutPage() {
 
   // Empty workout schedule - will be fetched from database
   const defaultWorkoutSchedule: DayWorkout[] = []
+=======
+    // Load workout schedule (from localStorage for now, later from Firestore)
+    try {
+      const saved = localStorage.getItem("weeklyWorkoutSchedule")
+      if (saved) {
+        setWorkoutSchedule(JSON.parse(saved))
+      } else {
+        // Default workout schedule
+        setWorkoutSchedule(defaultWorkoutSchedule)
+      }
+    } catch {
+      setWorkoutSchedule(defaultWorkoutSchedule)
+    }
+  }, [])
+
+  // Default workout schedule - will be managed by superadmin
+  const defaultWorkoutSchedule: DayWorkout[] = [
+    {
+      day: "Monday",
+      exercises: [
+        {
+          id: "mon1",
+          name: t("barbellBenchPress"),
+          sets: 4,
+          reps: "8-10",
+          notes: t("focusControlledMovement"),
+          muscleGroup: "Chest",
+          videoUrl: "https://example.com/bench-press.mp4",
+          imageUrl: "/exercises/bench-press.jpg"
+        },
+        {
+          id: "mon2",
+          name: t("inclineDumbbellPress"),
+          sets: 3,
+          reps: "10-12",
+          muscleGroup: "Chest",
+          gifUrl: "/exercises/incline-press.gif"
+        },
+        {
+          id: "mon3",
+          name: t("cableFlyes"),
+          sets: 3,
+          reps: "12-15",
+          notes: t("squeezeAtPeak"),
+          muscleGroup: "Chest"
+        }
+      ]
+    },
+    {
+      day: "Tuesday",
+      exercises: [
+        {
+          id: "tue1",
+          name: "Deadlift",
+          sets: 4,
+          reps: "6-8",
+          notes: t("keepBackStraightEngageCore"),
+          muscleGroup: "Back",
+          videoUrl: "https://example.com/deadlift.mp4"
+        },
+        {
+          id: "tue2",
+          name: "Pull-ups",
+          sets: 3,
+          reps: "8-10",
+          muscleGroup: "Back"
+        },
+        {
+          id: "tue3",
+          name: "Barbell Rows",
+          sets: 4,
+          reps: "8-10",
+          muscleGroup: "Back"
+        }
+      ]
+    },
+    {
+      day: "Wednesday",
+      exercises: [
+        {
+          id: "wed1",
+          name: "Squats",
+          sets: 4,
+          reps: "8-10",
+          notes: t("goDeepKeepChestUp"),
+          muscleGroup: "Legs",
+          videoUrl: "https://example.com/squats.mp4"
+        },
+        {
+          id: "wed2",
+          name: "Leg Press",
+          sets: 3,
+          reps: "12-15",
+          muscleGroup: "Legs"
+        },
+        {
+          id: "wed3",
+          name: "Leg Curls",
+          sets: 3,
+          reps: "12-15",
+          muscleGroup: "Legs"
+        }
+      ]
+    },
+    {
+      day: "Thursday",
+      exercises: [
+        {
+          id: "thu1",
+          name: "Shoulder Press",
+          sets: 4,
+          reps: "8-10",
+          muscleGroup: "Shoulders"
+        },
+        {
+          id: "thu2",
+          name: "Lateral Raises",
+          sets: 3,
+          reps: "12-15",
+          muscleGroup: "Shoulders"
+        },
+        {
+          id: "thu3",
+          name: "Face Pulls",
+          sets: 3,
+          reps: "15-20",
+          muscleGroup: "Shoulders"
+        }
+      ]
+    },
+    {
+      day: "Friday",
+      exercises: [
+        {
+          id: "fri1",
+          name: "Barbell Curl",
+          sets: 3,
+          reps: "10-12",
+          muscleGroup: "Arms"
+        },
+        {
+          id: "fri2",
+          name: "Tricep Dips",
+          sets: 3,
+          reps: "10-12",
+          muscleGroup: "Arms"
+        },
+        {
+          id: "fri3",
+          name: "Hammer Curls",
+          sets: 3,
+          reps: "12-15",
+          muscleGroup: "Arms"
+        }
+      ]
+    },
+    {
+      day: "Saturday",
+      exercises: [
+        {
+          id: "sat1",
+          name: "Plank",
+          sets: 3,
+          duration: "60 seconds",
+          reps: "Hold",
+          muscleGroup: "Core"
+        },
+        {
+          id: "sat2",
+          name: "Russian Twists",
+          sets: 3,
+          reps: "20 each side",
+          muscleGroup: "Core"
+        },
+        {
+          id: "sat3",
+          name: "Leg Raises",
+          sets: 3,
+          reps: "15-20",
+          muscleGroup: "Core"
+        }
+      ]
+    },
+    {
+      day: "Sunday",
+      exercises: [
+        {
+          id: "sun1",
+          name: "Rest Day",
+          sets: 0,
+          reps: "Active Recovery",
+          notes: t("lightStretchingYogaWalking"),
+          muscleGroup: "Recovery"
+        }
+      ]
+    }
+  ]
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 
   const toggleTask = (id: string) => {
     setCompleted((prev) => {
@@ -201,7 +406,10 @@ export default function WorkoutPage() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="user">
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <SubscriptionRequiredGuard>
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
@@ -236,6 +444,7 @@ export default function WorkoutPage() {
           </CardHeader>
           <CardContent>
             <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+<<<<<<< HEAD
               {(["day","week"] as ViewMode[]).map(v => (
                 <button
                   key={v}
@@ -243,6 +452,15 @@ export default function WorkoutPage() {
                   className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-cyan-400 to-blue-500 text-white border-cyan-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-cyan-500/30"}`}
                 >
                   {v === "day" ? t("today") : t("week")}
+=======
+              {(["day","week","month"] as ViewMode[]).map(v => (
+                <button
+                  key={v}
+                  onClick={() => handleViewChange(v)}
+                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-[#9333EA] to-[#C084FC] text-white border-purple-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-purple-500/30"}`}
+                >
+                  {v === "day" ? t("today") : v === "week" ? t("week") : t("monthView")}
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                 </button>
               ))}
             </div>
@@ -259,6 +477,7 @@ export default function WorkoutPage() {
               <div className="space-y-2">
                 {(() => {
                   const todayWorkout = getTodayWorkout()
+<<<<<<< HEAD
                   
                   if (!todayWorkout || todayWorkout.exercises.length === 0) {
                     return (
@@ -289,6 +508,8 @@ export default function WorkoutPage() {
                     )
                   }
                   
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                   const exerciseCount = todayWorkout.exercises.length
                   const isRestDay = todayWorkout.exercises[0]?.muscleGroup === "Recovery"
                   
@@ -385,6 +606,7 @@ export default function WorkoutPage() {
                     </button>
                   )
                 })}
+<<<<<<< HEAD
                 {!workoutSchedule.length && (
                   <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
                     <CardContent className="text-center py-20 px-6">
@@ -418,12 +640,87 @@ export default function WorkoutPage() {
                     </CardContent>
                   </Card>
                 )}
+=======
+                {!workoutSchedule.length && <p className="text-slate-500 text-sm">No workout schedule available.</p>}
+              </div>
+            )}
+
+            {view === "month" && (
+              <div className="space-y-3">
+                <div className={`grid grid-cols-7 gap-1 text-center text-[10px] text-slate-500 font-semibold mb-2 ${isRTL ? 'direction-rtl' : ''}`}>
+                  {isRTL ? (
+                    <>
+                      <div>{t("sun")}</div>
+                      <div>{t("sat")}</div>
+                      <div>{t("fri")}</div>
+                      <div>{t("thu")}</div>
+                      <div>{t("wed")}</div>
+                      <div>{t("tue")}</div>
+                      <div>{t("mon")}</div>
+                    </>
+                  ) : (
+                    <>
+                      <div>{t("mon")}</div>
+                      <div>{t("tue")}</div>
+                      <div>{t("wed")}</div>
+                      <div>{t("thu")}</div>
+                      <div>{t("fri")}</div>
+                      <div>{t("sat")}</div>
+                      <div>{t("sun")}</div>
+                    </>
+                  )}
+                </div>
+                <div className="grid grid-cols-7 gap-1">
+                  {Array.from({ length: 30 }, (_, i) => {
+                    const dayNum = i + 1
+                    const dayIndex = i % 7
+                    const workout = workoutSchedule[dayIndex]
+                    const exerciseCount = workout?.exercises.length || 0
+                    const isRestDay = workout?.exercises[0]?.muscleGroup === "Recovery"
+                    return (
+                      <button
+                        key={i}
+                        onClick={() => workout && setSelectedDay(workout.day)}
+                        className="aspect-square p-1 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 flex flex-col items-center justify-center text-center"
+                      >
+                        <p className="text-white text-[9px] font-bold mb-0.5">{dayNum}</p>
+                        <div className={`w-6 h-6 rounded-md flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
+                          {isRestDay ? (
+                            <Calendar className="w-3 h-3 text-slate-400" />
+                          ) : (
+                            <Dumbbell className="w-3 h-3 text-white" />
+                          )}
+                        </div>
+                        <p className="text-slate-400 text-[7px] mt-0.5">
+                          {isRestDay ? t("rest") : `${exerciseCount}ex`}
+                        </p>
+                      </button>
+                    )
+                  })}
+                </div>
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
             )}
             </div>
           </CardContent>
         </Card>
 
+<<<<<<< HEAD
+=======
+        {/* Submit (user performs; superadmin & trainer will view externally) */}
+        {view === "day" && (
+          <div className="mt-2">
+            <Button
+              disabled={submittedToday || submitting}
+              onClick={handleSubmitDay}
+              className="w-full bg-gradient-to-r from-[#9333EA] to-[#C084FC] disabled:opacity-50 disabled:cursor-not-allowed hover:from-[#7E22CE] hover:to-[#A855F7]"
+            >
+              {submittedToday ? "Submitted" : submitting ? "Submitting..." : "Submit Today's Workout"}
+            </Button>
+            {submittedToday && <p className="text-[11px] text-[#B6C4CF] mt-2 text-center">You already submitted today. Trainers & superadmin can view it.</p>}
+          </div>
+        )}
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       </section>
 
       </div>
@@ -479,6 +776,7 @@ export default function WorkoutPage() {
                         {/* Icons section - Center for RTL */}
                         <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse order-2' : 'order-2'}`}>
                           {exercise.videoUrl && (
+<<<<<<< HEAD
                             <div className="relative w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
                               <Film className="w-5 h-5 text-purple-400" />
                               {exercise.videoUrls && exercise.videoUrls.length > 1 && (
@@ -486,6 +784,10 @@ export default function WorkoutPage() {
                                   {exercise.videoUrls.length}
                                 </div>
                               )}
+=======
+                            <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
+                              <Film className="w-5 h-5 text-red-400" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                             </div>
                           )}
                           {exercise.gifUrl && (
@@ -558,6 +860,7 @@ export default function WorkoutPage() {
                       <CardTitle className="text-white text-lg">Exercise Demo</CardTitle>
                     </CardHeader>
                     <CardContent className="space-y-4">
+<<<<<<< HEAD
                       {selectedExercise.videos && selectedExercise.videos.length > 0 ? (
                         <div className="space-y-6">
                           {selectedExercise.videos.map((video, index) => (
@@ -640,6 +943,17 @@ export default function WorkoutPage() {
                           </video>
                         </div>
                       ) : null}
+=======
+                      {selectedExercise.videoUrl && (
+                        <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
+                          <div className="text-center">
+                            <Film className="w-12 h-12 text-purple-400 mx-auto mb-2" />
+                            <p className="text-slate-400 text-sm">Video demonstration</p>
+                            <p className="text-purple-400 text-xs mt-1">{selectedExercise.videoUrl}</p>
+                          </div>
+                        </div>
+                      )}
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                       {selectedExercise.gifUrl && (
                         <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
                           <div className="text-center">
@@ -685,7 +999,10 @@ export default function WorkoutPage() {
     </PageTransition>
       <BottomNav activeTab="workout" />
     </SubscriptionRequiredGuard>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { HeartPulse, Plus, CheckCircle2, Loader2, LayoutDashboard, Dumbbell, Utensils, User, Calendar, Award, Target } from "lucide-react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -201,7 +204,10 @@ export default function PhysioPage() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="user">
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <>
     <Toaster position="top-center" richColors />
     <SubscriptionRequiredGuard>
@@ -345,7 +351,10 @@ export default function PhysioPage() {
       <BottomNav activeTab="physio" />
     </SubscriptionRequiredGuard>
     </>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

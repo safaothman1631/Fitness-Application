@@ -1,7 +1,10 @@
 "use client"
 
 import { useState } from "react"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import FitproLayout from "@/components/fitpro-layout"
@@ -63,7 +66,10 @@ export default function ProgressPage() {
   ])
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="user">
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <FitproLayout role="user">
       <div className="space-y-6">
         <div>
@@ -181,6 +187,9 @@ export default function ProgressPage() {
         </Card>
       </div>
     </FitproLayout>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }

@@ -67,7 +67,11 @@ export default function PhysiotherapistLoginPage() {
         localStorage.setItem("isAuthenticated", "true")
         localStorage.setItem("userRole", "physiotherapist")
         toast.success("Login successful!")
+<<<<<<< HEAD
         router.replace("/physiotherapist")
+=======
+        router.push("/physiotherapist")
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       } else {
         setShowErrorModal(true)
       }

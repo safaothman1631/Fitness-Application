@@ -1,7 +1,10 @@
 "use client"
 
 import { useState } from "react"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -30,7 +33,10 @@ export default function SettingsPage() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="user">
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <FitproLayout role="user">
       <div className="max-w-2xl mx-auto space-y-6">
         <div>
@@ -189,6 +195,9 @@ export default function SettingsPage() {
         </Card>
       </div>
     </FitproLayout>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }

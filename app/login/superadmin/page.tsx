@@ -11,7 +11,10 @@ import { Eye, EyeOff, LogIn, Crown } from "lucide-react"
 import AuthTopbar from "@/components/auth-topbar"
 import LoginErrorModal, { LoginInputError } from "@/components/login-error"
 import { toast } from "sonner"
+<<<<<<< HEAD
 import { loginUser } from "@/lib/auth-service"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 
 export default function SuperAdminLoginPage() {
     const router = useRouter()
@@ -60,6 +63,7 @@ export default function SuperAdminLoginPage() {
         
         setLoading(true)
         
+<<<<<<< HEAD
         try {
             const result = await loginUser(formData.email, formData.password)
             
@@ -80,6 +84,22 @@ export default function SuperAdminLoginPage() {
         } finally {
             setLoading(false)
         }
+=======
+        // TODO: Replace with actual Firebase authentication
+        // For now, simulate API call
+        setTimeout(() => {
+            // Mock validation - replace with Firebase auth
+            if (formData.email === "admin@darinfitness.com" && formData.password === "DarinFitness2025!") {
+                localStorage.setItem("isAuthenticated", "true")
+                localStorage.setItem("userRole", "superadmin")
+                toast.success("Login successful!")
+                router.push("/superadmin")
+            } else {
+                setShowErrorModal(true)
+            }
+            setLoading(false)
+        }, 1000)
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     }
 
         return (

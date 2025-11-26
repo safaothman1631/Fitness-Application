@@ -15,6 +15,7 @@ const users = [
   { email: 'newuser@fitpro.com', password: '11111111' },
   { email: 'miduser@fitpro.com', password: '11111111' },
   { email: 'nosubuser@fitpro.com', password: '11111111' },
+<<<<<<< HEAD
   { email: 'superadmin@darinfitness.com', password: '11111111' },
   { email: 'admin@darinfitness.com', password: '11111111' },
   { email: 'trainer@darinfitness.com', password: '11111111' },
@@ -22,6 +23,8 @@ const users = [
   { email: 'user@darinfitness.com', password: '11111111' },
   { email: 'owner@darinfitness.com', password: '11111111' },
   { email: 'patient@darinfitness.com', password: '11111111' },
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 ];
 
 async function resetPasswords() {

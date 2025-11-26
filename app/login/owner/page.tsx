@@ -27,7 +27,11 @@ export default function OwnerLoginPage() {
                     loginTime: new Date().toISOString(),
                 }),
             )
+<<<<<<< HEAD
             router.replace("/owner")
+=======
+            router.push("/owner")
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
             setIsLoading(false)
         }, 800)
     }

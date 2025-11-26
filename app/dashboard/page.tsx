@@ -12,7 +12,10 @@ import { SubscriptionWarning } from "@/components/subscription-warning"
 import { checkSubscriptionStatus, getSubscriptionExpiry } from "@/lib/subscription"
 import { PageTransition } from "@/components/page-transition"
 import { BottomNav } from "@/components/bottom-nav"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 
 export default function UserDashboard() {
   const router = useRouter()
@@ -107,7 +110,10 @@ export default function UserDashboard() {
   }, [router])
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="user">
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <>
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
@@ -227,7 +233,10 @@ export default function UserDashboard() {
     </PageTransition>
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

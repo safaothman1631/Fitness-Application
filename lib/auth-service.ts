@@ -18,6 +18,7 @@ export interface LoginResult {
 
 // Mock test credentials for development
 const MOCK_CREDENTIALS = [
+// ...existing code...
   { email: "user@darinfitness.com", password: "11111111", role: "user" },
   { email: "admin@darinfitness.com", password: "11111111", role: "admin" },
   { email: "superadmin@darinfitness.com", password: "11111111", role: "superadmin" },
@@ -25,6 +26,15 @@ const MOCK_CREDENTIALS = [
   { email: "physio@darinfitness.com", password: "11111111", role: "physiotherapist" },
   { email: "owner@darinfitness.com", password: "11111111", role: "owner" },
   { email: "patient@darinfitness.com", password: "11111111", role: "patient" },
+// ...existing code...
+  { email: "user@darinfitness.com", password: "user1234", role: "user" },
+  { email: "admin@darinfitness.com", password: "DarinFitness2025!", role: "admin" },
+  { email: "superadmin@darinfitness.com", password: "DarinFitness2025!", role: "superadmin" },
+  { email: "trainer@darinfitness.com", password: "trainer1234", role: "trainer" },
+  { email: "physio@darinfitness.com", password: "physio1234", role: "physiotherapist" },
+  { email: "owner@darinfitness.com", password: "owner1234", role: "owner" },
+  { email: "patient@darinfitness.com", password: "patient1234", role: "patient" },
+// ...existing code...
 ]
 
 /**

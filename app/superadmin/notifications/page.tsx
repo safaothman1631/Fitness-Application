@@ -1,11 +1,18 @@
 "use client"
 
 import { useState } from "react"
+<<<<<<< HEAD
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Bell, Trash2, CheckCircle2, AlertCircle, Shield, Activity, Info, XCircle, Eye, Filter } from "lucide-react"
+=======
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import FitproLayout from "@/components/fitpro-layout"
+import { Trash2, CheckCircle2, AlertCircle, Shield, Activity } from "lucide-react"
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 
 interface Notification {
   id: string
@@ -66,6 +73,7 @@ export default function SuperAdminNotifications() {
   }
 
   return (
+<<<<<<< HEAD
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
         <div className="space-y-6">
@@ -222,11 +230,106 @@ export default function SuperAdminNotifications() {
                     <p className="text-gray-500 text-sm">You're all caught up!</p>
                   </div>
                 )}
+=======
+    <FitproLayout role="superadmin">
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-3xl font-bold text-white mb-2">System Notifications</h1>
+          <p className="text-gray-400">Security alerts, system activity, and important updates</p>
+        </div>
+
+        {/* Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <Card className="fitpro-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Total Alerts</p>
+                  <p className="text-3xl font-bold text-white">{notifications.length}</p>
+                </div>
+                <AlertCircle className="w-10 h-10 text-yellow-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="fitpro-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Unread</p>
+                  <p className="text-3xl font-bold text-red-500">{notifications.filter((n) => !n.isRead).length}</p>
+                </div>
+                <Shield className="w-10 h-10 text-red-500" />
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="fitpro-card">
+            <CardContent className="p-6">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-400 text-sm mb-1">Read</p>
+                  <p className="text-3xl font-bold text-green-500">{notifications.filter((n) => n.isRead).length}</p>
+                </div>
+                <CheckCircle2 className="w-10 h-10 text-green-500" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
               </div>
             </CardContent>
           </Card>
         </div>
+<<<<<<< HEAD
       </SidebarSleek>
     </AuthGuard>
+=======
+
+        {/* Notifications List */}
+        <Card className="fitpro-card">
+          <CardHeader>
+            <CardTitle className="text-white">Recent System Alerts</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {notifications.length > 0 ? (
+                notifications.map((notif) => (
+                  <div
+                    key={notif.id}
+                    className={`rounded-lg p-4 flex items-start gap-4 ${
+                      notif.isRead ? "bg-slate-800/30 border border-slate-700" : "bg-slate-800/50 border-l-4 border-l-red-500 border border-slate-600"
+                    }`}
+                  >
+                    <div className="flex-shrink-0 mt-1">{getIcon(notif.type)}</div>
+
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white">{notif.title}</h3>
+                      <p className="text-gray-400 text-sm mt-1">{notif.message}</p>
+                      <p className="text-gray-500 text-xs mt-2">{notif.timestamp}</p>
+                    </div>
+
+                    <div className="flex gap-2 flex-shrink-0">
+                      {!notif.isRead && (
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="text-gray-400 hover:text-green-400"
+                          onClick={() => handleMarkAsRead(notif.id)}
+                        >
+                          <CheckCircle2 className="w-4 h-4" />
+                        </Button>
+                      )}
+                      <Button size="sm" variant="ghost" className="text-gray-400 hover:text-red-400" onClick={() => handleDelete(notif.id)}>
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-400 text-center py-8">No alerts</p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    </FitproLayout>
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }

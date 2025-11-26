@@ -68,7 +68,11 @@ export default function AdminLoginPage() {
                 localStorage.setItem("isAuthenticated", "true")
                 localStorage.setItem("userRole", "admin")
                 toast.success("Login successful!")
+<<<<<<< HEAD
                 router.replace("/admin")
+=======
+                router.push("/admin")
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
             } else {
                 setShowErrorModal(true)
             }

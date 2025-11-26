@@ -2,7 +2,10 @@
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
+<<<<<<< HEAD
 import AuthGuard from "@/components/auth-guard"
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -40,6 +43,7 @@ export default function ProfilePage() {
   const [expiryDate, setExpiryDate] = useState<string | null>(null)
   const [open, setOpen] = useState(false)
   const [profile, setProfile] = useState({
+<<<<<<< HEAD
     name: "",
     email: "",
     phone: "",
@@ -48,11 +52,24 @@ export default function ProfilePage() {
     height: 0,
     goal: "",
     experience: "",
+=======
+    name: "Safa",
+    email: "safa@example.com",
+    phone: "+1 (555) 123-4567",
+    joinDate: "January 2023",
+    weight: 75,
+    height: 180,
+    goal: "Build Muscle",
+    experience: "Intermediate",
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   })
   const [avatar, setAvatar] = useState<string | null>(null)
   const [draft, setDraft] = useState(profile)
   const [draftAvatar, setDraftAvatar] = useState<string | null>(null)
+<<<<<<< HEAD
   const [loading, setLoading] = useState(true)
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   const [changingPassword, setChangingPassword] = useState(false)
   const [currentPassword, setCurrentPassword] = useState("")
   const [newPassword, setNewPassword] = useState("")
@@ -63,6 +80,7 @@ export default function ProfilePage() {
   const [notifyPush, setNotifyPush] = useState(true)
 
   useEffect(() => {
+<<<<<<< HEAD
     // Load user data from Firestore
     const loadUserData = async () => {
       setLoading(true)
@@ -129,6 +147,44 @@ export default function ProfilePage() {
 
     loadUserData()
 
+=======
+    // Load user data from localStorage
+    try {
+      const userStr = localStorage.getItem("user")
+      if (userStr) {
+        const user = JSON.parse(userStr)
+        const userData = {
+          name: user.name || `${user.firstName || ''} ${user.lastName || ''}`.trim() || "User",
+          email: user.email || "",
+          phone: user.phone || "",
+          joinDate: user.joinDate ? new Date(user.joinDate).toLocaleDateString() : "",
+          weight: user.weight || profile.weight,
+          height: user.height || profile.height,
+          goal: user.goal || profile.goal,
+          experience: user.experience || profile.experience,
+        }
+        setProfile(prev => ({ ...prev, ...userData }))
+        setDraft(prev => ({ ...prev, ...userData }))
+      }
+      
+      // Load saved profile data if exists (overrides user data)
+      const p = localStorage.getItem("profileData")
+      if (p) {
+        const parsed = JSON.parse(p)
+        setProfile(prev => ({ ...prev, ...parsed }))
+        setDraft(prev => ({ ...prev, ...parsed }))
+      }
+      
+      const a = localStorage.getItem("profileAvatar")
+      if (a) {
+        setAvatar(a)
+        setDraftAvatar(a)
+      }
+    } catch (error) {
+      console.error("Error loading user data:", error)
+    }
+
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     // Check subscription status
     const updateSubscriptionData = () => {
       const expiry = getSubscriptionExpiry()
@@ -169,6 +225,7 @@ export default function ProfilePage() {
     reader.readAsDataURL(file)
   }
 
+<<<<<<< HEAD
   const saveProfile = async () => {
     try {
       const userId = localStorage.getItem("userId")
@@ -206,6 +263,17 @@ export default function ProfilePage() {
       console.error("Error saving profile:", error)
       toast({ description: "Failed to save profile", variant: "destructive" })
     }
+=======
+  const saveProfile = () => {
+    setProfile(draft)
+    setAvatar(draftAvatar)
+    try {
+      localStorage.setItem("profileData", JSON.stringify(draft))
+      if (draftAvatar) localStorage.setItem("profileAvatar", draftAvatar)
+    } catch {}
+    toast({ description: "Profile saved." })
+    setOpen(false)
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   }
 
   const resetDraft = () => {
@@ -309,6 +377,7 @@ export default function ProfilePage() {
     }
   }
 
+<<<<<<< HEAD
   if (loading) {
     return (
       <AuthGuard requiredRole="user">
@@ -324,6 +393,9 @@ export default function ProfilePage() {
 
   return (
     <AuthGuard requiredRole="user">
+=======
+  return (
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     <>
     <Toaster />
     <PageTransition>
@@ -408,7 +480,11 @@ export default function ProfilePage() {
                             </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
+<<<<<<< HEAD
                               <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />
+=======
+                              <Input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                             </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
@@ -511,7 +587,11 @@ export default function ProfilePage() {
                             </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
+<<<<<<< HEAD
                               <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />
+=======
+                              <Input type="email" value={draft.email} onChange={e=>setDraft({...draft,email:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
                             </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
@@ -763,6 +843,9 @@ export default function ProfilePage() {
     </PageTransition>
       <BottomNav activeTab="profile" />
     </>
+<<<<<<< HEAD
     </AuthGuard>
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }

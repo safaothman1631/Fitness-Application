@@ -1,10 +1,15 @@
 "use client"
 
+<<<<<<< HEAD
 import { useEffect, useState } from "react"
+=======
+import { useEffect } from "react"
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
 import { useRouter } from "next/navigation"
 
 interface AuthGuardProps {
   children: React.ReactNode
+<<<<<<< HEAD
   requiredRole?: "admin" | "superadmin" | "trainer" | "physiotherapist" | "user" | "owner" | "patient"
   redirectTo?: string
 }
@@ -49,23 +54,41 @@ export default function AuthGuard({ children, requiredRole, redirectTo }: AuthGu
       return
     }
 
+=======
+  requiredRole?: "admin" | "superadmin" | "trainer" | "physiotherapist" | "user"
+  redirectTo?: string
+}
+
+export default function AuthGuard({ children, requiredRole, redirectTo }: AuthGuardProps) {
+  const router = useRouter()
+
+  useEffect(() => {
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     // Check if user is authenticated
     const isAuthenticated = localStorage.getItem("isAuthenticated")
     const userRole = localStorage.getItem("userRole")
 
     if (!isAuthenticated || isAuthenticated !== "true") {
       // Not authenticated - redirect to login
+<<<<<<< HEAD
       localStorage.clear()
       const loginPath = requiredRole 
         ? `/login/${requiredRole}` 
         : redirectTo || "/giris"
       router.replace(loginPath)
+=======
+      const loginPath = requiredRole 
+        ? `/login/${requiredRole}` 
+        : redirectTo || "/login"
+      router.push(loginPath)
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       return
     }
 
     // Check if user has required role
     if (requiredRole && userRole !== requiredRole) {
       // Wrong role - redirect to their proper dashboard
+<<<<<<< HEAD
       console.warn(`⚠️ Role mismatch: Expected ${requiredRole}, got ${userRole}`)
       switch (userRole) {
         case "admin":
@@ -99,6 +122,33 @@ export default function AuthGuard({ children, requiredRole, redirectTo }: AuthGu
   // Only render if verified
   if (!isVerified) {
     return null // Don't render anything while verifying/redirecting
+=======
+      switch (userRole) {
+        case "admin":
+          router.push("/admin")
+          break
+        case "superadmin":
+          router.push("/superadmin")
+          break
+        case "trainer":
+          router.push("/trainer")
+          break
+        case "physiotherapist":
+          router.push("/physiotherapist")
+          break
+        default:
+          router.push("/dashboard")
+      }
+    }
+  }, [requiredRole, redirectTo, router])
+
+  // Check authentication before rendering
+  if (typeof window !== "undefined") {
+    const isAuthenticated = localStorage.getItem("isAuthenticated")
+    if (!isAuthenticated || isAuthenticated !== "true") {
+      return null // Don't render anything while redirecting
+    }
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   }
 
   return <>{children}</>

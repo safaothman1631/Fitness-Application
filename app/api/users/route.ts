@@ -1,7 +1,10 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/firebase"
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
+// ...existing code...
 import { adminAuth, adminDb } from "@/lib/firebase-admin"
+// ...existing code...
+// ...existing code...
 
 export const dynamic = 'force-dynamic'
 
@@ -35,6 +38,7 @@ export async function POST(request: NextRequest) {
     const body = await request.json()
     console.log("📝 Creating user with data:", { ...body, password: body.password ? "***" : undefined })
     
+<<<<<<< HEAD
     const { email, name, firstName, lastName, phone, role, membership, subscriptionStatus, subscriptionEnd, password } = body
 
     if (!email || !name || !password) {
@@ -96,6 +100,39 @@ export async function POST(request: NextRequest) {
     const userData = {
       id: firebaseUser.uid,
       uid: firebaseUser.uid,
+=======
+    const { email, name, firstName, lastName, phone, role, membership, subscriptionStatus, subscriptionEndDate, password } = body
+
+    if (!email || !name) {
+      console.error("❌ Missing required fields:", { email: !!email, name: !!name })
+      return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+    }
+
+    console.log("🔥 Attempting to connect to Firestore...")
+    const usersRef = collection(db, "users")
+    
+    console.log("💾 Adding document to Firestore...")
+    const docRef = await addDoc(usersRef, {
+      email,
+      name,
+      firstName: firstName || "",
+      lastName: lastName || "",
+      phone: phone || "",
+      role: role || "user",
+      membership: membership || "Free",
+      subscriptionStatus: subscriptionStatus || "inactive",
+      subscriptionEndDate: subscriptionEndDate || null,
+      isActive: true,
+      joinDate: new Date().toISOString(),
+      createdAt: new Date().toISOString(),
+    })
+
+    console.log("✅ User created successfully with ID:", docRef.id)
+
+    // Return user data without password
+    const userData = {
+      id: docRef.id,
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       email,
       name,
       firstName,
@@ -104,12 +141,19 @@ export async function POST(request: NextRequest) {
       role: role || "user",
       membership: membership || "Free",
       subscriptionStatus: subscriptionStatus || "inactive",
+<<<<<<< HEAD
       subscriptionEnd,
+=======
+      subscriptionEndDate,
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       isActive: true,
       joinDate: new Date().toISOString(),
     }
 
+<<<<<<< HEAD
     console.log("✅ User created successfully:", userData.email)
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
     return NextResponse.json(userData, { status: 201 })
   } catch (error: any) {
     console.error("❌ Error creating user:", error)
@@ -124,6 +168,7 @@ export async function POST(request: NextRequest) {
     }, { status: 500 })
   }
 }
+<<<<<<< HEAD
 
 // Delete user
 export async function DELETE(request: NextRequest) {
@@ -167,3 +212,5 @@ export async function DELETE(request: NextRequest) {
     }, { status: 500 })
   }
 }
+=======
+>>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
