@@ -1,8 +1,33 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import AuthGuard from "@/components/auth-guard"  gifUrl?: string
+import AuthGuard from "@/components/auth-guard"
+import { Dumbbell, Clock, Plus, ListOrdered, Flame, CalendarDays, CheckCircle2, Circle, LayoutDashboard, Utensils, HeartPulse, User, Calendar, Award, Target, Play, Image as ImageIcon, Film } from "lucide-react"
+import { submitWorkout, hasSubmittedWorkoutToday } from "@/lib/submissions"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import SubscriptionRequiredGuard from "@/components/subscription-guard"
+import { PageTransition } from "@/components/page-transition"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
+import type { TranslationKey } from "@/lib/translations"
+
+type ViewMode = "day" | "week" | "month"
+
+interface Exercise {
+  id: string
+  name: string
+  sets: number
+  reps: string
+  duration?: string
+  notes?: string
+  videoUrl?: string
+  videoUrls?: string[]
+  videos?: Array<{ name: string; url: string; sets: string; reps: string; notes: string }>
+  gifUrl?: string
   imageUrl?: string
   muscleGroup: string
 }
@@ -54,20 +79,20 @@ export default function WorkoutPage() {
     try {
       const userId = typeof window !== "undefined" ? localStorage.getItem("userId") : null
       if (!userId) {
-        console.log('⚠️ No userId found')
+        console.log('ΓÜá∩╕Å No userId found')
         return
       }
 
-      console.log('🔍 Fetching workout programs for user:', userId)
+      console.log('≡ƒöì Fetching workout programs for user:', userId)
       const response = await fetch(`/api/programs?type=workout&userId=${userId}`)
       
       if (!response.ok) {
-        console.error('❌ Failed to fetch programs')
+        console.error('Γ¥î Failed to fetch programs')
         return
       }
 
       const programs = await response.json()
-      console.log('✅ Fetched programs:', programs)
+      console.log('Γ£à Fetched programs:', programs)
 
       // Convert programs to workout schedule format
       if (programs.length > 0) {
@@ -119,19 +144,20 @@ export default function WorkoutPage() {
         })
 
         setWorkoutSchedule(schedule)
-        console.log('✅ Workout schedule set:', schedule)
+        console.log('Γ£à Workout schedule set:', schedule)
       } else {
-        console.log('ℹ️ No programs assigned to user')
+        console.log('Γä╣∩╕Å No programs assigned to user')
         setWorkoutSchedule([])
       }
     } catch (error) {
-      console.error('❌ Error fetching workout programs:', error)
+      console.error('Γ¥î Error fetching workout programs:', error)
       setWorkoutSchedule([])
     }
   }
 
   // Empty workout schedule - will be fetched from database
   const defaultWorkoutSchedule: DayWorkout[] = []
+
   const toggleTask = (id: string) => {
     setCompleted((prev) => {
       const next = { ...prev, [id]: !prev[id] }
@@ -175,7 +201,49 @@ export default function WorkoutPage() {
   }
 
   return (
-    <AuthGuard requiredRole="user">                </button>
+    <AuthGuard requiredRole="user">
+    <SubscriptionRequiredGuard>
+    <PageTransition>
+    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#9333EA] to-[#C084FC] bg-clip-text text-transparent mb-2">
+          {t("workoutCenter")}
+        </h1>
+        <p className="text-[#B6C4CF] mb-8">{t("workoutCenterSubtitle")}</p>
+
+        <Card className="bg-gradient-to-r from-[#9333EA] to-[#C084FC] border-none p-8 mb-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <h3 className="text-white text-xl font-bold mb-2">{t("buildYourStrength")}</h3>
+            <p className="text-white/90 text-sm mb-4">{t("buildYourStrengthDesc")}</p>
+            {isSuperadmin && (
+              <Button className="bg-white text-[#9333EA] hover:bg-white/90 font-semibold flex items-center gap-2"><Plus className="w-4 h-4" /> New Workout</Button>
+            )}
+          </div>
+        </Card>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value="24" color="#9333EA" isRTL={isRTL} />
+          <StatsCard icon={Calendar} label={t("activeStreak")} value={`7 ${t("days")}`} color="#A855F7" isRTL={isRTL} />
+          <StatsCard icon={Flame} label={t("caloriesBurned")} value="1,450" color="#C084FC" isRTL={isRTL} />
+          <StatsCard icon={Clock} label={t("totalTime")} value={`42 ${t("min")}`} color="#9333EA" isRTL={isRTL} />
+        </div>
+
+      <section className="space-y-4">
+        {/* Schedule selector */}
+        <Card className="bg-[#101A23] border-[#2E3944]">
+          <CardHeader className={`pb-2 ${isRTL ? 'text-right' : ''}`}>
+            <CardTitle className={`text-white text-sm flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}><CalendarDays className="w-4 h-4 text-purple-400" /> {t("schedule")}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+              {(["day","week"] as ViewMode[]).map(v => (
+                <button
+                  key={v}
+                  onClick={() => handleViewChange(v)}
+                  className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-cyan-400 to-blue-500 text-white border-cyan-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-cyan-500/30"}`}
+                >
+                  {v === "day" ? t("today") : t("week")}
+                </button>
               ))}
             </div>
 
@@ -201,46 +269,161 @@ export default function WorkoutPage() {
                               <Calendar className="w-12 h-12 text-purple-400" />
                             </div>
                             <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-yellow-500/20 border-2 border-yellow-500/50 flex items-center justify-center">
-                              <span className="text-yellow-400 text-lg">✨</span>
+                              <span className="text-yellow-400 text-lg">Γ£¿</span>
                             </div>
                           </div>
                           <h3 className="text-2xl font-bold text-white mb-3">
-                            {language === 'ku' ? 'ئەمڕۆ وەرزش نییە' : language === 'ar' ? 'لا توجد تمارين اليوم' : 'No Workout Today'}
+                            {language === 'ku' ? '╪ª█ò┘à┌ò█å ┘ê█ò╪▒╪▓╪┤ ┘å█î█î█ò' : language === 'ar' ? '┘ä╪º ╪¬┘ê╪¼╪» ╪¬┘à╪º╪▒┘è┘å ╪º┘ä┘è┘ê┘à' : 'No Workout Today'}
                           </h3>
                           <p className="text-gray-400 mb-6 text-base max-w-sm mx-auto">
-                            {language === 'ku' ? 'هیچ وەرزشێک بۆ ئەمڕۆ دیاری نەکراوە' : language === 'ar' ? 'لم يتم تحديد تمارين لهذا اليوم' : 'No workout scheduled for today'}
+                            {language === 'ku' ? '┘ç█î┌å ┘ê█ò╪▒╪▓╪┤█Ä┌⌐ ╪¿█å ╪ª█ò┘à┌ò█å ╪»█î╪º╪▒█î ┘å█ò┌⌐╪▒╪º┘ê█ò' : language === 'ar' ? '┘ä┘à ┘è╪¬┘à ╪¬╪¡╪»┘è╪» ╪¬┘à╪º╪▒┘è┘å ┘ä┘ç╪░╪º ╪º┘ä┘è┘ê┘à' : 'No workout scheduled for today'}
                           </p>
                           <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Button variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
                               <Calendar className="w-4 h-4 mr-2" />
-                              {language === 'ku' ? 'رۆژانی تر ببینە' : language === 'ar' ? 'تحقق من الأيام الأخرى' : 'Check Other Days'}
+                              {language === 'ku' ? '╪▒█å┌ÿ╪º┘å█î ╪¬╪▒ ╪¿╪¿█î┘å█ò' : language === 'ar' ? '╪¬╪¡┘é┘é ┘à┘å ╪º┘ä╪ú┘è╪º┘à ╪º┘ä╪ú╪«╪▒┘ë' : 'Check Other Days'}
                             </Button>
                           </div>
                         </CardContent>
                       </Card>
                     )
                   }
-                                </div>
+                  
+                  const exerciseCount = todayWorkout.exercises.length
+                  const isRestDay = todayWorkout.exercises[0]?.muscleGroup === "Recovery"
+                  
+                  return (
+                    <button
+                      onClick={() => setSelectedDay(todayWorkout.day)}
+                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
+                    >
+                      {/* Right column for RTL: Play button + muscle tag */}
+                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                        <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                          <Play className={`w-4 h-4 text-purple-400 ${isRTL ? 'rotate-180' : ''}`} />
+                        </div>
+                        {!isRestDay && todayWorkout.exercises[0]?.muscleGroup && (
+                          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs whitespace-nowrap">
+                            {t(todayWorkout.exercises[0].muscleGroup.toLowerCase() === "chest" ? "chest" : 
+                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
+                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "legs" ? "legs" : 
+                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
+                               todayWorkout.exercises[0].muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Center: Text content */}
+                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <p className="text-white font-semibold text-sm">{t("todaysWorkout")} - {t(todayWorkout.day.toLowerCase() as any)}</p>
+                        <p className="text-[#B6C4CF] text-xs">
+                          {isRestDay ? t("restAndRecovery") : `${exerciseCount} ${t("exercisesCount")}`}
+                        </p>
+                      </div>
+                      
+                      {/* Left column for RTL: Icon */}
+                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
+                          {isRestDay ? (
+                            <Calendar className="w-5 h-5 text-slate-400" />
+                          ) : (
+                            <Dumbbell className="w-5 h-5 text-white" />
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })()}
+              </div>
+            )}
+
+            {view === "week" && (
+              <div className="space-y-2">
+                {workoutSchedule.map((dayWorkout, i) => {
+                  const exerciseCount = dayWorkout.exercises.length
+                  const isRestDay = dayWorkout.exercises[0]?.muscleGroup === "Recovery"
+                  return (
+                    <button
+                      key={i}
+                      onClick={() => setSelectedDay(dayWorkout.day)}
+                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
+                    >
+                      {/* Right column for RTL: Play button + muscle tag */}
+                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                        <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                          <Play className={`w-4 h-4 text-purple-400 ${isRTL ? 'rotate-180' : ''}`} />
+                        </div>
+                        {!isRestDay && dayWorkout.exercises[0]?.muscleGroup && (
+                          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs whitespace-nowrap">
+                            {t(dayWorkout.exercises[0].muscleGroup.toLowerCase() === "chest" ? "chest" : 
+                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
+                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "legs" ? "legs" : 
+                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
+                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
+                          </div>
+                        )}
+                      </div>
+                      
+                      {/* Center: Text content */}
+                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <p className="text-white font-semibold text-sm">{t(dayWorkout.day.toLowerCase() as any)}</p>
+                        <p className="text-[#B6C4CF] text-xs">
+                          {isRestDay ? t("restAndRecovery") : `${exerciseCount} ${t("exercisesCount")}`}
+                        </p>
+                      </div>
+                      
+                      {/* Left column for RTL: Icon */}
+                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
+                          {isRestDay ? (
+                            <Calendar className="w-5 h-5 text-slate-400" />
+                          ) : (
+                            <Dumbbell className="w-5 h-5 text-white" />
+                          )}
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })}
+                {!workoutSchedule.length && (
+                  <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
+                    <CardContent className="text-center py-20 px-6">
+                      <div className="relative inline-block mb-6">
+                        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 flex items-center justify-center shadow-2xl shadow-purple-500/20 border border-purple-500/30">
+                          <Dumbbell className="w-14 h-14 text-purple-400" />
+                        </div>
+                        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-yellow-400 to-orange-500 flex items-center justify-center shadow-lg">
+                          <span className="text-white text-xl">≡ƒÆ¬</span>
+                        </div>
+                      </div>
+                      <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
+                        {language === 'ku' ? '╪«╪┤╪¬█ò█î ┘ê█ò╪▒╪▓╪┤ ┘å█î█î█ò' : language === 'ar' ? '┘ä╪º ┘è┘ê╪¼╪» ╪¼╪»┘ê┘ä ╪¬┘à╪º╪▒┘è┘å' : 'No Workout Schedule'}
+                      </h3>
+                      <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
+                        {language === 'ku' ? '┘à█ò╪┤┘é┌»█ò╪▒█ò┌⌐█ò╪¬ ╪«╪┤╪¬█ò█î ┘ê█ò╪▒╪▓╪┤╪¬ ╪¿█å ╪»█î╪º╪▒█î ╪»█ò┌⌐╪º╪¬' : language === 'ar' ? '╪│┘è┘é┘ê┘à ┘à╪»╪▒╪¿┘â ╪¿╪¬╪╣┘è┘è┘å ╪¼╪»┘ê┘ä ╪º┘ä╪¬┘à╪º╪▒┘è┘å ┘ä┘â' : 'Your trainer will assign a workout schedule to you'}
+                      </p>
+                      <p className="text-gray-500 text-sm mb-8">
+                        {language === 'ku' ? '╪»┘ê╪º╪¬╪▒ ╪│█ò╪▒╪»╪º┘å█î ╪¿┌⌐█ò╪▒█ò┘ê█ò █î╪º┘å ┘╛█ò█î┘ê█ò┘å╪»█î ╪¿█ò ┘à█ò╪┤┘é┌»█ò╪▒█ò┌⌐█ò╪¬█ò┘ê█ò ╪¿┌⌐█ò' : language === 'ar' ? '╪¬╪¡┘é┘é ┘ä╪º╪¡┘é┘ï╪º ╪ú┘ê ╪º╪¬╪╡┘ä ╪¿┘à╪»╪▒╪¿┘â' : 'Check back later or contact your trainer'}
+                      </p>
+                      <div className="flex flex-wrap gap-3 justify-center text-sm text-gray-500">
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
+                          <Clock className="w-4 h-4 text-cyan-400" />
+                          <span>{language === 'ku' ? '╪¿█ò╪▓┘ê┘ê╪º┘å█ò ┌å╪º┘ê█ò┌ò█Ä╪¿█ò' : language === 'ar' ? '╪º┘å╪¬╪╕╪▒ ┘é┘ä┘è┘ä╪º┘ï' : 'Coming Soon'}</span>
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
+                          <Target className="w-4 h-4 text-green-400" />
+                          <span>{language === 'ku' ? '┘╛┘ä╪º┘å ╪¬╪º█î╪¿█ò╪¬' : language === 'ar' ? '╪«╪╖╪⌐ ┘à╪«╪╡╪╡╪⌐' : 'Personalized Plan'}</span>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
             )}
             </div>
           </CardContent>
         </Card>
 
-=======
-        {/* Submit (user performs; superadmin & trainer will view externally) */}
-        {view === "day" && (
-          <div className="mt-2">
-            <Button
-              disabled={submittedToday || submitting}
-              onClick={handleSubmitDay}
-              className="w-full bg-gradient-to-r from-[#9333EA] to-[#C084FC] disabled:opacity-50 disabled:cursor-not-allowed hover:from-[#7E22CE] hover:to-[#A855F7]"
-            >
-              {submittedToday ? "Submitted" : submitting ? "Submitting..." : "Submit Today's Workout"}
-            </Button>
-            {submittedToday && <p className="text-[11px] text-[#B6C4CF] mt-2 text-center">You already submitted today. Trainers & superadmin can view it.</p>}
-          </div>
-        )}
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       </section>
 
       </div>
@@ -296,14 +479,14 @@ export default function WorkoutPage() {
                         {/* Icons section - Center for RTL */}
                         <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse order-2' : 'order-2'}`}>
                           {exercise.videoUrl && (
-<<<<<<< HEAD
                             <div className="relative w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
                               <Film className="w-5 h-5 text-purple-400" />
                               {exercise.videoUrls && exercise.videoUrls.length > 1 && (
                                 <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center border-2 border-slate-900">
                                   {exercise.videoUrls.length}
                                 </div>
-                              )}                            </div>
+                              )}
+                            </div>
                           )}
                           {exercise.gifUrl && (
                             <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
@@ -320,7 +503,7 @@ export default function WorkoutPage() {
                       {/* Notes section - Below everything */}
                       {exercise.notes && (
                         <div className={`px-4 pb-4 ${isRTL ? 'text-right' : ''}`}>
-                          <p className="text-slate-400 text-sm italic">💡 {exercise.notes}</p>
+                          <p className="text-slate-400 text-sm italic">≡ƒÆí {exercise.notes}</p>
                         </div>
                       )}
                     </CardContent>
@@ -402,7 +585,7 @@ export default function WorkoutPage() {
                                 </div>
                               </div>
                               {video.notes && (
-                                <p className="text-amber-300 text-sm mb-2 italic">💡 {video.notes}</p>
+                                <p className="text-amber-300 text-sm mb-2 italic">≡ƒÆí {video.notes}</p>
                               )}
                               <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30">
                                 <video 
@@ -456,7 +639,8 @@ export default function WorkoutPage() {
                             Your browser does not support the video tag.
                           </video>
                         </div>
-                      ) : null}                      {selectedExercise.gifUrl && (
+                      ) : null}
+                      {selectedExercise.gifUrl && (
                         <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
                           <div className="text-center">
                             <Play className="w-12 h-12 text-green-400 mx-auto mb-2" />
@@ -483,7 +667,7 @@ export default function WorkoutPage() {
                   <Card className="bg-amber-500/10 border-amber-500/30">
                     <CardHeader>
                       <CardTitle className={`text-amber-400 text-lg flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                        💡 {t("importantNotes")}
+                        ≡ƒÆí {t("importantNotes")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -501,10 +685,7 @@ export default function WorkoutPage() {
     </PageTransition>
       <BottomNav activeTab="workout" />
     </SubscriptionRequiredGuard>
-<<<<<<< HEAD
     </AuthGuard>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

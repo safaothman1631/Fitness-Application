@@ -1,13 +1,164 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AuthGuard from "@/components/auth-guard"
+import { Apple, Sandwich, Utensils, Flame, Plus, Timer, CalendarDays, CheckCircle2, Circle, LayoutDashboard, Dumbbell, HeartPulse, User, Calendar, Award, Target, Play, Image as ImageIcon, Clock } from "lucide-react"
+import { submitMeal, hasSubmittedMealToday } from "@/lib/submissions"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import SubscriptionRequiredGuard from "@/components/subscription-guard"
+import { PageTransition } from "@/components/page-transition"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
+import type { TranslationKey } from "@/lib/translations"
+
+type ViewMode = "day" | "week" | "month"
+
+interface Meal {
+  id: string
+  name: string
+  calories: number | string
+  protein: number | string
+  carbs: number | string
+  fat?: number | string
+  fats?: number | string
+  ingredients?: string[] | string
+  recipe?: string
+  instructions?: string
+  imageUrl?: string
+  mealType?: string // Breakfast, Lunch, Dinner, Snack
+  category?: string // breakfast, lunch, dinner, snack
+  notes?: string
+}
+
+interface DayMeal {
+  day: string
+  meals: Meal[]
+}
+
+export default function MealsPage() {
+  const router = useRouter()
+  const [isSuperadmin, setIsSuperadmin] = useState(false)
+  const [view, setView] = useState<ViewMode>("week")
+  const [viewTransition, setViewTransition] = useState(true)
+  const [completed, setCompleted] = useState<Record<string, boolean>>({})
+  const [submittedToday, setSubmittedToday] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [selectedDay, setSelectedDay] = useState<string | null>(null)
+  const [mealSchedule, setMealSchedule] = useState<DayMeal[]>([])
+  const [selectedMeal, setSelectedMeal] = useState<Meal | null>(null)
+  const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0)
+  const [showImageOverlay, setShowImageOverlay] = useState(false)
+  const [mounted, setMounted] = useState(false)
+  const { t, language } = useLanguage()
+  const isRTL = language === "ar" || language === "ku"
+
+  // Get meal ordinal translation key (reusing exercise keys)
+  const getMealOrdinal = (num: number): TranslationKey => {
+    const ordinals: TranslationKey[] = [
+      "exerciseFirst", "exerciseSecond", "exerciseThird", "exerciseFourth", "exerciseFifth",
+      "exerciseSixth", "exerciseSeventh", "exerciseEighth", "exerciseNinth", "exerciseTenth"
+    ]
+    return ordinals[num - 1] || "exerciseFirst"
+  }
+
+  useEffect(() => {
+    setMounted(true)
+    const role = typeof window !== "undefined" ? localStorage.getItem("userRole") : null
+    setIsSuperadmin(role === "superadmin")
+    try {
+      const raw = localStorage.getItem("mealTasksCompleted")
+      if (raw) setCompleted(JSON.parse(raw))
+    } catch {}
+    setSubmittedToday(hasSubmittedMealToday())
+    
+    // Fetch meal programs from database
+    fetchMealPrograms()
+  }, [])
+
+  const fetchMealPrograms = async () => {
+    try {
+      const userId = localStorage.getItem("userId")
+      if (!userId) {
+        console.log("⚠️ No userId found, skipping meal programs fetch")
+        setMealSchedule(defaultMealSchedule)
+        return
+      }
+
+      console.log("🔍 Fetching meal programs for user:", userId)
+      const response = await fetch(`/api/programs?type=nutrition&userId=${userId}`)
+      
+      if (response.ok) {
+        const programs = await response.json()
+        console.log("✅ Fetched meal programs:", programs)
+        
+        if (programs.length > 0) {
+          // Use the first program's weekly schedule
+          const program = programs[0]
+          const weeklySchedule = program.weeklySchedule || {}
+          
+          // Convert to DayMeal format
+          const schedule: DayMeal[] = [
+            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+          ].map(day => {
+            const dayKey = day.toLowerCase()
+            const dayData = weeklySchedule[dayKey]
+            return {
+              day,
+              meals: dayData?.meals || []
+            }
+          })
+          
+          setMealSchedule(schedule)
+          console.log("✅ Meal schedule loaded:", schedule)
+        } else {
+          console.log("ℹ️ No meal programs assigned to user")
+          setMealSchedule(defaultMealSchedule)
+        }
+      } else {
+        console.error("❌ Failed to fetch meal programs")
+        setMealSchedule(defaultMealSchedule)
+      }
+    } catch (error) {
+      console.error("❌ Error fetching meal programs:", error)
+      setMealSchedule(defaultMealSchedule)
+    }
+  }
+
+  // Empty meal schedule - will be fetched from database
+  const defaultMealSchedule: DayMeal[] = []
+
   // Get today's meals
   const getTodayMeals = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const today = days[new Date().getDay()]
-    if (mealSchedule.length === 0) return { day: days[new Date().getDay()], meals: [] }  const handleSubmitDay = () => {
+    if (mealSchedule.length === 0) return { day: days[new Date().getDay()], meals: [] }
+    return mealSchedule.find(d => d.day === today) || mealSchedule[0]
+  }
+
+  const toggleTask = (id: string) => {
+    setCompleted((prev) => {
+      const next = { ...prev, [id]: !prev[id] }
+      try { localStorage.setItem("mealTasksCompleted", JSON.stringify(next)) } catch {}
+      return next
+    })
+  }
+
+  const handleViewChange = (newView: ViewMode) => {
+    if (newView === view) return
+    // Fade out
+    setViewTransition(false)
+    setTimeout(() => {
+      setView(newView)
+      // Fade in
+      setTimeout(() => setViewTransition(true), 50)
+    }, 200)
+  }
+
+  const handleSubmitDay = () => {
     if (submitting) return
     setSubmitting(true)
     const tasks = Object.entries(completed)
@@ -23,7 +174,32 @@ import AuthGuard from "@/components/auth-guard"
   }
 
   return (
-    <AuthGuard requiredRole="user">        </div>
+    <AuthGuard requiredRole="user">
+    <SubscriptionRequiredGuard>
+    <PageTransition>
+    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] bg-clip-text text-transparent mb-2">
+          {t("mealsAndNutrition")}
+        </h1>
+        <p className="text-[#B6C4CF] mb-8">{t("trackDailyMealsDesc")}</p>
+
+        <Card className="bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] border-none p-8 mb-8 relative overflow-hidden">
+          <div className="relative z-10">
+            <h3 className="text-white text-xl font-bold mb-2">{t("fuelYourBodyRight")}</h3>
+            <p className="text-white/90 text-sm mb-4">{t("fuelYourBodyRightDesc")}</p>
+            {isSuperadmin && (
+              <Button className="bg-white text-[#F59E0B] hover:bg-white/90 font-semibold flex items-center gap-2"><Plus className="w-4 h-4" /> Add Meal</Button>
+            )}
+          </div>
+        </Card>
+
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          <StatsCard icon={Flame} label={t("caloriesTodayLabel")} value="0" color="#F59E0B" />
+          <StatsCard icon={Apple} label={t("protein")} value="0g" color="#FB923C" />
+          <StatsCard icon={Utensils} label={t("mealsLogged")} value="0" color="#FCD34D" />
+          <StatsCard icon={Target} label={t("dailyGoal")} value="0%" color="#F59E0B" />
+        </div>
 
       <section className="space-y-4">
         {/* Schedule selector */}
@@ -33,12 +209,14 @@ import AuthGuard from "@/components/auth-guard"
           </CardHeader>
           <CardContent>
             <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-              {(["day","week"] as ViewMode[]).map(v => (                <button
+              {(["day","week"] as ViewMode[]).map(v => (
+                <button
                   key={v}
                   onClick={() => handleViewChange(v)}
                   className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${view===v?"bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] text-white border-amber-500":"bg-[#0E151B] text-slate-300 border-[#2E3944] hover:border-amber-500/30"}`}
                 >
-                  {v === "day" ? t("today") : t("week")}                </button>
+                  {v === "day" ? t("today") : t("week")}
+                </button>
               ))}
             </div>
 
@@ -64,26 +242,66 @@ import AuthGuard from "@/components/auth-guard"
                               <Utensils className="w-12 h-12 text-amber-400" />
                             </div>
                             <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-orange-500/20 border-2 border-orange-500/50 flex items-center justify-center">
-                              <span className="text-orange-400 text-lg">🍽️</span>
+                              <span className="text-orange-400 text-lg">≡ƒì╜∩╕Å</span>
                             </div>
                           </div>
                           <h3 className="text-2xl font-bold text-white mb-3">
-                            {language === 'ku' ? 'ئەمڕۆ خواردن نییە' : language === 'ar' ? 'لا توجد وجبات اليوم' : 'No Meals Today'}
+                            {language === 'ku' ? '╪ª█ò┘à┌ò█å ╪«┘ê╪º╪▒╪»┘å ┘å█î█î█ò' : language === 'ar' ? '┘ä╪º ╪¬┘ê╪¼╪» ┘ê╪¼╪¿╪º╪¬ ╪º┘ä┘è┘ê┘à' : 'No Meals Today'}
                           </h3>
                           <p className="text-gray-400 mb-6 text-base max-w-sm mx-auto">
-                            {language === 'ku' ? 'هیچ خواردنێک بۆ ئەمڕۆ دیاری نەکراوە' : language === 'ar' ? 'لم يتم تحديد وجبات لهذا اليوم' : 'No meals scheduled for today'}
+                            {language === 'ku' ? '┘ç█î┌å ╪«┘ê╪º╪▒╪»┘å█Ä┌⌐ ╪¿█å ╪ª█ò┘à┌ò█å ╪»█î╪º╪▒█î ┘å█ò┌⌐╪▒╪º┘ê█ò' : language === 'ar' ? '┘ä┘à ┘è╪¬┘à ╪¬╪¡╪»┘è╪» ┘ê╪¼╪¿╪º╪¬ ┘ä┘ç╪░╪º ╪º┘ä┘è┘ê┘à' : 'No meals scheduled for today'}
                           </p>
                           <div className="flex flex-col sm:flex-row gap-3 justify-center">
                             <Button variant="outline" className="border-amber-500/30 text-amber-400 hover:bg-amber-500/10">
                               <Calendar className="w-4 h-4 mr-2" />
-                              {language === 'ku' ? 'ڕۆژانی تر ببینە' : language === 'ar' ? 'تحقق من الأيام الأخرى' : 'Check Other Days'}
+                              {language === 'ku' ? '┌ò█å┌ÿ╪º┘å█î ╪¬╪▒ ╪¿╪¿█î┘å█ò' : language === 'ar' ? '╪¬╪¡┘é┘é ┘à┘å ╪º┘ä╪ú┘è╪º┘à ╪º┘ä╪ú╪«╪▒┘ë' : 'Check Other Days'}
                             </Button>
                           </div>
                         </CardContent>
                       </Card>
                     )
                   }
-                                    const mealCount = dayMeal.meals.length
+                  
+                  const mealCount = todayMeals.meals.length
+                  const totalCalories = todayMeals.meals.reduce((sum, m) => sum + m.calories, 0)
+                  
+                  return (
+                    <button
+                      onClick={() => setSelectedDay(todayMeals.day)}
+                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
+                    >
+                      {/* Right column: Play button + calories */}
+                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                        <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                          <Play className={`w-4 h-4 text-amber-400 ${isRTL ? 'rotate-180' : ''}`} />
+                        </div>
+                        <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs whitespace-nowrap">
+                          {totalCalories} cal
+                        </div>
+                      </div>
+                      
+                      {/* Center: Text content */}
+                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                        <p className="text-white font-semibold text-sm">{t("todaysMeals")} - {t(todayMeals.day.toLowerCase() as any)}</p>
+                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} ΓÇó {totalCalories} {t("kcal")}</p>
+                      </div>
+                      
+                      {/* Left column: Icon */}
+                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
+                          <Utensils className="w-5 h-5 text-white" />
+                        </div>
+                      </div>
+                    </button>
+                  )
+                })()}
+              </div>
+            )}
+
+            {view === "week" && (
+              <div className="space-y-2">
+                {mealSchedule.length > 0 ? mealSchedule.map((dayMeal, i) => {
+                  const mealCount = dayMeal.meals.length
                   const totalCalories = dayMeal.meals.reduce((sum, m) => sum + m.calories, 0)
                   return (
                     <button
@@ -104,7 +322,7 @@ import AuthGuard from "@/components/auth-guard"
                       {/* Center: Text content */}
                       <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
                         <p className="text-white font-semibold text-sm">{t(dayMeal.day.toLowerCase() as any)}</p>
-                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} • {totalCalories} {t("kcal")}</p>
+                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} ΓÇó {totalCalories} {t("kcal")}</p>
                       </div>
                       
                       {/* Left column: Icon */}
@@ -123,54 +341,36 @@ import AuthGuard from "@/components/auth-guard"
                           <Utensils className="w-14 h-14 text-amber-400" />
                         </div>
                         <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg">
-                          <span className="text-white text-xl">🍽️</span>
+                          <span className="text-white text-xl">≡ƒì╜∩╕Å</span>
                         </div>
                       </div>
                       <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                        {language === 'ku' ? 'خشتەی خواردن نییە' : language === 'ar' ? 'لا يوجد جدول وجبات' : 'No Meal Plan'}
+                        {language === 'ku' ? '╪«╪┤╪¬█ò█î ╪«┘ê╪º╪▒╪»┘å ┘å█î█î█ò' : language === 'ar' ? '┘ä╪º ┘è┘ê╪¼╪» ╪¼╪»┘ê┘ä ┘ê╪¼╪¿╪º╪¬' : 'No Meal Plan'}
                       </h3>
                       <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
-                        {language === 'ku' ? 'مەشقگەرەکەت خشتەی خواردنت بۆ دیاری دەکات' : language === 'ar' ? 'سيقوم مدربك بتعيين خطة الوجبات لك' : 'Your trainer will assign a meal plan to you'}
+                        {language === 'ku' ? '┘à█ò╪┤┘é┌»█ò╪▒█ò┌⌐█ò╪¬ ╪«╪┤╪¬█ò█î ╪«┘ê╪º╪▒╪»┘å╪¬ ╪¿█å ╪»█î╪º╪▒█î ╪»█ò┌⌐╪º╪¬' : language === 'ar' ? '╪│┘è┘é┘ê┘à ┘à╪»╪▒╪¿┘â ╪¿╪¬╪╣┘è┘è┘å ╪«╪╖╪⌐ ╪º┘ä┘ê╪¼╪¿╪º╪¬ ┘ä┘â' : 'Your trainer will assign a meal plan to you'}
                       </p>
                       <p className="text-gray-500 text-sm mb-8">
-                        {language === 'ku' ? 'دواتر سەردانی بکەرەوە یان پەیوەندی بە مەشقگەرەکەتەوە بکە' : language === 'ar' ? 'تحقق لاحقًا أو اتصل بمدربك' : 'Check back later or contact your trainer'}
+                        {language === 'ku' ? '╪»┘ê╪º╪¬╪▒ ╪│█ò╪▒╪»╪º┘å█î ╪¿┌⌐█ò╪▒█ò┘ê█ò █î╪º┘å ┘╛█ò█î┘ê█ò┘å╪»█î ╪¿█ò ┘à█ò╪┤┘é┌»█ò╪▒█ò┌⌐█ò╪¬█ò┘ê█ò ╪¿┌⌐█ò' : language === 'ar' ? '╪¬╪¡┘é┘é ┘ä╪º╪¡┘é┘ï╪º ╪ú┘ê ╪º╪¬╪╡┘ä ╪¿┘à╪»╪▒╪¿┘â' : 'Check back later or contact your trainer'}
                       </p>
                       <div className="flex flex-wrap gap-3 justify-center text-sm text-gray-500">
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
                           <Clock className="w-4 h-4 text-cyan-400" />
-                          <span>{language === 'ku' ? 'بەزوویانە چاوەڕێبە' : language === 'ar' ? 'انتظر قليلاً' : 'Coming Soon'}</span>
+                          <span>{language === 'ku' ? '╪¿█ò╪▓┘ê┘ê█î╪º┘å█ò ┌å╪º┘ê█ò┌ò█Ä╪¿█ò' : language === 'ar' ? '╪º┘å╪¬╪╕╪▒ ┘é┘ä┘è┘ä╪º┘ï' : 'Coming Soon'}</span>
                         </div>
                         <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
                           <Target className="w-4 h-4 text-green-400" />
-                          <span>{language === 'ku' ? 'خواردنی تەندروست' : language === 'ar' ? 'وجبات صحية' : 'Healthy Meals'}</span>
+                          <span>{language === 'ku' ? '╪«┘ê╪º╪▒╪»┘å█î ╪¬█ò┘å╪»╪▒┘ê╪│╪¬' : language === 'ar' ? '┘ê╪¼╪¿╪º╪¬ ╪╡╪¡┘è╪⌐' : 'Healthy Meals'}</span>
                         </div>
                       </div>
                     </CardContent>
                   </Card>
-                )}              </div>
+                )}
+              </div>
             )}
             </div>
           </CardContent>
         </Card>
-<<<<<<< HEAD
-=======
-
-        {/* Submit (user performs; superadmin & trainer will view externally) */}
-        {view === "day" && (
-          <div className="mt-2">
-            <Button
-              disabled={submittedToday || submitting}
-              onClick={handleSubmitDay}
-              className="w-full bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] disabled:opacity-50 disabled:cursor-not-allowed hover:from-[#D97706] hover:to-[#FBBF24] text-white"
-            >
-              {submittedToday ? "Submitted" : submitting ? "Submitting..." : "Submit Today's Meals"}
-            </Button>
-            {submittedToday && <p className="text-[11px] text-[#B6C4CF] mt-2 text-center">You already submitted today. Trainers & superadmin can view it.</p>}
-          </div>
-        )}
-
-
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       </section>
       </div>
 
@@ -212,9 +412,16 @@ import AuthGuard from "@/components/auth-guard"
                             <div className="px-3 py-1 rounded-full bg-yellow-500/10 text-yellow-400 text-sm">
                               {t("fat")}: {meal.fat}g
                             </div>
-                            <div className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-sm">
-                              {t(meal.mealType.toLowerCase() as any)}
-                            </div>
+                            {meal.mealType && (
+                              <div className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-sm">
+                                {t(meal.mealType.toLowerCase() as any)}
+                              </div>
+                            )}
+                            {meal.category && !meal.mealType && (
+                              <div className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-sm">
+                                {meal.category}
+                              </div>
+                            )}
                           </div>
                         </div>
                         <div className="flex gap-2">
@@ -268,47 +475,62 @@ import AuthGuard from "@/components/auth-guard"
                   </CardContent>
                 </Card>
 
-                {/* Image Gallery */}
-                {selectedMeal.imageUrl && (() => {
-                  const imageUrls = selectedMeal.imageUrl.split(',').filter(Boolean)
-                  return (
-                    <Card className="bg-slate-900/70 border-slate-800">
-                      <CardHeader>
-                        <CardTitle className="text-white text-lg flex items-center gap-2">
-                          <ImageIcon className="w-5 h-5 text-amber-400" />
-                          {t("mealImage")} 
-                          {imageUrls.length > 1 && (
-                            <span className="text-sm text-slate-400">({imageUrls.length} وێنە)</span>
-                          )}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className={`grid gap-3 ${imageUrls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
-                          {imageUrls.map((url, idx) => (
-                            <div key={idx} className="relative group">
-                              <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-amber-500/50 transition-all">
-                                <img 
-                                  src={url} 
-                                  alt={`${selectedMeal.name} - ${idx + 1}`}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    e.currentTarget.src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="400" height="300"%3E%3Crect fill="%23334155" width="400" height="300"/%3E%3Ctext x="50%25" y="50%25" font-size="48" text-anchor="middle" dy=".3em" fill="%239ca3af"%3E🍽️%3C/text%3E%3C/svg%3E'
-                                  }}
-                                />
-                              </div>
-                              {/* Image number badge */}
-                              {imageUrls.length > 1 && (
-                                <div className="absolute top-2 right-2 w-8 h-8 rounded-full bg-amber-500 flex items-center justify-center text-white font-bold shadow-lg">
-                                  {idx + 1}
-                                </div>
-                              )}
+                {/* Image */}
+                {selectedMeal.imageUrl && (
+                  <Card className="bg-slate-900/70 border-slate-800">
+                    <CardHeader>
+                      <CardTitle className="text-white text-lg flex items-center gap-2">
+                        <ImageIcon className="w-5 h-5 text-blue-400" />
+                        {t("mealImage")}
+                      </CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                        {selectedMeal.imageUrl.split(',').map((url: string, idx: number) => (
+                          <div 
+                            key={idx} 
+                            className="relative group cursor-pointer"
+                            onClick={() => {
+                              setSelectedImageIndex(idx)
+                              setShowImageOverlay(true)
+                            }}
+                          >
+                            <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-amber-500/50 transition-all">
+                              <img 
+                                src={url.trim()} 
+                                alt={`${selectedMeal.name} ${idx + 1}`}
+                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).style.display = 'none';
+                                  (e.target as HTMLImageElement).parentElement!.innerHTML = `
+                                    <div class="w-full h-full flex items-center justify-center">
+                                      <div class="text-center">
+                                        <svg class="w-12 h-12 text-slate-600 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        <p class="text-slate-500 text-xs">Image not available</p>
+                                      </div>
+                                    </div>
+                                  `;
+                                }}
+                              />
                             </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )
-                })()}
+                            {selectedMeal.imageUrl.split(',').length > 1 && (
+                              <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-amber-500 flex items-center justify-center text-white text-xs font-bold shadow-lg">
+                                {idx + 1}
+                              </div>
+                            )}
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all rounded-lg flex items-center justify-center opacity-0 group-hover:opacity-100">
+                              <div className="text-white text-sm font-semibold bg-black/50 px-4 py-2 rounded-full">
+                                🔍 {language === 'ku' ? 'کلیک بکە بۆ بینین' : language === 'ar' ? 'انقر للعرض' : 'Click to view'}
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
 
                 {/* Ingredients */}
                 {selectedMeal.ingredients && selectedMeal.ingredients.length > 0 && (
@@ -334,7 +556,7 @@ import AuthGuard from "@/components/auth-guard"
                   <Card className="bg-green-500/10 border-green-500/30">
                     <CardHeader>
                       <CardTitle className={`text-green-400 text-lg flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                        📝 {t("recipeInstructions")}
+                        ≡ƒô¥ {t("recipeInstructions")}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -344,17 +566,159 @@ import AuthGuard from "@/components/auth-guard"
                 )}
 
                 {/* Meal Type */}
-                <Card className="bg-amber-500/10 border-amber-500/30">
-                  <CardContent className="p-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-sm">{t("mealType")}</span>
-                      <span className="text-amber-400 font-semibold">{t(selectedMeal.mealType.toLowerCase() as any)}</span>
-                    </div>
-                  </CardContent>
-                </Card>
+                {(selectedMeal.mealType || selectedMeal.category) && (
+                  <Card className="bg-amber-500/10 border-amber-500/30">
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between">
+                        <span className="text-slate-400 text-sm">{t("mealType")}</span>
+                        <span className="text-amber-400 font-semibold">
+                          {selectedMeal.mealType ? t(selectedMeal.mealType.toLowerCase() as any) : selectedMeal.category}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
           </ScrollArea>
+        </DialogContent>
+      </Dialog>
+
+      {/* Image Overlay Dialog */}
+      <Dialog open={showImageOverlay} onOpenChange={setShowImageOverlay}>
+        <DialogContent className="max-w-7xl max-h-[95vh] bg-black/95 border-amber-500/30 p-0 overflow-hidden">
+          <DialogHeader className="sr-only">
+            <DialogTitle>{selectedMeal?.name}</DialogTitle>
+          </DialogHeader>
+          <div className="relative w-full h-[95vh]">
+            {selectedMeal?.imageUrl && (
+              <>
+                {/* Background Image with Blur */}
+                <div 
+                  className="absolute inset-0 bg-cover bg-center blur-2xl opacity-30"
+                  style={{ 
+                    backgroundImage: `url(${selectedMeal.imageUrl.split(',')[selectedImageIndex]?.trim()})` 
+                  }}
+                />
+                
+                {/* Main Content */}
+                <div className="relative z-10 h-full flex flex-col md:flex-row">
+                  {/* Left: Image */}
+                  <div className="flex-1 flex items-center justify-center p-8">
+                    <div className="relative max-w-4xl w-full">
+                      <img 
+                        src={selectedMeal.imageUrl.split(',')[selectedImageIndex]?.trim()} 
+                        alt={selectedMeal.name}
+                        className="w-full h-auto rounded-2xl shadow-2xl border-4 border-amber-500/30"
+                      />
+                      {/* Image Navigation */}
+                      {selectedMeal.imageUrl.split(',').length > 1 && (
+                        <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 bg-black/50 backdrop-blur-sm px-4 py-2 rounded-full">
+                          {selectedMeal.imageUrl.split(',').map((_, idx) => (
+                            <button
+                              key={idx}
+                              onClick={() => setSelectedImageIndex(idx)}
+                              className={`w-3 h-3 rounded-full transition-all ${
+                                idx === selectedImageIndex 
+                                  ? 'bg-amber-500 w-8' 
+                                  : 'bg-white/30 hover:bg-white/50'
+                              }`}
+                            />
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Right: Meal Info Overlay */}
+                  <div className="w-full md:w-96 bg-gradient-to-b from-slate-900/95 to-black/95 backdrop-blur-xl p-6 overflow-y-auto border-l border-amber-500/20">
+                    <ScrollArea className="h-full">
+                      <div className="space-y-4">
+                        {/* Header */}
+                        <div>
+                          <h2 className="text-3xl font-bold text-white mb-2">{selectedMeal.name}</h2>
+                          {(selectedMeal.mealType || selectedMeal.category) && (
+                            <div className="inline-block px-3 py-1 rounded-full bg-amber-500/20 text-amber-400 text-sm">
+                              {selectedMeal.mealType ? t(selectedMeal.mealType.toLowerCase() as any) : selectedMeal.category}
+                            </div>
+                          )}
+                        </div>
+
+                        {/* Nutrition Stats */}
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-4">
+                            <div className="text-red-400 text-xs uppercase mb-1">🔥 {t("calories")}</div>
+                            <div className="text-white text-2xl font-bold">{selectedMeal.calories}</div>
+                          </div>
+                          <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4">
+                            <div className="text-blue-400 text-xs uppercase mb-1">💪 {t("protein")}</div>
+                            <div className="text-white text-2xl font-bold">{selectedMeal.protein}g</div>
+                          </div>
+                          <div className="bg-green-500/10 border border-green-500/30 rounded-xl p-4">
+                            <div className="text-green-400 text-xs uppercase mb-1">🌾 {t("carbs")}</div>
+                            <div className="text-white text-2xl font-bold">{selectedMeal.carbs}g</div>
+                          </div>
+                          <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-xl p-4">
+                            <div className="text-yellow-400 text-xs uppercase mb-1">🧈 {t("fat")}</div>
+                            <div className="text-white text-2xl font-bold">{selectedMeal.fat || selectedMeal.fats}g</div>
+                          </div>
+                        </div>
+
+                        {/* Ingredients */}
+                        {selectedMeal.ingredients && (
+                          <div className="bg-slate-800/50 rounded-xl p-4 border border-slate-700">
+                            <h3 className="text-white font-semibold mb-3 flex items-center gap-2">
+                              <Utensils className="w-4 h-4 text-amber-400" />
+                              {t("ingredients")}
+                            </h3>
+                            <ul className="space-y-2">
+                              {(typeof selectedMeal.ingredients === 'string' 
+                                ? selectedMeal.ingredients.split(',') 
+                                : selectedMeal.ingredients
+                              ).map((ing: string, idx: number) => (
+                                <li key={idx} className="flex items-start gap-2 text-slate-300 text-sm">
+                                  <span className="text-amber-400 mt-1">•</span>
+                                  {ing.trim()}
+                                </li>
+                              ))}
+                            </ul>
+                          </div>
+                        )}
+
+                        {/* Recipe/Instructions */}
+                        {(selectedMeal.recipe || selectedMeal.instructions) && (
+                          <div className="bg-green-500/10 rounded-xl p-4 border border-green-500/30">
+                            <h3 className="text-green-400 font-semibold mb-3 flex items-center gap-2">
+                              📝 {t("recipeInstructions")}
+                            </h3>
+                            <p className="text-white text-sm leading-relaxed">
+                              {selectedMeal.recipe || selectedMeal.instructions}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* Notes */}
+                        {selectedMeal.notes && (
+                          <div className="bg-purple-500/10 rounded-xl p-4 border border-purple-500/30">
+                            <h3 className="text-purple-400 font-semibold mb-2">📌 {t("notes")}</h3>
+                            <p className="text-white text-sm">{selectedMeal.notes}</p>
+                          </div>
+                        )}
+                      </div>
+                    </ScrollArea>
+                  </div>
+                </div>
+
+                {/* Close Button */}
+                <button
+                  onClick={() => setShowImageOverlay(false)}
+                  className="absolute top-4 right-4 z-20 w-10 h-10 rounded-full bg-black/50 hover:bg-black/70 backdrop-blur-sm flex items-center justify-center text-white transition-all"
+                >
+                  ✕
+                </button>
+              </>
+            )}
+          </div>
         </DialogContent>
       </Dialog>
 
@@ -362,10 +726,7 @@ import AuthGuard from "@/components/auth-guard"
     </PageTransition>
       <BottomNav activeTab="meals" />
     </SubscriptionRequiredGuard>
-<<<<<<< HEAD
     </AuthGuard>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

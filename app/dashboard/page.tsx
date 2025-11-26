@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -12,7 +12,103 @@ import { SubscriptionWarning } from "@/components/subscription-warning"
 import { checkSubscriptionStatus, getSubscriptionExpiry } from "@/lib/subscription"
 import { PageTransition } from "@/components/page-transition"
 import { BottomNav } from "@/components/bottom-nav"
-import AuthGuard from "@/components/auth-guard"    <>
+import AuthGuard from "@/components/auth-guard"
+
+export default function UserDashboard() {
+  const router = useRouter()
+  const { t, language } = useLanguage()
+  const [activeTab, setActiveTab] = useState("dashboard")
+  const [notificationOpen, setNotificationOpen] = useState(false)
+  const [subscriptionStatus, setSubscriptionStatus] = useState({
+    isActive: true,
+    isExpired: false,
+    daysRemaining: 30,
+  })
+  const [notifications, setNotifications] = useState([
+    {
+      id: "1",
+      type: "achievement",
+      title: "Milestone Reached",
+      message: "You've completed 20 workouts! Keep up the great work!",
+      timestamp: "2024-11-09 15:30",
+      isRead: false,
+    },
+    {
+      id: "2",
+      type: "reminder",
+      title: "Workout Reminder",
+      message: "Don't forget to complete your evening workout",
+      timestamp: "2024-11-09 18:00",
+      isRead: false,
+    },
+    {
+      id: "3",
+      type: "alert",
+      title: "Progress Update",
+      message: "You've lost 2kg this month. Great progress!",
+      timestamp: "2024-11-08 10:00",
+      isRead: true,
+    },
+  ])
+
+  const unreadCount = notifications.filter(n => !n.isRead).length
+
+  // Mark notification as read when clicked
+  const markAsRead = (id: string) => {
+    setNotifications(prev => 
+      prev.map(notif => 
+        notif.id === id ? { ...notif, isRead: true } : notif
+      )
+    )
+  }
+
+  // Mark all as read when dialog opens
+  const handleDialogOpen = (open: boolean) => {
+    setNotificationOpen(open)
+    if (open) {
+      setTimeout(() => {
+        setNotifications(prev => 
+          prev.map(notif => ({ ...notif, isRead: true }))
+        )
+      }, 500) // Delay to show animation first
+    }
+  }
+
+  useEffect(() => {
+    const userEmail = localStorage.getItem("userEmail")
+    if (!userEmail) router.push("/login")
+
+    // Check subscription status
+    const updateSubscriptionStatus = () => {
+      const expiry = getSubscriptionExpiry()
+      const status = checkSubscriptionStatus(expiry)
+      setSubscriptionStatus(status)
+      console.log('≡ƒôè Subscription Status:', status) // Debug log
+    }
+
+    // Initial check
+    updateSubscriptionStatus()
+
+    // Listen for storage changes (from test panel and login)
+    const handleStorageChange = () => {
+      console.log('≡ƒöä Storage changed, updating subscription...') // Debug log
+      updateSubscriptionStatus()
+    }
+
+    window.addEventListener('storage', handleStorageChange)
+    
+    // Also check on component mount with small delay to ensure localStorage is ready
+    const timer = setTimeout(updateSubscriptionStatus, 100)
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange)
+      clearTimeout(timer)
+    }
+  }, [router])
+
+  return (
+    <AuthGuard requiredRole="user">
+    <>
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
@@ -131,10 +227,7 @@ import AuthGuard from "@/components/auth-guard"    <>
     </PageTransition>
       <BottomNav activeTab={activeTab} setActiveTab={setActiveTab} />
     </>
-<<<<<<< HEAD
     </AuthGuard>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 

@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
@@ -75,17 +75,18 @@ export default function SuperAdminPage() {
               </h2>
               <div className="grid grid-cols-2 gap-3">
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  👥 Manage Users
+                  ≡ƒæÑ Manage Users
                 </button>
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  🔑 Generate Keys
+                  ≡ƒöæ Generate Keys
                 </button>
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  📊 View Reports
+                  ≡ƒôè View Reports
                 </button>
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  ⚙️ Settings
-                </button>              </div>
+                  ΓÜÖ∩╕Å Settings
+                </button>
+              </div>
             </CardContent>
           </Card>
 
@@ -114,10 +115,12 @@ export default function SuperAdminPage() {
                     <span className="text-gray-300">Storage</span>
                   </div>
                   <span className="text-green-400 text-sm font-semibold">67% Used</span>
-                </div>              </div>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
-      </SidebarSleek>    </AuthGuard>
+      </SidebarSleek>
+    </AuthGuard>
   )
 }

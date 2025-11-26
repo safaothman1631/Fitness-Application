@@ -5,7 +5,21 @@ export interface SubscriptionStatus {
   isExpired: boolean
   daysRemaining: number
   expiryDate: Date | null
-  type: 'FREE' | 'PRO' // جۆری بەشداریکردن    }
+  type: 'FREE' | 'PRO' // جۆری بەشداریکردن
+}
+
+/**
+ * Check subscription status based on expiry date
+ */
+export function checkSubscriptionStatus(expiryDateString: string | null): SubscriptionStatus {
+  if (!expiryDateString) {
+    return {
+      isActive: false,
+      isExpired: true,
+      daysRemaining: 0,
+      expiryDate: null,
+      type: 'FREE'
+    }
   }
 
   const expiryDate = new Date(expiryDateString)
@@ -28,7 +42,8 @@ export interface SubscriptionStatus {
     isExpired,
     daysRemaining,
     expiryDate,
-    type,  }
+    type
+  }
 }
 
 /**
@@ -72,7 +87,6 @@ export function hasPremiumAccess(): boolean {
 }
 
 /**
-<<<<<<< HEAD
  * Get subscription type (FREE or PRO)
  */
 export function getSubscriptionType(): 'FREE' | 'PRO' {
@@ -89,8 +103,6 @@ export function isProMember(): boolean {
 }
 
 /**
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
  * Mock function to set a test subscription
  * For development/testing only
  */

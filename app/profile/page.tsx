@@ -1,12 +1,135 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
-import AuthGuard from "@/components/auth-guard"  })
+import AuthGuard from "@/components/auth-guard"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast"
+import { Toaster } from "@/components/ui/toaster"
+import { Edit2, Save, Camera, Lock, Mail, Phone, Activity, Calendar, Settings as SettingsIcon, LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, Weight, Ruler, Goal, LogOut } from "lucide-react"
+import { useMobile } from "@/hooks/use-mobile"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation"
+import { useTheme } from "next-themes"
+import { PageTransition } from "@/components/page-transition"
+import { User as UserIcon } from "lucide-react"
+import { SubscriptionWarning } from "@/components/subscription-warning"
+import { SubscriptionInfoCard } from "@/components/subscription-info-card"
+import { checkSubscriptionStatus, getSubscriptionExpiry, getUserAccessKey, getUserJoinDate } from "@/lib/subscription"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
+
+export default function ProfilePage() {
+  const router = useRouter()
+  const { theme, setTheme } = useTheme()
+  const { toast } = useToast()
+  const { language, setLanguage, t } = useLanguage()
+  const [selectedLanguage, setSelectedLanguage] = useState(language)
+  const [subscriptionStatus, setSubscriptionStatus] = useState({
+    isActive: true,
+    isExpired: false,
+    daysRemaining: 30,
+  })
+  const [userKey, setUserKey] = useState('')
+  const [joinDate, setJoinDate] = useState('')
+  const [expiryDate, setExpiryDate] = useState<string | null>(null)
+  const [open, setOpen] = useState(false)
+  const [profile, setProfile] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    joinDate: "",
+    weight: 0,
+    height: 0,
+    goal: "",
+    experience: "",
+  })
   const [avatar, setAvatar] = useState<string | null>(null)
   const [draft, setDraft] = useState(profile)
   const [draftAvatar, setDraftAvatar] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)    // Check subscription status
+  const [loading, setLoading] = useState(true)
+  const [changingPassword, setChangingPassword] = useState(false)
+  const [currentPassword, setCurrentPassword] = useState("")
+  const [newPassword, setNewPassword] = useState("")
+  const [confirmPassword, setConfirmPassword] = useState("")
+  const isMobile = useMobile()
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const [notifyEmail, setNotifyEmail] = useState(true)
+  const [notifyPush, setNotifyPush] = useState(true)
+
+  useEffect(() => {
+    // Load user data from Firestore
+    const loadUserData = async () => {
+      setLoading(true)
+      try {
+        const userId = localStorage.getItem("userId")
+        if (!userId) {
+          console.error("No user ID found")
+          setLoading(false)
+          return
+        }
+
+        // Fetch user data from Firestore
+        const { db } = await import("@/lib/firebase")
+        const { doc, getDoc } = await import("firebase/firestore")
+        
+        const userDoc = await getDoc(doc(db, "users", userId))
+        
+        if (userDoc.exists()) {
+          const userData = userDoc.data()
+          
+          // Handle createdAt - could be Timestamp, string, or undefined
+          let joinDate = ""
+          if (userData.createdAt) {
+            try {
+              if (typeof userData.createdAt === 'string') {
+                joinDate = new Date(userData.createdAt).toLocaleDateString()
+              } else if (userData.createdAt.toDate) {
+                joinDate = new Date(userData.createdAt.toDate()).toLocaleDateString()
+              } else {
+                joinDate = new Date(userData.createdAt).toLocaleDateString()
+              }
+            } catch (error) {
+              console.error("Error parsing createdAt:", error)
+              joinDate = ""
+            }
+          }
+          
+          const profileData = {
+            name: `${userData.firstName || ''} ${userData.lastName || ''}`.trim() || userData.name || "User",
+            email: userData.email || "",
+            phone: userData.phone || "",
+            joinDate: joinDate,
+            weight: userData.weight || 0,
+            height: userData.height || 0,
+            goal: userData.goal || "",
+            experience: userData.activityLevel || "",
+          }
+          setProfile(profileData)
+          setDraft(profileData)
+        }
+        
+        // Load avatar from localStorage if exists
+        const a = localStorage.getItem("profileAvatar")
+        if (a) {
+          setAvatar(a)
+          setDraftAvatar(a)
+        }
+      } catch (error) {
+        console.error("Error loading user data:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadUserData()
+
+    // Check subscription status
     const updateSubscriptionData = () => {
       const expiry = getSubscriptionExpiry()
       const status = checkSubscriptionStatus(expiry)
@@ -21,7 +144,7 @@ import AuthGuard from "@/components/auth-guard"  })
 
     // Listen for storage changes (from test panel or login)
     const handleStorageChange = () => {
-      console.log('🔄 Profile: Storage changed, updating subscription...') // Debug log
+      console.log('≡ƒöä Profile: Storage changed, updating subscription...') // Debug log
       updateSubscriptionData()
     }
 
@@ -82,7 +205,8 @@ import AuthGuard from "@/components/auth-guard"  })
     } catch (error) {
       console.error("Error saving profile:", error)
       toast({ description: "Failed to save profile", variant: "destructive" })
-    }  }
+    }
+  }
 
   const resetDraft = () => {
     setDraft(profile)
@@ -136,7 +260,7 @@ import AuthGuard from "@/components/auth-guard"  })
       setNewPassword("")
       setConfirmPassword("")
       
-      toast({ description: "✅ Password changed successfully!", variant: "default" })
+      toast({ description: "Γ£à Password changed successfully!", variant: "default" })
     } catch (error: any) {
       console.error("Password change error:", error)
       
@@ -199,7 +323,8 @@ import AuthGuard from "@/components/auth-guard"  })
   }
 
   return (
-    <AuthGuard requiredRole="user">    <>
+    <AuthGuard requiredRole="user">
+    <>
     <Toaster />
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
@@ -283,7 +408,8 @@ import AuthGuard from "@/components/auth-guard"  })
                             </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
-                              <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />                            </div>
+                              <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />
+                            </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
                               <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
@@ -385,7 +511,8 @@ import AuthGuard from "@/components/auth-guard"  })
                             </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
-                              <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />                            </div>
+                              <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />
+                            </div>
                             <div>
                               <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
                               <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
@@ -580,10 +707,10 @@ import AuthGuard from "@/components/auth-guard"  })
                       onChange={(e) => setSelectedLanguage(e.target.value as "en" | "tr" | "ar" | "ku")}
                       className="w-full bg-slate-950/80 border-2 border-slate-700/60 hover:border-blue-500/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm rounded-xl px-4 py-3.5 text-white transition-all duration-200 outline-none cursor-pointer shadow-inner"
                     >
-                      <option value="en" className="bg-slate-900">🇬🇧 English</option>
-                      <option value="tr" className="bg-slate-900">🇹🇷 Türkçe</option>
-                      <option value="ar" className="bg-slate-900">🇸🇦 العربية</option>
-                      <option value="ku" className="bg-slate-900">☀️ Kurdî</option>
+                      <option value="en" className="bg-slate-900">≡ƒç¼≡ƒçº English</option>
+                      <option value="tr" className="bg-slate-900">≡ƒç╣≡ƒç╖ T├╝rk├ºe</option>
+                      <option value="ar" className="bg-slate-900">≡ƒç╕≡ƒçª ╪º┘ä╪╣╪▒╪¿┘è╪⌐</option>
+                      <option value="ku" className="bg-slate-900">ΓÿÇ∩╕Å Kurd├«</option>
                     </select>
                   </div>
                   
@@ -591,7 +718,7 @@ import AuthGuard from "@/components/auth-guard"  })
                     onClick={() => {
                       setLanguage(selectedLanguage as "en" | "tr" | "ar" | "ku");
                       toast({
-                        title: "✓ Language Changed",
+                        title: "Γ£ô Language Changed",
                         description: "Your language preference has been updated successfully.",
                       });
                     }}
@@ -636,9 +763,6 @@ import AuthGuard from "@/components/auth-guard"  })
     </PageTransition>
       <BottomNav activeTab="profile" />
     </>
-<<<<<<< HEAD
     </AuthGuard>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }

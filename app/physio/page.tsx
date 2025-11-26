@@ -1,8 +1,208 @@
-"use client"
+﻿"use client"
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import AuthGuard from "@/components/auth-guard"    <>
+import AuthGuard from "@/components/auth-guard"
+import { HeartPulse, Plus, CheckCircle2, Loader2, LayoutDashboard, Dumbbell, Utensils, User, Calendar, Award, Target } from "lucide-react"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import SubscriptionRequiredGuard from "@/components/subscription-guard"
+import { dbService } from "@/lib/db-service"
+import { toast, Toaster } from "sonner"
+import { PageTransition } from "@/components/page-transition"
+import { useLanguage } from "@/hooks/useLanguage"
+import { BottomNav } from "@/components/bottom-nav"
+
+interface PhysioRequest {
+  id: string
+  userId?: string
+  userName?: string
+  physioId: string
+  physioName: string
+  injuryType: string
+  painPercent: number
+  notes?: string
+  status: "pending" | "accepted" | "rejected"
+  completed?: boolean
+  createdAt: string
+}
+
+interface Physiotherapist {
+  id: string
+  name: string
+  specialization?: string
+}
+
+export default function PhysioPage() {
+  const router = useRouter()
+  const [mounted, setMounted] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [submitting, setSubmitting] = useState(false)
+  const [requests, setRequests] = useState<PhysioRequest[]>([])
+  const [physiotherapists, setPhysiotherapists] = useState<Physiotherapist[]>([])
+  const [form, setForm] = useState({ physioId: "", injuryType: "", painPercent: 50, notes: "" })
+  const [userId, setUserId] = useState("")
+  const [userName, setUserName] = useState("")
+  const { t } = useLanguage()
+
+  useEffect(() => {
+    // Mark as mounted to prevent hydration mismatch
+    setMounted(true)
+
+    // Load user info from localStorage
+    const storedUserId = localStorage.getItem("userId")
+    const storedUserEmail = localStorage.getItem("userEmail")
+    const storedUserName = localStorage.getItem("userName") || storedUserEmail || "User"
+    
+    console.log("≡ƒöì User Info from localStorage:", {
+      userId: storedUserId,
+      userEmail: storedUserEmail,
+      userName: storedUserName
+    })
+    
+    if (storedUserId) {
+      setUserId(storedUserId)
+      setUserName(storedUserName)
+    } else if (storedUserEmail) {
+      // Use email as userId if userId not found
+      setUserId(storedUserEmail)
+      setUserName(storedUserName)
+      console.log("ΓÜá∩╕Å Using email as userId")
+    } else {
+      console.error("Γ¥î No user information found in localStorage")
+      toast.error("Please login first")
+    }
+
+    // Load data from database
+    loadData()
+  }, [])
+
+  const loadData = async () => {
+    // Only run on client side
+    if (typeof window === 'undefined') return
+    
+    try {
+      setLoading(true)
+      
+      // Load physiotherapists
+      console.log("≡ƒöì Loading physiotherapists...")
+      try {
+        const physios = await dbService.getPhysiotherapists()
+        console.log("Γ£à Loaded physiotherapists:", physios)
+        setPhysiotherapists(physios)
+      } catch (error) {
+        console.error("Γ¥î Failed to load physiotherapists:", error)
+        toast.error("Failed to load physiotherapists")
+      }
+      
+      // Don't set default physioId - let user select
+      // This prevents auto-submission issues
+      
+      // Load user's requests using state or localStorage
+      const currentUserId = userId || localStorage.getItem("userId") || localStorage.getItem("userEmail")
+      if (currentUserId) {
+        console.log("≡ƒöì Loading requests for user:", currentUserId)
+        try {
+          const userRequests = await dbService.getPhysioRequests(currentUserId)
+          console.log("Γ£à Loaded requests:", userRequests)
+          console.log("≡ƒôè Total requests found:", userRequests.length)
+          setRequests(userRequests)
+        } catch (error) {
+          console.error("Γ¥î Failed to load requests:", error)
+          // Don't show error toast - just log it
+          // User can still submit new requests
+          setRequests([])
+        }
+      } else {
+        console.warn("ΓÜá∩╕Å No userId found in state or localStorage")
+      }
+    } catch (error) {
+      console.error("Γ¥î Error loading data:", error)
+      toast.error("Failed to load data: " + (error instanceof Error ? error.message : String(error)))
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    console.log("≡ƒô¥ Form submission started")
+    console.log("Form data:", form)
+    console.log("User ID:", userId)
+    console.log("User Name:", userName)
+    
+    if (!form.physioId) {
+      console.error("Γ¥î No physiotherapist selected")
+      toast.error("Please select a physiotherapist")
+      return
+    }
+    
+    if (!form.injuryType.trim()) {
+      console.error("Γ¥î No injury type entered")
+      toast.error("Please enter injury type")
+      return
+    }
+    
+    if (!userId) {
+      console.error("Γ¥î No user ID found")
+      toast.error("Please login first")
+      return
+    }
+
+    console.log("Γ£à All validations passed, submitting...")
+    setSubmitting(true)
+    try {
+      const physioName = physiotherapists.find(p => p.id === form.physioId)?.name || "Unknown"
+      
+      const requestData = {
+        userId,
+        userName,
+        physioId: form.physioId,
+        physioName,
+        injuryType: form.injuryType.trim(),
+        painPercent: form.painPercent,
+        notes: form.notes.trim() || "",
+      }
+      
+      console.log("≡ƒôñ Sending request:", requestData)
+      const newRequest = await dbService.createPhysioRequest(requestData)
+      console.log("Γ£à Request created:", newRequest)
+
+      // Add to local state immediately
+      setRequests([newRequest, ...requests])
+      
+      // Clear form
+      setForm({ physioId: "", injuryType: "", painPercent: 50, notes: "" })
+      
+      // Show success message
+      toast.success("Request sent successfully!")
+      
+      // Reload data from database to ensure sync
+      console.log("≡ƒöä Reloading requests from database...")
+      await loadData()
+    } catch (error) {
+      console.error("Γ¥î Error creating request:", error)
+      toast.error("Failed to send request: " + (error instanceof Error ? error.message : String(error)))
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  // Prevent hydration mismatch - don't render until mounted
+  if (!mounted) {
+    return (
+      <div className="min-h-screen bg-[#0E151B] text-white flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin text-rose-500" />
+      </div>
+    )
+  }
+
+  return (
+    <AuthGuard requiredRole="user">
+    <>
     <Toaster position="top-center" richColors />
     <SubscriptionRequiredGuard>
     <PageTransition>
@@ -19,7 +219,7 @@ import AuthGuard from "@/components/auth-guard"    <>
             <p className="text-white/90 text-sm mb-4">{t("recoverAndHealDesc")}</p>
             <div className="flex items-center gap-3 text-white/90 text-sm">
               <span>{requests.length} {t("requestsLabel")}</span>
-              <span>•</span>
+              <span>ΓÇó</span>
               <span>{requests.filter(r => r.completed).length} {t("completedLabel")}</span>
             </div>
           </div>
@@ -127,7 +327,7 @@ import AuthGuard from "@/components/auth-guard"    <>
                   <div key={r.id} className="p-3 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-rose-500/30 transition-all">
                     <div className="text-xs">
                       <p className="text-white font-semibold">{r.injuryType}</p>
-                      <p className="text-slate-400 mt-0.5">{r.physioName} • Pain {r.painPercent}% • {r.status}</p>
+                      <p className="text-slate-400 mt-0.5">{r.physioName} ΓÇó Pain {r.painPercent}% ΓÇó {r.status}</p>
                       {r.notes && <p className="text-slate-500 mt-0.5 line-clamp-1">{r.notes}</p>}
                       <p className="text-slate-600 mt-0.5">{new Date(r.createdAt).toLocaleDateString()}</p>
                     </div>
@@ -145,10 +345,7 @@ import AuthGuard from "@/components/auth-guard"    <>
       <BottomNav activeTab="physio" />
     </SubscriptionRequiredGuard>
     </>
-<<<<<<< HEAD
     </AuthGuard>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
 
