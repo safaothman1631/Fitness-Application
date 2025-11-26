@@ -98,7 +98,8 @@ export async function POST(request: NextRequest) {
     // Return user data without password
     const userData = {
       id: firebaseUser.uid,
-      uid: firebaseUser.uid,      email,
+      uid: firebaseUser.uid,
+      email,
       name,
       firstName,
       lastName,
@@ -106,8 +107,87 @@ export async function POST(request: NextRequest) {
       role: role || "user",
       membership: membership || "Free",
       subscriptionStatus: subscriptionStatus || "inactive",
-      subscriptionEnd,      isActive: true,
+      subscriptionEnd,
+      isActive: true,
       joinDate: new Date().toISOString(),
     }
 
     console.log("✅ User created successfully:", userData.email)
+    return NextResponse.json(userData, { status: 201 })
+  } catch (error: any) {
+    console.error("❌ Error creating user:", error)
+    return NextResponse.json({
+      error: "Failed to create user",
+      details: error.message
+    }, { status: 500 })
+  }
+}
+
+// Update user
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json()
+    const { id, ...updateData } = body
+
+    if (!id) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 })
+    }
+
+    // Update in Firestore
+    await adminDb.collection("users").doc(id).update({
+      ...updateData,
+      updatedAt: new Date().toISOString(),
+    })
+
+    return NextResponse.json({ success: true, message: "User updated successfully" })
+  } catch (error: any) {
+    console.error("❌ Error updating user:", error)
+    return NextResponse.json({
+      error: "Failed to update user",
+      details: error.message
+    }, { status: 500 })
+  }
+}
+
+// Delete user
+export async function DELETE(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get("id")
+
+    if (!userId) {
+      return NextResponse.json({ error: "User ID is required" }, { status: 400 })
+    }
+
+    console.log("🗑️ Deleting user:", userId)
+
+    try {
+      // Delete from Firebase Authentication
+      await adminAuth.deleteUser(userId)
+      console.log("✅ User deleted from Firebase Auth")
+    } catch (authError: any) {
+      console.error("❌ Firebase Auth deletion error:", authError)
+      if (authError.code !== 'auth/user-not-found') {
+        throw authError
+      }
+    }
+
+    try {
+      // Delete from Firestore
+      await adminDb.collection("users").doc(userId).delete()
+      console.log("✅ User deleted from Firestore")
+    } catch (firestoreError) {
+      console.error("❌ Firestore deletion error:", firestoreError)
+      throw firestoreError
+    }
+
+    console.log("✅ User deleted successfully:", userId)
+    return NextResponse.json({ success: true, message: "User deleted successfully" })
+  } catch (error: any) {
+    console.error("❌ Error deleting user:", error)
+    return NextResponse.json({
+      error: "Failed to delete user",
+      details: error.message
+    }, { status: 500 })
+  }
+}
