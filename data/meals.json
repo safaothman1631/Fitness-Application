@@ -1,5 +1,62 @@
 [
   {
+    "id": "meal-1",
+    "name": "Grilled Chicken Salad",
+    "type": "meal",
+    "category": "Healthy Meal",
+    "calories": 350,
+    "protein": 35,
+    "carbs": 25,
+    "fat": 12,
+    "vitamins": "Complete Nutrition",
+    "country": "Mediterranean",
+    "image": "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400",
+    "description": "Fresh grilled chicken salad"
+  },
+  {
+    "id": "meal-2",
+    "name": "Salmon with Vegetables",
+    "type": "meal",
+    "category": "Main Course",
+    "calories": 420,
+    "protein": 38,
+    "carbs": 22,
+    "fat": 18,
+    "vitamins": "Omega-3, Vitamins",
+    "country": "Scandinavian",
+    "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400",
+    "description": "Grilled salmon with mixed vegetables"
+  },
+  {
+    "id": "meal-3",
+    "name": "Quinoa Bowl",
+    "type": "meal",
+    "category": "Vegetarian",
+    "calories": 380,
+    "protein": 15,
+    "carbs": 55,
+    "fat": 10,
+    "vitamins": "Plant Protein, Fiber",
+    "country": "South American",
+    "image": "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400",
+    "description": "Nutritious quinoa bowl"
+  },
+  {
+    "id": "meal-4",
+    "name": "Avocado Toast",
+    "type": "meal",
+    "category": "Breakfast",
+    "calories": 280,
+    "protein": 8,
+    "carbs": 35,
+    "fat": 15,
+    "vitamins": "Healthy Fats, Fiber",
+    "country": "Global",
+    "image": "https://images.unsplash.com/photo-1525351484163-7529414344d8?w=400",
+    "description": "Fresh avocado toast"
+  }
+
+  {
     "id": 501,
     "name": "Margherita Pizza",
     "type": "meal",

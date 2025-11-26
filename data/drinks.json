@@ -1,5 +1,48 @@
 [
   {
+    "id": "drink-1",
+    "name": "Green Smoothie",
+    "type": "drink",
+    "category": "Healthy Drink",
+    "calories": 120,
+    "protein": 4,
+    "carbs": 25,
+    "fat": 2,
+    "vitamins": "Vitamins A, C, K",
+    "country": "Global",
+    "image": "https://images.unsplash.com/photo-1610970881699-44a5587cabec?w=400",
+    "description": "Fresh green smoothie"
+  },
+  {
+    "id": "drink-2",
+    "name": "Orange Juice",
+    "type": "drink",
+    "category": "Juice",
+    "calories": 112,
+    "protein": 1.7,
+    "carbs": 26,
+    "fat": 0.5,
+    "vitamins": "Vitamin C",
+    "country": "USA",
+    "image": "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400",
+    "description": "Fresh squeezed orange juice"
+  },
+  {
+    "id": "drink-3",
+    "name": "Protein Shake",
+    "type": "drink",
+    "category": "Sports Nutrition",
+    "calories": 180,
+    "protein": 25,
+    "carbs": 15,
+    "fat": 3,
+    "vitamins": "Protein, BCAAs",
+    "country": "Global",
+    "image": "https://images.unsplash.com/photo-1622597467836-f3285f2131b8?w=400",
+    "description": "High protein shake"
+  }
+
+  {
     "id": 401,
     "name": "Water",
     "type": "drink",

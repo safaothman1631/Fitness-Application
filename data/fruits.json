@@ -1,5 +1,76 @@
 [
   {
+    "id": "fruit-1",
+    "name": "Red Apple",
+    "type": "fruit",
+    "category": "Fresh Fruit",
+    "calories": 95,
+    "protein": 0.5,
+    "carbs": 25,
+    "fat": 0.3,
+    "vitamins": "Vitamin C, Fiber",
+    "country": "USA",
+    "image": "https://images.unsplash.com/photo-1567306226416-28f0efdc88ce?w=400",
+    "description": "Fresh red apple, crisp and sweet"
+  },
+  {
+    "id": "fruit-2",
+    "name": "Banana",
+    "type": "fruit",
+    "category": "Tropical Fruit",
+    "calories": 105,
+    "protein": 1.3,
+    "carbs": 27,
+    "fat": 0.4,
+    "vitamins": "Potassium, Vitamin B6",
+    "country": "Ecuador",
+    "image": "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=400",
+    "description": "Yellow ripe banana, naturally sweet"
+  },
+  {
+    "id": "fruit-3",
+    "name": "Orange",
+    "type": "fruit",
+    "category": "Citrus Fruit",
+    "calories": 62,
+    "protein": 1.2,
+    "carbs": 15,
+    "fat": 0.2,
+    "vitamins": "Vitamin C, Folate",
+    "country": "Spain",
+    "image": "https://images.unsplash.com/photo-1547514701-42782101795e?w=400",
+    "description": "Juicy fresh orange"
+  },
+  {
+    "id": "fruit-4",
+    "name": "Strawberry",
+    "type": "fruit",
+    "category": "Berry",
+    "calories": 32,
+    "protein": 0.7,
+    "carbs": 7.7,
+    "fat": 0.3,
+    "vitamins": "Vitamin C, Manganese",
+    "country": "USA",
+    "image": "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=400",
+    "description": "Sweet fresh strawberries"
+  },
+  {
+    "id": "fruit-5",
+    "name": "Mango",
+    "type": "fruit",
+    "category": "Tropical Fruit",
+    "calories": 135,
+    "protein": 1.4,
+    "carbs": 31,
+    "fat": 0.6,
+    "vitamins": "Vitamin A, Vitamin C",
+    "country": "India",
+    "image": "https://images.unsplash.com/photo-1553279768-865429fa0078?w=400",
+    "description": "Ripe sweet mango"
+  }
+
+  {
     "id": 1,
     "name": "Red Apple",
     "type": "fruit",

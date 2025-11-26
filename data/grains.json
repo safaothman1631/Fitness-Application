@@ -1,5 +1,48 @@
 [
   {
+    "id": "grain-1",
+    "name": "Brown Rice",
+    "type": "grain",
+    "category": "Whole Grain",
+    "calories": 216,
+    "protein": 5,
+    "carbs": 45,
+    "fat": 1.8,
+    "vitamins": "Fiber, Manganese",
+    "country": "Thailand",
+    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=400",
+    "description": "Nutritious brown rice"
+  },
+  {
+    "id": "grain-2",
+    "name": "Quinoa",
+    "type": "grain",
+    "category": "Whole Grain",
+    "calories": 222,
+    "protein": 8,
+    "carbs": 39,
+    "fat": 3.6,
+    "vitamins": "Complete Protein, Iron",
+    "country": "Peru",
+    "image": "https://images.unsplash.com/photo-1586444248902-2f64eddc13df?w=400",
+    "description": "Protein-rich quinoa"
+  },
+  {
+    "id": "grain-3",
+    "name": "Oats",
+    "type": "grain",
+    "category": "Whole Grain",
+    "calories": 389,
+    "protein": 17,
+    "carbs": 66,
+    "fat": 7,
+    "vitamins": "Fiber, Iron",
+    "country": "Canada",
+    "image": "https://images.unsplash.com/photo-1574635566542-1b85aa27a99b?w=400",
+    "description": "Heart-healthy oats"
+  }
+
+  {
     "id": 301,
     "name": "White Rice (cooked)",
     "type": "grain",

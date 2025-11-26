@@ -1,5 +1,62 @@
 [
   {
+    "id": "veg-1",
+    "name": "Tomato",
+    "type": "vegetable",
+    "category": "Fresh Vegetable",
+    "calories": 18,
+    "protein": 0.9,
+    "carbs": 3.9,
+    "fat": 0.2,
+    "vitamins": "Vitamin C, Vitamin K",
+    "country": "Italy",
+    "image": "https://images.unsplash.com/photo-1546470427-227ab6e55e93?w=400",
+    "description": "Fresh red tomatoes"
+  },
+  {
+    "id": "veg-2",
+    "name": "Carrot",
+    "type": "vegetable",
+    "category": "Root Vegetable",
+    "calories": 41,
+    "protein": 0.9,
+    "carbs": 10,
+    "fat": 0.2,
+    "vitamins": "Vitamin A, Beta-carotene",
+    "country": "Netherlands",
+    "image": "https://images.unsplash.com/photo-1582515073490-39981397c445?w=400",
+    "description": "Fresh orange carrots"
+  },
+  {
+    "id": "veg-3",
+    "name": "Broccoli",
+    "type": "vegetable",
+    "category": "Cruciferous",
+    "calories": 55,
+    "protein": 3.7,
+    "carbs": 11,
+    "fat": 0.6,
+    "vitamins": "Vitamin C, Vitamin K",
+    "country": "USA",
+    "image": "https://images.unsplash.com/photo-1459411621453-7b03977f4bfc?w=400",
+    "description": "Fresh green broccoli"
+  },
+  {
+    "id": "veg-4",
+    "name": "Spinach",
+    "type": "vegetable",
+    "category": "Leafy Green",
+    "calories": 23,
+    "protein": 2.9,
+    "carbs": 3.6,
+    "fat": 0.4,
+    "vitamins": "Iron, Vitamin K",
+    "country": "USA",
+    "image": "https://images.unsplash.com/photo-1576045057995-568f588f82fb?w=400",
+    "description": "Fresh baby spinach"
+  }
+
+  {
     "id": 101,
     "name": "Tomato",
     "type": "vegetable",
