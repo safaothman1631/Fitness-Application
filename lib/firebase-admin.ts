@@ -31,15 +31,10 @@ try {
     admin.initializeApp({
       credential: admin.credential.cert(serviceAccountKey),
       databaseURL: `https://${serviceAccountKey.projectId}.firebaseio.com`,
-<<<<<<< HEAD
       storageBucket: "final-database-51935.firebasestorage.app",
     })
     console.log("✅ Firebase Admin SDK initialized successfully")
     console.log("📦 Storage bucket: final-database-51935.firebasestorage.app")
-=======
-    })
-    console.log("✅ Firebase Admin SDK initialized successfully")
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   } else {
     console.log("♻️ Using existing Firebase Admin SDK instance")
   }

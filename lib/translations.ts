@@ -886,11 +886,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   // Premium Feature Locked
   premiumFeatureLocked: "Premium Feature Locked",
   featureRequiresSubscription: "This feature requires an active subscription. Please renew your subscription to continue accessing premium content.",
-<<<<<<< HEAD
   renewSubscription: "Visit Office to Renew Subscription",
-=======
-  renewSubscription: "Renew Subscription",
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   backToDashboard: "Back to Dashboard",
   redirectingToDashboard: "Redirecting to dashboard in 3 seconds...",
   // Signup
@@ -918,11 +914,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   workoutPrograms: "Workout Programs 💪",
   mealPlans: "Meal Plans 🍽️",
   expertSupport: "Expert Support 👨‍⚕️",
-<<<<<<< HEAD
   renewSubscriptionNow: "Visit Office to Renew Subscription",
-=======
-  renewSubscriptionNow: "Renew Subscription Now",
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   subscriptionExpiringSoon: "Subscription Expiring Soon",
   subscriptionExpiresInDays: "Your subscription expires in",
   renewNow: "Renew Now",
@@ -1371,11 +1363,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       // Premium Feature Locked (Arabic)
       ,premiumFeatureLocked: "ميزة بريميوم مقفلة"
       ,featureRequiresSubscription: "تتطلب هذه الميزة اشتراكًا نشطًا. يرجى تجديد اشتراكك للاستمرار في الوصول إلى المحتوى المميز."
-<<<<<<< HEAD
       ,renewSubscription: "قم بزيارة المكتب لتجديد الاشتراك"
-=======
-      ,renewSubscription: "تجديد الاشتراك"
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       ,backToDashboard: "العودة إلى لوحة التحكم"
       ,redirectingToDashboard: "إعادة التوجيه إلى لوحة التحكم خلال ٣ ثوانٍ..."
       ,backToLogin: "العودة لتسجيل الدخول"
@@ -1402,11 +1390,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,workoutPrograms: "برامج التمارين 💪"
       ,mealPlans: "خطط الوجبات 🍽️"
       ,expertSupport: "دعم الخبراء 👨‍⚕️"
-<<<<<<< HEAD
       ,renewSubscriptionNow: "قم بزيارة المكتب لتجديد الاشتراك"
-=======
-      ,renewSubscriptionNow: "جدّد الاشتراك الآن"
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       ,subscriptionExpiringSoon: "الاشتراك ينتهي قريباً"
       ,subscriptionExpiresInDays: "ينتهي اشتراكك خلال"
       ,renewNow: "جدّد الآن"
@@ -1856,11 +1840,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       // Premium Feature Locked (Kurdish)
       ,premiumFeatureLocked: "تایبەتمەندی پریمیەم داخراوە"
       ,featureRequiresSubscription: "ئەم تایبەتمەندیە پێویستی بە بەشداریی چالاک هەیە. تکایە بەشداریەکەت نوێ بکەرەوە بۆ بەردەوامبوون لە دەستگەیشتن بە ناوەڕۆکی پریمیەم."
-<<<<<<< HEAD
       ,renewSubscription: "سەردانی ئۆفیس بکە بۆ نوێکردنەوەی ئیشتراک"
-=======
-      ,renewSubscription: "نوێکردنەوەی بەشداری"
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       ,backToDashboard: "گەڕانەوە بۆ داشبۆرد"
       ,redirectingToDashboard: "گواستنەوە بۆ داشبۆرد لە ماوەی ٣ چرکەدا..."
       ,backToLogin: "گەڕانەوە بۆ چوونەژوورەوە"
@@ -1887,11 +1867,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,workoutPrograms: "پڕۆگرامی وەرزش 💪"
       ,mealPlans: "پلانی خۆراک 🍽️"
       ,expertSupport: "پشتگیری پسپۆڕان 👨‍⚕️"
-<<<<<<< HEAD
       ,renewSubscriptionNow: "سەردانی ئۆفیس بکە بۆ نوێکردنەوەی ئیشتراک"
-=======
-      ,renewSubscriptionNow: "نوێکردنەوەی بەشداری ئێستا"
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
       ,subscriptionExpiringSoon: "بەشداری بە زوویی بەسەردەچێت"
       ,subscriptionExpiresInDays: "بەشداریەکەت لە ماوەی"
       ,renewNow: "نوێکردنەوە ئێستا"
@@ -2344,11 +2320,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   // Premium Feature Locked (Turkish)
   premiumFeatureLocked: "Premium Özellik Kilitli",
   featureRequiresSubscription: "Bu özellik aktif bir abonelik gerektirir. Premium içeriğe erişmeye devam etmek için lütfen aboneliğinizi yenileyin.",
-<<<<<<< HEAD
   renewSubscription: "Aboneliği Yenilemek İçin Ofise Gelin",
-=======
-  renewSubscription: "Aboneliği Yenile",
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   backToDashboard: "Panele Dön",
   redirectingToDashboard: "3 saniye içinde panele yönlendiriliyorsunuz...",
   backToLogin: "Girişe Dön",
