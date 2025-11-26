@@ -2375,11 +2375,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   workoutPrograms: "Egzersiz Programları 💪",
   mealPlans: "Yemek Planları 🍽️",
   expertSupport: "Uzman Desteği 👨‍⚕️",
-<<<<<<< HEAD
   renewSubscriptionNow: "Aboneliği Yenilemek İçin Ofise Gelin",
-=======
-  renewSubscriptionNow: "Aboneliği Şimdi Yenile",
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   subscriptionExpiringSoon: "Abonelik Yakında Sona Eriyor",
   subscriptionExpiresInDays: "Aboneliğiniz",
   renewNow: "Şimdi Yenile",
