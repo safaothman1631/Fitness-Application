@@ -778,6 +778,9 @@ export type TranslationKey =
   | "mealLibrary"
   | "savedMeals"
   | "saveMealToLibrary"
+  | "weekUniqueExercises"
+  | "setMealsForEachDay"
+  | "setExercisesForEachDay"
   | "cancelAction"
   | "saveProgram"
   | "addExerciseTitle"
@@ -1701,6 +1704,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   mealLibrary: "Meal Library",
   savedMeals: "Saved Meals",
   saveMealToLibrary: "Save to Library",
+  weekUniqueExercises: "Week's Unique Exercises",
+  setMealsForEachDay: "Set meals for each day",
+  setExercisesForEachDay: "Set exercises for each day",
   cancelAction: "Cancel",
   saveProgram: "Save",
   addExerciseTitle: "Add Exercise",
@@ -2543,6 +2549,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,mealLibrary: "مكتبة الوجبات"
   ,savedMeals: "الوجبات المحفوظة"
   ,saveMealToLibrary: "حفظ في المكتبة"
+  ,weekUniqueExercises: "تمارين الأسبوع الفريدة"
+  ,setMealsForEachDay: "حدد الوجبات لكل يوم"
+  ,setExercisesForEachDay: "حدد التمارين لكل يوم"
   ,cancelAction: "إلغاء"
   ,saveProgram: "حفظ"
   ,addExerciseTitle: "إضافة تمرين"
@@ -3389,6 +3398,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,mealLibrary: "کتێبخانەی خواردن"
     ,savedMeals: "خواردنە هەڵگیراوەکان"
     ,saveMealToLibrary: "خەزنکردن بۆ کتێبخانە"
+    ,weekUniqueExercises: "یارییە جیاوازەکانی هەفتە"
+    ,setMealsForEachDay: "خواردنەکانی هەر رۆژێک دیاری بکە"
+    ,setExercisesForEachDay: "یارییەکانی هەر رۆژێک دیاری بکە"
     ,cancelAction: "پاشگەزبوونەوە"
     ,saveProgram: "پاشەکەوتکردن"
     ,addExerciseTitle: "زیادکردنی یاری"
@@ -4232,6 +4244,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   mealLibrary: "Öğün Kütüphanesi",
   savedMeals: "Kaydedilen Öğünler",
   saveMealToLibrary: "Kütüphaneye Kaydet",
+  weekUniqueExercises: "Haftanın Benzersiz Egzersizleri",
+  setMealsForEachDay: "Her gün için öğünleri belirle",
+  setExercisesForEachDay: "Her gün için egzersizleri belirle",
   cancelAction: "İptal",
   saveProgram: "Kaydet",
   addExerciseTitle: "Egzersiz Ekle",

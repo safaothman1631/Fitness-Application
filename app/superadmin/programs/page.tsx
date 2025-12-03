@@ -1657,7 +1657,7 @@ export default function ProgramsPage() {
                       <Calendar className="w-6 h-6 text-blue-400" />
                       <div>
                         <h3 className="text-lg font-bold text-white">{t("weeklySchedule")}</h3>
-                        <p className="text-xs text-gray-400">{t("description")}</p>
+                        <p className="text-xs text-gray-400">{t("setExercisesForEachDay")}</p>
                       </div>
                     </div>
 
@@ -1826,10 +1826,10 @@ export default function ProgramsPage() {
                           <div className="flex items-center justify-between">
                             <h4 className="text-white font-bold text-sm flex items-center gap-2">
                               <Dumbbell className="w-4 h-4 text-cyan-400" />
-                              یارییە جیاوازەکانی هەفتە
+                              {t("weekUniqueExercises")}
                             </h4>
                             <span className="text-xs text-cyan-300">
-                              {getAllUniqueExercises().length} جۆر
+                              {getAllUniqueExercises().length} {t("types")}
                             </span>
                           </div>
                         </CardHeader>
@@ -1860,8 +1860,8 @@ export default function ProgramsPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <Calendar className="w-6 h-6 text-green-400" />
                       <div>
-                        <h3 className="text-lg font-bold text-white">بەرنامەی هەفتانە</h3>
-                        <p className="text-xs text-gray-400">خواردنەکانی هەر رۆژێک دیاری بکە</p>
+                        <h3 className="text-lg font-bold text-white">{t("weeklySchedule")}</h3>
+                        <p className="text-xs text-gray-400">{t("setMealsForEachDay")}</p>
                       </div>
                     </div>
 
