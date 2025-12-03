@@ -316,7 +316,7 @@ export default function UsersPage() {
                     </h3>
                     <div className="space-y-4">
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">User Role *</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("roleLabel")} *</Label>
                         <select
                           value={newUser.role}
                           onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
@@ -327,7 +327,7 @@ export default function UsersPage() {
                         </select>
                       </div>
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">Password *</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("passwordLabel")} *</Label>
                         <Input
                           type="password"
                           value={newUser.password}
@@ -346,7 +346,7 @@ export default function UsersPage() {
                       <div className="flex items-center justify-between">
                         <div className="space-y-2 flex-1">
                           <div>
-                            <p className="text-gray-400 text-sm mb-1">User Role</p>
+                            <p className="text-gray-400 text-sm mb-1">{t("roleLabel")}</p>
                             <span className={`px-4 py-2 rounded-full text-sm font-semibold inline-block ${
                               newUser.role === "Trainer" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
                               "bg-purple-500/20 text-purple-400 border border-purple-500/30"
@@ -355,7 +355,7 @@ export default function UsersPage() {
                             </span>
                           </div>
                           <div>
-                            <p className="text-gray-400 text-sm mb-1">Membership</p>
+                            <p className="text-gray-400 text-sm mb-1">{t("membership")}</p>
                             <span className="px-4 py-2 rounded-full text-sm font-semibold inline-block bg-slate-700/50 text-gray-400 border border-slate-600">
                               Free
                             </span>
@@ -374,7 +374,7 @@ export default function UsersPage() {
                       className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800"
                     >
                       <X className="w-4 h-4 mr-2" />
-                      Cancel
+                      {t("cancelAction")}
                     </Button>
                     <Button
                       onClick={async () => {
@@ -511,7 +511,7 @@ export default function UsersPage() {
                       className="flex-1 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Save className="w-4 h-4 mr-2" />
-                      {isCreating ? "Creating..." : "Create User"}
+                      {isCreating ? t("loading") + "..." : t("addNewUser")}
                     </Button>
                   </div>
                 </div>
@@ -772,20 +772,20 @@ export default function UsersPage() {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg shadow-yellow-500/30">
                   <Crown className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">Pro Upgrade Requests</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-yellow-400 to-orange-400 bg-clip-text text-transparent">{t("upgradeRequests")}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <div className="text-center py-12">
                   <div className="inline-block w-12 h-12 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                  <p className="text-gray-400 text-sm">Loading requests...</p>
+                  <p className="text-gray-400 text-sm">{t("loading")}...</p>
                 </div>
               ) : proRequests.length === 0 ? (
                 <div className="text-center py-16">
                   <Crown className="w-20 h-20 text-gray-600 mx-auto mb-4" />
-                  <p className="text-xl text-gray-400 mb-2">No Pro Requests</p>
-                  <p className="text-gray-500 text-sm">All Pro upgrade requests will appear here</p>
+                  <p className="text-xl text-gray-400 mb-2">{t("noPendingRequests")}</p>
+                  <p className="text-gray-500 text-sm">{t("proRequestsDescription")}</p>
                 </div>
               ) : (
                 <div className="overflow-x-auto">
@@ -897,14 +897,14 @@ export default function UsersPage() {
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/40">
                   <UserPlus className="w-6 h-6" />
                 </div>
-                <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Edit User</span>
+                <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">{t("editUser")}</span>
               </DialogTitle>
             </DialogHeader>
             {userToEdit && (
               <div className="space-y-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-gray-300 font-semibold">First Name</Label>
+                    <Label className="text-gray-300 font-semibold">{t("firstName")}</Label>
                     <Input 
                       value={userToEdit.firstName || userToEdit.name?.split(' ')[0] || ''}
                       onChange={(e) => setUserToEdit({...userToEdit, firstName: e.target.value})}
@@ -912,7 +912,7 @@ export default function UsersPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-gray-300 font-semibold">Last Name</Label>
+                    <Label className="text-gray-300 font-semibold">{t("lastName")}</Label>
                     <Input 
                       value={userToEdit.lastName || userToEdit.name?.split(' ').slice(1).join(' ') || ''}
                       onChange={(e) => setUserToEdit({...userToEdit, lastName: e.target.value})}
@@ -922,8 +922,8 @@ export default function UsersPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-gray-300 font-semibold">Email</Label>
-                  <Input 
+                  <Label className="text-gray-300 font-semibold">{t("emailAddressLabel")}</Label>
+                  <Input
                     type="email"
                     value={userToEdit.email || ''}
                     onChange={(e) => setUserToEdit({...userToEdit, email: e.target.value})}
@@ -932,7 +932,7 @@ export default function UsersPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label className="text-gray-300 font-semibold">Phone</Label>
+                  <Label className="text-gray-300 font-semibold">{t("phoneNumberLabel")}</Label>
                   <Input 
                     value={userToEdit.phone || ''}
                     onChange={(e) => setUserToEdit({...userToEdit, phone: e.target.value})}
@@ -942,7 +942,7 @@ export default function UsersPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-gray-300 font-semibold">Role</Label>
+                    <Label className="text-gray-300 font-semibold">{t("roleLabel")}</Label>
                     <select 
                       value={userToEdit.role || 'user'}
                       onChange={(e) => setUserToEdit({...userToEdit, role: e.target.value})}
@@ -953,18 +953,18 @@ export default function UsersPage() {
                     </select>
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-gray-300 font-semibold">Status</Label>
+                    <Label className="text-gray-300 font-semibold">{t("statusColumn")}</Label>
                     <select 
                       value={userToEdit.isActive ? 'active' : 'inactive'}
                       onChange={(e) => setUserToEdit({...userToEdit, isActive: e.target.value === 'active'})}
                       disabled={userToEdit.role === 'trainer' || userToEdit.role === 'superadmin'}
                       className="w-full bg-slate-800/50 border border-slate-700 text-white rounded-md px-3 py-2 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <option value="active">Active</option>
-                      <option value="inactive">Inactive</option>
+                      <option value="active">{t("active")}</option>
+                      <option value="inactive">{t("inactive")}</option>
                     </select>
                     {(userToEdit.role === 'trainer' || userToEdit.role === 'superadmin') && (
-                      <p className="text-xs text-cyan-400 mt-1">Trainers and Superadmins are always active</p>
+                      <p className="text-xs text-cyan-400 mt-1">{t("trainersAlwaysActive")}</p>
                     )}
                   </div>
                 </div>
@@ -979,7 +979,7 @@ export default function UsersPage() {
                     className="flex-1 border-2 border-slate-700 text-gray-300 hover:bg-gradient-to-r hover:from-slate-800/60 hover:to-slate-700/40 hover:border-slate-600 hover:scale-105 transition-all duration-300 shadow-lg font-semibold"
                     disabled={isUpdating}
                   >
-                    Cancel
+                    {t("cancelAction")}
                   </Button>
                   <Button
                     onClick={async () => {
@@ -1017,7 +1017,7 @@ export default function UsersPage() {
                     disabled={isUpdating}
                     className="flex-1 bg-gradient-to-r from-blue-600 via-cyan-600 to-blue-700 hover:from-blue-700 hover:via-cyan-700 hover:to-blue-800 text-white shadow-xl shadow-blue-500/40 hover:shadow-2xl hover:shadow-blue-500/50 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                   >
-                    {isUpdating ? 'Updating...' : 'Save Changes'}
+                    {isUpdating ? t("updating") + '...' : t("saveChanges")}
                   </Button>
                 </div>
               </div>
@@ -1033,13 +1033,13 @@ export default function UsersPage() {
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-red-500 via-rose-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/40">
                   <span className="text-2xl">⚠️</span>
                 </div>
-                <span className="bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent">Confirm Deletion</span>
+                <span className="bg-gradient-to-r from-red-400 to-rose-400 bg-clip-text text-transparent">{t("deleteUserTitle")}</span>
               </DialogTitle>
             </DialogHeader>
             <div className="space-y-4 py-4">
               <div className="bg-gradient-to-br from-red-950/40 via-red-900/20 to-red-950/30 border-2 border-red-700/40 rounded-xl p-5 shadow-lg">
                 <p className="text-gray-200 mb-5 text-base font-medium">
-                  Are you sure you want to delete this user? This action cannot be undone.
+                  {t("areYouSure")} {t("actionCannotBeUndone")}.
                 </p>
                 {userToDelete && (
                   <div className="bg-gradient-to-br from-slate-800/70 to-slate-900/50 rounded-xl p-4 space-y-3 border border-slate-700/50 shadow-lg">
@@ -1069,14 +1069,14 @@ export default function UsersPage() {
                   className="flex-1 border-2 border-slate-700 text-gray-300 hover:bg-gradient-to-r hover:from-slate-800/60 hover:to-slate-700/40 hover:border-slate-600 hover:scale-105 transition-all duration-300 shadow-lg font-semibold"
                   disabled={isDeleting}
                 >
-                  Cancel
+                  {t("cancelAction")}
                 </Button>
                 <Button
                   onClick={handleDeleteUser}
                   disabled={isDeleting}
                   className="flex-1 bg-gradient-to-r from-red-600 via-rose-600 to-red-700 hover:from-red-700 hover:via-rose-700 hover:to-red-800 text-white shadow-xl shadow-red-500/40 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed font-bold"
                 >
-                  {isDeleting ? "Deleting..." : "Delete User"}
+                  {isDeleting ? t("loading") + "..." : t("deleteUser")}
                 </Button>
               </div>
             </div>
