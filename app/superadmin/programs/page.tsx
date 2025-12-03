@@ -702,13 +702,13 @@ export default function ProgramsPage() {
   )
 
   const dayNames = {
-    monday: 'دووشەممە',
-    tuesday: 'سێشەممە',
-    wednesday: 'چوارشەممە',
-    thursday: 'پێنجشەممە',
-    friday: 'هەینی',
-    saturday: 'شەممە',
-    sunday: 'یەکشەممە'
+    monday: t('monday'),
+    tuesday: t('tuesday'),
+    wednesday: t('wednesday'),
+    thursday: t('thursday'),
+    friday: t('friday'),
+    saturday: t('saturday'),
+    sunday: t('sunday')
   }
 
   return (
@@ -1365,7 +1365,7 @@ export default function ProgramsPage() {
                     ? 'from-green-400 to-emerald-400'
                     : 'from-blue-400 to-cyan-400'
                 }`}>
-                  {newProgram.id ? 'گۆڕانکاری' : 'دروستکردنی'} بەرنامەی {activeTab === 'nutrition' ? 'خواردن' : 'وەرزش'}
+                  {newProgram.id ? t("update") : activeTab === 'nutrition' ? t("createNutritionProgram") : t("createNewProgram")}
                 </span>
               </DialogTitle>
             </DialogHeader>
@@ -1379,16 +1379,16 @@ export default function ProgramsPage() {
                     <div className="space-y-1">
                       <p className="text-sm text-blue-300 font-semibold">{t("instructions")}</p>
                       <ul className="text-xs text-gray-400 space-y-1 list-disc list-inside">
-                        <li>زانیاریەکانی سەرەتایی پڕبکەرەوە (ناو، وەسف، کات...)</li>
+                        <li>{t("fillBasicInfo")}</li>
                         {activeTab === 'workout' && (
                           <>
-                            <li>رۆژێک هەڵبژێرە لە 7 رۆژەکە (دووشەممە تا یەکشەممە)</li>
-                            <li>کلیک لە "زیادکردنی یاری" بکە بۆ زیادکردنی یاری</li>
-                            <li>دەتوانی چەند یارییەک زیاد بکەیت بۆ هەر رۆژێک</li>
-                            <li>ئەگەر رۆژێک پشوو بێت، "رۆژی پشوو" لەسەر ON بکە</li>
+                            <li>{t("selectDayFrom7Days")}</li>
+                            <li>{t("clickAddExercise")}</li>
+                            <li>{t("canAddMultipleExercises")}</li>
+                            <li>{t("ifRestDayTurnOn")}</li>
                           </>
                         )}
-                        <li>کاتێک تەواو بووی کلیک لە "پاشەکەوتکردن" بکە</li>
+                        <li>{t("whenComplete")}</li>
                       </ul>
                     </div>
                   </div>
@@ -1428,15 +1428,15 @@ export default function ProgramsPage() {
                     />
                   </div>
                   <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⭐ Level</Label>
+                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⭐ {t("level")}</Label>
                     <select
                       value={newProgram.difficulty}
                       onChange={(e) => setNewProgram({ ...newProgram, difficulty: e.target.value })}
                       className="w-full h-12 bg-slate-800/50 border border-slate-700 text-white rounded-lg px-4 py-2"
                     >
-                      <option value="beginner">🟢 Beginner (سەرەتایی)</option>
-                      <option value="intermediate">🟡 Intermediate (مامناوەند)</option>
-                      <option value="advanced">🔴 Advanced (پێشکەوتوو)</option>
+                      <option value="beginner">🟢 {t("beginner")}</option>
+                      <option value="intermediate">🟡 {t("intermediate")}</option>
+                      <option value="advanced">🔴 {t("advanced")}</option>
                     </select>
                   </div>
                 </div>
@@ -1493,7 +1493,7 @@ export default function ProgramsPage() {
                 )}
 
                 <div>
-                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">🖼️ لینکی وێنە</Label>
+                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">🖼️ {t("imageUrl")}</Label>
                   <Input
                     value={newProgram.imageUrl}
                     onChange={(e) => setNewProgram({ ...newProgram, imageUrl: e.target.value })}
@@ -1508,8 +1508,8 @@ export default function ProgramsPage() {
                     <div className="flex items-center gap-3">
                       <Users className="w-6 h-6 text-purple-400" />
                       <div>
-                        <h3 className="text-lg font-bold text-white">هەڵبژاردنی یوزەرەکان</h3>
-                        <p className="text-xs text-gray-400">تەنها یوزەرە پرۆکان (بەبێ فریی و ئەدمین)</p>
+                        <h3 className="text-lg font-bold text-white">{t("userSelection")}</h3>
+                        <p className="text-xs text-gray-400">{t("onlyProUsers")}</p>
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
@@ -1520,7 +1520,7 @@ export default function ProgramsPage() {
                         ⭐ PRO
                       </span>
                       <span className="px-3 py-1.5 rounded-lg bg-purple-500/20 text-purple-300 text-sm font-bold border border-purple-500/30">
-                        {selectedUsers.length} هەڵبژێردراوە
+                        {selectedUsers.length} {t("selected")}
                       </span>
                     </div>
                   </div>
@@ -1529,7 +1529,7 @@ export default function ProgramsPage() {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
                     <Input
-                      placeholder="گەڕان بە ناو یان ئیمەیڵ..."
+                      placeholder={t("searchByNameOrEmail")}
                       value={userSearchQuery}
                       onChange={(e) => setUserSearchQuery(e.target.value)}
                       className="pl-10 h-10 bg-slate-800/50 border-slate-700 text-white"
@@ -1546,7 +1546,7 @@ export default function ProgramsPage() {
                       className="flex-1 border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
                     >
                       <UserPlus className="w-4 h-4 mr-2" />
-                      هەڵبژاردنی هەموو ({filteredUsers.length})
+                      {t("selectAllUsers")} ({filteredUsers.length})
                     </Button>
                     <Button
                       type="button"
@@ -1556,7 +1556,7 @@ export default function ProgramsPage() {
                       className="flex-1 border-slate-700 text-gray-400 hover:bg-slate-800"
                     >
                       <X className="w-4 h-4 mr-2" />
-                      سڕینەوەی هەموو
+                      {t("clearAll")}
                     </Button>
                   </div>
 
