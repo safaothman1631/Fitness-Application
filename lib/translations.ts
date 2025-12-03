@@ -802,6 +802,7 @@ export type TranslationKey =
   | "setsCount"
   | "repsCount"
   | "videoSpecificNotes"
+  | "savedSuccessfully"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1680,6 +1681,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   setsCount: "Sets Count",
   repsCount: "Reps",
   videoSpecificNotes: "Specific notes for this video...",
+  savedSuccessfully: "Saved Successfully",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2488,6 +2490,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,setsCount: "عدد المجموعات"
   ,repsCount: "التكرارات"
   ,videoSpecificNotes: "ملاحظات خاصة بهذا الفيديو..."
+  ,savedSuccessfully: "تم الحفظ بنجاح"
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -3299,6 +3302,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,setsCount: "ژمارەی سێت"
     ,repsCount: "دووبارەکردنەوە"
     ,videoSpecificNotes: "تێبینی تایبەت بەم ڤیدیۆیە..."
+    ,savedSuccessfully: "پاشەکەوتکرا بە سەرکەوتوویی"
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -4107,6 +4111,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   setsCount: "Set Sayısı",
   repsCount: "Tekrarlar",
   videoSpecificNotes: "Bu videoya özel notlar...",
+  savedSuccessfully: "Başarıyla Kaydedildi",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",
