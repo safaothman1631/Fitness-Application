@@ -15,6 +15,12 @@ export default function SuperAdminPage() {
     keys: 0,
     loading: true
   })
+  const [systemStatus, setSystemStatus] = useState({
+    database: 'healthy',
+    apiServer: 'running',
+    storagePercent: 0,
+    loading: true
+  })
 
   useEffect(() => {
     async function fetchStats() {
@@ -22,15 +28,26 @@ export default function SuperAdminPage() {
         const trainersRes = await fetch('/api/trainers')
         const trainersData = await trainersRes.json()
         
+        const systemRes = await fetch('/api/system-status')
+        const systemData = await systemRes.json()
+        
         setStats({
           trainers: trainersData.count || 0,
           users: 0, // Will be implemented later
           keys: 0, // Will be implemented later
           loading: false
         })
+        
+        setSystemStatus({
+          database: systemData.database || 'healthy',
+          apiServer: systemData.apiServer || 'running',
+          storagePercent: systemData.storagePercent || 0,
+          loading: false
+        })
       } catch (error) {
         console.error('Error fetching stats:', error)
         setStats(prev => ({ ...prev, loading: false }))
+        setSystemStatus(prev => ({ ...prev, loading: false }))
       }
     }
 
@@ -75,29 +92,51 @@ export default function SuperAdminPage() {
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6">
               <h2 className="text-white text-lg font-semibold mb-4">{t("systemStatus")}</h2>
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-gray-300">{t("database")}</span>
+              {systemStatus.loading ? (
+                <div className="text-center py-4 text-gray-400">Loading...</div>
+              ) : (
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full animate-pulse ${
+                        systemStatus.database === 'healthy' ? 'bg-green-500' : 'bg-red-500'
+                      }`} />
+                      <span className="text-gray-300">{t("database")}</span>
+                    </div>
+                    <span className={`text-sm font-semibold ${
+                      systemStatus.database === 'healthy' ? 'text-green-400' : 'text-red-400'
+                    }`}>
+                      {systemStatus.database === 'healthy' ? t("healthy") : 'Error'}
+                    </span>
                   </div>
-                  <span className="text-green-400 text-sm font-semibold">{t("healthy")}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-gray-300">{t("apiServer")}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full animate-pulse ${
+                        systemStatus.apiServer === 'running' ? 'bg-green-500' : 'bg-yellow-500'
+                      }`} />
+                      <span className="text-gray-300">{t("apiServer")}</span>
+                    </div>
+                    <span className={`text-sm font-semibold ${
+                      systemStatus.apiServer === 'running' ? 'text-green-400' : 'text-yellow-400'
+                    }`}>
+                      {systemStatus.apiServer === 'running' ? t("running") : 'Stopped'}
+                    </span>
                   </div>
-                  <span className="text-green-400 text-sm font-semibold">{t("running")}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-gray-300">{t("storage")}</span>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className={`w-3 h-3 rounded-full animate-pulse ${
+                        systemStatus.storagePercent < 80 ? 'bg-green-500' : 'bg-orange-500'
+                      }`} />
+                      <span className="text-gray-300">{t("storage")}</span>
+                    </div>
+                    <span className={`text-sm font-semibold ${
+                      systemStatus.storagePercent < 80 ? 'text-green-400' : 'text-orange-400'
+                    }`}>
+                      {systemStatus.storagePercent}% {t("percentUsed")}
+                    </span>
                   </div>
-                  <span className="text-green-400 text-sm font-semibold">67% {t("percentUsed")}</span>
                 </div>
-              </div>
+              )}
             </CardContent>
           </Card>
         </div>
