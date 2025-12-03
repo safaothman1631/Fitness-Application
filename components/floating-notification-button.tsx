@@ -51,9 +51,9 @@ export function FloatingNotificationButton() {
     <>
       <button
         onClick={() => setNotificationOpen(true)}
-        className={`fixed top-4 ${positionClass} z-40 p-3 rounded-xl bg-[#101A23] border border-[#2E3944] hover:border-[#47D8FF]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,178,227,0.3)] group`}
+        className={`fixed -top-8 ${positionClass} z-40 p-3 rounded-xl bg-[#101A23]/30 backdrop-blur-sm border border-[#2E3944]/50 hover:border-[#47D8FF]/50 transition-all duration-500 hover:top-4 hover:bg-[#101A23] hover:shadow-[0_0_20px_rgba(16,178,227,0.3)] group opacity-40 hover:opacity-100`}
       >
-        <Bell className="w-6 h-6 text-[#10B2E3] transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
+        <Bell className="w-6 h-6 text-[#10B2E3] transition-all duration-300 group-hover:rotate-12" />
         {unreadCount > 0 && (
           <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-[#F43F5E] to-[#EF4444] rounded-full text-white text-xs flex items-center justify-center font-bold animate-pulse shadow-[0_0_15px_rgba(244,63,94,0.6)]">
             {unreadCount}

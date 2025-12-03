@@ -25,10 +25,10 @@ export function FloatingLanguageSelector() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className={`fixed top-4 ${positionClass} z-40 p-3 rounded-xl bg-[#101A23] border border-[#2E3944] hover:border-[#47D8FF]/50 transition-all duration-300 hover:scale-110 hover:shadow-[0_0_20px_rgba(16,178,227,0.3)] group`}
+          className={`fixed -top-8 ${positionClass} z-40 p-3 rounded-xl bg-[#101A23]/30 backdrop-blur-sm border border-[#2E3944]/50 hover:border-[#47D8FF]/50 transition-all duration-500 hover:top-4 hover:bg-[#101A23] hover:shadow-[0_0_20px_rgba(16,178,227,0.3)] group opacity-40 hover:opacity-100`}
           aria-label="Select language"
         >
-          <Languages className="w-6 h-6 text-[#10B2E3] transition-all duration-300 group-hover:rotate-12 group-hover:scale-110" />
+          <Languages className="w-6 h-6 text-[#10B2E3] transition-all duration-300 group-hover:rotate-12" />
         </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-44">
