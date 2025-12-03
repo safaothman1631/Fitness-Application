@@ -3631,9 +3631,9 @@ export default function ProgramsPage() {
                   <Activity className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">گالەریی وێنەکانی خواردن</div>
+                  <div className="text-white">{t("mealImageGallery")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1">
-                    {availableMealImages.length} وێنە لە ستۆرج
+                    {availableMealImages.length} {t("imagesInStorage")}
                   </div>
                 </div>
               </DialogTitle>
@@ -3657,7 +3657,7 @@ export default function ProgramsPage() {
                   <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-yellow-400" />
                     <Input
-                      placeholder="گەڕان بە ناوی وێنە..."
+                      placeholder={t("searchByImageName")}
                       value={mealImageSearchQuery}
                       onChange={(e) => {
                         setMealImageSearchQuery(e.target.value)
@@ -3669,7 +3669,7 @@ export default function ProgramsPage() {
                   <p className="text-sm text-gray-400 mt-2">
                     {availableMealImages
                       .filter(img => img.displayName.toLowerCase().includes(mealImageSearchQuery.toLowerCase()))
-                      .length} وێنە دۆزرایەوە
+                      .length} {t("imagesFound")}
                   </p>
                 </div>
 
@@ -3767,10 +3767,10 @@ export default function ProgramsPage() {
                           variant="outline"
                           className="border-slate-700 text-gray-300 hover:bg-slate-800 disabled:opacity-50"
                         >
-                          پێشوو
+                          {t("previousPage")}
                         </Button>
                         <span className="text-sm text-gray-400">
-                          پەڕەی {mealImagePage} لە {totalPages}
+                          {t("pageOf").replace("{current}", mealImagePage.toString()).replace("{total}", totalPages.toString())}
                         </span>
                         <Button
                           onClick={() => setMealImagePage(Math.min(totalPages, mealImagePage + 1))}
@@ -3778,7 +3778,7 @@ export default function ProgramsPage() {
                           variant="outline"
                           className="border-slate-700 text-gray-300 hover:bg-slate-800 disabled:opacity-50"
                         >
-                          دواتر
+                          {t("nextPage")}
                         </Button>
                       </div>
                     )

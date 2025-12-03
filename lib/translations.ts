@@ -810,6 +810,13 @@ export type TranslationKey =
   | "exampleInstructions"
   | "specialNotes"
   | "pleaseEnterMealName"
+  | "mealImageGallery"
+  | "imagesInStorage"
+  | "searchByImageName"
+  | "imagesFound"
+  | "pageOf"
+  | "previousPage"
+  | "nextPage"
   | "cancelAction"
   | "saveProgram"
   | "addExerciseTitle"
@@ -1765,6 +1772,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   exampleInstructions: "Example:\n1. Grill chicken until fully cooked\n2. Cook rice separately\n3. Mix all ingredients in a bowl...",
   specialNotes: "Special notes...",
   pleaseEnterMealName: "Please enter meal name",
+  mealImageGallery: "Meal Image Gallery",
+  imagesInStorage: "images in storage",
+  searchByImageName: "Search by image name...",
+  imagesFound: "images found",
+  pageOf: "Page {current} of {total}",
+  previousPage: "Previous",
+  nextPage: "Next",
   cancelAction: "Cancel",
   saveProgram: "Save",
   addExerciseTitle: "Add Exercise",
@@ -2639,6 +2653,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,exampleInstructions: "مثال:\n1. اشوِ الدجاج حتى ينضج تماماً\n2. اطبخ الأرز بشكل منفصل\n3. اخلط جميع المكونات في وعاء..."
   ,specialNotes: "ملاحظات خاصة..."
   ,pleaseEnterMealName: "الرجاء إدخال اسم الوجبة"
+  ,mealImageGallery: "معرض صور الوجبات"
+  ,imagesInStorage: "صور في التخزين"
+  ,searchByImageName: "البحث باسم الصورة..."
+  ,imagesFound: "صور موجودة"
+  ,pageOf: "صفحة {current} من {total}"
+  ,previousPage: "السابق"
+  ,nextPage: "التالي"
   ,cancelAction: "إلغاء"
   ,saveProgram: "حفظ"
   ,addExerciseTitle: "إضافة تمرين"
@@ -3517,6 +3538,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,exampleInstructions: "نموونە:\n1. مریشک بە تەواوی برژێنە\n2. برنج بە جیاکاری لێبنێ\n3. هەموو پێکهاتەکان لە قاپێکدا تێکەڵ بکە..."
     ,specialNotes: "تێبینی تایبەت..."
     ,pleaseEnterMealName: "تکایە ناوی خواردن بنووسە"
+    ,mealImageGallery: "گالەریی وێنەکانی خواردن"
+    ,imagesInStorage: "وێنە لە ستۆرج"
+    ,searchByImageName: "گەڕان بە ناوی وێنە..."
+    ,imagesFound: "وێنە دۆزرایەوە"
+    ,pageOf: "پەڕەی {current} لە {total}"
+    ,previousPage: "پێشوو"
+    ,nextPage: "دواتر"
     ,cancelAction: "پاشگەزبوونەوە"
     ,saveProgram: "پاشەکەوتکردن"
     ,addExerciseTitle: "زیادکردنی یاری"
@@ -4392,6 +4420,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   exampleInstructions: "Örnek:\n1. Tavuğu tamamen pişene kadar ızgarada pişirin\n2. Pilavı ayrı olarak pişirin\n3. Tüm malzemeleri bir kasede karıştırın...",
   specialNotes: "Özel notlar...",
   pleaseEnterMealName: "Lütfen öğün adını girin",
+  mealImageGallery: "Öğün Resim Galerisi",
+  imagesInStorage: "depolamada resim",
+  searchByImageName: "Resim adına göre ara...",
+  imagesFound: "resim bulundu",
+  pageOf: "Sayfa {current} / {total}",
+  previousPage: "Önceki",
+  nextPage: "Sonraki",
   cancelAction: "İptal",
   saveProgram: "Kaydet",
   addExerciseTitle: "Egzersiz Ekle",
