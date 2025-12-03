@@ -778,6 +778,26 @@ export type TranslationKey =
   | "addAnotherVideo"
   | "preview"
   | "videosSelected"
+  | "selectVideo"
+  | "videosInStorage"
+  | "noVideosAvailable"
+  | "uploadVideosToFirebase"
+  | "searchByVideoName"
+  | "allGenders"
+  | "allLevels"
+  | "allBodyParts"
+  | "chest"
+  | "back"
+  | "legs"
+  | "shoulders"
+  | "arms"
+  | "core"
+  | "videosFound"
+  | "selected"
+  | "select"
+  | "previous"
+  | "next"
+  | "saveWithCount"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1632,6 +1652,26 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   addAnotherVideo: "Add Another Video",
   preview: "Preview:",
   videosSelected: "videos selected",
+  selectVideo: "Select Video",
+  videosInStorage: "videos in storage",
+  noVideosAvailable: "No Videos Available",
+  uploadVideosToFirebase: "Upload videos to Firebase Storage",
+  searchByVideoName: "Search by video name...",
+  allGenders: "All Genders",
+  allLevels: "All Levels",
+  allBodyParts: "All Body Parts",
+  chest: "Chest",
+  back: "Back",
+  legs: "Legs",
+  shoulders: "Shoulders",
+  arms: "Arms",
+  core: "Core",
+  videosFound: "videos found",
+  selected: "Selected",
+  select: "Select",
+  previous: "Previous",
+  next: "Next",
+  saveWithCount: "Save",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2415,7 +2455,27 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,optional: "اختياري"
   ,addAnotherVideo: "إضافة فيديو آخر"
   ,preview: "معاينة:"
-  ,videosSelected: "فيديوهات مختارة"
+  ,videosSelected: "فيديو محدد"
+  ,selectVideo: "اختيار الفيديو"
+  ,videosInStorage: "فيديو في التخزين"
+  ,noVideosAvailable: "لا توجد فيديوهات متاحة"
+  ,uploadVideosToFirebase: "رفع الفيديوهات إلى Firebase Storage"
+  ,searchByVideoName: "البحث باسم الفيديو..."
+  ,allGenders: "كل الأجناس"
+  ,allLevels: "كل المستويات"
+  ,allBodyParts: "كل أجزاء الجسم"
+  ,chest: "صدر"
+  ,back: "ظهر"
+  ,legs: "أرجل"
+  ,shoulders: "أكتاف"
+  ,arms: "ذراعان"
+  ,core: "الوسط"
+  ,videosFound: "فيديو تم العثور عليه"
+  ,selected: "محدد"
+  ,select: "اختيار"
+  ,previous: "السابق"
+  ,next: "التالي"
+  ,saveWithCount: "حفظ"
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -3203,6 +3263,26 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,addAnotherVideo: "زیادکردنی ڤیدیۆی تر"
     ,preview: "پێشبینین:"
     ,videosSelected: "ڤیدیۆ هەڵبژێردراوە"
+    ,selectVideo: "هەڵبژاردنی ڤیدیۆ"
+    ,videosInStorage: "ڤیدیۆ لە ستۆرج"
+    ,noVideosAvailable: "هیچ ڤیدیۆیەک نییە"
+    ,uploadVideosToFirebase: "ڤیدیۆکان بۆ فایربەیس ستۆرج ئەپلۆد بکە"
+    ,searchByVideoName: "گەڕان بە ناوی ڤیدیۆ..."
+    ,allGenders: "هەموو ڕەگەزەکان"
+    ,allLevels: "هەموو ئاستەکان"
+    ,allBodyParts: "هەموو بەشەکان"
+    ,chest: "سنگ"
+    ,back: "پشت"
+    ,legs: "قاچ"
+    ,shoulders: "شان"
+    ,arms: "باڵ"
+    ,core: "ناوەڕاست"
+    ,videosFound: "ڤیدیۆ دۆزرایەوە"
+    ,selected: "هەڵبژێردراوە"
+    ,select: "هەڵبژاردن"
+    ,previous: "پێشوو"
+    ,next: "دواتر"
+    ,saveWithCount: "پاشەکەوتکردن"
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -3987,6 +4067,26 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   addAnotherVideo: "Başka Video Ekle",
   preview: "Önizleme:",
   videosSelected: "video seçildi",
+  selectVideo: "Video Seç",
+  videosInStorage: "depolamada video",
+  noVideosAvailable: "Video Yok",
+  uploadVideosToFirebase: "Firebase Storage'a video yükleyin",
+  searchByVideoName: "Video adına göre ara...",
+  allGenders: "Tüm Cinsiyetler",
+  allLevels: "Tüm Seviyeler",
+  allBodyParts: "Tüm Vücut Bölgeleri",
+  chest: "Göğüs",
+  back: "Sırt",
+  legs: "Bacaklar",
+  shoulders: "Omuzlar",
+  arms: "Kollar",
+  core: "Karın",
+  videosFound: "video bulundu",
+  selected: "Seçildi",
+  select: "Seç",
+  previous: "Önceki",
+  next: "Sonraki",
+  saveWithCount: "Kaydet",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",

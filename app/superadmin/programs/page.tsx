@@ -2448,9 +2448,9 @@ export default function ProgramsPage() {
                   <Video className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">هەڵبژاردنی ڤیدیۆ</div>
+                  <div className="text-white">{t("selectVideo")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1">
-                    {availableVideos.length} ڤیدیۆ لە ستۆرج
+                    {availableVideos.length} {t("videosInStorage")}
                   </div>
                 </div>
               </DialogTitle>
@@ -2463,8 +2463,8 @@ export default function ProgramsPage() {
             ) : availableVideos.length === 0 ? (
               <div className="text-center py-20">
                 <Video className="w-20 h-20 text-gray-600 mx-auto mb-4" />
-                <p className="text-xl font-bold text-white mb-2">هیچ ڤیدیۆیەک نییە</p>
-                <p className="text-gray-400">ڤیدیۆکان بۆ فایربەیس ستۆرج ئەپلۆد بکە</p>
+                <p className="text-xl font-bold text-white mb-2">{t("noVideosAvailable")}</p>
+                <p className="text-gray-400">{t("uploadVideosToFirebase")}</p>
               </div>
             ) : (
               <>
@@ -2474,7 +2474,7 @@ export default function ProgramsPage() {
                   <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400" />
                     <Input
-                      placeholder="گەڕان بە ناوی ڤیدیۆ..."
+                      placeholder={t("searchByVideoName")}
                       value={videoSearchQuery}
                       onChange={(e) => {
                         setVideoSearchQuery(e.target.value)
@@ -2495,9 +2495,9 @@ export default function ProgramsPage() {
                       }}
                       className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
                     >
-                      <option value="all">هەموو ڕەگەزەکان</option>
-                      <option value="male">نێر</option>
-                      <option value="female">مێ</option>
+                      <option value="all">{t("allGenders")}</option>
+                      <option value="male">{t("male")}</option>
+                      <option value="female">{t("female")}</option>
                     </select>
 
                     {/* Level Filter */}
@@ -2509,10 +2509,10 @@ export default function ProgramsPage() {
                       }}
                       className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
                     >
-                      <option value="all">هەموو ئاستەکان</option>
-                      <option value="beginner">سەرەتایی</option>
-                      <option value="intermediate">ناوەند</option>
-                      <option value="advanced">پێشکەوتوو</option>
+                      <option value="all">{t("allLevels")}</option>
+                      <option value="beginner">{t("beginner")}</option>
+                      <option value="intermediate">{t("intermediate")}</option>
+                      <option value="advanced">{t("advanced")}</option>
                     </select>
 
                     {/* Body Part Filter */}
@@ -2524,13 +2524,13 @@ export default function ProgramsPage() {
                       }}
                       className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
                     >
-                      <option value="all">هەموو بەشەکان</option>
-                      <option value="chest">سنگ</option>
-                      <option value="back">پشت</option>
-                      <option value="legs">قاچ</option>
-                      <option value="shoulders">شان</option>
-                      <option value="arms">باڵ</option>
-                      <option value="core">ناوەڕاست</option>
+                      <option value="all">{t("allBodyParts")}</option>
+                      <option value="chest">{t("chest")}</option>
+                      <option value="back">{t("back")}</option>
+                      <option value="legs">{t("legs")}</option>
+                      <option value="shoulders">{t("shoulders")}</option>
+                      <option value="arms">{t("arms")}</option>
+                      <option value="core">{t("core")}</option>
                     </select>
                   </div>
 
@@ -2543,7 +2543,7 @@ export default function ProgramsPage() {
                         const matchesLevel = videoFilters.level === 'all' || name.includes(videoFilters.level)
                         const matchesBodyPart = videoFilters.bodyPart === 'all' || name.includes(videoFilters.bodyPart)
                         return matchesSearch && matchesGender && matchesLevel && matchesBodyPart
-                      }).length} ڤیدیۆ دۆزرایەوە
+                      }).length} {t("videosFound")}
                   </p>
                 </div>
 
@@ -2660,12 +2660,12 @@ export default function ProgramsPage() {
                                   {isSelected ? (
                                     <>
                                       <Check className="w-4 h-4 mr-2" />
-                                      هەڵبژێردراوە
+                                      {t("selected")}
                                     </>
                                   ) : (
                                     <>
                                       <Plus className="w-4 h-4 mr-2" />
-                                      هەڵبژاردن
+                                      {t("select")}
                                     </>
                                   )}
                                 </Button>
@@ -2699,7 +2699,7 @@ export default function ProgramsPage() {
                         disabled={videoPage === 1}
                         className="border-slate-700 text-gray-300 hover:bg-slate-800"
                       >
-                        ← پێشوو
+                        ← {t("previous")}
                       </Button>
                       <div className="px-4 py-2 rounded-lg bg-slate-800/50 text-white text-sm font-bold">
                         {videoPage} / {totalPages}
@@ -2711,7 +2711,7 @@ export default function ProgramsPage() {
                         disabled={videoPage >= totalPages}
                         className="border-slate-700 text-gray-300 hover:bg-slate-800"
                       >
-                        دواتر →
+                        {t("next")} →
                       </Button>
                     </div>
                   )
@@ -2732,7 +2732,7 @@ export default function ProgramsPage() {
                     className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg font-bold shadow-lg"
                   >
                     <Check className="w-5 h-5 mr-2" />
-                    پاشەکەوتکردن ({exerciseFormData.videos.length})
+                    {t("saveWithCount")} ({exerciseFormData.videos.length})
                   </Button>
                 </div>
               </>
