@@ -2,6 +2,7 @@
 
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
+import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,6 +11,7 @@ import { User, Mail, Phone, MapPin, Calendar, Shield, Crown, Save, Camera, Lock,
 import { useState } from "react"
 
 export default function SuperAdminProfile() {
+  const { t } = useLanguage()
   const [editing, setEditing] = useState(false)
 
   return (
@@ -22,8 +24,8 @@ export default function SuperAdminProfile() {
               <User className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">My Profile</h1>
-              <p className="text-gray-400 text-sm">Manage your account information</p>
+              <h1 className="text-3xl font-bold text-white">{t("myProfile")}</h1>
+              <p className="text-gray-400 text-sm">{t("manageAccountInfo")}</p>
             </div>
           </div>
 
@@ -40,18 +42,18 @@ export default function SuperAdminProfile() {
                   </button>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl font-bold text-white mb-1">System Administrator</h2>
+                  <h2 className="text-2xl font-bold text-white mb-1">{t("systemAdministrator")}</h2>
                   <p className="text-gray-400 mb-4">admin@fitpro.com</p>
                   <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                     <span className="px-4 py-2 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 text-sm font-semibold flex items-center gap-2">
                       <Crown className="w-4 h-4" />
-                      Super Admin
+                      {t("superadmin")}
                     </span>
                     <span className="px-4 py-2 rounded-full bg-green-500/20 text-green-400 border border-green-500/30 text-sm font-semibold">
-                      Active
+                      {t("active")}
                     </span>
                     <span className="px-4 py-2 rounded-full bg-blue-500/20 text-blue-400 border border-blue-500/30 text-sm font-semibold">
-                      Full Access
+                      {t("fullAccess")}
                     </span>
                   </div>
                 </div>
@@ -59,7 +61,7 @@ export default function SuperAdminProfile() {
                   onClick={() => setEditing(!editing)}
                   className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg"
                 >
-                  {editing ? "Cancel" : "Edit Profile"}
+                  {editing ? t("cancelEdit") : t("editProfile")}
                 </Button>
               </div>
             </CardContent>
@@ -72,12 +74,12 @@ export default function SuperAdminProfile() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <User className="w-5 h-5 text-purple-400" />
-                  Personal Information
+                  {t("personalInfo")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">First Name</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("firstName")}</Label>
                   <Input 
                     defaultValue="System" 
                     disabled={!editing}
@@ -85,7 +87,7 @@ export default function SuperAdminProfile() {
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Last Name</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("lastName")}</Label>
                   <Input 
                     defaultValue="Administrator" 
                     disabled={!editing}
@@ -93,16 +95,16 @@ export default function SuperAdminProfile() {
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Email Address</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("emailAddress")}</Label>
                   <Input 
                     defaultValue="admin@fitpro.com" 
                     disabled
                     className="bg-slate-800/50 border-slate-700 text-white opacity-60 cursor-not-allowed"
                   />
-                  <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+                  <p className="text-xs text-gray-500 mt-1">{t("emailCannotChange")}</p>
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Phone Number</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("phoneNumber")}</Label>
                   <Input 
                     defaultValue="+964 750 123 4567" 
                     disabled={!editing}
@@ -117,12 +119,12 @@ export default function SuperAdminProfile() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <MapPin className="w-5 h-5 text-cyan-400" />
-                  Additional Details
+                  {t("additionalDetails")}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Department</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("department")}</Label>
                   <Input 
                     defaultValue="System Administration" 
                     disabled={!editing}
@@ -130,7 +132,7 @@ export default function SuperAdminProfile() {
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Location</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("location")}</Label>
                   <Input 
                     defaultValue="Erbil, Kurdistan" 
                     disabled={!editing}
@@ -138,7 +140,7 @@ export default function SuperAdminProfile() {
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Timezone</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("timezone")}</Label>
                   <Input 
                     defaultValue="GMT+3 (Baghdad)" 
                     disabled={!editing}
@@ -146,7 +148,7 @@ export default function SuperAdminProfile() {
                   />
                 </div>
                 <div>
-                  <Label className="text-gray-400 text-sm mb-2 block">Language</Label>
+                  <Label className="text-gray-400 text-sm mb-2 block">{t("languagePreference")}</Label>
                   <select 
                     disabled={!editing}
                     className="w-full bg-slate-800/50 border border-slate-700 text-white rounded-lg px-3 py-2 disabled:opacity-100"
@@ -167,28 +169,28 @@ export default function SuperAdminProfile() {
               <CardContent className="p-4 text-center">
                 <Calendar className="w-8 h-8 text-blue-400 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-white">2 Years</p>
-                <p className="text-xs text-gray-400">Member Since</p>
+                <p className="text-xs text-gray-400">{t("memberSince")}</p>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/30">
               <CardContent className="p-4 text-center">
                 <Zap className="w-8 h-8 text-green-400 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-white">1,234</p>
-                <p className="text-xs text-gray-400">Actions</p>
+                <p className="text-xs text-gray-400">{t("actions")}</p>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/30">
               <CardContent className="p-4 text-center">
                 <Shield className="w-8 h-8 text-purple-400 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-white">100%</p>
-                <p className="text-xs text-gray-400">Security</p>
+                <p className="text-xs text-gray-400">{t("securitySettings")}</p>
               </CardContent>
             </Card>
             <Card className="bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/30">
               <CardContent className="p-4 text-center">
                 <Lock className="w-8 h-8 text-red-400 mx-auto mb-2" />
                 <p className="text-2xl font-bold text-white">2FA</p>
-                <p className="text-xs text-gray-400">Enabled</p>
+                <p className="text-xs text-gray-400">{t("enabled")}</p>
               </CardContent>
             </Card>
           </div>
@@ -196,10 +198,10 @@ export default function SuperAdminProfile() {
           {/* Admin Privileges */}
           <Card className="bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/30">
             <CardHeader>
-              <CardTitle className="text-red-400 flex items-center gap-2">
-                <Crown className="w-5 h-5" />
-                Administrator Privileges
-              </CardTitle>
+                <CardTitle className="text-red-400 flex items-center gap-2">
+                  <Crown className="w-5 h-5" />
+                  {t("adminPrivileges")}
+                </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -224,7 +226,7 @@ export default function SuperAdminProfile() {
           {editing && (
             <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg py-6 text-lg">
               <Save className="w-5 h-5 mr-2" />
-              Save Changes
+              {t("saveChanges")}
             </Button>
           )}
         </div>
