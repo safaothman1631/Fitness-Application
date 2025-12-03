@@ -7,7 +7,13 @@ export async function GET(request: NextRequest) {
 
     // Get users data
     const usersSnapshot = await adminDb.collection('users').get()
-    const users = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    const allUsers = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
+    // Filter to show only user and trainer roles (same as user management page)
+    const users = allUsers.filter((user: any) => {
+      const role = user.role?.toLowerCase()
+      return role === 'user' || role === 'trainer'
+    })
 
     // Calculate total users by role
     const totalUsers = users.length
