@@ -1482,7 +1482,7 @@ export default function ProgramsPage() {
                   </div>
                 ) : (
                   <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">💪 ماسوولکەی ئامانج</Label>
+                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">💪 {t("targetMuscles")}</Label>
                     <Input
                       value={newProgram.targetMuscles}
                       onChange={(e) => setNewProgram({ ...newProgram, targetMuscles: e.target.value })}
@@ -1637,11 +1637,11 @@ export default function ProgramsPage() {
                       <div className="flex items-start gap-2">
                         <Lightbulb className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
                         <div className="text-xs text-blue-300">
-                          <p className="font-semibold mb-1">⚠️ تێبینی:</p>
+                          <p className="font-semibold mb-1">⚠️ {t("noteLabel")}</p>
                           <ul className="space-y-0.5 text-gray-400">
-                            <li>✅ تەنها یوزەرە پرۆکان پیشان دەدرێن</li>
-                            <li>❌ یوزەری فریی شاراوەیە</li>
-                            <li>❌ ئەدمین، سوپەرئەدمین، فیزیۆ، تریینەر شاراوەن</li>
+                            <li>✅ {t("onlyProUsersShown")}</li>
+                            <li>❌ {t("freeUsersHidden")}</li>
+                            <li>❌ {t("adminsHidden")}</li>
                           </ul>
                         </div>
                       </div>
@@ -1760,7 +1760,7 @@ export default function ProgramsPage() {
                             ) : (
                               <div className="text-center py-6 border-2 border-dashed border-slate-700 rounded-lg">
                                 <Activity className="w-10 h-10 text-gray-600 mx-auto mb-2" />
-                                <p className="text-gray-400 text-sm">هیچ یارییەک زیاد نەکراوە</p>
+                                <p className="text-gray-400 text-sm">{t("noExercisesAdded")}</p>
                               </div>
                             )}
 
@@ -1770,7 +1770,7 @@ export default function ProgramsPage() {
                                 className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700"
                               >
                                 <Plus className="w-5 h-5 mr-2" />
-                                زیادکردنی یاری
+                                {t("addExerciseButton")}
                               </Button>
                               <Button
                                 onClick={() => {
@@ -1782,7 +1782,7 @@ export default function ProgramsPage() {
                                 disabled={!newProgram.weeklySchedule?.[currentDay]?.exercises?.length}
                               >
                                 <Dumbbell className="w-5 h-5 mr-2" />
-                                کۆپی بۆ رۆژی تر
+                                {t("copyToDay")}
                               </Button>
                             </div>
                           </div>
@@ -1800,19 +1800,19 @@ export default function ProgramsPage() {
                     <Card className="bg-slate-800/30 border-slate-700">
                       <CardContent className="p-3">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-gray-400">پوختەی هەفتە:</span>
+                          <span className="text-xs font-semibold text-gray-400">{t("weekSummaryLabel")}</span>
                           <div className="flex gap-3 text-xs">
                             <span className="text-green-400">
-                              ✓ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.exercises?.length > 0).length} چالاک
+                              ✓ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.exercises?.length > 0).length} {t("activeLabel")}
                             </span>
                             <span className="text-orange-400">
-                              ○ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length} پشوو
+                              ○ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length} {t("restLabel")}
                             </span>
                             <span className="text-blue-400">
-                              Σ {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.exercises?.length || 0), 0)} یاری
+                              Σ {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.exercises?.length || 0), 0)} {t("exercisesLabel")}
                             </span>
                             <span className="text-cyan-400">
-                              ◇ {getAllUniqueExercises().length} جیاواز
+                              ◇ {getAllUniqueExercises().length} {t("uniqueLabel")}
                             </span>
                           </div>
                         </div>
@@ -2121,7 +2121,7 @@ export default function ProgramsPage() {
                   className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
                 >
                   <X className="w-4 h-4 mr-2" />
-                  پاشگەزبوونەوە
+                  {t("cancelAction")}
                 </Button>
                 <Button
                   onClick={handleCreateProgram}
@@ -2135,12 +2135,12 @@ export default function ProgramsPage() {
                   {isSaving ? (
                     <>
                       <div className="w-5 h-5 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      پاشەکەوتکردن...
+                      {t("saveProgram")}...
                     </>
                   ) : (
                     <>
                       <Save className="w-5 h-5 mr-2" />
-                      پاشەکەوتکردن
+                      {t("saveProgram")}
                     </>
                   )}
                 </Button>

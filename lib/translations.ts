@@ -754,6 +754,17 @@ export type TranslationKey =
   | "programWillBeSentTo"
   | "PROusers"
   | "setMealsDescription"
+  | "targetMuscles"
+  | "noExercisesAdded"
+  | "addExerciseButton"
+  | "copyToDay"
+  | "weekSummaryLabel"
+  | "activeLabel"
+  | "restLabel"
+  | "exercisesLabel"
+  | "uniqueLabel"
+  | "cancelAction"
+  | "saveProgram"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1584,6 +1595,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   programWillBeSentTo: "This program will be sent to",
   PROusers: "PRO users",
   setMealsDescription: "Set meals for each day",
+  targetMuscles: "Target Muscles",
+  noExercisesAdded: "No exercises added",
+  addExerciseButton: "Add Exercise",
+  copyToDay: "Copy to another day",
+  weekSummaryLabel: "Week summary:",
+  activeLabel: "Active",
+  restLabel: "Rest",
+  exercisesLabel: "Exercises",
+  uniqueLabel: "Unique",
+  cancelAction: "Cancel",
+  saveProgram: "Save",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2344,6 +2366,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,programWillBeSentTo: "سيتم إرسال هذا البرنامج إلى"
   ,PROusers: "مستخدمي PRO"
   ,setMealsDescription: "تحديد الوجبات لكل يوم"
+  ,targetMuscles: "العضلات المستهدفة"
+  ,noExercisesAdded: "لم تتم إضافة تمارين"
+  ,addExerciseButton: "إضافة تمرين"
+  ,copyToDay: "نسخ إلى يوم آخر"
+  ,weekSummaryLabel: "ملخص الأسبوع:"
+  ,activeLabel: "نشط"
+  ,restLabel: "راحة"
+  ,exercisesLabel: "تمارين"
+  ,uniqueLabel: "فريد"
+  ,cancelAction: "إلغاء"
+  ,saveProgram: "حفظ"
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -3107,6 +3140,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,programWillBeSentTo: "ئەم بەرنامەیە بۆ"
     ,PROusers: "یوزەری PRO دەنێردرێت"
     ,setMealsDescription: "خواردنەکانی هەر رۆژێک دیاری بکە"
+    ,targetMuscles: "ماسوولکەی ئامانج"
+    ,noExercisesAdded: "هیچ یارییەک زیاد نەکراوە"
+    ,addExerciseButton: "زیادکردنی یاری"
+    ,copyToDay: "کۆپی بۆ رۆژی تر"
+    ,weekSummaryLabel: "پوختەی هەفتە:"
+    ,activeLabel: "چالاک"
+    ,restLabel: "پشوو"
+    ,exercisesLabel: "یاری"
+    ,uniqueLabel: "جیاواز"
+    ,cancelAction: "پاشگەزبوونەوە"
+    ,saveProgram: "پاشەکەوتکردن"
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -3867,6 +3911,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   programWillBeSentTo: "Bu program",
   PROusers: "PRO kullanıcılara gönderilecek",
   setMealsDescription: "Her gün için öğünleri ayarla",
+  targetMuscles: "Hedef Kaslar",
+  noExercisesAdded: "Egzersiz eklenmedi",
+  addExerciseButton: "Egzersiz Ekle",
+  copyToDay: "Başka güne kopyala",
+  weekSummaryLabel: "Hafta özeti:",
+  activeLabel: "Aktif",
+  restLabel: "Dinlenme",
+  exercisesLabel: "Egzersizler",
+  uniqueLabel: "Benzersiz",
+  cancelAction: "İptal",
+  saveProgram: "Kaydet",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",
