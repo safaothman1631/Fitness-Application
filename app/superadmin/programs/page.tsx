@@ -726,7 +726,7 @@ export default function ProgramsPage() {
               }`}
             >
               <Utensils className="w-6 h-6 inline mr-2" />
-              بەرنامەی خواردن
+              {t("nutritionPrograms")}
             </button>
             <button
               onClick={() => setActiveTab('workout')}
@@ -737,7 +737,7 @@ export default function ProgramsPage() {
               }`}
             >
               <Dumbbell className="w-6 h-6 inline mr-2" />
-              بەرنامەی وەرزش
+              {t("workoutPrograms")}
             </button>
           </div>
 
@@ -757,7 +757,7 @@ export default function ProgramsPage() {
                     <div>
                       <h1 className="text-4xl font-bold text-white mb-2">
                         <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-green-500 bg-clip-text text-transparent">
-                          بەرنامەی خواردن
+                          {t("nutritionPrograms")}
                         </span>
                       </h1>
                       <p className="text-gray-400 text-lg">{t("createAndManagePrograms")}</p>
@@ -800,7 +800,7 @@ export default function ProgramsPage() {
                       </div>
                       <div>
                         <p className="text-3xl font-bold text-white">48</p>
-                        <p className="text-sm text-gray-400">Meal Options</p>
+                        <p className="text-sm text-gray-400">{t("meals")}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -841,7 +841,7 @@ export default function ProgramsPage() {
                   <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />
                     <Input
-                      placeholder="Search nutrition plans..."
+                      placeholder={t("searchPrograms")}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="pl-12 h-12 bg-slate-800/50 border-slate-700 text-white placeholder:text-gray-500"
@@ -855,13 +855,13 @@ export default function ProgramsPage() {
                 {isLoading ? (
                   <div className="col-span-full text-center py-12">
                     <div className="inline-block w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p className="text-gray-400">Loading nutrition plans...</p>
+                    <p className="text-gray-400">{t("loading")}...</p>
                   </div>
                 ) : filteredPrograms.length === 0 ? (
                   <div className="col-span-full text-center py-12">
                     <Utensils className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg mb-2">No nutrition plans found</p>
-                    <p className="text-gray-500 text-sm">Create your first nutrition plan</p>
+                    <p className="text-gray-400 text-lg mb-2">{t("noProgramsFound")}</p>
+                    <p className="text-gray-500 text-sm">{t("createFirstProgram")}</p>
                   </div>
                 ) : (
                   filteredPrograms.map((program) => (
