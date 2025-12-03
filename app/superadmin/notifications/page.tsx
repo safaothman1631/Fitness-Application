@@ -3,6 +3,7 @@
 import { useState } from "react"
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
+import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Bell, Trash2, CheckCircle2, AlertCircle, Shield, Activity, Info, XCircle, Eye, Filter } from "lucide-react"
@@ -16,6 +17,7 @@ interface Notification {
 }
 
 export default function SuperAdminNotifications() {
+  const { t } = useLanguage()
   const [notifications, setNotifications] = useState<Notification[]>([
     {
       id: "1",
@@ -75,18 +77,18 @@ export default function SuperAdminNotifications() {
                 <Bell className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-3xl font-bold text-white">Notifications</h1>
-                <p className="text-gray-400 text-sm">Stay updated with system alerts</p>
+                <h1 className="text-3xl font-bold text-white">{t("notificationsPage")}</h1>
+                <p className="text-gray-400 text-sm">{t("stayUpdated")}</p>
               </div>
             </div>
             <div className="flex gap-2">
               <Button variant="outline" className="border-slate-700 text-gray-300 hover:bg-slate-800">
                 <Filter className="w-4 h-4 mr-2" />
-                Filter
+                {t("filterByType")}
               </Button>
               <Button variant="outline" className="border-slate-700 text-gray-300 hover:bg-slate-800">
                 <CheckCircle2 className="w-4 h-4 mr-2" />
-                Mark All Read
+                {t("markAllRead")}
               </Button>
             </div>
           </div>
@@ -99,7 +101,7 @@ export default function SuperAdminNotifications() {
                   <Bell className="w-8 h-8 text-blue-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{notifications.length}</p>
-                    <p className="text-xs text-gray-400">Total</p>
+                    <p className="text-xs text-gray-400">{t("total")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -111,7 +113,7 @@ export default function SuperAdminNotifications() {
                   <AlertCircle className="w-8 h-8 text-red-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{notifications.filter((n) => !n.isRead).length}</p>
-                    <p className="text-xs text-gray-400">Unread</p>
+                    <p className="text-xs text-gray-400">{t("unreadNotifications")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -123,7 +125,7 @@ export default function SuperAdminNotifications() {
                   <CheckCircle2 className="w-8 h-8 text-green-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{notifications.filter((n) => n.isRead).length}</p>
-                    <p className="text-xs text-gray-400">Read</p>
+                    <p className="text-xs text-gray-400">{t("read")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -135,7 +137,7 @@ export default function SuperAdminNotifications() {
                   <Shield className="w-8 h-8 text-purple-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{notifications.filter((n) => n.type === 'security').length}</p>
-                    <p className="text-xs text-gray-400">Security</p>
+                    <p className="text-xs text-gray-400">{t("securitySettings")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -145,10 +147,10 @@ export default function SuperAdminNotifications() {
           {/* Notifications List */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Bell className="w-5 h-5 text-yellow-400" />
-                All Notifications
-              </CardTitle>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-yellow-400" />
+                  {t("allNotifications")}
+                </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
@@ -183,7 +185,7 @@ export default function SuperAdminNotifications() {
                             <h3 className="font-semibold text-white">{notif.title}</h3>
                             {!notif.isRead && (
                               <span className="px-2 py-1 rounded-full bg-red-500/20 text-red-400 text-xs font-semibold whitespace-nowrap">
-                                New
+                                {t("new")}
                               </span>
                             )}
                           </div>
@@ -217,8 +219,8 @@ export default function SuperAdminNotifications() {
                 ) : (
                   <div className="text-center py-12">
                     <Bell className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg">No notifications</p>
-                    <p className="text-gray-500 text-sm">You're all caught up!</p>
+                    <p className="text-gray-400 text-lg">{t("noNotifications")}</p>
+                    <p className="text-gray-500 text-sm">{t("allCaughtUp")}</p>
                   </div>
                 )}              </div>
             </CardContent>
