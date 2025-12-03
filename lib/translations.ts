@@ -798,6 +798,10 @@ export type TranslationKey =
   | "previous"
   | "next"
   | "saveWithCount"
+  | "videoDetails"
+  | "setsCount"
+  | "repsCount"
+  | "videoSpecificNotes"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1672,6 +1676,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   previous: "Previous",
   next: "Next",
   saveWithCount: "Save",
+  videoDetails: "Video Details",
+  setsCount: "Sets Count",
+  repsCount: "Reps",
+  videoSpecificNotes: "Specific notes for this video...",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2476,6 +2484,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,previous: "السابق"
   ,next: "التالي"
   ,saveWithCount: "حفظ"
+  ,videoDetails: "تفاصيل الفيديو"
+  ,setsCount: "عدد المجموعات"
+  ,repsCount: "التكرارات"
+  ,videoSpecificNotes: "ملاحظات خاصة بهذا الفيديو..."
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -3283,6 +3295,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,previous: "پێشوو"
     ,next: "دواتر"
     ,saveWithCount: "پاشەکەوتکردن"
+    ,videoDetails: "وردەکاری ڤیدیۆ"
+    ,setsCount: "ژمارەی سێت"
+    ,repsCount: "دووبارەکردنەوە"
+    ,videoSpecificNotes: "تێبینی تایبەت بەم ڤیدیۆیە..."
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -4087,6 +4103,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   previous: "Önceki",
   next: "Sonraki",
   saveWithCount: "Kaydet",
+  videoDetails: "Video Detayları",
+  setsCount: "Set Sayısı",
+  repsCount: "Tekrarlar",
+  videoSpecificNotes: "Bu videoya özel notlar...",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",

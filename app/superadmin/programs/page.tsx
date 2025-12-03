@@ -2749,7 +2749,7 @@ export default function ProgramsPage() {
                   <Video className="w-5 h-5 text-white" />
                 </div>
                 <div className="flex-1">
-                  <div className="text-white">وردەکاری ڤیدیۆ</div>
+                  <div className="text-white">{t("videoDetails")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1 truncate">
                     {currentVideoForDetail?.name}
                   </div>
@@ -2764,7 +2764,7 @@ export default function ProgramsPage() {
                     <div className="w-5 h-5 rounded-lg bg-blue-500/20 flex items-center justify-center">
                       <TrendingUp className="w-3 h-3 text-blue-400" />
                     </div>
-                    📊 ژمارەی سێت
+                    📊 {t("setsCount")}
                   </Label>
                   <Input
                     id="video-sets"
@@ -2779,7 +2779,7 @@ export default function ProgramsPage() {
                     <div className="w-5 h-5 rounded-lg bg-cyan-500/20 flex items-center justify-center">
                       <Target className="w-3 h-3 text-cyan-400" />
                     </div>
-                    🔢 دووبارەکردنەوە
+                    🔢 {t("repsCount")}
                   </Label>
                   <Input
                     id="video-reps"
@@ -2795,11 +2795,11 @@ export default function ProgramsPage() {
                   <div className="w-5 h-5 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <Lightbulb className="w-3 h-3 text-purple-400" />
                   </div>
-                  📝 تێبینی (ئیختیاری)
+                  📝 {t("notesOptional")}
                 </Label>
                 <Input
                   id="video-notes"
-                  placeholder="تێبینی تایبەت بەم ڤیدیۆیە..."
+                  placeholder={t("videoSpecificNotes")}
                   className="bg-slate-800/50 border-slate-700 text-white h-11"
                 />
               </div>
@@ -2843,7 +2843,7 @@ export default function ProgramsPage() {
                 className="flex-1 h-11 bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-lg font-bold shadow-lg"
               >
                 <Check className="w-5 h-5 mr-2" />
-                زیادکردن
+                {t("addButton")}
               </Button>
             </div>
           </DialogContent>
