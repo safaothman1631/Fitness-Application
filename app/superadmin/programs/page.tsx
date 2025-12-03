@@ -1377,7 +1377,7 @@ export default function ProgramsPage() {
                   <div className="flex items-start gap-3">
                     <Lightbulb className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
                     <div className="space-y-1">
-                      <p className="text-sm text-blue-300 font-semibold">چۆن کار دەکات؟</p>
+                      <p className="text-sm text-blue-300 font-semibold">{t("instructions")}</p>
                       <ul className="text-xs text-gray-400 space-y-1 list-disc list-inside">
                         <li>زانیاریەکانی سەرەتایی پڕبکەرەوە (ناو، وەسف، کات...)</li>
                         {activeTab === 'workout' && (
@@ -1401,7 +1401,7 @@ export default function ProgramsPage() {
                   <Input
                     value={newProgram.title}
                     onChange={(e) => setNewProgram({ ...newProgram, title: e.target.value })}
-                    placeholder={activeTab === 'nutrition' ? 'نموونە: بەرنامەی کیتۆ' : 'نموونە: بەرنامەی تەواوی جەستە'}
+                    placeholder={activeTab === 'nutrition' ? 'Example: Keto Diet Plan' : 'Example: Full Body Workout'}
                     className="bg-slate-800/50 border-slate-700 text-white h-12"
                   />
                 </div>
@@ -1411,7 +1411,7 @@ export default function ProgramsPage() {
                   <textarea
                     value={newProgram.description}
                     onChange={(e) => setNewProgram({ ...newProgram, description: e.target.value })}
-                    placeholder="وەسفی بەرنامەکە بنووسە..."
+                    placeholder="Enter program description..."
                     rows={3}
                     className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                   />
@@ -1423,12 +1423,12 @@ export default function ProgramsPage() {
                     <Input
                       value={newProgram.duration}
                       onChange={(e) => setNewProgram({ ...newProgram, duration: e.target.value })}
-                      placeholder="نموونە: 30 mins"
+                      placeholder="Example: 30 mins"
                       className="bg-slate-800/50 border-slate-700 text-white h-12"
                     />
                   </div>
                   <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⭐ ئاستەکە</Label>
+                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⭐ Level</Label>
                     <select
                       value={newProgram.difficulty}
                       onChange={(e) => setNewProgram({ ...newProgram, difficulty: e.target.value })}
@@ -1448,7 +1448,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.calories}
                         onChange={(e) => setNewProgram({ ...newProgram, calories: e.target.value })}
-                        placeholder="نموونە: 2000"
+                        placeholder="Example: 2000"
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1457,7 +1457,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.protein}
                         onChange={(e) => setNewProgram({ ...newProgram, protein: e.target.value })}
-                        placeholder="نموونە: 150"
+                        placeholder="Example: 150"
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1466,7 +1466,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.carbs}
                         onChange={(e) => setNewProgram({ ...newProgram, carbs: e.target.value })}
-                        placeholder="نموونە: 200"
+                        placeholder="Example: 200"
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1475,7 +1475,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.fats}
                         onChange={(e) => setNewProgram({ ...newProgram, fats: e.target.value })}
-                        placeholder="نموونە: 60"
+                        placeholder="Example: 60"
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1486,7 +1486,7 @@ export default function ProgramsPage() {
                     <Input
                       value={newProgram.targetMuscles}
                       onChange={(e) => setNewProgram({ ...newProgram, targetMuscles: e.target.value })}
-                      placeholder="نموونە: سنگ، شان، ترایسێپس"
+                      placeholder="Example: Chest, Shoulders, Triceps"
                       className="bg-slate-800/50 border-slate-700 text-white h-12"
                     />
                   </div>
@@ -2309,7 +2309,7 @@ export default function ProgramsPage() {
                 <Input
                   value={exerciseFormData.name}
                   onChange={(e) => setExerciseFormData({ ...exerciseFormData, name: e.target.value })}
-                  placeholder="نموونە: Push-ups, Squats, Bench Press..."
+                  placeholder="Example: Push-ups, Squats, Bench Press..."
                   className="bg-slate-800/50 border-slate-700 text-white h-12 text-lg"
                 />
               </div>
@@ -2910,7 +2910,7 @@ export default function ProgramsPage() {
                 <Input
                   value={mealFormData.name}
                   onChange={(e) => setMealFormData({ ...mealFormData, name: e.target.value })}
-                  placeholder="نموونە: Grilled Chicken & Rice"
+                  placeholder="Example: Grilled Chicken & Rice"
                   className="bg-slate-800/50 border-slate-700 text-white h-12 text-lg"
                 />
               </div>
@@ -2950,7 +2950,7 @@ export default function ProgramsPage() {
                       type="number"
                       value={mealFormData.calories}
                       onChange={(e) => setMealFormData({ ...mealFormData, calories: e.target.value })}
-                      placeholder="نموونە: 450"
+                      placeholder="Example: 450"
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
@@ -2960,7 +2960,7 @@ export default function ProgramsPage() {
                       type="number"
                       value={mealFormData.protein}
                       onChange={(e) => setMealFormData({ ...mealFormData, protein: e.target.value })}
-                      placeholder="نموونە: 35"
+                      placeholder="Example: 35"
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
@@ -2970,7 +2970,7 @@ export default function ProgramsPage() {
                       type="number"
                       value={mealFormData.carbs}
                       onChange={(e) => setMealFormData({ ...mealFormData, carbs: e.target.value })}
-                      placeholder="نموونە: 50"
+                      placeholder="Example: 50"
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
@@ -2980,7 +2980,7 @@ export default function ProgramsPage() {
                       type="number"
                       value={mealFormData.fats}
                       onChange={(e) => setMealFormData({ ...mealFormData, fats: e.target.value })}
-                      placeholder="نموونە: 12"
+                      placeholder="Example: 12"
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
@@ -2998,7 +2998,7 @@ export default function ProgramsPage() {
                 <textarea
                   value={mealFormData.ingredients}
                   onChange={(e) => setMealFormData({ ...mealFormData, ingredients: e.target.value })}
-                  placeholder="نموونە:&#10;- Chicken breast 150g&#10;- Rice 200g&#10;- Vegetables 100g&#10;- Olive oil 1 tsp"
+                  placeholder="Example:&#10;- Chicken breast 150g&#10;- Rice 200g&#10;- Vegetables 100g&#10;- Olive oil 1 tsp"
                   rows={4}
                   className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
@@ -3015,7 +3015,7 @@ export default function ProgramsPage() {
                 <textarea
                   value={mealFormData.instructions}
                   onChange={(e) => setMealFormData({ ...mealFormData, instructions: e.target.value })}
-                  placeholder="نموونە:&#10;1- بڕینی جوجە بە پارچە بچووک&#10;2- برژاندنی برنج&#10;3- کۆکردنی هەموو شتەکان لە تەشت..."
+                  placeholder="Example:&#10;1. Grill chicken until fully cooked&#10;2. Cook rice separately&#10;3. Mix all ingredients in a bowl..."
                   rows={4}
                   className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
