@@ -683,6 +683,7 @@ export default function UsersPage() {
                         <th className="text-left text-gray-400 text-sm font-semibold p-3">Role</th>
                         <th className="text-left text-gray-400 text-sm font-semibold p-3">Membership</th>
                         <th className="text-left text-gray-400 text-sm font-semibold p-3">Status</th>
+                        <th className="text-left text-gray-400 text-sm font-semibold p-3">Days Left</th>
                         <th className="text-left text-gray-400 text-sm font-semibold p-3">Joined</th>
                         <th className="text-right text-gray-400 text-sm font-semibold p-3">Actions</th>
                       </tr>
@@ -737,6 +738,36 @@ export default function UsersPage() {
                             }`}>
                               {(user.role === "trainer" || user.role === "superadmin" || user.isActive) ? "Active" : "Inactive"}
                             </span>
+                          </td>
+                          <td className="p-4">
+                            {(() => {
+                              if (user.membership !== "Pro" && user.role !== "trainer" && user.role !== "superadmin") {
+                                return <span className="text-gray-500 text-sm">-</span>
+                              }
+                              
+                              const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
+                              if (!expiryDate) {
+                                return <span className="text-gray-500 text-sm">∞</span>
+                              }
+                              
+                              const daysLeft = Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+                              const isExpired = daysLeft <= 0
+                              const isExpiringSoon = daysLeft <= 7 && daysLeft > 0
+                              
+                              return (
+                                <div className="flex items-center gap-2">
+                                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                    isExpired 
+                                      ? 'bg-red-500/20 text-red-300 border border-red-500/40'
+                                      : isExpiringSoon
+                                      ? 'bg-orange-500/20 text-orange-300 border border-orange-500/40'
+                                      : 'bg-green-500/20 text-green-300 border border-green-500/40'
+                                  }`}>
+                                    {isExpired ? `${Math.abs(daysLeft)}d ago` : `${daysLeft}d`}
+                                  </span>
+                                </div>
+                              )
+                            })()}
                           </td>
                           <td className="p-4 text-gray-400 text-sm font-medium">
                             {user.joinDate ? new Date(user.joinDate).toLocaleDateString() : "-"}
