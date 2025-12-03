@@ -1,4 +1,4 @@
-"use client"
+﻿"use client"
 
 import type React from "react"
 import { useState } from "react"
@@ -27,7 +27,8 @@ export default function OwnerLoginPage() {
                     loginTime: new Date().toISOString(),
                 }),
             )
-            router.replace("/owner")            setIsLoading(false)
+            router.replace("/owner")
+            setIsLoading(false)
         }, 800)
     }
 

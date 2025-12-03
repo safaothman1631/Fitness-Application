@@ -4,8 +4,11 @@ import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { Card, CardContent } from "@/components/ui/card"
 import { Users, Key, Activity, TrendingUp, Shield, Zap } from "lucide-react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export default function SuperAdminPage() {
+  const { t } = useLanguage()
+  
   return (
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
@@ -15,8 +18,8 @@ export default function SuperAdminPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 rounded-3xl bg-gradient-to-br from-cyan-500 to-blue-600 mb-4 shadow-lg shadow-cyan-500/30">
               <Shield className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Superadmin Dashboard</h1>
-            <p className="text-gray-400">System Management & Control</p>
+            <h1 className="text-3xl font-bold text-white mb-2">{t("superadminDashboard")}</h1>
+            <p className="text-gray-400">{t("systemManagementControl")}</p>
           </div>
 
           {/* Stats Grid */}
@@ -25,10 +28,10 @@ export default function SuperAdminPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <Users className="w-8 h-8 text-blue-400" />
-                  <span className="text-xs text-blue-400 font-semibold uppercase tracking-wider">Users</span>
+                  <span className="text-xs text-blue-400 font-semibold uppercase tracking-wider">{t("users")}</span>
                 </div>
                 <p className="text-3xl font-bold text-white mb-1">1,234</p>
-                <p className="text-xs text-gray-400">Total Active</p>
+                <p className="text-xs text-gray-400">{t("totalActive")}</p>
               </CardContent>
             </Card>
 
@@ -36,10 +39,10 @@ export default function SuperAdminPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <Key className="w-8 h-8 text-purple-400" />
-                  <span className="text-xs text-purple-400 font-semibold uppercase tracking-wider">Keys</span>
+                  <span className="text-xs text-purple-400 font-semibold uppercase tracking-wider">{t("keys")}</span>
                 </div>
                 <p className="text-3xl font-bold text-white mb-1">56</p>
-                <p className="text-xs text-gray-400">Access Keys</p>
+                <p className="text-xs text-gray-400">{t("accessKeysLabel")}</p>
               </CardContent>
             </Card>
 
@@ -47,10 +50,10 @@ export default function SuperAdminPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <Activity className="w-8 h-8 text-green-400" />
-                  <span className="text-xs text-green-400 font-semibold uppercase tracking-wider">Active</span>
+                  <span className="text-xs text-green-400 font-semibold uppercase tracking-wider">{t("activeNow")}</span>
                 </div>
                 <p className="text-3xl font-bold text-white mb-1">892</p>
-                <p className="text-xs text-gray-400">Online Now</p>
+                <p className="text-xs text-gray-400">{t("onlineNow")}</p>
               </CardContent>
             </Card>
 
@@ -58,10 +61,10 @@ export default function SuperAdminPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between mb-3">
                   <TrendingUp className="w-8 h-8 text-yellow-400" />
-                  <span className="text-xs text-yellow-400 font-semibold uppercase tracking-wider">Growth</span>
+                  <span className="text-xs text-yellow-400 font-semibold uppercase tracking-wider">{t("growth")}</span>
                 </div>
                 <p className="text-3xl font-bold text-white mb-1">+24%</p>
-                <p className="text-xs text-gray-400">This Month</p>
+                <p className="text-xs text-gray-400">{t("thisMonth")}</p>
               </CardContent>
             </Card>
           </div>
@@ -71,20 +74,20 @@ export default function SuperAdminPage() {
             <CardContent className="p-6">
               <h2 className="text-white text-lg font-semibold mb-4 flex items-center gap-2">
                 <Zap className="w-5 h-5 text-cyan-400" />
-                Quick Actions
+                {t("quickActions")}
               </h2>
               <div className="grid grid-cols-2 gap-3">
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  ≡ƒæÑ Manage Users
+                  👥 {t("manageUsers")}
                 </button>
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  ≡ƒöæ Generate Keys
+                  🔑 {t("generateKeys")}
                 </button>
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  ≡ƒôè View Reports
+                  📊 {t("viewReports")}
                 </button>
                 <button className="p-4 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  ΓÜÖ∩╕Å Settings
+                  ⚙️ {t("settings")}
                 </button>
               </div>
             </CardContent>
@@ -93,28 +96,28 @@ export default function SuperAdminPage() {
           {/* System Status */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6">
-              <h2 className="text-white text-lg font-semibold mb-4">System Status</h2>
+              <h2 className="text-white text-lg font-semibold mb-4">{t("systemStatus")}</h2>
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-gray-300">Database</span>
+                    <span className="text-gray-300">{t("database")}</span>
                   </div>
-                  <span className="text-green-400 text-sm font-semibold">Healthy</span>
+                  <span className="text-green-400 text-sm font-semibold">{t("healthy")}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-gray-300">API Server</span>
+                    <span className="text-gray-300">{t("apiServer")}</span>
                   </div>
-                  <span className="text-green-400 text-sm font-semibold">Running</span>
+                  <span className="text-green-400 text-sm font-semibold">{t("running")}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-3 h-3 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-gray-300">Storage</span>
+                    <span className="text-gray-300">{t("storage")}</span>
                   </div>
-                  <span className="text-green-400 text-sm font-semibold">67% Used</span>
+                  <span className="text-green-400 text-sm font-semibold">67% {t("percentUsed")}</span>
                 </div>
               </div>
             </CardContent>

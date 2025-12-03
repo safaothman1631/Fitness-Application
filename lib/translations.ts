@@ -552,6 +552,67 @@ export type TranslationKey =
   | "progressUpdate"
   | "progressUpdateDesc"
   | "close"
+  // Superadmin Dashboard
+  | "superadminDashboard"
+  | "systemManagementControl"
+  | "users"
+  | "keys"
+  | "activeNow"
+  | "growth"
+  | "totalActive"
+  | "accessKeysLabel"
+  | "onlineNow"
+  | "thisMonth"
+  | "quickActions"
+  | "manageUsers"
+  | "generateKeys"
+  | "viewReports"
+  | "systemStatus"
+  | "database"
+  | "apiServer"
+  | "storage"
+  | "healthy"
+  | "running"
+  | "percentUsed"
+  // Users Management
+  | "userManagementTitle"
+  | "manageYourUsers"
+  | "statistics"
+  | "allUsers"
+  | "searchUsers"
+  | "addNewUser"
+  | "viewProfile"
+  | "editUser"
+  | "deleteUser"
+  | "active"
+  | "inactive"
+  | "membership"
+  | "accountSettings"
+  | "personalInformation"
+  | "fullNameLabel"
+  | "emailAddressLabel"
+  | "phoneNumberLabel"
+  | "locationLabel"
+  | "roleLabel"
+  | "passwordLabel"
+  | "trainersAlwaysActive"
+  | "saveChanges"
+  | "cancelAction"
+  | "deleteUserTitle"
+  | "areYouSure"
+  | "actionCannotBeUndone"
+  | "confirmDelete"
+  | "proRequests"
+  | "proRequestsDescription"
+  | "upgradeRequests"
+  | "noPendingRequests"
+  | "requestFrom"
+  | "requestDetails"
+  | "approve"
+  | "reject"
+  | "pending"
+  | "approved"
+  | "rejected"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -1099,6 +1160,67 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   progressUpdate: "Progress Update",
   progressUpdateDesc: "You've lost 2kg this month. Great progress!",
   close: "Close",
+  // Superadmin Dashboard (English)
+  superadminDashboard: "Superadmin Dashboard",
+  systemManagementControl: "System Management & Control",
+  users: "Users",
+  keys: "Keys",
+  activeNow: "Active",
+  growth: "Growth",
+  totalActive: "Total Active",
+  accessKeysLabel: "Access Keys",
+  onlineNow: "Online Now",
+  thisMonth: "This Month",
+  quickActions: "Quick Actions",
+  manageUsers: "Manage Users",
+  generateKeys: "Generate Keys",
+  viewReports: "View Reports",
+  systemStatus: "System Status",
+  database: "Database",
+  apiServer: "API Server",
+  storage: "Storage",
+  healthy: "Healthy",
+  running: "Running",
+  percentUsed: "Used",
+  // Users Management (English)
+  userManagementTitle: "User Management",
+  manageYourUsers: "Manage and monitor all users",
+  statistics: "Statistics",
+  allUsers: "All Users",
+  searchUsers: "Search users...",
+  addNewUser: "Add New User",
+  viewProfile: "View Profile",
+  editUser: "Edit User",
+  deleteUser: "Delete User",
+  active: "Active",
+  inactive: "Inactive",
+  membership: "Membership",
+  accountSettings: "Account Settings",
+  personalInformation: "Personal Information",
+  fullNameLabel: "Full Name",
+  emailAddressLabel: "Email Address",
+  phoneNumberLabel: "Phone Number",
+  locationLabel: "Location",
+  roleLabel: "Role",
+  passwordLabel: "Password",
+  trainersAlwaysActive: "Trainers and Superadmins are always active",
+  saveChanges: "Save Changes",
+  cancelAction: "Cancel",
+  deleteUserTitle: "Delete User",
+  areYouSure: "Are you sure?",
+  actionCannotBeUndone: "This action cannot be undone",
+  confirmDelete: "Confirm Delete",
+  proRequests: "Pro Requests",
+  proRequestsDescription: "Review and approve Pro upgrade requests",
+  upgradeRequests: "Upgrade Requests",
+  noPendingRequests: "No pending requests",
+  requestFrom: "Request from",
+  requestDetails: "Request Details",
+  approve: "Approve",
+  reject: "Reject",
+  pending: "Pending",
+  approved: "Approved",
+  rejected: "Rejected",
   },
   // Minimal Arabic placeholders (update with full translations later)
   ar: {
@@ -1576,6 +1698,67 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,progressUpdate: "تحديث التقدم"
   ,progressUpdateDesc: "فقدت 2 كجم هذا الشهر. تقدم رائع!"
   ,close: "إغلاق"
+  // Superadmin Dashboard (Arabic)
+  ,superadminDashboard: "لوحة تحكم المسؤول الأعلى"
+  ,systemManagementControl: "إدارة النظام والتحكم"
+  ,users: "المستخدمون"
+  ,keys: "المفاتيح"
+  ,activeNow: "نشط"
+  ,growth: "النمو"
+  ,totalActive: "النشط الإجمالي"
+  ,accessKeysLabel: "مفاتيح الوصول"
+  ,onlineNow: "متصل الآن"
+  ,thisMonth: "هذا الشهر"
+  ,quickActions: "إجراءات سريعة"
+  ,manageUsers: "إدارة المستخدمين"
+  ,generateKeys: "إنشاء المفاتيح"
+  ,viewReports: "عرض التقارير"
+  ,systemStatus: "حالة النظام"
+  ,database: "قاعدة البيانات"
+  ,apiServer: "خادم API"
+  ,storage: "التخزين"
+  ,healthy: "سليم"
+  ,running: "يعمل"
+  ,percentUsed: "مستخدم"
+  // Users Management (Arabic)
+  ,userManagementTitle: "إدارة المستخدمين"
+  ,manageYourUsers: "إدارة ومراقبة جميع المستخدمين"
+  ,statistics: "الإحصائيات"
+  ,allUsers: "جميع المستخدمين"
+  ,searchUsers: "البحث عن المستخدمين..."
+  ,addNewUser: "إضافة مستخدم جديد"
+  ,viewProfile: "عرض الملف الشخصي"
+  ,editUser: "تعديل المستخدم"
+  ,deleteUser: "حذف المستخدم"
+  ,active: "نشط"
+  ,inactive: "غير نشط"
+  ,membership: "العضوية"
+  ,accountSettings: "إعدادات الحساب"
+  ,personalInformation: "المعلومات الشخصية"
+  ,fullNameLabel: "الاسم الكامل"
+  ,emailAddressLabel: "عنوان البريد الإلكتروني"
+  ,phoneNumberLabel: "رقم الهاتف"
+  ,locationLabel: "الموقع"
+  ,roleLabel: "الدور"
+  ,passwordLabel: "كلمة المرور"
+  ,trainersAlwaysActive: "المدربون والمسؤولون نشطون دائماً"
+  ,saveChanges: "حفظ التغييرات"
+  ,cancelAction: "إلغاء"
+  ,deleteUserTitle: "حذف المستخدم"
+  ,areYouSure: "هل أنت متأكد؟"
+  ,actionCannotBeUndone: "لا يمكن التراجع عن هذا الإجراء"
+  ,confirmDelete: "تأكيد الحذف"
+  ,proRequests: "طلبات الترقية"
+  ,proRequestsDescription: "مراجعة والموافقة على طلبات الترقية إلى Pro"
+  ,upgradeRequests: "طلبات الترقية"
+  ,noPendingRequests: "لا توجد طلبات معلقة"
+  ,requestFrom: "طلب من"
+  ,requestDetails: "تفاصيل الطلب"
+  ,approve: "موافقة"
+  ,reject: "رفض"
+  ,pending: "قيد الانتظار"
+  ,approved: "تمت الموافقة"
+  ,rejected: "مرفوض"
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -2056,6 +2239,67 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,progressUpdate: "نوێکردنەوەی پێشکەوتن"
     ,progressUpdateDesc: "تۆ 2kg لەم مانگەدا لەدەست داوە. پێشکەوتنێکی نایاب!"
     ,close: "داخستن"
+    // Superadmin Dashboard (Kurdish)
+    ,superadminDashboard: "داشبۆردی سوپەرئادمین"
+    ,systemManagementControl: "بەڕێوەبردن و کۆنترۆڵی سیستەم"
+    ,users: "بەکارهێنەران"
+    ,keys: "کلیلەکان"
+    ,activeNow: "چالاک"
+    ,growth: "گەشەکردن"
+    ,totalActive: "کۆی چالاک"
+    ,accessKeysLabel: "کلیلەکانی دەستگەیشتن"
+    ,onlineNow: "ئێستا سەرهێڵ"
+    ,thisMonth: "ئەم مانگە"
+    ,quickActions: "کردارە خێراکان"
+    ,manageUsers: "بەڕێوەبردنی بەکارهێنەران"
+    ,generateKeys: "دروستکردنی کلیل"
+    ,viewReports: "بینینی ڕاپۆرتەکان"
+    ,systemStatus: "دۆخی سیستەم"
+    ,database: "بنکەی دراوە"
+    ,apiServer: "سێرڤەری API"
+    ,storage: "کۆگا"
+    ,healthy: "تەندروست"
+    ,running: "کاردەکات"
+    ,percentUsed: "بەکارهاتوو"
+    // Users Management (Kurdish)
+    ,userManagementTitle: "بەڕێوەبردنی بەکارهێنەران"
+    ,manageYourUsers: "بەڕێوەبردن و چاودێریکردنی هەموو بەکارهێنەران"
+    ,statistics: "ئامارەکان"
+    ,allUsers: "هەموو بەکارهێنەران"
+    ,searchUsers: "گەڕان بۆ بەکارهێنەران..."
+    ,addNewUser: "زیادکردنی بەکارهێنەری نوێ"
+    ,viewProfile: "بینینی پڕۆفایل"
+    ,editUser: "دەستکاریکردنی بەکارهێنەر"
+    ,deleteUser: "سڕینەوەی بەکارهێنەر"
+    ,active: "چالاک"
+    ,inactive: "ناچالاک"
+    ,membership: "ئەندامیەتی"
+    ,accountSettings: "ڕێکخستنەکانی هەژمار"
+    ,personalInformation: "زانیاری کەسی"
+    ,fullNameLabel: "ناوی تەواو"
+    ,emailAddressLabel: "ئیمەیڵ"
+    ,phoneNumberLabel: "ژمارەی تەلەفۆن"
+    ,locationLabel: "شوێن"
+    ,roleLabel: "ڕۆڵ"
+    ,passwordLabel: "وشەی نهێنی"
+    ,trainersAlwaysActive: "مڕەببی و سوپەرئادمین هەمیشە چالاکن"
+    ,saveChanges: "پاشەکەوتکردنی گۆڕانکاریەکان"
+    ,cancelAction: "پاشگەزبوونەوە"
+    ,deleteUserTitle: "سڕینەوەی بەکارهێنەر"
+    ,areYouSure: "دڵنیایت؟"
+    ,actionCannotBeUndone: "ئەم کردارە ناگەڕێتەوە"
+    ,confirmDelete: "پشتڕاستکردنەوەی سڕینەوە"
+    ,proRequests: "داواکارییەکانی پڕۆ"
+    ,proRequestsDescription: "پێداچوونەوە و پەسەندکردنی داواکارییەکانی بەرزکردنەوە بۆ پڕۆ"
+    ,upgradeRequests: "داواکارییەکانی بەرزکردنەوە"
+    ,noPendingRequests: "هیچ داواکارییەکی چاوەڕوانکراو نییە"
+    ,requestFrom: "داواکاری لە"
+    ,requestDetails: "وردەکاریەکانی داواکاری"
+    ,approve: "پەسەندکردن"
+    ,reject: "ڕەتکردنەوە"
+    ,pending: "چاوەڕوانکراو"
+    ,approved: "پەسەندکراو"
+    ,rejected: "ڕەتکراوەتەوە"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -2533,5 +2777,66 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   progressUpdate: "İlerleme Güncellemesi",
   progressUpdateDesc: "Bu ay 2kg kaybettin. Harika ilerleme!",
   close: "Kapat",
+  // Superadmin Dashboard (Turkish)
+  superadminDashboard: "Süper Yönetici Paneli",
+  systemManagementControl: "Sistem Yönetimi ve Kontrolü",
+  users: "Kullanıcılar",
+  keys: "Anahtarlar",
+  activeNow: "Aktif",
+  growth: "Büyüme",
+  totalActive: "Toplam Aktif",
+  accessKeysLabel: "Erişim Anahtarları",
+  onlineNow: "Şu Anda Çevrimiçi",
+  thisMonth: "Bu Ay",
+  quickActions: "Hızlı İşlemler",
+  manageUsers: "Kullanıcıları Yönet",
+  generateKeys: "Anahtar Oluştur",
+  viewReports: "Raporları Görüntüle",
+  systemStatus: "Sistem Durumu",
+  database: "Veritabanı",
+  apiServer: "API Sunucusu",
+  storage: "Depolama",
+  healthy: "Sağlıklı",
+  running: "Çalışıyor",
+  percentUsed: "Kullanılıyor",
+  // Users Management (Turkish)
+  userManagementTitle: "Kullanıcı Yönetimi",
+  manageYourUsers: "Tüm kullanıcıları yönet ve izle",
+  statistics: "İstatistikler",
+  allUsers: "Tüm Kullanıcılar",
+  searchUsers: "Kullanıcıları ara...",
+  addNewUser: "Yeni Kullanıcı Ekle",
+  viewProfile: "Profili Görüntüle",
+  editUser: "Kullanıcıyı Düzenle",
+  deleteUser: "Kullanıcıyı Sil",
+  active: "Aktif",
+  inactive: "Pasif",
+  membership: "Üyelik",
+  accountSettings: "Hesap Ayarları",
+  personalInformation: "Kişisel Bilgiler",
+  fullNameLabel: "Tam Ad",
+  emailAddressLabel: "E-posta Adresi",
+  phoneNumberLabel: "Telefon Numarası",
+  locationLabel: "Konum",
+  roleLabel: "Rol",
+  passwordLabel: "Şifre",
+  trainersAlwaysActive: "Antrenörler ve Süper Yöneticiler her zaman aktiftir",
+  saveChanges: "Değişiklikleri Kaydet",
+  cancelAction: "İptal",
+  deleteUserTitle: "Kullanıcıyı Sil",
+  areYouSure: "Emin misiniz?",
+  actionCannotBeUndone: "Bu işlem geri alınamaz",
+  confirmDelete: "Silmeyi Onayla",
+  proRequests: "Pro Talepleri",
+  proRequestsDescription: "Pro yükseltme taleplerini incele ve onayla",
+  upgradeRequests: "Yükseltme Talepleri",
+  noPendingRequests: "Bekleyen talep yok",
+  requestFrom: "Talep gönderen",
+  requestDetails: "Talep Detayları",
+  approve: "Onayla",
+  reject: "Reddet",
+  pending: "Beklemede",
+  approved: "Onaylandı",
+  rejected: "Reddedildi",
   },
 }

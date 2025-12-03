@@ -1,9 +1,704 @@
-"use client"
+﻿"use client"
 
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
-import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen relative overflow-hidden">
+import AuthGuard from "@/components/auth-guard"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Switch } from "@/components/ui/switch"
+import { Checkbox } from "@/components/ui/checkbox"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  Sparkles,
+  Users,
+  Shield,
+  Crown,
+  Activity,
+  Settings,
+  Database,
+  Lock,
+  Eye,
+  EyeOff,
+  Trash2,
+  Edit,
+  Check,
+  X,
+  Key,
+  UserPlus,
+  TrendingUp,
+  BarChart3,
+  FileText,
+  Download,
+  RefreshCw,
+  AlertTriangle,
+  CheckCircle2,
+  Dumbbell,
+  Calendar,
+  Mail,
+  Phone,
+  Zap,
+  Cpu,
+  Save,
+} from "lucide-react"
+import { useLanguage } from "@/contexts/language-context"
+
+interface Permission {
+  id: string
+  name: string
+  description: string
+  category: string
+}
+
+interface RolePermissions {
+  role: "admin" | "superadmin" | "physiotherapist" | "doctor" | "member"
+  permissions: string[]
+}
+
+interface User {
+  id: string
+  firstName: string
+  lastName: string
+  name: string
+  email: string
+  phone: string
+  role: "member" | "admin" | "superadmin" | "physiotherapist" | "doctor"
+  status: "active" | "inactive" | "suspended"
+  createdAt: string
+  lastLogin: string
+  permissions: string[]
+  gender: string
+  membershipType?: string
+  duration?: string
+}
+
+interface SystemSettings {
+  siteName: string
+  siteUrl: string
+  maintenanceMode: boolean
+  registrationEnabled: boolean
+  emailVerification: boolean
+  twoFactorAuth: boolean
+  sessionTimeout: number
+  maxLoginAttempts: number
+  passwordMinLength: number
+  requireSpecialChars: boolean
+  dataRetentionDays: number
+  backupFrequency: string
+  apiRateLimit: number
+}
+
+export default function OwnerPage() {
+  const router = useRouter()
+  const { t } = useLanguage()
+  const [showPassword, setShowPassword] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [isCreatingUser, setIsCreatingUser] = useState(false)
+  const [isEditingPermissions, setIsEditingPermissions] = useState(false)
+  const [editingUser, setEditingUser] = useState<User | null>(null)
+
+  const [allPermissions] = useState<Permission[]>([
+    // Kullan─▒c─▒ Y├╢netimi
+    {
+      id: "user_view",
+      name: "Kullan─▒c─▒lar─▒ G├╢r├╝nt├╝le",
+      description: "T├╝m kullan─▒c─▒lar─▒ g├╢r├╝nt├╝leme",
+      category: "Kullan─▒c─▒ Y├╢netimi",
+    },
+    {
+      id: "user_create",
+      name: "Kullan─▒c─▒ Olu┼ƒtur",
+      description: "Yeni kullan─▒c─▒ olu┼ƒturma",
+      category: "Kullan─▒c─▒ Y├╢netimi",
+    },
+    {
+      id: "user_edit",
+      name: "Kullan─▒c─▒ D├╝zenle",
+      description: "Kullan─▒c─▒ bilgilerini d├╝zenleme",
+      category: "Kullan─▒c─▒ Y├╢netimi",
+    },
+    { id: "user_delete", name: "Kullan─▒c─▒ Sil", description: "Kullan─▒c─▒lar─▒ silme", category: "Kullan─▒c─▒ Y├╢netimi" },
+    {
+      id: "user_suspend",
+      name: "Kullan─▒c─▒ Ask─▒ya Al",
+      description: "Kullan─▒c─▒lar─▒ ask─▒ya alma",
+      category: "Kullan─▒c─▒ Y├╢netimi",
+    },
+
+    // Admin Y├╢netimi
+    {
+      id: "admin_view",
+      name: "Adminleri G├╢r├╝nt├╝le",
+      description: "Admin kullan─▒c─▒lar─▒n─▒ g├╢r├╝nt├╝leme",
+      category: "Admin Y├╢netimi",
+    },
+    { id: "admin_create", name: "Admin Olu┼ƒtur", description: "Yeni admin olu┼ƒturma", category: "Admin Y├╢netimi" },
+    { id: "admin_edit", name: "Admin D├╝zenle", description: "Admin bilgilerini d├╝zenleme", category: "Admin Y├╢netimi" },
+    { id: "admin_delete", name: "Admin Sil", description: "Adminleri silme", category: "Admin Y├╢netimi" },
+    {
+      id: "admin_permissions",
+      name: "Admin ─░zinleri",
+      description: "Admin izinlerini y├╢netme",
+      category: "Admin Y├╢netimi",
+    },
+
+    // Egzersiz Y├╢netimi
+    {
+      id: "exercise_view",
+      name: "Egzersizleri G├╢r├╝nt├╝le",
+      description: "T├╝m egzersizleri g├╢r├╝nt├╝leme",
+      category: "Egzersiz Y├╢netimi",
+    },
+    {
+      id: "exercise_create",
+      name: "Egzersiz Olu┼ƒtur",
+      description: "Yeni egzersiz olu┼ƒturma",
+      category: "Egzersiz Y├╢netimi",
+    },
+    {
+      id: "exercise_edit",
+      name: "Egzersiz D├╝zenle",
+      description: "Egzersizleri d├╝zenleme",
+      category: "Egzersiz Y├╢netimi",
+    },
+    { id: "exercise_delete", name: "Egzersiz Sil", description: "Egzersizleri silme", category: "Egzersiz Y├╢netimi" },
+    {
+      id: "exercise_assign",
+      name: "Egzersiz Ata",
+      description: "Kullan─▒c─▒lara egzersiz atama",
+      category: "Egzersiz Y├╢netimi",
+    },
+
+    // Program Y├╢netimi
+    {
+      id: "program_view",
+      name: "Programlar─▒ G├╢r├╝nt├╝le",
+      description: "T├╝m programlar─▒ g├╢r├╝nt├╝leme",
+      category: "Program Y├╢netimi",
+    },
+    {
+      id: "program_create",
+      name: "Program Olu┼ƒtur",
+      description: "Yeni program olu┼ƒturma",
+      category: "Program Y├╢netimi",
+    },
+    { id: "program_edit", name: "Program D├╝zenle", description: "Programlar─▒ d├╝zenleme", category: "Program Y├╢netimi" },
+    { id: "program_delete", name: "Program Sil", description: "Programlar─▒ silme", category: "Program Y├╢netimi" },
+    {
+      id: "program_assign",
+      name: "Program Ata",
+      description: "Kullan─▒c─▒lara program atama",
+      category: "Program Y├╢netimi",
+    },
+
+    // Rapor ve Analitik
+    {
+      id: "report_view",
+      name: "Raporlar─▒ G├╢r├╝nt├╝le",
+      description: "Sistem raporlar─▒n─▒ g├╢r├╝nt├╝leme",
+      category: "Rapor ve Analitik",
+    },
+    {
+      id: "report_export",
+      name: "Rapor D─▒┼ƒa Aktar",
+      description: "Raporlar─▒ d─▒┼ƒa aktarma",
+      category: "Rapor ve Analitik",
+    },
+    {
+      id: "analytics_view",
+      name: "Analitik G├╢r├╝nt├╝le",
+      description: "Sistem analiti─ƒini g├╢r├╝nt├╝leme",
+      category: "Rapor ve Analitik",
+    },
+    {
+      id: "analytics_advanced",
+      name: "Geli┼ƒmi┼ƒ Analitik",
+      description: "Detayl─▒ analitik eri┼ƒimi",
+      category: "Rapor ve Analitik",
+    },
+
+    // Sistem Ayarlar─▒
+    {
+      id: "system_view",
+      name: "Sistem Ayarlar─▒n─▒ G├╢r├╝nt├╝le",
+      description: "Sistem ayarlar─▒n─▒ g├╢r├╝nt├╝leme",
+      category: "Sistem Ayarlar─▒",
+    },
+    {
+      id: "system_edit",
+      name: "Sistem Ayarlar─▒n─▒ D├╝zenle",
+      description: "Sistem ayarlar─▒n─▒ de─ƒi┼ƒtirme",
+      category: "Sistem Ayarlar─▒",
+    },
+    {
+      id: "system_security",
+      name: "G├╝venlik Ayarlar─▒",
+      description: "G├╝venlik ayarlar─▒n─▒ y├╢netme",
+      category: "Sistem Ayarlar─▒",
+    },
+    { id: "system_maintenance", name: "Bak─▒m Modu", description: "Bak─▒m modunu y├╢netme", category: "Sistem Ayarlar─▒" },
+
+    // Veritaban─▒ Y├╢netimi
+    {
+      id: "db_view",
+      name: "Veritaban─▒ G├╢r├╝nt├╝le",
+      description: "Veritaban─▒ bilgilerini g├╢r├╝nt├╝leme",
+      category: "Veritaban─▒ Y├╢netimi",
+    },
+    { id: "db_backup", name: "Yedekleme", description: "Veritaban─▒ yedekleme", category: "Veritaban─▒ Y├╢netimi" },
+    { id: "db_restore", name: "Geri Y├╝kleme", description: "Veritaban─▒ geri y├╝kleme", category: "Veritaban─▒ Y├╢netimi" },
+    {
+      id: "db_optimize",
+      name: "Optimizasyon",
+      description: "Veritaban─▒ optimizasyonu",
+      category: "Veritaban─▒ Y├╢netimi",
+    },
+    { id: "db_cleanup", name: "Temizleme", description: "Veritaban─▒ temizleme", category: "Veritaban─▒ Y├╢netimi" },
+
+    // ├ûdeme ve Finans
+    {
+      id: "payment_view",
+      name: "├ûdemeleri G├╢r├╝nt├╝le",
+      description: "├ûdeme kay─▒tlar─▒n─▒ g├╢r├╝nt├╝leme",
+      category: "├ûdeme ve Finans",
+    },
+    {
+      id: "payment_manage",
+      name: "├ûdeme Y├╢netimi",
+      description: "├ûdeme i┼ƒlemlerini y├╢netme",
+      category: "├ûdeme ve Finans",
+    },
+    {
+      id: "subscription_manage",
+      name: "Abonelik Y├╢netimi",
+      description: "Abonelikleri y├╢netme",
+      category: "├ûdeme ve Finans",
+    },
+    { id: "invoice_create", name: "Fatura Olu┼ƒtur", description: "Fatura olu┼ƒturma", category: "├ûdeme ve Finans" },
+
+    // ─░├ºerik Y├╢netimi
+    {
+      id: "content_view",
+      name: "─░├ºerikleri G├╢r├╝nt├╝le",
+      description: "T├╝m i├ºerikleri g├╢r├╝nt├╝leme",
+      category: "─░├ºerik Y├╢netimi",
+    },
+    { id: "content_create", name: "─░├ºerik Olu┼ƒtur", description: "Yeni i├ºerik olu┼ƒturma", category: "─░├ºerik Y├╢netimi" },
+    { id: "content_edit", name: "─░├ºerik D├╝zenle", description: "─░├ºerikleri d├╝zenleme", category: "─░├ºerik Y├╢netimi" },
+    { id: "content_delete", name: "─░├ºerik Sil", description: "─░├ºerikleri silme", category: "─░├ºerik Y├╢netimi" },
+    {
+      id: "content_moderate",
+      name: "─░├ºerik Moderasyonu",
+      description: "─░├ºerik moderasyonu yapma",
+      category: "─░├ºerik Y├╢netimi",
+    },
+
+    // Bildirim Y├╢netimi
+    {
+      id: "notification_send",
+      name: "Bildirim G├╢nder",
+      description: "Kullan─▒c─▒lara bildirim g├╢nderme",
+      category: "Bildirim Y├╢netimi",
+    },
+    {
+      id: "notification_manage",
+      name: "Bildirim Y├╢netimi",
+      description: "Bildirimleri y├╢netme",
+      category: "Bildirim Y├╢netimi",
+    },
+    { id: "email_send", name: "E-posta G├╢nder", description: "Toplu e-posta g├╢nderme", category: "Bildirim Y├╢netimi" },
+
+    // Eri┼ƒim Anahtar─▒ Y├╢netimi
+    {
+      id: "accesskey_view",
+      name: "Eri┼ƒim Anahtarlar─▒n─▒ G├╢r├╝nt├╝le",
+      description: "Eri┼ƒim anahtarlar─▒n─▒ g├╢r├╝nt├╝leme",
+      category: "Eri┼ƒim Anahtar─▒",
+    },
+    {
+      id: "accesskey_create",
+      name: "Eri┼ƒim Anahtar─▒ Olu┼ƒtur",
+      description: "Yeni eri┼ƒim anahtar─▒ olu┼ƒturma",
+      category: "Eri┼ƒim Anahtar─▒",
+    },
+    {
+      id: "accesskey_delete",
+      name: "Eri┼ƒim Anahtar─▒ Sil",
+      description: "Eri┼ƒim anahtarlar─▒n─▒ silme",
+      category: "Eri┼ƒim Anahtar─▒",
+    },
+  ])
+
+  const [rolePermissionTemplates, setRolePermissionTemplates] = useState<RolePermissions[]>([
+    {
+      role: "superadmin",
+      permissions: [
+        "user_view",
+        "user_create",
+        "user_edit",
+        "user_delete",
+        "user_suspend",
+        "admin_view",
+        "admin_create",
+        "admin_edit",
+        "admin_delete",
+        "exercise_view",
+        "exercise_create",
+        "exercise_edit",
+        "exercise_delete",
+        "exercise_assign",
+        "program_view",
+        "program_create",
+        "program_edit",
+        "program_delete",
+        "program_assign",
+        "report_view",
+        "report_export",
+        "analytics_view",
+        "analytics_advanced",
+        "system_view",
+        "system_edit",
+        "system_security",
+        "db_view",
+        "db_backup",
+        "db_optimize",
+        "payment_view",
+        "payment_manage",
+        "subscription_manage",
+        "content_view",
+        "content_create",
+        "content_edit",
+        "content_moderate",
+        "notification_send",
+        "notification_manage",
+        "email_send",
+        "accesskey_view",
+        "accesskey_create",
+        "accesskey_delete",
+      ],
+    },
+    {
+      role: "admin",
+      permissions: [
+        "user_view",
+        "user_create",
+        "user_edit",
+        "exercise_view",
+        "exercise_create",
+        "exercise_edit",
+        "exercise_assign",
+        "program_view",
+        "program_create",
+        "program_edit",
+        "program_assign",
+        "report_view",
+        "analytics_view",
+        "content_view",
+        "content_create",
+        "content_edit",
+        "notification_send",
+        "accesskey_view",
+        "accesskey_create",
+      ],
+    },
+    {
+      role: "physiotherapist",
+      permissions: [
+        "user_view",
+        "exercise_view",
+        "exercise_create",
+        "exercise_edit",
+        "exercise_assign",
+        "program_view",
+        "program_create",
+        "program_edit",
+        "program_assign",
+        "report_view",
+        "content_view",
+      ],
+    },
+    {
+      role: "doctor",
+      permissions: ["user_view", "exercise_view", "exercise_assign", "program_view", "program_assign", "report_view"],
+    },
+    {
+      role: "member",
+      permissions: ["exercise_view", "program_view"],
+    },
+  ])
+
+  const [users, setUsers] = useState<User[]>([
+    {
+      id: "1",
+      firstName: "Super",
+      lastName: "Admin",
+      name: "Super Admin",
+      email: "superadmin@fitness.com",
+      phone: "+90 555 111 1111",
+      role: "superadmin",
+      status: "active",
+      createdAt: "2024-01-01",
+      lastLogin: "Bug├╝n",
+      permissions: rolePermissionTemplates.find((r) => r.role === "superadmin")?.permissions || [],
+      gender: "erkek",
+    },
+    {
+      id: "2",
+      firstName: "Admin",
+      lastName: "User",
+      name: "Admin User",
+      email: "admin@fitness.com",
+      phone: "+90 555 222 2222",
+      role: "admin",
+      status: "active",
+      createdAt: "2024-01-05",
+      lastLogin: "D├╝n",
+      permissions: rolePermissionTemplates.find((r) => r.role === "admin")?.permissions || [],
+      gender: "erkek",
+    },
+    {
+      id: "3",
+      firstName: "Ahmet",
+      lastName: "Y─▒lmaz",
+      name: "Dr. Ahmet Y─▒lmaz",
+      email: "ahmet@fitness.com",
+      phone: "+90 555 333 3333",
+      role: "physiotherapist",
+      status: "active",
+      createdAt: "2024-01-10",
+      lastLogin: "Bug├╝n",
+      permissions: rolePermissionTemplates.find((r) => r.role === "physiotherapist")?.permissions || [],
+      gender: "erkek",
+    },
+    {
+      id: "4",
+      firstName: "Ay┼ƒe",
+      lastName: "Demir",
+      name: "Ay┼ƒe Demir",
+      email: "ayse@fitness.com",
+      phone: "+90 555 444 4444",
+      role: "member",
+      status: "active",
+      createdAt: "2024-01-15",
+      lastLogin: "2 saat ├╢nce",
+      permissions: rolePermissionTemplates.find((r) => r.role === "member")?.permissions || [],
+      gender: "kadin",
+      membershipType: "Premium",
+      duration: "6",
+    },
+  ])
+
+  const [systemSettings, setSystemSettings] = useState<SystemSettings>({
+    siteName: "FitnessApp Pro",
+    siteUrl: "https://fitnessapp.com",
+    maintenanceMode: false,
+    registrationEnabled: true,
+    emailVerification: true,
+    twoFactorAuth: false,
+    sessionTimeout: 30,
+    maxLoginAttempts: 5,
+    passwordMinLength: 8,
+    requireSpecialChars: true,
+    dataRetentionDays: 365,
+    backupFrequency: "daily",
+    apiRateLimit: 1000,
+  })
+
+  const [newUser, setNewUser] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    role: "member" as User["role"],
+    password: "",
+    gender: "erkek",
+    membershipType: "Basic",
+    duration: "1",
+    notes: "",
+    permissions: [] as string[],
+  })
+
+  const handleCreateUser = () => {
+    const roleTemplate = rolePermissionTemplates.find((r) => r.role === newUser.role)
+    const user: User = {
+      id: String(users.length + 1),
+      firstName: newUser.firstName,
+      lastName: newUser.lastName,
+      name: `${newUser.firstName} ${newUser.lastName}`,
+      email: newUser.email,
+      phone: newUser.phone,
+      role: newUser.role,
+      status: "active",
+      createdAt: new Date().toISOString().split("T")[0],
+      lastLogin: "Hen├╝z giri┼ƒ yapmad─▒",
+      permissions: roleTemplate?.permissions || [],
+      gender: newUser.gender,
+      membershipType: newUser.membershipType,
+      duration: newUser.duration,
+    }
+    setUsers([...users, user])
+    setIsCreatingUser(false)
+    setNewUser({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      role: "member",
+      password: "",
+      gender: "erkek",
+      membershipType: "Basic",
+      duration: "1",
+      notes: "",
+      permissions: [],
+    })
+    console.log("[v0] Yeni kullan─▒c─▒ olu┼ƒturuldu:", user)
+  }
+
+  const handleDeleteUser = (userId: string) => {
+    const user = users.find((u) => u.id === userId)
+    if (confirm(`${user?.name} kullan─▒c─▒s─▒n─▒ silmek istedi─ƒinizden emin misiniz?`)) {
+      setUsers(users.filter((u) => u.id !== userId))
+      if (selectedUser?.id === userId) {
+        setSelectedUser(null)
+      }
+      console.log("[v0] Kullan─▒c─▒ silindi:", userId)
+    }
+  }
+
+  const handleSuspendUser = (userId: string) => {
+    setUsers(
+      users.map((u) =>
+        u.id === userId ? { ...u, status: u.status === "suspended" ? "active" : ("suspended" as User["status"]) } : u,
+      ),
+    )
+    console.log("[v0] Kullan─▒c─▒ durumu de─ƒi┼ƒtirildi:", userId)
+  }
+
+  const handleEditUser = (user: User) => {
+    setEditingUser(user)
+    setSelectedUser(user)
+  }
+
+  const handleSaveUser = () => {
+    if (editingUser) {
+      setUsers(users.map((u) => (u.id === editingUser.id ? editingUser : u)))
+      setEditingUser(null)
+      setSelectedUser(null)
+      console.log("[v0] Kullan─▒c─▒ g├╝ncellendi:", editingUser)
+    }
+  }
+
+  const handleUpdatePermissions = (userId: string, permissions: string[]) => {
+    setUsers(users.map((u) => (u.id === userId ? { ...u, permissions } : u)))
+    console.log("[v0] Kullan─▒c─▒ izinleri g├╝ncellendi:", userId, permissions)
+  }
+
+  const handleUpdateRoleTemplate = (role: User["role"], permissions: string[]) => {
+    setRolePermissionTemplates(rolePermissionTemplates.map((r) => (r.role === role ? { ...r, permissions } : r)))
+    console.log("[v0] Rol ┼ƒablonu g├╝ncellendi:", role, permissions)
+  }
+
+  const handleUpdateSystemSettings = (key: keyof SystemSettings, value: any) => {
+    setSystemSettings({ ...systemSettings, [key]: value })
+    console.log("[v0] Sistem ayar─▒ g├╝ncellendi:", key, value)
+  }
+
+  const handleSaveSystemSettings = () => {
+    console.log("[v0] Sistem ayarlar─▒ kaydedildi:", systemSettings)
+    alert("Sistem ayarlar─▒ ba┼ƒar─▒yla kaydedildi!")
+  }
+
+  const handleDatabaseBackup = () => {
+    console.log("[v0] Veritaban─▒ yede─ƒi olu┼ƒturuluyor...")
+    alert("Veritaban─▒ yede─ƒi ba┼ƒar─▒yla olu┼ƒturuldu!")
+  }
+
+  const handleDatabaseRestore = () => {
+    if (confirm("Veritaban─▒n─▒ geri y├╝klemek istedi─ƒinizden emin misiniz? Bu i┼ƒlem geri al─▒namaz!")) {
+      console.log("[v0] Veritaban─▒ geri y├╝kleniyor...")
+      alert("Veritaban─▒ ba┼ƒar─▒yla geri y├╝klendi!")
+    }
+  }
+
+  const handleDatabaseOptimize = () => {
+    console.log("[v0] Veritaban─▒ optimize ediliyor...")
+    alert("Veritaban─▒ ba┼ƒar─▒yla optimize edildi!")
+  }
+
+  const handleDatabaseCleanup = () => {
+    if (confirm("Eski verileri temizlemek istedi─ƒinizden emin misiniz?")) {
+      console.log("[v0] Veritaban─▒ temizleniyor...")
+      alert("Veritaban─▒ ba┼ƒar─▒yla temizlendi!")
+    }
+  }
+
+  const handleExportReport = (reportType: string) => {
+    console.log("[v0] Rapor d─▒┼ƒa aktar─▒l─▒yor:", reportType)
+    alert(`${reportType} raporu ba┼ƒar─▒yla d─▒┼ƒa aktar─▒ld─▒!`)
+  }
+
+  const getRoleColor = (role: User["role"]) => {
+    switch (role) {
+      case "superadmin":
+        return "from-purple-600 to-pink-600"
+      case "admin":
+        return "from-blue-600 to-indigo-600"
+      case "physiotherapist":
+        return "from-green-600 to-teal-600"
+      case "doctor":
+        return "from-cyan-600 to-blue-600"
+      default:
+        return "from-gray-600 to-gray-700"
+    }
+  }
+
+  const getRoleIcon = (role: User["role"]) => {
+    switch (role) {
+      case "superadmin":
+        return <Crown className="w-4 h-4" />
+      case "admin":
+        return <Shield className="w-4 h-4" />
+      case "physiotherapist":
+        return <Activity className="w-4 h-4" />
+      case "doctor":
+        return <Activity className="w-4 h-4" />
+      default:
+        return <Users className="w-4 h-4" />
+    }
+  }
+
+  const getRoleDisplayName = (role: User["role"]) => {
+    switch (role) {
+      case "superadmin":
+        return "Superadmin"
+      case "admin":
+        return "Admin"
+      case "physiotherapist":
+        return "Fizyoterapist"
+      case "doctor":
+        return "Doktor"
+      default:
+        return "├£ye"
+    }
+  }
+
+  return (
+    <AuthGuard requiredRole="owner">
+    <div className="min-h-screen relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-amber-950/20 via-orange-950/20 to-yellow-950/20" />
 
       <div className="relative z-10 container mx-auto px-4 py-8">
@@ -14,9 +709,9 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             </div>
             <div>
               <h1 className="text-3xl font-bold bg-gradient-to-r from-amber-500 via-orange-500 to-yellow-500 bg-clip-text text-transparent">
-                Owner Yönetim Paneli
+                Owner Y├╢netim Paneli
               </h1>
-              <p className="text-muted-foreground">Tam Sistem Kontrolü ve Ultra Kapsamlı Ayarlar</p>
+              <p className="text-muted-foreground">Tam Sistem Kontrol├╝ ve Ultra Kapsaml─▒ Ayarlar</p>
             </div>
           </div>
           <div className="flex items-center gap-3">
@@ -33,7 +728,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
           <TabsList className="grid w-full max-w-4xl grid-cols-6">
             <TabsTrigger value="users">
               <Users className="w-4 h-4 mr-2" />
-              Kullanıcılar
+              Kullan─▒c─▒lar
             </TabsTrigger>
             <TabsTrigger value="admins">
               <Shield className="w-4 h-4 mr-2" />
@@ -41,7 +736,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             </TabsTrigger>
             <TabsTrigger value="permissions">
               <Lock className="w-4 h-4 mr-2" />
-              İzinler
+              ─░zinler
             </TabsTrigger>
             <TabsTrigger value="system">
               <Settings className="w-4 h-4 mr-2" />
@@ -49,7 +744,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             </TabsTrigger>
             <TabsTrigger value="database">
               <Database className="w-4 h-4 mr-2" />
-              Veritabanı
+              Veritaban─▒
             </TabsTrigger>
             <TabsTrigger value="analytics">
               <BarChart3 className="w-4 h-4 mr-2" />
@@ -65,7 +760,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     <Users className="w-6 h-6 text-amber-500" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Toplam Kullanıcı</p>
+                    <p className="text-sm text-muted-foreground">Toplam Kullan─▒c─▒</p>
                     <p className="text-2xl font-bold">{users.length}</p>
                   </div>
                 </div>
@@ -116,7 +811,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                 className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500"
               >
                 <UserPlus className="w-4 h-4 mr-2" />
-                Yeni Kullanıcı Oluştur
+                Yeni Kullan─▒c─▒ Olu┼ƒtur
               </Button>
             </div>
 
@@ -125,7 +820,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold flex items-center gap-2">
                     <UserPlus className="w-6 h-6 text-amber-500" />
-                    Yeni Kullanıcı Oluştur
+                    Yeni Kullan─▒c─▒ Olu┼ƒtur
                   </h2>
                   <Button variant="ghost" size="sm" onClick={() => setIsCreatingUser(false)}>
                     <X className="w-4 h-4" />
@@ -139,7 +834,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       id="firstName"
                       value={newUser.firstName}
                       onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
-                      placeholder="Kullanıcı adı"
+                      placeholder="Kullan─▒c─▒ ad─▒"
                       className="bg-black/20 border-border/50"
                     />
                   </div>
@@ -150,7 +845,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       id="lastName"
                       value={newUser.lastName}
                       onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
-                      placeholder="Kullanıcı soyadı"
+                      placeholder="Kullan─▒c─▒ soyad─▒"
                       className="bg-black/20 border-border/50"
                     />
                   </div>
@@ -194,7 +889,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="member">Üye</SelectItem>
+                        <SelectItem value="member">├£ye</SelectItem>
                         <SelectItem value="doctor">Doktor</SelectItem>
                         <SelectItem value="physiotherapist">Fizyoterapist</SelectItem>
                         <SelectItem value="admin">Admin</SelectItem>
@@ -211,7 +906,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="erkek">Erkek</SelectItem>
-                        <SelectItem value="kadin">Kadın</SelectItem>
+                        <SelectItem value="kadin">Kad─▒n</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -219,7 +914,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   {newUser.role === "member" && (
                     <>
                       <div className="space-y-3">
-                        <Label htmlFor="membershipType">Üyelik Tipi</Label>
+                        <Label htmlFor="membershipType">├£yelik Tipi</Label>
                         <Select
                           value={newUser.membershipType}
                           onValueChange={(value) => setNewUser({ ...newUser, membershipType: value })}
@@ -236,7 +931,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       </div>
 
                       <div className="space-y-3">
-                        <Label htmlFor="duration">Süre (Ay)</Label>
+                        <Label htmlFor="duration">S├╝re (Ay)</Label>
                         <Input
                           id="duration"
                           type="number"
@@ -252,7 +947,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   )}
 
                   <div className="space-y-3">
-                    <Label htmlFor="password">Şifre *</Label>
+                    <Label htmlFor="password">┼₧ifre *</Label>
                     <div className="relative">
                       <Key className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
@@ -260,7 +955,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                         type={showPassword ? "text" : "password"}
                         value={newUser.password}
                         onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
-                        placeholder="••••••••"
+                        placeholder="ΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇóΓÇó"
                         className="pl-10 pr-10 bg-black/20 border-border/50"
                       />
                       <button
@@ -279,7 +974,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       id="notes"
                       value={newUser.notes}
                       onChange={(e) => setNewUser({ ...newUser, notes: e.target.value })}
-                      placeholder="Kullanıcı hakkında notlar..."
+                      placeholder="Kullan─▒c─▒ hakk─▒nda notlar..."
                       className="bg-black/20 border-border/50 min-h-[100px]"
                     />
                   </div>
@@ -287,7 +982,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
 
                 <div className="flex justify-end gap-3 mt-6">
                   <Button variant="outline" onClick={() => setIsCreatingUser(false)}>
-                    İptal
+                    ─░ptal
                   </Button>
                   <Button
                     onClick={handleCreateUser}
@@ -295,7 +990,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     className="bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-500 hover:to-orange-500"
                   >
                     <Check className="w-4 h-4 mr-2" />
-                    Kullanıcı Oluştur
+                    Kullan─▒c─▒ Olu┼ƒtur
                   </Button>
                 </div>
               </Card>
@@ -304,7 +999,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             <Card className="p-8 glass-effect border-amber-500/30">
               <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 <Users className="w-6 h-6 text-amber-500" />
-                Tüm Kullanıcılar
+                T├╝m Kullan─▒c─▒lar
               </h2>
 
               <div className="space-y-4">
@@ -337,7 +1032,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                                     : "destructive"
                               }
                             >
-                              {user.status === "active" ? "Aktif" : user.status === "suspended" ? "Askıda" : "Pasif"}
+                              {user.status === "active" ? "Aktif" : user.status === "suspended" ? "Ask─▒da" : "Pasif"}
                             </Badge>
                           </div>
                           <p className="text-sm text-muted-foreground mb-2">{user.email}</p>
@@ -345,16 +1040,16 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                           <div className="flex items-center gap-4 text-xs text-muted-foreground mb-3">
                             <span className="flex items-center gap-1">
                               <Calendar className="w-3 h-3" />
-                              Kayıt: {user.createdAt}
+                              Kay─▒t: {user.createdAt}
                             </span>
                             <span className="flex items-center gap-1">
                               <Activity className="w-3 h-3" />
-                              Son giriş: {user.lastLogin}
+                              Son giri┼ƒ: {user.lastLogin}
                             </span>
                           </div>
                           <div className="flex flex-wrap gap-1">
                             <Badge variant="secondary" className="text-xs">
-                              {user.permissions.length} İzin
+                              {user.permissions.length} ─░zin
                             </Badge>
                             {user.membershipType && (
                               <Badge variant="secondary" className="text-xs">
@@ -374,13 +1069,13 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                               className="bg-transparent"
                             >
                               <Edit className="w-4 h-4 mr-2" />
-                              Düzenle
+                              D├╝zenle
                             </Button>
                           </DialogTrigger>
                           <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
-                              <DialogTitle>Kullanıcı İzinlerini Düzenle - {user.name}</DialogTitle>
-                              <DialogDescription>Bu kullanıcı için manuel izin ayarları yapın</DialogDescription>
+                              <DialogTitle>Kullan─▒c─▒ ─░zinlerini D├╝zenle - {user.name}</DialogTitle>
+                              <DialogDescription>Bu kullan─▒c─▒ i├ºin manuel izin ayarlar─▒ yap─▒n</DialogDescription>
                             </DialogHeader>
                             <div className="space-y-6 mt-4">
                               {Object.entries(
@@ -426,7 +1121,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                             </div>
                             <div className="flex justify-end gap-3 mt-6">
                               <Button variant="outline" onClick={() => setEditingUser(null)}>
-                                İptal
+                                ─░ptal
                               </Button>
                               <Button
                                 onClick={() => {
@@ -450,7 +1145,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                           className="bg-transparent text-orange-500 hover:text-orange-600 hover:border-orange-500"
                         >
                           <AlertTriangle className="w-4 h-4 mr-2" />
-                          {user.status === "suspended" ? "Aktifleştir" : "Askıya Al"}
+                          {user.status === "suspended" ? "Aktifle┼ƒtir" : "Ask─▒ya Al"}
                         </Button>
                         <Button
                           variant="outline"
@@ -473,7 +1168,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             <Card className="p-8 glass-effect border-amber-500/30">
               <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 <Shield className="w-6 h-6 text-amber-500" />
-                Admin ve Superadmin Yönetimi
+                Admin ve Superadmin Y├╢netimi
               </h2>
 
               <div className="space-y-4">
@@ -501,7 +1196,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                             <p className="text-sm text-muted-foreground mb-3">{user.phone}</p>
                             <div className="flex flex-wrap gap-1">
                               <Badge variant="secondary" className="text-xs">
-                                {user.permissions.length} İzin Aktif
+                                {user.permissions.length} ─░zin Aktif
                               </Badge>
                             </div>
                           </div>
@@ -516,13 +1211,13 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                                 className="bg-transparent"
                               >
                                 <Edit className="w-4 h-4 mr-2" />
-                                İzinleri Düzenle
+                                ─░zinleri D├╝zenle
                               </Button>
                             </DialogTrigger>
                             <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                               <DialogHeader>
-                                <DialogTitle>Admin İzinlerini Düzenle - {user.name}</DialogTitle>
-                                <DialogDescription>Bu admin için detaylı izin ayarları yapın</DialogDescription>
+                                <DialogTitle>Admin ─░zinlerini D├╝zenle - {user.name}</DialogTitle>
+                                <DialogDescription>Bu admin i├ºin detayl─▒ izin ayarlar─▒ yap─▒n</DialogDescription>
                               </DialogHeader>
                               <div className="space-y-6 mt-4">
                                 {Object.entries(
@@ -568,7 +1263,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                               </div>
                               <div className="flex justify-end gap-3 mt-6">
                                 <Button variant="outline" onClick={() => setEditingUser(null)}>
-                                  İptal
+                                  ─░ptal
                                 </Button>
                                 <Button
                                   onClick={() => {
@@ -592,7 +1287,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                             className="bg-transparent text-orange-500 hover:text-orange-600 hover:border-orange-500"
                           >
                             <AlertTriangle className="w-4 h-4 mr-2" />
-                            {user.status === "suspended" ? "Aktifleştir" : "Askıya Al"}
+                            {user.status === "suspended" ? "Aktifle┼ƒtir" : "Ask─▒ya Al"}
                           </Button>
                           <Button
                             variant="outline"
@@ -615,7 +1310,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             <Card className="p-8 glass-effect border-amber-500/30">
               <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 <Lock className="w-6 h-6 text-amber-500" />
-                Rol Bazlı İzin Yönetimi
+                Rol Bazl─▒ ─░zin Y├╢netimi
               </h2>
 
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -627,7 +1322,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                         {getRoleIcon(roleTemplate.role)} {roleTemplate.role}
                       </Badge>
                     </div>
-                    <p className="text-sm text-muted-foreground mb-4">Bu rol için tanımlanmış izinler.</p>
+                    <p className="text-sm text-muted-foreground mb-4">Bu rol i├ºin tan─▒mlanm─▒┼ƒ izinler.</p>
                     <div className="flex flex-wrap gap-1 mb-6">
                       {roleTemplate.permissions.slice(0, 5).map((permId) => (
                         <Badge key={permId} variant="secondary" className="text-xs">
@@ -636,7 +1331,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       ))}
                       {roleTemplate.permissions.length > 5 && (
                         <Badge variant="secondary" className="text-xs">
-                          +{roleTemplate.permissions.length - 5} Diğer
+                          +{roleTemplate.permissions.length - 5} Di─ƒer
                         </Badge>
                       )}
                     </div>
@@ -664,13 +1359,13 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                           }}
                         >
                           <Edit className="w-4 h-4 mr-2" />
-                          İzinleri Düzenle
+                          ─░zinleri D├╝zenle
                         </Button>
                       </DialogTrigger>
                       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
                         <DialogHeader>
-                          <DialogTitle>{getRoleDisplayName(roleTemplate.role)} İzinlerini Düzenle</DialogTitle>
-                          <DialogDescription>Bu rol için izinleri seçin veya kaldırın.</DialogDescription>
+                          <DialogTitle>{getRoleDisplayName(roleTemplate.role)} ─░zinlerini D├╝zenle</DialogTitle>
+                          <DialogDescription>Bu rol i├ºin izinleri se├ºin veya kald─▒r─▒n.</DialogDescription>
                         </DialogHeader>
                         <div className="space-y-6 mt-4">
                           {Object.entries(
@@ -722,7 +1417,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                               setEditingUser(null)
                             }}
                           >
-                            İptal
+                            ─░ptal
                           </Button>
                           <Button
                             onClick={() => {
@@ -751,12 +1446,12 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
             <Card className="p-8 glass-effect border-amber-500/30">
               <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
                 <Settings className="w-6 h-6 text-amber-500" />
-                Genel Sistem Ayarları
+                Genel Sistem Ayarlar─▒
               </h2>
 
               <div className="grid md:grid-cols-2 gap-6">
                 <div className="space-y-3">
-                  <Label htmlFor="siteName">Site Adı</Label>
+                  <Label htmlFor="siteName">Site Ad─▒</Label>
                   <Input
                     id="siteName"
                     value={systemSettings.siteName}
@@ -784,7 +1479,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     checked={systemSettings.maintenanceMode}
                     onCheckedChange={(checked) => handleUpdateSystemSettings("maintenanceMode", checked)}
                   />
-                  <Label htmlFor="maintenanceMode">Bakım Modu</Label>
+                  <Label htmlFor="maintenanceMode">Bak─▒m Modu</Label>
                 </div>
                 <div className="flex items-center space-x-3 space-y-0 p-3 rounded-md border border-border/50 glass-effect">
                   <Switch
@@ -792,7 +1487,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     checked={systemSettings.registrationEnabled}
                     onCheckedChange={(checked) => handleUpdateSystemSettings("registrationEnabled", checked)}
                   />
-                  <Label htmlFor="registrationEnabled">Kayıtlar Açık</Label>
+                  <Label htmlFor="registrationEnabled">Kay─▒tlar A├º─▒k</Label>
                 </div>
                 <div className="flex items-center space-x-3 space-y-0 p-3 rounded-md border border-border/50 glass-effect">
                   <Switch
@@ -800,7 +1495,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     checked={systemSettings.emailVerification}
                     onCheckedChange={(checked) => handleUpdateSystemSettings("emailVerification", checked)}
                   />
-                  <Label htmlFor="emailVerification">E-posta Doğrulama</Label>
+                  <Label htmlFor="emailVerification">E-posta Do─ƒrulama</Label>
                 </div>
                 <div className="flex items-center space-x-3 space-y-0 p-3 rounded-md border border-border/50 glass-effect">
                   <Switch
@@ -808,13 +1503,13 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     checked={systemSettings.twoFactorAuth}
                     onCheckedChange={(checked) => handleUpdateSystemSettings("twoFactorAuth", checked)}
                   />
-                  <Label htmlFor="twoFactorAuth">İki Faktörlü Kimlik Doğrulama</Label>
+                  <Label htmlFor="twoFactorAuth">─░ki Fakt├╢rl├╝ Kimlik Do─ƒrulama</Label>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div className="space-y-3">
-                  <Label htmlFor="sessionTimeout">Oturum Zaman Aşımı (Dakika)</Label>
+                  <Label htmlFor="sessionTimeout">Oturum Zaman A┼ƒ─▒m─▒ (Dakika)</Label>
                   <Input
                     id="sessionTimeout"
                     type="number"
@@ -825,7 +1520,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label htmlFor="maxLoginAttempts">Maksimum Giriş Denemesi</Label>
+                  <Label htmlFor="maxLoginAttempts">Maksimum Giri┼ƒ Denemesi</Label>
                   <Input
                     id="maxLoginAttempts"
                     type="number"
@@ -836,7 +1531,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label htmlFor="passwordMinLength">Şifre Minimum Uzunluk</Label>
+                  <Label htmlFor="passwordMinLength">┼₧ifre Minimum Uzunluk</Label>
                   <Input
                     id="passwordMinLength"
                     type="number"
@@ -847,7 +1542,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   />
                 </div>
                 <div className="space-y-3">
-                  <Label htmlFor="dataRetentionDays">Veri Saklama (Gün)</Label>
+                  <Label htmlFor="dataRetentionDays">Veri Saklama (G├╝n)</Label>
                   <Input
                     id="dataRetentionDays"
                     type="number"
@@ -861,7 +1556,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
 
               <div className="grid md:grid-cols-2 gap-6 mt-6">
                 <div className="space-y-3">
-                  <Label htmlFor="backupFrequency">Yedekleme Sıklığı</Label>
+                  <Label htmlFor="backupFrequency">Yedekleme S─▒kl─▒─ƒ─▒</Label>
                   <Select
                     value={systemSettings.backupFrequency}
                     onValueChange={(value) => handleUpdateSystemSettings("backupFrequency", value)}
@@ -870,14 +1565,14 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="daily">Günlük</SelectItem>
-                      <SelectItem value="weekly">Haftalık</SelectItem>
-                      <SelectItem value="monthly">Aylık</SelectItem>
+                      <SelectItem value="daily">G├╝nl├╝k</SelectItem>
+                      <SelectItem value="weekly">Haftal─▒k</SelectItem>
+                      <SelectItem value="monthly">Ayl─▒k</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-3">
-                  <Label htmlFor="apiRateLimit">API İstek Sınırı (Saniyede)</Label>
+                  <Label htmlFor="apiRateLimit">API ─░stek S─▒n─▒r─▒ (Saniyede)</Label>
                   <Input
                     id="apiRateLimit"
                     type="number"
@@ -895,7 +1590,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   className="bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-500 hover:to-teal-500"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  Sistem Ayarlarını Kaydet
+                  Sistem Ayarlar─▒n─▒ Kaydet
                 </Button>
               </div>
             </Card>
@@ -911,7 +1606,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
                     <Save className="w-6 h-6 text-blue-500" />
                   </div>
-                  <p className="text-sm text-muted-foreground text-center">Veritabanı Yedeği Oluştur</p>
+                  <p className="text-sm text-muted-foreground text-center">Veritaban─▒ Yede─ƒi Olu┼ƒtur</p>
                 </div>
               </Card>
 
@@ -923,7 +1618,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   <div className="w-12 h-12 rounded-xl bg-red-500/20 flex items-center justify-center">
                     <RefreshCw className="w-6 h-6 text-red-500" />
                   </div>
-                  <p className="text-sm text-muted-foreground text-center">Veritabanını Geri Yükle</p>
+                  <p className="text-sm text-muted-foreground text-center">Veritaban─▒n─▒ Geri Y├╝kle</p>
                 </div>
               </Card>
 
@@ -935,7 +1630,7 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                   <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center">
                     <Cpu className="w-6 h-6 text-purple-500" />
                   </div>
-                  <p className="text-sm text-muted-foreground text-center">Veritabanını Optimize Et</p>
+                  <p className="text-sm text-muted-foreground text-center">Veritaban─▒n─▒ Optimize Et</p>
                 </div>
               </Card>
 
@@ -958,19 +1653,19 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
               <Card className="p-8 glass-effect border-cyan-500/30 lg:col-span-2">
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <TrendingUp className="w-6 h-6 text-cyan-500" />
-                  Kullanıcı Büyüme Grafiği
+                  Kullan─▒c─▒ B├╝y├╝me Grafi─ƒi
                 </h3>
                 <div className="h-64 flex items-center justify-center bg-black/30 rounded-lg border border-dashed border-border/50">
-                  <p className="text-muted-foreground">Grafik verisi yükleniyor...</p>
+                  <p className="text-muted-foreground">Grafik verisi y├╝kleniyor...</p>
                 </div>
               </Card>
               <Card className="p-8 glass-effect border-teal-500/30">
                 <h3 className="text-xl font-bold mb-4 flex items-center gap-2">
                   <BarChart3 className="w-6 h-6 text-teal-500" />
-                  Kullanıcı Rol Dağılımı
+                  Kullan─▒c─▒ Rol Da─ƒ─▒l─▒m─▒
                 </h3>
                 <div className="h-64 flex items-center justify-center bg-black/30 rounded-lg border border-dashed border-border/50">
-                  <p className="text-muted-foreground">Grafik verisi yükleniyor...</p>
+                  <p className="text-muted-foreground">Grafik verisi y├╝kleniyor...</p>
                 </div>
               </Card>
             </div>
@@ -983,11 +1678,11 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                     Son Raporlar
                   </h3>
                   <Button variant="outline" size="sm" className="bg-transparent">
-                    Tümünü Gör
+                    T├╝m├╝n├╝ G├╢r
                   </Button>
                 </div>
                 <div className="space-y-3">
-                  {["Kullanıcı Aktivite Raporu", "Gelir Raporu", "Egzersiz Tamamlama Raporu"].map((report, i) => (
+                  {["Kullan─▒c─▒ Aktivite Raporu", "Gelir Raporu", "Egzersiz Tamamlama Raporu"].map((report, i) => (
                     <div key={i} className="flex items-center justify-between text-sm text-muted-foreground">
                       <span>{report}</span>
                       <div className="flex items-center gap-2">
@@ -1014,19 +1709,19 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <p className="text-sm text-muted-foreground">CPU Kullanımı</p>
+                    <p className="text-sm text-muted-foreground">CPU Kullan─▒m─▒</p>
                     <p className="font-bold text-lg">75%</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Bellek Kullanımı</p>
+                    <p className="text-sm text-muted-foreground">Bellek Kullan─▒m─▒</p>
                     <p className="font-bold text-lg">60%</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Disk Kullanımı</p>
+                    <p className="text-sm text-muted-foreground">Disk Kullan─▒m─▒</p>
                     <p className="font-bold text-lg">45%</p>
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Ağ Trafiği (Gelen)</p>
+                    <p className="text-sm text-muted-foreground">A─ƒ Trafi─ƒi (Gelen)</p>
                     <p className="font-bold text-lg">1.2 Gbps</p>
                   </div>
                 </div>
@@ -1036,9 +1731,6 @@ import AuthGuard from "@/components/auth-guard"    <div className="min-h-screen 
         </Tabs>
       </div>
     </div>
-<<<<<<< HEAD
     </AuthGuard>
-=======
->>>>>>> 9c460f7163f178fc6d372d6f20b4eaf84840edbf
   )
 }
