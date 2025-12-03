@@ -1320,7 +1320,7 @@ export default function ProgramsPage() {
                   className="flex-1 h-12 border-2 border-gray-600 text-gray-300 hover:bg-gray-800 hover:text-white text-lg font-bold"
                 >
                   <X className="w-5 h-5 mr-2" />
-                  پاشگەزبوونەوە
+                  {t("cancelAction")}
                 </Button>
                 <Button
                   onClick={handleDeleteProgram}
@@ -1397,7 +1397,7 @@ export default function ProgramsPage() {
 
               <div className="space-y-4">
                 <div>
-                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">📝 ناوی بەرنامە *</Label>
+                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">📝 {t("programName")} *</Label>
                   <Input
                     value={newProgram.title}
                     onChange={(e) => setNewProgram({ ...newProgram, title: e.target.value })}
@@ -1407,7 +1407,7 @@ export default function ProgramsPage() {
                 </div>
 
                 <div>
-                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">📋 وەسف</Label>
+                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">📋 {t("description")}</Label>
                   <textarea
                     value={newProgram.description}
                     onChange={(e) => setNewProgram({ ...newProgram, description: e.target.value })}
@@ -1419,7 +1419,7 @@ export default function ProgramsPage() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⏱️ ماوە</Label>
+                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⏱️ {t("duration")}</Label>
                     <Input
                       value={newProgram.duration}
                       onChange={(e) => setNewProgram({ ...newProgram, duration: e.target.value })}
@@ -1444,7 +1444,7 @@ export default function ProgramsPage() {
                 {activeTab === 'nutrition' ? (
                   <div className="grid grid-cols-2 gap-4">
                     <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🔥 کالۆری</Label>
+                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🔥 {t("calories")}</Label>
                       <Input
                         value={newProgram.calories}
                         onChange={(e) => setNewProgram({ ...newProgram, calories: e.target.value })}
@@ -1453,7 +1453,7 @@ export default function ProgramsPage() {
                       />
                     </div>
                     <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🥩 پرۆتین (g)</Label>
+                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🥩 {t("protein")} (g)</Label>
                       <Input
                         value={newProgram.protein}
                         onChange={(e) => setNewProgram({ ...newProgram, protein: e.target.value })}
@@ -1462,7 +1462,7 @@ export default function ProgramsPage() {
                       />
                     </div>
                     <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🍚 کاربز (g)</Label>
+                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🍚 {t("carbs")} (g)</Label>
                       <Input
                         value={newProgram.carbs}
                         onChange={(e) => setNewProgram({ ...newProgram, carbs: e.target.value })}
@@ -1471,7 +1471,7 @@ export default function ProgramsPage() {
                       />
                     </div>
                     <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🧈 چەورە (g)</Label>
+                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🧈 {t("fats")} (g)</Label>
                       <Input
                         value={newProgram.fats}
                         onChange={(e) => setNewProgram({ ...newProgram, fats: e.target.value })}
@@ -1656,8 +1656,8 @@ export default function ProgramsPage() {
                     <div className="flex items-center gap-3 mb-2">
                       <Calendar className="w-6 h-6 text-blue-400" />
                       <div>
-                        <h3 className="text-lg font-bold text-white">بەرنامەی هەفتانە</h3>
-                        <p className="text-xs text-gray-400">یاریەکانی هەر رۆژێک دیاری بکە</p>
+                        <h3 className="text-lg font-bold text-white">{t("weeklySchedule")}</h3>
+                        <p className="text-xs text-gray-400">{t("description")}</p>
                       </div>
                     </div>
 
