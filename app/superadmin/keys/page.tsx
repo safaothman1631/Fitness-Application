@@ -7,8 +7,10 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Key, Plus, Copy, Trash2, Clock, CheckCircle, XCircle, Sparkles } from "lucide-react"
 import { useState } from "react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export default function AccessKeysPage() {
+  const { t } = useLanguage()
   const [generating, setGenerating] = useState(false)
 
   const keys = [
@@ -36,8 +38,8 @@ export default function AccessKeysPage() {
                   <Key className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white">Access Keys</h1>
-                  <p className="text-gray-400 text-sm">Generate and manage access keys</p>
+                  <h1 className="text-3xl font-bold text-white">{t("accessKeysPage")}</h1>
+                  <p className="text-gray-400 text-sm">{t("generateAndManageKeys")}</p>
                 </div>
               </div>
             </div>
@@ -47,7 +49,7 @@ export default function AccessKeysPage() {
               className="bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30"
             >
               <Plus className="w-4 h-4 mr-2" />
-              {generating ? "Generating..." : "Generate New Key"}
+              {generating ? t("generating") : t("generateNewKey")}
             </Button>
           </div>
 
@@ -59,7 +61,7 @@ export default function AccessKeysPage() {
                   <Key className="w-8 h-8 text-purple-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">56</p>
-                    <p className="text-xs text-gray-400">Total Keys</p>
+                    <p className="text-xs text-gray-400">{t("totalKeys")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -71,7 +73,7 @@ export default function AccessKeysPage() {
                   <CheckCircle className="w-8 h-8 text-green-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">32</p>
-                    <p className="text-xs text-gray-400">Active</p>
+                    <p className="text-xs text-gray-400">{t("active")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -83,7 +85,7 @@ export default function AccessKeysPage() {
                   <Clock className="w-8 h-8 text-blue-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">15</p>
-                    <p className="text-xs text-gray-400">Used</p>
+                    <p className="text-xs text-gray-400">{t("used")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -95,7 +97,7 @@ export default function AccessKeysPage() {
                   <XCircle className="w-8 h-8 text-red-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">9</p>
-                    <p className="text-xs text-gray-400">Expired</p>
+                    <p className="text-xs text-gray-400">{t("expired")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -110,17 +112,17 @@ export default function AccessKeysPage() {
                   <Sparkles className="w-6 h-6 text-white" />
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-white font-semibold text-lg mb-2">Quick Key Generator</h3>
-                  <p className="text-gray-400 text-sm mb-4">Generate access keys for new members instantly</p>
+                  <h3 className="text-white font-semibold text-lg mb-2">{t("quickKeyGenerator")}</h3>
+                  <p className="text-gray-400 text-sm mb-4">{t("generateKeysInstantly")}</p>
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                     <Button variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
-                      Trial (1 use)
+                      {t("trialOneUse")}
                     </Button>
                     <Button variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
-                      Standard (5 uses)
+                      {t("standardFiveUses")}
                     </Button>
                     <Button variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
-                      Premium (10 uses)
+                      {t("premiumTenUses")}
                     </Button>
                   </div>
                 </div>
@@ -133,7 +135,7 @@ export default function AccessKeysPage() {
             <CardHeader>
               <CardTitle className="text-white flex items-center gap-2">
                 <Key className="w-5 h-5 text-purple-400" />
-                All Access Keys
+                {t("allAccessKeys")}
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -141,12 +143,12 @@ export default function AccessKeysPage() {
                 <table className="w-full">
                   <thead>
                     <tr className="border-b border-slate-800">
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">Key</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">Type</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">Uses</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">Status</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">Expires</th>
-                      <th className="text-right text-gray-400 text-sm font-semibold p-3">Actions</th>
+                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("keyColumn")}</th>
+                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("typeColumn")}</th>
+                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("usesColumn")}</th>
+                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("statusColumn")}</th>
+                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("expiresColumn")}</th>
+                      <th className="text-right text-gray-400 text-sm font-semibold p-3">{t("actionsColumn")}</th>
                     </tr>
                   </thead>
                   <tbody>
