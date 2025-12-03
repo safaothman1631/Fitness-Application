@@ -9,8 +9,10 @@ import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Users, Search, Plus, Filter, UserCheck, UserX, Crown, Activity, Mail, Phone, MapPin, X, Save, UserPlus, AlertCircle } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export default function UsersPage() {
+  const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'users' | 'requests'>('users')
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -191,8 +193,8 @@ export default function UsersPage() {
                   <Users className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white">Users Management</h1>
-                  <p className="text-gray-400 text-sm">Manage all system users</p>
+                  <h1 className="text-3xl font-bold text-white">{t("userManagementTitle")}</h1>
+                  <p className="text-gray-400 text-sm">{t("manageYourUsers")}</p>
                 </div>
               </div>
             </div>
@@ -200,7 +202,7 @@ export default function UsersPage() {
               <DialogTrigger asChild>
                 <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30">
                   <Plus className="w-4 h-4 mr-2" />
-                  Add New User
+                  {t("addNewUser")}
                 </Button>
               </DialogTrigger>
               <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -209,7 +211,7 @@ export default function UsersPage() {
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
                       <UserPlus className="w-5 h-5 text-white" />
                     </div>
-                    Add New User
+                    {t("addNewUser")}
                   </DialogTitle>
                 </DialogHeader>
                 
@@ -239,11 +241,11 @@ export default function UsersPage() {
                       <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
                         <Users className="w-4 h-4 text-purple-400" />
                       </div>
-                      Personal Information
+                      {t("personalInformation")}
                     </h3>
                     <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">First Name *</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("firstName")} *</Label>
                         <Input
                           value={newUser.firstName}
                           onChange={(e) => setNewUser({ ...newUser, firstName: e.target.value })}
@@ -252,7 +254,7 @@ export default function UsersPage() {
                         />
                       </div>
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">Last Name *</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("lastName")} *</Label>
                         <Input
                           value={newUser.lastName}
                           onChange={(e) => setNewUser({ ...newUser, lastName: e.target.value })}
@@ -269,11 +271,11 @@ export default function UsersPage() {
                       <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center">
                         <Mail className="w-4 h-4 text-cyan-400" />
                       </div>
-                      Contact Information
+                      {t("personalInfo")}
                     </h3>
                     <div className="space-y-4">
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">Email Address *</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("emailAddressLabel")} *</Label>
                         <Input
                           type="email"
                           value={newUser.email}
@@ -283,7 +285,7 @@ export default function UsersPage() {
                         />
                       </div>
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">Phone Number</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("phoneNumberLabel")}</Label>
                         <Input
                           type="tel"
                           value={newUser.phone}
@@ -293,7 +295,7 @@ export default function UsersPage() {
                         />
                       </div>
                       <div>
-                        <Label className="text-gray-400 text-sm mb-2 block">Location</Label>
+                        <Label className="text-gray-400 text-sm mb-2 block">{t("locationLabel")}</Label>
                         <Input
                           value={newUser.location}
                           onChange={(e) => setNewUser({ ...newUser, location: e.target.value })}
@@ -310,7 +312,7 @@ export default function UsersPage() {
                       <div className="w-8 h-8 rounded-lg bg-green-500/20 flex items-center justify-center">
                         <Crown className="w-4 h-4 text-green-400" />
                       </div>
-                      Account Settings
+                      {t("accountSettings")}
                     </h3>
                     <div className="space-y-4">
                       <div>
@@ -529,7 +531,7 @@ export default function UsersPage() {
             >
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                All Users
+                {t("allUsers")}
               </div>
             </button>
             <button
@@ -542,7 +544,7 @@ export default function UsersPage() {
             >
               <div className="flex items-center gap-2">
                 <Crown className="w-4 h-4" />
-                Pro Requests
+                {t("proRequests")}
                 {proRequests.filter(r => r.status === 'pending').length > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
                     {proRequests.filter(r => r.status === 'pending').length}
@@ -563,7 +565,7 @@ export default function UsersPage() {
                   </div>
                   <div>
                     <p className="text-3xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">{stats.total}</p>
-                    <p className="text-xs text-blue-300 font-medium">Total Users</p>
+                    <p className="text-xs text-blue-300 font-medium">{t("totalUsers")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -577,7 +579,7 @@ export default function UsersPage() {
                   </div>
                   <div>
                     <p className="text-3xl font-bold text-white bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">{stats.active}</p>
-                    <p className="text-xs text-green-300 font-medium">Active</p>
+                    <p className="text-xs text-green-300 font-medium">{t("active")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -621,7 +623,7 @@ export default function UsersPage() {
                 <div className="relative flex-1">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
                   <Input
-                    placeholder="Search users by name or email..."
+                    placeholder={t("searchUsers")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-12 h-12 bg-slate-800/80 border-slate-600 text-white placeholder:text-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
@@ -644,14 +646,14 @@ export default function UsersPage() {
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
                   <Activity className="w-5 h-5 text-white" />
                 </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">All Users</span>
+                <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{t("allUsers")}</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
                 <div className="text-center py-12">
                   <div className="inline-block w-12 h-12 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                  <p className="text-gray-400">Loading users...</p>
+                  <p className="text-gray-400">{t("loading")}...</p>
                 </div>
               ) : users.length === 0 ? (
                 <div className="text-center py-12">
