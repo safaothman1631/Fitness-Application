@@ -2,6 +2,7 @@
 
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
+import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
@@ -9,6 +10,7 @@ import { FileText, Search, Filter, Download, AlertTriangle, Info, CheckCircle, X
 import { useState, useEffect } from "react"
 
 export default function SystemLogsPage() {
+  const { t } = useLanguage()
   const [searchQuery, setSearchQuery] = useState("")
   const [logs, setLogs] = useState<any[]>([])
   const [stats, setStats] = useState<any>(null)
@@ -104,8 +106,8 @@ export default function SystemLogsPage() {
                   <FileText className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-bold text-white">System Logs</h1>
-                  <p className="text-gray-400 text-sm">Monitor system events and activities</p>
+                  <h1 className="text-3xl font-bold text-white">{t("systemLogs")}</h1>
+                  <p className="text-gray-400 text-sm">{t("monitorSystemActivity")}</p>
                 </div>
               </div>
             </div>
@@ -115,7 +117,7 @@ export default function SystemLogsPage() {
               className="bg-gradient-to-r from-orange-500 to-red-600 hover:from-orange-600 hover:to-red-700 text-white shadow-lg shadow-orange-500/30 disabled:opacity-50"
             >
               <Download className="w-4 h-4 mr-2" />
-              Export Logs
+              {t("exportLogs")}
             </Button>
           </div>
 
@@ -127,7 +129,7 @@ export default function SystemLogsPage() {
                   <Info className="w-8 h-8 text-blue-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{stats?.info || 0}</p>
-                    <p className="text-xs text-gray-400">Info</p>
+                    <p className="text-xs text-gray-400">{t("info")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -139,7 +141,7 @@ export default function SystemLogsPage() {
                   <CheckCircle className="w-8 h-8 text-green-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{stats?.success || 0}</p>
-                    <p className="text-xs text-gray-400">Success</p>
+                    <p className="text-xs text-gray-400">{t("success")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -151,7 +153,7 @@ export default function SystemLogsPage() {
                   <AlertTriangle className="w-8 h-8 text-yellow-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{stats?.warning || 0}</p>
-                    <p className="text-xs text-gray-400">Warnings</p>
+                    <p className="text-xs text-gray-400">{t("warnings")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -163,7 +165,7 @@ export default function SystemLogsPage() {
                   <XCircle className="w-8 h-8 text-red-400" />
                   <div>
                     <p className="text-2xl font-bold text-white">{stats?.error || 0}</p>
-                    <p className="text-xs text-gray-400">Errors</p>
+                    <p className="text-xs text-gray-400">{t("errors")}</p>
                   </div>
                 </div>
               </CardContent>
@@ -177,7 +179,7 @@ export default function SystemLogsPage() {
                 <div className="relative flex-1">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <Input
-                    placeholder="Search logs..."
+                    placeholder={t("searchLogs")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     className="pl-10 bg-slate-800/50 border-slate-700 text-white placeholder:text-gray-500"
@@ -190,7 +192,7 @@ export default function SystemLogsPage() {
                     className={`border-blue-500/30 text-blue-400 hover:bg-blue-500/10 ${filterType === 'info' ? 'bg-blue-500/20' : ''}`}
                   >
                     <Info className="w-4 h-4 mr-2" />
-                    Info
+                    {t("info")}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -198,7 +200,7 @@ export default function SystemLogsPage() {
                     className={`border-yellow-500/30 text-yellow-400 hover:bg-yellow-500/10 ${filterType === 'warning' ? 'bg-yellow-500/20' : ''}`}
                   >
                     <AlertTriangle className="w-4 h-4 mr-2" />
-                    Warnings
+                    {t("warnings")}
                   </Button>
                   <Button 
                     variant="outline" 
@@ -206,7 +208,7 @@ export default function SystemLogsPage() {
                     className={`border-red-500/30 text-red-400 hover:bg-red-500/10 ${filterType === 'error' ? 'bg-red-500/20' : ''}`}
                   >
                     <XCircle className="w-4 h-4 mr-2" />
-                    Errors
+                    {t("errors")}
                   </Button>
                 </div>
               </div>
@@ -216,10 +218,10 @@ export default function SystemLogsPage() {
           {/* Logs List */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <FileText className="w-5 h-5 text-orange-400" />
-                Recent Logs
-              </CardTitle>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <FileText className="w-5 h-5 text-orange-400" />
+                  {t("allLogs")}
+                </CardTitle>
             </CardHeader>
             <CardContent>
               {isLoading ? (
@@ -229,7 +231,7 @@ export default function SystemLogsPage() {
               ) : filteredLogs.length === 0 ? (
                 <div className="text-center py-12 text-gray-400">
                   <FileText className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                  <p>No logs found</p>
+                  <p>{t("noLogsFound")}</p>
                 </div>
               ) : (
               <div className="space-y-3">
