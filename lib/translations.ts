@@ -3118,6 +3118,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,passwordLabel: "وشەی نهێنی"
     ,trainersAlwaysActive: "مڕەببی و سوپەرئادمین هەمیشە چالاکن"
     ,saveChanges: "پاشەکەوتکردنی گۆڕانکاریەکان"
+    ,cancel: "پاشگەزبوونەوە"
     ,cancelAction: "پاشگەزبوونەوە"
     ,deleteUserTitle: "سڕینەوەی بەکارهێنەر"
     ,areYouSure: "دڵنیایت؟"
@@ -3934,6 +3935,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   passwordLabel: "Şifre",
   trainersAlwaysActive: "Antrenörler ve Süper Yöneticiler her zaman aktiftir",
   saveChanges: "Değişiklikleri Kaydet",
+  cancel: "İptal",
   cancelAction: "İptal",
   deleteUserTitle: "Kullanıcıyı Sil",
   areYouSure: "Emin misiniz?",
