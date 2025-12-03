@@ -1,5 +1,6 @@
 ﻿"use client"
 
+import { useEffect, useState } from "react"
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { Card, CardContent } from "@/components/ui/card"
@@ -8,6 +9,33 @@ import { useLanguage } from "@/hooks/useLanguage"
 
 export default function SuperAdminPage() {
   const { t } = useLanguage()
+  const [stats, setStats] = useState({
+    trainers: 0,
+    users: 0,
+    keys: 0,
+    loading: true
+  })
+
+  useEffect(() => {
+    async function fetchStats() {
+      try {
+        const trainersRes = await fetch('/api/trainers')
+        const trainersData = await trainersRes.json()
+        
+        setStats({
+          trainers: trainersData.count || 0,
+          users: 0, // Will be implemented later
+          keys: 0, // Will be implemented later
+          loading: false
+        })
+      } catch (error) {
+        console.error('Error fetching stats:', error)
+        setStats(prev => ({ ...prev, loading: false }))
+      }
+    }
+
+    fetchStats()
+  }, [])
   
   return (
     <AuthGuard requiredRole="superadmin">
@@ -24,47 +52,21 @@ export default function SuperAdminPage() {
 
           {/* Stats Grid */}
           <div className="grid grid-cols-2 gap-4">
-            <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30">
+            {/* Trainers Card */}
+            <Card className="bg-gradient-to-br from-purple-500/20 to-pink-500/20 border-purple-500/30">
               <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <Users className="w-8 h-8 text-blue-400" />
-                  <span className="text-xs text-blue-400 font-semibold uppercase tracking-wider">{t("users")}</span>
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">ترەینەرەکان</p>
+                    <h3 className="text-3xl font-bold text-white">
+                      {stats.loading ? '...' : stats.trainers}
+                    </h3>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-purple-500/30 flex items-center justify-center">
+                    <Shield className="w-6 h-6 text-purple-400" />
+                  </div>
                 </div>
-                <p className="text-3xl font-bold text-white mb-1">1,234</p>
-                <p className="text-xs text-gray-400">{t("totalActive")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/30">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <Key className="w-8 h-8 text-purple-400" />
-                  <span className="text-xs text-purple-400 font-semibold uppercase tracking-wider">{t("keys")}</span>
-                </div>
-                <p className="text-3xl font-bold text-white mb-1">56</p>
-                <p className="text-xs text-gray-400">{t("accessKeysLabel")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-green-500/10 to-green-600/10 border-green-500/30">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <Activity className="w-8 h-8 text-green-400" />
-                  <span className="text-xs text-green-400 font-semibold uppercase tracking-wider">{t("activeNow")}</span>
-                </div>
-                <p className="text-3xl font-bold text-white mb-1">892</p>
-                <p className="text-xs text-gray-400">{t("onlineNow")}</p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-500/30">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between mb-3">
-                  <TrendingUp className="w-8 h-8 text-yellow-400" />
-                  <span className="text-xs text-yellow-400 font-semibold uppercase tracking-wider">{t("growth")}</span>
-                </div>
-                <p className="text-3xl font-bold text-white mb-1">+24%</p>
-                <p className="text-xs text-gray-400">{t("thisMonth")}</p>
+                <p className="text-gray-500 text-xs mt-2">کۆی گشتی ترەینەرەکان</p>
               </CardContent>
             </Card>
           </div>
