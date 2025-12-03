@@ -2263,15 +2263,9 @@ export default function ProgramsPage() {
                   <Dumbbell className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">زیادکردنی یاری</div>
+                  <div className="text-white">{t("addExerciseTitle")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1">
-                    {currentEditingDay === 'monday' && '📅 دووشەممە'}
-                    {currentEditingDay === 'tuesday' && '📅 سێشەممە'}
-                    {currentEditingDay === 'wednesday' && '📅 چوارشەممە'}
-                    {currentEditingDay === 'thursday' && '📅 پێنجشەممە'}
-                    {currentEditingDay === 'friday' && '📅 هەینی'}
-                    {currentEditingDay === 'saturday' && '📅 شەممە'}
-                    {currentEditingDay === 'sunday' && '📅 یەکشەممە'}
+                    {currentEditingDay && `📅 ${dayNames[currentEditingDay as keyof typeof dayNames]}`}
                   </div>
                 </div>
               </DialogTitle>
@@ -2286,7 +2280,7 @@ export default function ProgramsPage() {
                   className="flex-1 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 h-10"
                 >
                   <Dumbbell className="w-4 h-4 mr-2" />
-                  کتێبخانەی یاری
+                  {t("exerciseLibraryButton")}
                 </Button>
                 <Button
                   onClick={handleSaveExerciseToLibrary}
@@ -2294,7 +2288,7 @@ export default function ProgramsPage() {
                   className="flex-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 h-10"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  خەزنکردن بۆ کتێبخانە
+                  {t("saveToLibrary")}
                 </Button>
               </div>
 
@@ -2304,7 +2298,7 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center">
                     <Activity className="w-4 h-4 text-blue-400" />
                   </div>
-                  🏋️ ناوی یاری
+                  🏋️ {t("exerciseName")}
                 </Label>
                 <Input
                   value={exerciseFormData.name}
@@ -2320,7 +2314,7 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-pink-500/20 flex items-center justify-center">
                     <Heart className="w-4 h-4 text-pink-400" />
                   </div>
-                  🎥 ڤیدیۆکانی یاری (ئیختیاری)
+                  🎥 {t("exerciseVideos")} ({t("optional")})
                 </Label>
                 
                 {exerciseFormData.videos.length > 0 && (
@@ -2375,7 +2369,7 @@ export default function ProgramsPage() {
                   className="w-full h-12 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700"
                 >
                   <Video className="w-5 h-5 mr-2" />
-                  {exerciseFormData.videos.length > 0 ? `زیادکردنی ڤیدیۆی تر (${exerciseFormData.videos.length})` : 'هەڵبژاردنی ڤیدیۆ لە ستۆرج'}
+                  {exerciseFormData.videos.length > 0 ? `${t("addAnotherVideo")} (${exerciseFormData.videos.length})` : t("selectVideoFromStorage")}
                 </Button>
               </div>
 
@@ -2385,12 +2379,12 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <Lightbulb className="w-4 h-4 text-purple-400" />
                   </div>
-                  📝 تێبینی (ئیختیاری)
+                  📝 {t("notesOptional")}
                 </Label>
                 <Input
                   value={exerciseFormData.notes}
                   onChange={(e) => setExerciseFormData({ ...exerciseFormData, notes: e.target.value })}
-                  placeholder="تێبینی زیاتر بۆ یارییەکە..."
+                  placeholder={t("additionalNotesPlaceholder")}
                   className="bg-slate-800/50 border-slate-700 text-white h-12"
                 />
               </div>
@@ -2401,7 +2395,7 @@ export default function ProgramsPage() {
                   <CardContent className="p-4">
                     <div className="flex items-center gap-2 mb-2">
                       <Zap className="w-4 h-4 text-yellow-400" />
-                      <span className="text-xs font-bold text-gray-400">پێشبینین:</span>
+                      <span className="text-xs font-bold text-gray-400">{t("preview")}</span>
                     </div>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -2411,7 +2405,7 @@ export default function ProgramsPage() {
                         <p className="text-white font-bold text-lg">{exerciseFormData.name}</p>
                         {exerciseFormData.videos.length > 0 && (
                           <p className="text-purple-400 text-sm mt-1">
-                            🎬 {exerciseFormData.videos.length} ڤیدیۆ هەڵبژێردراوە
+                            🎬 {exerciseFormData.videos.length} {t("videosSelected")}
                           </p>
                         )}
                         {exerciseFormData.notes && (
@@ -2432,14 +2426,14 @@ export default function ProgramsPage() {
                 className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
               >
                 <X className="w-4 h-4 mr-2" />
-                پاشگەزبوونەوە
+                {t("cancel")}
               </Button>
               <Button
                 onClick={handleSaveExercise}
                 className="flex-1 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-lg font-bold shadow-lg"
               >
                 <Check className="w-5 h-5 mr-2" />
-                زیادکردن
+                {t("addButton")}
               </Button>
             </div>
           </DialogContent>

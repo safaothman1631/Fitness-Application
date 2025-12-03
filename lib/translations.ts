@@ -765,6 +765,19 @@ export type TranslationKey =
   | "uniqueLabel"
   | "cancelAction"
   | "saveProgram"
+  | "addExerciseTitle"
+  | "exerciseLibraryButton"
+  | "saveToLibrary"
+  | "exerciseName"
+  | "exerciseVideos"
+  | "selectVideoFromStorage"
+  | "notesOptional"
+  | "additionalNotesPlaceholder"
+  | "addButton"
+  | "optional"
+  | "addAnotherVideo"
+  | "preview"
+  | "videosSelected"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1606,6 +1619,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   uniqueLabel: "Unique",
   cancelAction: "Cancel",
   saveProgram: "Save",
+  addExerciseTitle: "Add Exercise",
+  exerciseLibraryButton: "Exercise Library",
+  saveToLibrary: "Save to Library",
+  exerciseName: "Exercise Name",
+  exerciseVideos: "Exercise Videos",
+  selectVideoFromStorage: "Select Video from Storage",
+  notesOptional: "Notes (Optional)",
+  additionalNotesPlaceholder: "Additional notes for the exercise...",
+  addButton: "Add",
+  optional: "Optional",
+  addAnotherVideo: "Add Another Video",
+  preview: "Preview:",
+  videosSelected: "videos selected",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2377,6 +2403,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,uniqueLabel: "فريد"
   ,cancelAction: "إلغاء"
   ,saveProgram: "حفظ"
+  ,addExerciseTitle: "إضافة تمرين"
+  ,exerciseLibraryButton: "مكتبة التمارين"
+  ,saveToLibrary: "حفظ في المكتبة"
+  ,exerciseName: "اسم التمرين"
+  ,exerciseVideos: "فيديوهات التمرين"
+  ,selectVideoFromStorage: "اختر فيديو من التخزين"
+  ,notesOptional: "ملاحظات (اختياري)"
+  ,additionalNotesPlaceholder: "ملاحظات إضافية للتمرين..."
+  ,addButton: "إضافة"
+  ,optional: "اختياري"
+  ,addAnotherVideo: "إضافة فيديو آخر"
+  ,preview: "معاينة:"
+  ,videosSelected: "فيديوهات مختارة"
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -3151,6 +3190,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,uniqueLabel: "جیاواز"
     ,cancelAction: "پاشگەزبوونەوە"
     ,saveProgram: "پاشەکەوتکردن"
+    ,addExerciseTitle: "زیادکردنی یاری"
+    ,exerciseLibraryButton: "کتێبخانەی یاری"
+    ,saveToLibrary: "خەزنکردن بۆ کتێبخانە"
+    ,exerciseName: "ناوی یاری"
+    ,exerciseVideos: "ڤیدیۆکانی یاری"
+    ,selectVideoFromStorage: "هەڵبژاردنی ڤیدیۆ لە ستۆرج"
+    ,notesOptional: "تێبینی"
+    ,additionalNotesPlaceholder: "تێبینی زیاتر بۆ یارییەکە..."
+    ,addButton: "زیادکردن"
+    ,optional: "ئیختیاری"
+    ,addAnotherVideo: "زیادکردنی ڤیدیۆی تر"
+    ,preview: "پێشبینین:"
+    ,videosSelected: "ڤیدیۆ هەڵبژێردراوە"
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -3922,6 +3974,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   uniqueLabel: "Benzersiz",
   cancelAction: "İptal",
   saveProgram: "Kaydet",
+  addExerciseTitle: "Egzersiz Ekle",
+  exerciseLibraryButton: "Egzersiz Kütüphanesi",
+  saveToLibrary: "Kütüphaneye Kaydet",
+  exerciseName: "Egzersiz Adı",
+  exerciseVideos: "Egzersiz Videoları",
+  selectVideoFromStorage: "Depolamadan Video Seç",
+  notesOptional: "Notlar",
+  additionalNotesPlaceholder: "Egzersiz için ek notlar...",
+  addButton: "Ekle",
+  optional: "İsteğe bağlı",
+  addAnotherVideo: "Başka Video Ekle",
+  preview: "Önizleme:",
+  videosSelected: "video seçildi",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",
