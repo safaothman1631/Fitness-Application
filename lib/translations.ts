@@ -803,6 +803,13 @@ export type TranslationKey =
   | "repsCount"
   | "videoSpecificNotes"
   | "savedSuccessfully"
+  | "exerciseLibrary"
+  | "savedExercises"
+  | "libraryEmpty"
+  | "saveYourExercisesForLater"
+  | "searchInLibrary"
+  | "videos"
+  | "close"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1682,6 +1689,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   repsCount: "Reps",
   videoSpecificNotes: "Specific notes for this video...",
   savedSuccessfully: "Saved Successfully",
+  exerciseLibrary: "Exercise Library",
+  savedExercises: "saved exercises",
+  libraryEmpty: "Library is Empty",
+  saveYourExercisesForLater: "Save your exercises for later",
+  searchInLibrary: "Search in library...",
+  videos: "videos",
+  close: "Close",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2491,6 +2505,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,repsCount: "التكرارات"
   ,videoSpecificNotes: "ملاحظات خاصة بهذا الفيديو..."
   ,savedSuccessfully: "تم الحفظ بنجاح"
+  ,exerciseLibrary: "مكتبة التمارين"
+  ,savedExercises: "تمرين محفوظ"
+  ,libraryEmpty: "المكتبة فارغة"
+  ,saveYourExercisesForLater: "احفظ تمارينك للاستخدام لاحقًا"
+  ,searchInLibrary: "البحث في المكتبة..."
+  ,videos: "فيديوهات"
+  ,close: "إغلاق"
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -3303,6 +3324,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,repsCount: "دووبارەکردنەوە"
     ,videoSpecificNotes: "تێبینی تایبەت بەم ڤیدیۆیە..."
     ,savedSuccessfully: "پاشەکەوتکرا بە سەرکەوتوویی"
+    ,exerciseLibrary: "کتێبخانەی یاری"
+    ,savedExercises: "یاریی خەزێنکراو"
+    ,libraryEmpty: "کتێبخانە بەتاڵە"
+    ,saveYourExercisesForLater: "یارییەکانی خۆت خەزێنە کردنی دواتر"
+    ,searchInLibrary: "گەڕان لە کتێبخانە..."
+    ,videos: "ڤیدیۆ"
+    ,close: "داخستن"
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -4112,6 +4140,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   repsCount: "Tekrarlar",
   videoSpecificNotes: "Bu videoya özel notlar...",
   savedSuccessfully: "Başarıyla Kaydedildi",
+  exerciseLibrary: "Egzersiz Kütüphanesi",
+  savedExercises: "kaydedilmiş egzersiz",
+  libraryEmpty: "Kütüphane Boş",
+  saveYourExercisesForLater: "Egzersizlerinizi daha sonra kullanmak için kaydedin",
+  searchInLibrary: "Kütüphanede ara...",
+  videos: "video",
+  close: "Kapat",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",

@@ -3425,9 +3425,9 @@ export default function ProgramsPage() {
                   <Dumbbell className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">کتێبخانەی یاری</div>
+                  <div className="text-white">{t("exerciseLibrary")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1">
-                    {exerciseLibrary.length} یاریی خەزێنکراو
+                    {exerciseLibrary.length} {t("savedExercises")}
                   </div>
                 </div>
               </DialogTitle>
@@ -3436,8 +3436,8 @@ export default function ProgramsPage() {
             {exerciseLibrary.length === 0 ? (
               <div className="text-center py-20">
                 <Dumbbell className="w-20 h-20 text-gray-600 mx-auto mb-4" />
-                <p className="text-xl font-bold text-white mb-2">کتێبخانە بەتاڵە</p>
-                <p className="text-gray-400">یارییەکانی خۆت خەزێنە کردنی دواتر</p>
+                <p className="text-xl font-bold text-white mb-2">{t("libraryEmpty")}</p>
+                <p className="text-gray-400">{t("saveYourExercisesForLater")}</p>
               </div>
             ) : (
               <>
@@ -3445,7 +3445,7 @@ export default function ProgramsPage() {
                 <div className="relative mb-4">
                   <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
                   <Input
-                    placeholder="گەڕان لە کتێبخانە..."
+                    placeholder={t("searchInLibrary")}
                     value={exerciseSearchQuery}
                     onChange={(e) => setExerciseSearchQuery(e.target.value)}
                     className="pl-12 h-12 bg-slate-800/50 border-slate-700 text-white"
@@ -3479,7 +3479,7 @@ export default function ProgramsPage() {
                                 )}
                                 {exercise.videos?.length > 0 && (
                                   <span className="px-2 py-1 rounded bg-pink-500/20 text-pink-300 text-xs font-bold">
-                                    🎥 {exercise.videos.length} ڤیدیۆ
+                                    🎥 {exercise.videos.length} {t("videos")}
                                   </span>
                                 )}
                               </div>
@@ -3495,7 +3495,7 @@ export default function ProgramsPage() {
                                 className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 h-8 px-3"
                               >
                                 <Check className="w-4 h-4 mr-1" />
-                                هەڵبژاردن
+                                {t("select")}
                               </Button>
                               <Button
                                 size="sm"
@@ -3524,7 +3524,7 @@ export default function ProgramsPage() {
                 className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-11"
               >
                 <X className="w-4 h-4 mr-2" />
-                داخستن
+                {t("close")}
               </Button>
             </div>
           </DialogContent>
