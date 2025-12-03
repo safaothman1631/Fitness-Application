@@ -2725,7 +2725,7 @@ export default function ProgramsPage() {
                     className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
                   >
                     <X className="w-4 h-4 mr-2" />
-                    پاشگەزبوونەوە
+                    {t("cancel")}
                   </Button>
                   <Button
                     onClick={() => setShowVideoBrowser(false)}
@@ -2815,7 +2815,7 @@ export default function ProgramsPage() {
                 className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-11"
               >
                 <X className="w-4 h-4 mr-2" />
-                پاشگەزبوونەوە
+                {t("cancel")}
               </Button>
               <Button
                 onClick={() => {
@@ -3175,7 +3175,7 @@ export default function ProgramsPage() {
                 className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
               >
                 <X className="w-4 h-4 mr-2" />
-                پاشگەزبوونەوە
+                {t("cancel")}
               </Button>
               <Button
                 onClick={handleSaveMeal}
@@ -3410,7 +3410,7 @@ export default function ProgramsPage() {
                 className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
               >
                 <X className="w-4 h-4 mr-2" />
-                پاشگەزبوونەوە
+                {t("cancel")}
               </Button>
             </div>
           </DialogContent>
@@ -3616,7 +3616,7 @@ export default function ProgramsPage() {
                 className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
               >
                 <X className="w-4 h-4 mr-2" />
-                پاشگەزبوونەوە
+                {t("cancel")}
               </Button>
             </div>
           </DialogContent>
@@ -3844,7 +3844,7 @@ export default function ProgramsPage() {
                       className="border-slate-700 text-gray-300 hover:bg-slate-800 h-12 px-6"
                     >
                       <X className="w-4 h-4 mr-2" />
-                      پاشگەزبوونەوە
+                      {t("cancel")}
                     </Button>
                   </>
                 ) : (
@@ -3858,7 +3858,7 @@ export default function ProgramsPage() {
                     className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
                   >
                     <X className="w-4 h-4 mr-2" />
-                    پاشگەزبوونەوە
+                    {t("cancel")}
                   </Button>
                 )}
               </div>
