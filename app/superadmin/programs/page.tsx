@@ -1708,7 +1708,7 @@ export default function ProgramsPage() {
                             📅 {dayNames[currentDay as keyof typeof dayNames]}
                           </h4>
                           <div className="flex items-center gap-2 bg-slate-900/50 rounded-lg px-3 py-1.5">
-                            <span className="text-xs text-gray-400">رۆژی پشوو؟</span>
+                            <span className="text-xs text-gray-400">{t("restDay")}</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
