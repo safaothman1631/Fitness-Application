@@ -977,10 +977,10 @@ export default function ProgramsPage() {
                     <div>
                       <h1 className="text-4xl font-bold text-white mb-2">
                         <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-blue-500 bg-clip-text text-transparent">
-                          بەرنامەی وەرزش
+                          {t("workoutPrograms")}
                         </span>
                       </h1>
-                      <p className="text-gray-400 text-lg">Manage workout plans, exercises & training programs</p>
+                      <p className="text-gray-400 text-lg">{t("createAndManagePrograms")}</p>
                     </div>
                   </div>
                   <Button 
@@ -991,7 +991,7 @@ export default function ProgramsPage() {
                     className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white shadow-xl shadow-blue-500/30 px-8 py-6 text-lg rounded-2xl"
                   >
                     <Plus className="w-6 h-6 mr-2" />
-                    Add Workout Plan
+                    {t("createNewProgram")}
                   </Button>
                 </div>
               </div>
@@ -1006,7 +1006,7 @@ export default function ProgramsPage() {
                       </div>
                       <div>
                         <p className="text-3xl font-bold text-white">{programs.length}</p>
-                        <p className="text-sm text-gray-400">Total Plans</p>
+                        <p className="text-sm text-gray-400">{t("workoutPrograms")}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -1061,7 +1061,7 @@ export default function ProgramsPage() {
                   <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-blue-400" />
                     <Input
-                      placeholder="Search workout plans..."
+                      placeholder={t("searchPrograms")}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       className="pl-12 h-12 bg-slate-800/50 border-slate-700 text-white placeholder:text-gray-500"
@@ -1075,13 +1075,13 @@ export default function ProgramsPage() {
                 {isLoading ? (
                   <div className="col-span-full text-center py-12">
                     <div className="inline-block w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-                    <p className="text-gray-400">Loading workout plans...</p>
+                    <p className="text-gray-400">{t("loading")}...</p>
                   </div>
                 ) : filteredPrograms.length === 0 ? (
                   <div className="col-span-full text-center py-12">
                     <Dumbbell className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg mb-2">No workout plans found</p>
-                    <p className="text-gray-500 text-sm">Create your first workout plan</p>
+                    <p className="text-gray-400 text-lg mb-2">{t("noProgramsFound")}</p>
+                    <p className="text-gray-500 text-sm">{t("createFirstProgram")}</p>
                   </div>
                 ) : (
                   filteredPrograms.map((program) => (
