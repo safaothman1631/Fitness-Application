@@ -387,7 +387,7 @@ export default function ProgramsPage() {
 
   const handleSaveMeal = () => {
     if (!mealFormData.name.trim()) {
-      alert('تکایە ناوی خواردن بنووسە')
+      alert(t('pleaseEnterMealName'))
       return
     }
     if (!mealFormData.calories.trim()) {
@@ -2899,12 +2899,12 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-green-500/20 flex items-center justify-center">
                     <Utensils className="w-4 h-4 text-green-400" />
                   </div>
-                  🍽️ ناوی خواردن
+                  🍽️ {t("mealName")}
                 </Label>
                 <Input
                   value={mealFormData.name}
                   onChange={(e) => setMealFormData({ ...mealFormData, name: e.target.value })}
-                  placeholder="Example: Grilled Chicken & Rice"
+                  placeholder={t("exampleGrilledChicken")}
                   className="bg-slate-800/50 border-slate-700 text-white h-12 text-lg"
                 />
               </div>
@@ -2915,7 +2915,7 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center">
                     <Calendar className="w-4 h-4 text-blue-400" />
                   </div>
-                  🕐 پۆلی خواردن
+                  🕐 {t("mealCategory")}
                 </Label>
                 <select
                   value={mealFormData.category}
@@ -2935,46 +2935,46 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-orange-500/20 flex items-center justify-center">
                     <Flame className="w-4 h-4 text-orange-400" />
                   </div>
-                  📊 ماکرۆکان
+                  📊 {t("macros")}
                 </Label>
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label className="text-gray-300 text-sm">🔥 کالۆری *</Label>
+                    <Label className="text-gray-300 text-sm">🔥 {t("caloriesRequired")}</Label>
                     <Input
                       type="number"
                       value={mealFormData.calories}
                       onChange={(e) => setMealFormData({ ...mealFormData, calories: e.target.value })}
-                      placeholder="Example: 450"
+                      placeholder={t("exampleCalories450")}
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-gray-300 text-sm">🥩 پرۆتین (g)</Label>
+                    <Label className="text-gray-300 text-sm">🥩 {t("proteinG")}</Label>
                     <Input
                       type="number"
                       value={mealFormData.protein}
                       onChange={(e) => setMealFormData({ ...mealFormData, protein: e.target.value })}
-                      placeholder="Example: 35"
+                      placeholder={t("exampleProtein35")}
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-gray-300 text-sm">🍚 کاربز (g)</Label>
+                    <Label className="text-gray-300 text-sm">🍚 {t("carbsG")}</Label>
                     <Input
                       type="number"
                       value={mealFormData.carbs}
                       onChange={(e) => setMealFormData({ ...mealFormData, carbs: e.target.value })}
-                      placeholder="Example: 50"
+                      placeholder={t("exampleCarbs50")}
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label className="text-gray-300 text-sm">🧈 چەورە (g)</Label>
+                    <Label className="text-gray-300 text-sm">🧈 {t("fatsG")}</Label>
                     <Input
                       type="number"
                       value={mealFormData.fats}
                       onChange={(e) => setMealFormData({ ...mealFormData, fats: e.target.value })}
-                      placeholder="Example: 12"
+                      placeholder={t("exampleFats12")}
                       className="bg-slate-800/50 border-slate-700 text-white h-11"
                     />
                   </div>
@@ -2987,12 +2987,12 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-purple-500/20 flex items-center justify-center">
                     <Apple className="w-4 h-4 text-purple-400" />
                   </div>
-                  🥘 پێکهاتەکان (ئیختیاری)
+                  🥘 {t("ingredientsOptional")}
                 </Label>
                 <textarea
                   value={mealFormData.ingredients}
                   onChange={(e) => setMealFormData({ ...mealFormData, ingredients: e.target.value })}
-                  placeholder="Example:&#10;- Chicken breast 150g&#10;- Rice 200g&#10;- Vegetables 100g&#10;- Olive oil 1 tsp"
+                  placeholder={t("exampleIngredients")}
                   rows={4}
                   className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
@@ -3004,12 +3004,12 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-cyan-500/20 flex items-center justify-center">
                     <Lightbulb className="w-4 h-4 text-cyan-400" />
                   </div>
-                  📝 ڕێنمایی (ئیختیاری)
+                  📝 {t("instructionsOptional")}
                 </Label>
                 <textarea
                   value={mealFormData.instructions}
                   onChange={(e) => setMealFormData({ ...mealFormData, instructions: e.target.value })}
-                  placeholder="Example:&#10;1. Grill chicken until fully cooked&#10;2. Cook rice separately&#10;3. Mix all ingredients in a bowl..."
+                  placeholder={t("exampleInstructions")}
                   rows={4}
                   className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                 />
@@ -3021,12 +3021,12 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-pink-500/20 flex items-center justify-center">
                     <Heart className="w-4 h-4 text-pink-400" />
                   </div>
-                  💡 تێبینی (ئیختیاری)
+                  💡 {t("notesOptional")}
                 </Label>
                 <Input
                   value={mealFormData.notes}
                   onChange={(e) => setMealFormData({ ...mealFormData, notes: e.target.value })}
-                  placeholder="تێبینی تایبەت..."
+                  placeholder={t("specialNotes")}
                   className="bg-slate-800/50 border-slate-700 text-white h-11"
                 />
               </div>
@@ -3037,7 +3037,7 @@ export default function ProgramsPage() {
                   <div className="w-6 h-6 rounded-lg bg-yellow-500/20 flex items-center justify-center">
                     <Activity className="w-4 h-4 text-yellow-400" />
                   </div>
-                  🖼️ وێنەی خواردن (ئیختیاری)
+                  🖼️ {t("mealImageOptional")}
                 </Label>
                 
                 {/* Selected Images Preview */}
@@ -3182,7 +3182,7 @@ export default function ProgramsPage() {
                 className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg font-bold shadow-lg"
               >
                 <Check className="w-5 h-5 mr-2" />
-                زیادکردن
+                {t("addAction")}
               </Button>
             </div>
           </DialogContent>

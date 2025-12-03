@@ -781,6 +781,35 @@ export type TranslationKey =
   | "weekUniqueExercises"
   | "setMealsForEachDay"
   | "setExercisesForEachDay"
+  | "mealName"
+  | "mealCategory"
+  | "macros"
+  | "caloriesRequired"
+  | "proteinG"
+  | "carbsG"
+  | "fatsG"
+  | "ingredients"
+  | "ingredientsOptional"
+  | "instructionsOptional"
+  | "notesOptional"
+  | "mealImage"
+  | "mealImageOptional"
+  | "selectFromGallery"
+  | "orEnterImageLink"
+  | "importantNote"
+  | "onlyNameCaloriesRequired"
+  | "ingredientsInstructionsNotesOptional"
+  | "canAddMultipleMealsPerDay"
+  | "addAction"
+  | "exampleGrilledChicken"
+  | "exampleCalories450"
+  | "exampleProtein35"
+  | "exampleCarbs50"
+  | "exampleFats12"
+  | "exampleIngredients"
+  | "exampleInstructions"
+  | "specialNotes"
+  | "pleaseEnterMealName"
   | "cancelAction"
   | "saveProgram"
   | "addExerciseTitle"
@@ -1707,6 +1736,35 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   weekUniqueExercises: "Week's Unique Exercises",
   setMealsForEachDay: "Set meals for each day",
   setExercisesForEachDay: "Set exercises for each day",
+  mealName: "Meal Name",
+  mealCategory: "Meal Category",
+  macros: "Macros",
+  caloriesRequired: "Calories *",
+  proteinG: "Protein (g)",
+  carbsG: "Carbs (g)",
+  fatsG: "Fats (g)",
+  ingredients: "Ingredients",
+  ingredientsOptional: "Ingredients (Optional)",
+  instructionsOptional: "Instructions (Optional)",
+  notesOptional: "Notes (Optional)",
+  mealImage: "Meal Image",
+  mealImageOptional: "Meal Image (Optional)",
+  selectFromGallery: "Select from Gallery",
+  orEnterImageLink: "Or enter image link...",
+  importantNote: "Important Note:",
+  onlyNameCaloriesRequired: "Only name and calories are required",
+  ingredientsInstructionsNotesOptional: "Ingredients, instructions and notes are optional",
+  canAddMultipleMealsPerDay: "You can add multiple meals for each day",
+  addAction: "Add",
+  exampleGrilledChicken: "Example: Grilled Chicken & Rice",
+  exampleCalories450: "Example: 450",
+  exampleProtein35: "Example: 35",
+  exampleCarbs50: "Example: 50",
+  exampleFats12: "Example: 12",
+  exampleIngredients: "Example:\n- Chicken breast 150g\n- Rice 200g\n- Vegetables 100g\n- Olive oil 1 tsp",
+  exampleInstructions: "Example:\n1. Grill chicken until fully cooked\n2. Cook rice separately\n3. Mix all ingredients in a bowl...",
+  specialNotes: "Special notes...",
+  pleaseEnterMealName: "Please enter meal name",
   cancelAction: "Cancel",
   saveProgram: "Save",
   addExerciseTitle: "Add Exercise",
@@ -2552,6 +2610,35 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,weekUniqueExercises: "تمارين الأسبوع الفريدة"
   ,setMealsForEachDay: "حدد الوجبات لكل يوم"
   ,setExercisesForEachDay: "حدد التمارين لكل يوم"
+  ,mealName: "اسم الوجبة"
+  ,mealCategory: "فئة الوجبة"
+  ,macros: "المغذيات الكبرى"
+  ,caloriesRequired: "السعرات *"
+  ,proteinG: "البروتين (g)"
+  ,carbsG: "الكربوهيدرات (g)"
+  ,fatsG: "الدهون (g)"
+  ,ingredients: "المكونات"
+  ,ingredientsOptional: "المكونات (اختياري)"
+  ,instructionsOptional: "التعليمات (اختياري)"
+  ,notesOptional: "ملاحظات (اختياري)"
+  ,mealImage: "صورة الوجبة"
+  ,mealImageOptional: "صورة الوجبة (اختياري)"
+  ,selectFromGallery: "اختر من المعرض"
+  ,orEnterImageLink: "أو أدخل رابط الصورة..."
+  ,importantNote: "ملاحظة مهمة:"
+  ,onlyNameCaloriesRequired: "فقط الاسم والسعرات مطلوبة"
+  ,ingredientsInstructionsNotesOptional: "المكونات والتعليمات والملاحظات اختيارية"
+  ,canAddMultipleMealsPerDay: "يمكنك إضافة وجبات متعددة لكل يوم"
+  ,addAction: "إضافة"
+  ,exampleGrilledChicken: "مثال: دجاج مشوي وأرز"
+  ,exampleCalories450: "مثال: 450"
+  ,exampleProtein35: "مثال: 35"
+  ,exampleCarbs50: "مثال: 50"
+  ,exampleFats12: "مثال: 12"
+  ,exampleIngredients: "مثال:\n- صدر دجاج 150 جرام\n- أرز 200 جرام\n- خضروات 100 جرام\n- زيت زيتون 1 ملعقة صغيرة"
+  ,exampleInstructions: "مثال:\n1. اشوِ الدجاج حتى ينضج تماماً\n2. اطبخ الأرز بشكل منفصل\n3. اخلط جميع المكونات في وعاء..."
+  ,specialNotes: "ملاحظات خاصة..."
+  ,pleaseEnterMealName: "الرجاء إدخال اسم الوجبة"
   ,cancelAction: "إلغاء"
   ,saveProgram: "حفظ"
   ,addExerciseTitle: "إضافة تمرين"
@@ -3401,6 +3488,35 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,weekUniqueExercises: "یارییە جیاوازەکانی هەفتە"
     ,setMealsForEachDay: "خواردنەکانی هەر رۆژێک دیاری بکە"
     ,setExercisesForEachDay: "یارییەکانی هەر رۆژێک دیاری بکە"
+    ,mealName: "ناوی خواردن"
+    ,mealCategory: "پۆلی خواردن"
+    ,macros: "ماکرۆکان"
+    ,caloriesRequired: "کالۆری *"
+    ,proteinG: "پرۆتین (g)"
+    ,carbsG: "کاربز (g)"
+    ,fatsG: "چەورە (g)"
+    ,ingredients: "پێکهاتەکان"
+    ,ingredientsOptional: "پێکهاتەکان (ئیختیاری)"
+    ,instructionsOptional: "ڕێنمایی (ئیختیاری)"
+    ,notesOptional: "تێبینی (ئیختیاری)"
+    ,mealImage: "وێنەی خواردن"
+    ,mealImageOptional: "وێنەی خواردن (ئیختیاری)"
+    ,selectFromGallery: "هەڵبژاردن لە گالەری"
+    ,orEnterImageLink: "یان لینکی وێنە بنووسە..."
+    ,importantNote: "تێبینی گرنگ:"
+    ,onlyNameCaloriesRequired: "تەنها ناو و کالۆری پێویستە"
+    ,ingredientsInstructionsNotesOptional: "پێکهاتە، ڕێنمایی و تێبینی ئیختیاریە"
+    ,canAddMultipleMealsPerDay: "دەتوانی زیاتر لە خواردنێک زیاد بکەیت بۆ هەر رۆژێک"
+    ,addAction: "زیادکردن"
+    ,exampleGrilledChicken: "نموونە: مریشکی برژاو و برنج"
+    ,exampleCalories450: "نموونە: 450"
+    ,exampleProtein35: "نموونە: 35"
+    ,exampleCarbs50: "نموونە: 50"
+    ,exampleFats12: "نموونە: 12"
+    ,exampleIngredients: "نموونە:\n- سنگی مریشک 150g\n- برنج 200g\n- سەوزە 100g\n- ڕۆنی زەیتوون 1 کەوچک"
+    ,exampleInstructions: "نموونە:\n1. مریشک بە تەواوی برژێنە\n2. برنج بە جیاکاری لێبنێ\n3. هەموو پێکهاتەکان لە قاپێکدا تێکەڵ بکە..."
+    ,specialNotes: "تێبینی تایبەت..."
+    ,pleaseEnterMealName: "تکایە ناوی خواردن بنووسە"
     ,cancelAction: "پاشگەزبوونەوە"
     ,saveProgram: "پاشەکەوتکردن"
     ,addExerciseTitle: "زیادکردنی یاری"
@@ -4247,6 +4363,35 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   weekUniqueExercises: "Haftanın Benzersiz Egzersizleri",
   setMealsForEachDay: "Her gün için öğünleri belirle",
   setExercisesForEachDay: "Her gün için egzersizleri belirle",
+  mealName: "Öğün Adı",
+  mealCategory: "Öğün Kategorisi",
+  macros: "Makrolar",
+  caloriesRequired: "Kalori *",
+  proteinG: "Protein (g)",
+  carbsG: "Karbonhidrat (g)",
+  fatsG: "Yağ (g)",
+  ingredients: "Malzemeler",
+  ingredientsOptional: "Malzemeler (İsteğe bağlı)",
+  instructionsOptional: "Talimatlar (İsteğe bağlı)",
+  notesOptional: "Notlar (İsteğe bağlı)",
+  mealImage: "Öğün Resmi",
+  mealImageOptional: "Öğün Resmi (İsteğe bağlı)",
+  selectFromGallery: "Galeriden Seç",
+  orEnterImageLink: "Veya resim bağlantısı girin...",
+  importantNote: "Önemli Not:",
+  onlyNameCaloriesRequired: "Sadece ad ve kalori gerekli",
+  ingredientsInstructionsNotesOptional: "Malzemeler, talimatlar ve notlar isteğe bağlı",
+  canAddMultipleMealsPerDay: "Her gün için birden fazla öğün ekleyebilirsiniz",
+  addAction: "Ekle",
+  exampleGrilledChicken: "Örnek: Izgara Tavuk ve Pilav",
+  exampleCalories450: "Örnek: 450",
+  exampleProtein35: "Örnek: 35",
+  exampleCarbs50: "Örnek: 50",
+  exampleFats12: "Örnek: 12",
+  exampleIngredients: "Örnek:\n- Tavuk göğsü 150g\n- Pilav 200g\n- Sebzeler 100g\n- Zeytinyağı 1 çay kaşığı",
+  exampleInstructions: "Örnek:\n1. Tavuğu tamamen pişene kadar ızgarada pişirin\n2. Pilavı ayrı olarak pişirin\n3. Tüm malzemeleri bir kasede karıştırın...",
+  specialNotes: "Özel notlar...",
+  pleaseEnterMealName: "Lütfen öğün adını girin",
   cancelAction: "İptal",
   saveProgram: "Kaydet",
   addExerciseTitle: "Egzersiz Ekle",
