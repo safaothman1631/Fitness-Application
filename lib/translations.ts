@@ -810,6 +810,17 @@ export type TranslationKey =
   | "searchInLibrary"
   | "videos"
   | "close"
+  // Placeholders for Create Program dialogs
+  | "exampleKetoDiet"
+  | "exampleFullBodyWorkout"
+  | "enterProgramDescription"
+  | "example30mins"
+  | "example2000"
+  | "example150"
+  | "example200"
+  | "example60"
+  | "exampleChestShouldersTriceps"
+  | "exampleImageUrl"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1438,6 +1449,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   progressUpdate: "Progress Update",
   progressUpdateDesc: "You've lost 2kg this month. Great progress!",
   close: "Close",
+  // Placeholders for Create Program dialogs (English)
+  exampleKetoDiet: "Example: Keto Diet Plan",
+  exampleFullBodyWorkout: "Example: Full Body Workout",
+  enterProgramDescription: "Enter program description...",
+  example30mins: "Example: 30 mins",
+  example2000: "Example: 2000",
+  example150: "Example: 150",
+  example200: "Example: 200",
+  example60: "Example: 60",
+  exampleChestShouldersTriceps: "Example: Chest, Shoulders, Triceps",
+  exampleImageUrl: "https://example.com/image.jpg",
   // Superadmin Dashboard (English)
   superadminDashboard: "Superadmin Dashboard",
   systemManagementControl: "System Management & Control",
@@ -2254,6 +2276,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,progressUpdate: "تحديث التقدم"
   ,progressUpdateDesc: "فقدت 2 كجم هذا الشهر. تقدم رائع!"
   ,close: "إغلاق"
+  // Placeholders for Create Program dialogs (Arabic)
+  ,exampleKetoDiet: "مثال: خطة حمية الكيتو"
+  ,exampleFullBodyWorkout: "مثال: تمرين كامل الجسم"
+  ,enterProgramDescription: "أدخل وصف البرنامج..."
+  ,example30mins: "مثال: 30 دقيقة"
+  ,example2000: "مثال: 2000"
+  ,example150: "مثال: 150"
+  ,example200: "مثال: 200"
+  ,example60: "مثال: 60"
+  ,exampleChestShouldersTriceps: "مثال: الصدر، الأكتاف، العضلة ثلاثية الرؤوس"
+  ,exampleImageUrl: "https://example.com/image.jpg"
   // Superadmin Dashboard (Arabic)
   ,superadminDashboard: "لوحة تحكم المسؤول الأعلى"
   ,systemManagementControl: "إدارة النظام والتحكم"
@@ -3073,6 +3106,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,progressUpdate: "نوێکردنەوەی پێشکەوتن"
     ,progressUpdateDesc: "تۆ 2kg لەم مانگەدا لەدەست داوە. پێشکەوتنێکی نایاب!"
     ,close: "داخستن"
+    // Placeholders for Create Program dialogs (Kurdish)
+    ,exampleKetoDiet: "نموونە: پلانی خۆراکی کیتۆ"
+    ,exampleFullBodyWorkout: "نموونە: وەرزشی هەموو جەستە"
+    ,enterProgramDescription: "پێناسەی بەرنامە بنووسە..."
+    ,example30mins: "نموونە: 30 خولەک"
+    ,example2000: "نموونە: 2000"
+    ,example150: "نموونە: 150"
+    ,example200: "نموونە: 200"
+    ,example60: "نموونە: 60"
+    ,exampleChestShouldersTriceps: "نموونە: سنگ، شان، ترایسێپس"
+    ,exampleImageUrl: "https://example.com/image.jpg"
     // Superadmin Dashboard (Kurdish)
     ,superadminDashboard: "داشبۆردی سوپەرئادمین"
     ,systemManagementControl: "بەڕێوەبردن و کۆنترۆڵی سیستەم"
@@ -3890,6 +3934,17 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   progressUpdate: "İlerleme Güncellemesi",
   progressUpdateDesc: "Bu ay 2kg kaybettin. Harika ilerleme!",
   close: "Kapat",
+  // Placeholders for Create Program dialogs (Turkish)
+  exampleKetoDiet: "Örnek: Keto Diyet Planı",
+  exampleFullBodyWorkout: "Örnek: Tam Vücut Antrenmanı",
+  enterProgramDescription: "Program açıklamasını girin...",
+  example30mins: "Örnek: 30 dakika",
+  example2000: "Örnek: 2000",
+  example150: "Örnek: 150",
+  example200: "Örnek: 200",
+  example60: "Örnek: 60",
+  exampleChestShouldersTriceps: "Örnek: Göğüs, Omuzlar, Triseps",
+  exampleImageUrl: "https://example.com/image.jpg",
   // Superadmin Dashboard (Turkish)
   superadminDashboard: "Süper Yönetici Paneli",
   systemManagementControl: "Sistem Yönetimi ve Kontrolü",

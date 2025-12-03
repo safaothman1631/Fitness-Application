@@ -1401,7 +1401,7 @@ export default function ProgramsPage() {
                   <Input
                     value={newProgram.title}
                     onChange={(e) => setNewProgram({ ...newProgram, title: e.target.value })}
-                    placeholder={activeTab === 'nutrition' ? 'Example: Keto Diet Plan' : 'Example: Full Body Workout'}
+                    placeholder={activeTab === 'nutrition' ? t("exampleKetoDiet") : t("exampleFullBodyWorkout")}
                     className="bg-slate-800/50 border-slate-700 text-white h-12"
                   />
                 </div>
@@ -1411,7 +1411,7 @@ export default function ProgramsPage() {
                   <textarea
                     value={newProgram.description}
                     onChange={(e) => setNewProgram({ ...newProgram, description: e.target.value })}
-                    placeholder="Enter program description..."
+                    placeholder={t("enterProgramDescription")}
                     rows={3}
                     className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
                   />
@@ -1423,7 +1423,7 @@ export default function ProgramsPage() {
                     <Input
                       value={newProgram.duration}
                       onChange={(e) => setNewProgram({ ...newProgram, duration: e.target.value })}
-                      placeholder="Example: 30 mins"
+                      placeholder={t("example30mins")}
                       className="bg-slate-800/50 border-slate-700 text-white h-12"
                     />
                   </div>
@@ -1448,7 +1448,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.calories}
                         onChange={(e) => setNewProgram({ ...newProgram, calories: e.target.value })}
-                        placeholder="Example: 2000"
+                        placeholder={t("example2000")}
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1457,7 +1457,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.protein}
                         onChange={(e) => setNewProgram({ ...newProgram, protein: e.target.value })}
-                        placeholder="Example: 150"
+                        placeholder={t("example150")}
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1466,7 +1466,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.carbs}
                         onChange={(e) => setNewProgram({ ...newProgram, carbs: e.target.value })}
-                        placeholder="Example: 200"
+                        placeholder={t("example200")}
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1475,7 +1475,7 @@ export default function ProgramsPage() {
                       <Input
                         value={newProgram.fats}
                         onChange={(e) => setNewProgram({ ...newProgram, fats: e.target.value })}
-                        placeholder="Example: 60"
+                        placeholder={t("example60")}
                         className="bg-slate-800/50 border-slate-700 text-white h-12"
                       />
                     </div>
@@ -1486,7 +1486,7 @@ export default function ProgramsPage() {
                     <Input
                       value={newProgram.targetMuscles}
                       onChange={(e) => setNewProgram({ ...newProgram, targetMuscles: e.target.value })}
-                      placeholder="Example: Chest, Shoulders, Triceps"
+                      placeholder={t("exampleChestShouldersTriceps")}
                       className="bg-slate-800/50 border-slate-700 text-white h-12"
                     />
                   </div>
@@ -1497,7 +1497,7 @@ export default function ProgramsPage() {
                   <Input
                     value={newProgram.imageUrl}
                     onChange={(e) => setNewProgram({ ...newProgram, imageUrl: e.target.value })}
-                    placeholder="https://example.com/image.jpg"
+                    placeholder={t("exampleImageUrl")}
                     className="bg-slate-800/50 border-slate-700 text-white h-12"
                   />
                 </div>
@@ -1567,10 +1567,10 @@ export default function ProgramsPage() {
                         <div className="text-center py-8">
                           <Users className="w-12 h-12 text-gray-600 mx-auto mb-2" />
                           <p className="text-gray-400 text-sm">
-                            {users.length === 0 ? 'هیچ یوزەرێکی ئاسایی (user) بە PRO نییە' : 'هیچ یوزەرێک نەدۆزرایەوە'}
+                            {users.length === 0 ? t("noPROusers") : t("noUsersFound")}
                           </p>
                           {users.length === 0 && (
-                            <p className="text-gray-500 text-xs mt-1">یوزەرە فریەکان و ئەدمین/فیزیۆ پیشان نادرێن</p>
+                            <p className="text-gray-500 text-xs mt-1">{t("freeUsersNotShown")}</p>
                           )}
                         </div>
                       ) : (
@@ -1624,7 +1624,7 @@ export default function ProgramsPage() {
                         <div className="flex items-center gap-2">
                           <Check className="w-4 h-4 text-green-400" />
                           <p className="text-sm text-green-300">
-                            ئەم بەرنامەیە بۆ <span className="font-bold">{selectedUsers.length}</span> یوزەری PRO دەنێردرێت
+                            {t("programWillBeSentTo").replace("{count}", selectedUsers.length.toString())} {t("PROusers")}
                           </p>
                         </div>
                       </CardContent>
