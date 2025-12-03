@@ -681,6 +681,116 @@ export type TranslationKey =
   | "restoreFromBackup"
   | "clearCache"
   | "clearing"
+  // Programs Page
+  | "programsManagement"
+  | "createAndManagePrograms"
+  | "nutritionPrograms"
+  | "workoutPrograms"
+  | "searchPrograms"
+  | "createNewProgram"
+  | "programName"
+  | "description"
+  | "assignToUsers"
+  | "selectUsers"
+  | "searchByName"
+  | "selected"
+  | "weeklySchedule"
+  | "addMeal"
+  | "addExercise"
+  | "mealLibrary"
+  | "exerciseLibrary"
+  | "calories"
+  | "protein"
+  | "carbs"
+  | "fats"
+  | "sets"
+  | "reps"
+  | "rest"
+  | "instructions"
+  | "ingredients"
+  | "noProgramsFound"
+  | "createFirstProgram"
+  // Videos Page
+  | "firebaseVideos"
+  | "checkFirebaseVideos"
+  | "refreshVideos"
+  | "videoName"
+  | "fileSize"
+  | "uploadDate"
+  | "download"
+  | "noVideosFound"
+  | "uploadVideosFirst"
+  // Logs Page
+  | "systemLogs"
+  | "monitorSystemActivity"
+  | "searchLogs"
+  | "filterByType"
+  | "exportLogs"
+  | "allLogs"
+  | "errors"
+  | "warnings"
+  | "infoLogs"
+  | "timestamp"
+  | "message"
+  | "details"
+  | "noLogsFound"
+  | "error"
+  | "warning"
+  | "info"
+  // Profile Page
+  | "myProfile"
+  | "manageAccountInfo"
+  | "systemAdministrator"
+  | "editProfile"
+  | "cancelEdit"
+  | "personalInfo"
+  | "firstName"
+  | "lastName"
+  | "fullAccess"
+  | "accountInfo"
+  | "joinedDate"
+  | "lastLogin"
+  | "securitySettings"
+  | "changePassword"
+  | "currentPasswordPlaceholder"
+  | "newPasswordPlaceholder"
+  | "confirmPasswordPlaceholder"
+  | "updatePassword"
+  // Settings Page
+  | "settingsPage"
+  | "customizePreferences"
+  | "securityAndPrivacy"
+  | "addExtraLayer"
+  | "twoFactorAuth"
+  | "notificationsSettings"
+  | "systemNotifications"
+  | "receiveSystemAlerts"
+  | "emailNotifs"
+  | "getEmailUpdates"
+  | "appearance"
+  | "darkModeLabel"
+  | "darkModeDesc"
+  | "languagePreference"
+  | "chooseLanguage"
+  | "systemPreferences"
+  | "autoBackup"
+  | "autoBackupDesc"
+  | "maintenanceMode"
+  | "maintenanceModeDesc"
+  // Notifications Page
+  | "notificationsPage"
+  | "stayUpdated"
+  | "markAllRead"
+  | "clearAll"
+  | "unreadNotifications"
+  | "allNotifications"
+  | "failedLoginAttempt"
+  | "newAdminCreated"
+  | "highServerLoad"
+  | "markAsRead"
+  | "deleteNotification"
+  | "noNotifications"
+  | "allCaughtUp"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -1357,6 +1467,116 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   restoreFromBackup: "Restore from Backup",
   clearCache: "Clear Cache",
   clearing: "Clearing...",
+  // Programs Page (English)
+  programsManagement: "Programs Management",
+  createAndManagePrograms: "Create and manage workout & nutrition programs",
+  nutritionPrograms: "Nutrition Programs",
+  workoutPrograms: "Workout Programs",
+  searchPrograms: "Search programs...",
+  createNewProgram: "Create New Program",
+  programName: "Program Name",
+  description: "Description",
+  assignToUsers: "Assign to Users",
+  selectUsers: "Select Users",
+  searchByName: "Search by name...",
+  selected: "selected",
+  weeklySchedule: "Weekly Schedule",
+  addMeal: "Add Meal",
+  addExercise: "Add Exercise",
+  mealLibrary: "Meal Library",
+  exerciseLibrary: "Exercise Library",
+  calories: "Calories",
+  protein: "Protein",
+  carbs: "Carbs",
+  fats: "Fats",
+  sets: "Sets",
+  reps: "Reps",
+  rest: "Rest",
+  instructions: "Instructions",
+  ingredients: "Ingredients",
+  noProgramsFound: "No programs found",
+  createFirstProgram: "Create your first program above",
+  // Videos Page (English)
+  firebaseVideos: "Firebase Storage Videos",
+  checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
+  refreshVideos: "Refresh",
+  videoName: "Video Name",
+  fileSize: "File Size",
+  uploadDate: "Upload Date",
+  download: "Download",
+  noVideosFound: "No videos found",
+  uploadVideosFirst: "Upload videos to Firebase Storage first",
+  // Logs Page (English)
+  systemLogs: "System Logs",
+  monitorSystemActivity: "Monitor system activity and events",
+  searchLogs: "Search logs...",
+  filterByType: "Filter by Type",
+  exportLogs: "Export Logs",
+  allLogs: "All Logs",
+  errors: "Errors",
+  warnings: "Warnings",
+  infoLogs: "Info",
+  timestamp: "Timestamp",
+  message: "Message",
+  details: "Details",
+  noLogsFound: "No logs found",
+  error: "Error",
+  warning: "Warning",
+  info: "Info",
+  // Profile Page (English)
+  myProfile: "My Profile",
+  manageAccountInfo: "Manage your account information",
+  systemAdministrator: "System Administrator",
+  editProfile: "Edit Profile",
+  cancelEdit: "Cancel",
+  personalInfo: "Personal Information",
+  firstName: "First Name",
+  lastName: "Last Name",
+  fullAccess: "Full Access",
+  accountInfo: "Account Information",
+  joinedDate: "Joined Date",
+  lastLogin: "Last Login",
+  securitySettings: "Security Settings",
+  changePassword: "Change Password",
+  currentPasswordPlaceholder: "Enter current password",
+  newPasswordPlaceholder: "Enter new password",
+  confirmPasswordPlaceholder: "Confirm new password",
+  updatePassword: "Update Password",
+  // Settings Page (English)
+  settingsPage: "Settings",
+  customizePreferences: "Customize your preferences and security",
+  securityAndPrivacy: "Security & Privacy",
+  addExtraLayer: "Add an extra layer of security",
+  twoFactorAuth: "Two-Factor Authentication",
+  notificationsSettings: "Notifications",
+  systemNotifications: "System Notifications",
+  receiveSystemAlerts: "Receive system alerts and updates",
+  emailNotifs: "Email Notifications",
+  getEmailUpdates: "Get important updates via email",
+  appearance: "Appearance",
+  darkModeLabel: "Dark Mode",
+  darkModeDesc: "Use dark theme for better visibility",
+  languagePreference: "Language Preference",
+  chooseLanguage: "Choose your preferred language",
+  systemPreferences: "System Preferences",
+  autoBackup: "Automatic Backup",
+  autoBackupDesc: "Backup database automatically every day",
+  maintenanceMode: "Maintenance Mode",
+  maintenanceModeDesc: "Enable maintenance mode for system updates",
+  // Notifications Page (English)
+  notificationsPage: "Notifications",
+  stayUpdated: "Stay updated with system alerts",
+  markAllRead: "Mark All Read",
+  clearAll: "Clear All",
+  unreadNotifications: "Unread",
+  allNotifications: "All",
+  failedLoginAttempt: "Failed Login Attempt",
+  newAdminCreated: "New Admin Created",
+  highServerLoad: "High Server Load",
+  markAsRead: "Mark as Read",
+  deleteNotification: "Delete",
+  noNotifications: "No notifications",
+  allCaughtUp: "You're all caught up!",
   },
   // Minimal Arabic placeholders (update with full translations later)
   ar: {
@@ -1963,6 +2183,116 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,restoreFromBackup: "استعادة من نسخة احتياطية"
   ,clearCache: "مسح ذاكرة التخزين المؤقت"
   ,clearing: "جارٍ المسح..."
+  // Programs Page (Arabic)
+  ,programsManagement: "إدارة البرامج"
+  ,createAndManagePrograms: "إنشاء وإدارة برامج التمارين والتغذية"
+  ,nutritionPrograms: "برامج التغذية"
+  ,workoutPrograms: "برامج التمارين"
+  ,searchPrograms: "البحث عن البرامج..."
+  ,createNewProgram: "إنشاء برنامج جديد"
+  ,programName: "اسم البرنامج"
+  ,description: "الوصف"
+  ,assignToUsers: "تعيين للمستخدمين"
+  ,selectUsers: "اختر المستخدمين"
+  ,searchByName: "البحث بالاسم..."
+  ,selected: "محدد"
+  ,weeklySchedule: "الجدول الأسبوعي"
+  ,addMeal: "إضافة وجبة"
+  ,addExercise: "إضافة تمرين"
+  ,mealLibrary: "مكتبة الوجبات"
+  ,exerciseLibrary: "مكتبة التمارين"
+  ,calories: "السعرات"
+  ,protein: "البروتين"
+  ,carbs: "الكربوهيدرات"
+  ,fats: "الدهون"
+  ,sets: "المجموعات"
+  ,reps: "التكرارات"
+  ,rest: "الراحة"
+  ,instructions: "التعليمات"
+  ,ingredients: "المكونات"
+  ,noProgramsFound: "لا توجد برامج"
+  ,createFirstProgram: "قم بإنشاء برنامجك الأول أعلاه"
+  // Videos Page (Arabic)
+  ,firebaseVideos: "فيديوهات Firebase"
+  ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
+  ,refreshVideos: "تحديث"
+  ,videoName: "اسم الفيديو"
+  ,fileSize: "حجم الملف"
+  ,uploadDate: "تاريخ الرفع"
+  ,download: "تحميل"
+  ,noVideosFound: "لا توجد فيديوهات"
+  ,uploadVideosFirst: "قم برفع الفيديوهات إلى Firebase أولاً"
+  // Logs Page (Arabic)
+  ,systemLogs: "سجلات النظام"
+  ,monitorSystemActivity: "مراقبة نشاط النظام والأحداث"
+  ,searchLogs: "البحث في السجلات..."
+  ,filterByType: "التصفية حسب النوع"
+  ,exportLogs: "تصدير السجلات"
+  ,allLogs: "جميع السجلات"
+  ,errors: "الأخطاء"
+  ,warnings: "التحذيرات"
+  ,infoLogs: "معلومات"
+  ,timestamp: "الوقت"
+  ,message: "الرسالة"
+  ,details: "التفاصيل"
+  ,noLogsFound: "لا توجد سجلات"
+  ,error: "خطأ"
+  ,warning: "تحذير"
+  ,info: "معلومات"
+  // Profile Page (Arabic)
+  ,myProfile: "ملفي الشخصي"
+  ,manageAccountInfo: "إدارة معلومات حسابك"
+  ,systemAdministrator: "مسؤول النظام"
+  ,editProfile: "تعديل الملف"
+  ,cancelEdit: "إلغاء"
+  ,personalInfo: "المعلومات الشخصية"
+  ,firstName: "الاسم الأول"
+  ,lastName: "اسم العائلة"
+  ,fullAccess: "وصول كامل"
+  ,accountInfo: "معلومات الحساب"
+  ,joinedDate: "تاريخ الانضمام"
+  ,lastLogin: "آخر تسجيل دخول"
+  ,securitySettings: "إعدادات الأمان"
+  ,changePassword: "تغيير كلمة المرور"
+  ,currentPasswordPlaceholder: "أدخل كلمة المرور الحالية"
+  ,newPasswordPlaceholder: "أدخل كلمة المرور الجديدة"
+  ,confirmPasswordPlaceholder: "تأكيد كلمة المرور الجديدة"
+  ,updatePassword: "تحديث كلمة المرور"
+  // Settings Page (Arabic)
+  ,settingsPage: "الإعدادات"
+  ,customizePreferences: "تخصيص تفضيلاتك والأمان"
+  ,securityAndPrivacy: "الأمان والخصوصية"
+  ,addExtraLayer: "إضافة طبقة إضافية من الأمان"
+  ,twoFactorAuth: "المصادقة الثنائية"
+  ,notificationsSettings: "الإشعارات"
+  ,systemNotifications: "إشعارات النظام"
+  ,receiveSystemAlerts: "تلقي تنبيهات وتحديثات النظام"
+  ,emailNotifs: "إشعارات البريد الإلكتروني"
+  ,getEmailUpdates: "احصل على التحديثات المهمة عبر البريد"
+  ,appearance: "المظهر"
+  ,darkModeLabel: "الوضع الداكن"
+  ,darkModeDesc: "استخدم السمة الداكنة لرؤية أفضل"
+  ,languagePreference: "تفضيل اللغة"
+  ,chooseLanguage: "اختر لغتك المفضلة"
+  ,systemPreferences: "تفضيلات النظام"
+  ,autoBackup: "النسخ الاحتياطي التلقائي"
+  ,autoBackupDesc: "نسخ قاعدة البيانات تلقائياً كل يوم"
+  ,maintenanceMode: "وضع الصيانة"
+  ,maintenanceModeDesc: "تفعيل وضع الصيانة لتحديثات النظام"
+  // Notifications Page (Arabic)
+  ,notificationsPage: "الإشعارات"
+  ,stayUpdated: "ابق على اطلاع بتنبيهات النظام"
+  ,markAllRead: "تمييز الكل كمقروء"
+  ,clearAll: "مسح الكل"
+  ,unreadNotifications: "غير مقروء"
+  ,allNotifications: "الكل"
+  ,failedLoginAttempt: "محاولة تسجيل دخول فاشلة"
+  ,newAdminCreated: "تم إنشاء مسؤول جديد"
+  ,highServerLoad: "حمل عالٍ على الخادم"
+  ,markAsRead: "تمييز كمقروء"
+  ,deleteNotification: "حذف"
+  ,noNotifications: "لا توجد إشعارات"
+  ,allCaughtUp: "أنت على اطلاع على كل شيء!"
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -2572,6 +2902,116 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,restoreFromBackup: "گەڕانەوە لە کۆپی پاشەکەوت"
     ,clearCache: "پاککردنەوەی کاش"
     ,clearing: "پاکدەکرێتەوە..."
+    // Programs Page (Kurdish)
+    ,programsManagement: "بەڕێوەبردنی پرۆگرامەکان"
+    ,createAndManagePrograms: "دروستکردن و بەڕێوەبردنی پرۆگرامەکانی ڕاهێنان و خۆراک"
+    ,nutritionPrograms: "پرۆگرامەکانی خۆراک"
+    ,workoutPrograms: "پرۆگرامەکانی ڕاهێنان"
+    ,searchPrograms: "گەڕان بۆ پرۆگرامەکان..."
+    ,createNewProgram: "دروستکردنی پرۆگرامی نوێ"
+    ,programName: "ناوی پرۆگرام"
+    ,description: "وەسف"
+    ,assignToUsers: "دیاریکردن بۆ بەکارهێنەران"
+    ,selectUsers: "بەکارهێنەران هەڵبژێرە"
+    ,searchByName: "گەڕان بە ناو..."
+    ,selected: "هەڵبژێردراو"
+    ,weeklySchedule: "خشتەی هەفتانە"
+    ,addMeal: "زیادکردنی ژەمی خۆراک"
+    ,addExercise: "زیادکردنی ڕاهێنان"
+    ,mealLibrary: "کتێبخانەی ژەمە خۆراکەکان"
+    ,exerciseLibrary: "کتێبخانەی ڕاهێنانەکان"
+    ,calories: "کالۆری"
+    ,protein: "پرۆتین"
+    ,carbs: "کاربۆهایدرات"
+    ,fats: "چەوری"
+    ,sets: "سێتەکان"
+    ,reps: "دووبارەکردنەوەکان"
+    ,rest: "پشوو"
+    ,instructions: "ڕێنماییەکان"
+    ,ingredients: "پێکهاتەکان"
+    ,noProgramsFound: "هیچ پرۆگرامێک نەدۆزرایەوە"
+    ,createFirstProgram: "یەکەم پرۆگرامەکەت لە سەرەوە دروست بکە"
+    // Videos Page (Kurdish)
+    ,firebaseVideos: "ڤیدیۆکانی Firebase"
+    ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
+    ,refreshVideos: "نوێکردنەوە"
+    ,videoName: "ناوی ڤیدیۆ"
+    ,fileSize: "قەبارەی فایل"
+    ,uploadDate: "بەرواری بارکردن"
+    ,download: "داگرتن"
+    ,noVideosFound: "هیچ ڤیدیۆیەک نەدۆزرایەوە"
+    ,uploadVideosFirst: "سەرەتا ڤیدیۆکان بار بکە بۆ Firebase"
+    // Logs Page (Kurdish)
+    ,systemLogs: "تۆمارەکانی سیستم"
+    ,monitorSystemActivity: "چاودێری چالاکی سیستم و ڕووداوەکان"
+    ,searchLogs: "گەڕان لە تۆمارەکان..."
+    ,filterByType: "فلتەرکردن بەپێی جۆر"
+    ,exportLogs: "هەناردەکردنی تۆمارەکان"
+    ,allLogs: "هەموو تۆمارەکان"
+    ,errors: "هەڵەکان"
+    ,warnings: "ئاگاداریەکان"
+    ,infoLogs: "زانیاری"
+    ,timestamp: "کاتژمێر"
+    ,message: "پەیام"
+    ,details: "وردەکارییەکان"
+    ,noLogsFound: "هیچ تۆمارێک نەدۆزرایەوە"
+    ,error: "هەڵە"
+    ,warning: "ئاگاداری"
+    ,info: "زانیاری"
+    // Profile Page (Kurdish)
+    ,myProfile: "پرۆفایلی من"
+    ,manageAccountInfo: "بەڕێوەبردنی زانیاریەکانی هەژمار"
+    ,systemAdministrator: "بەڕێوەبەری سیستم"
+    ,editProfile: "دەستکاری پرۆفایل"
+    ,cancelEdit: "هەڵوەشاندنەوە"
+    ,personalInfo: "زانیاری کەسی"
+    ,firstName: "ناوی یەکەم"
+    ,lastName: "ناوی کۆتایی"
+    ,fullAccess: "دەستگەیشتنی تەواو"
+    ,accountInfo: "زانیاری هەژمار"
+    ,joinedDate: "بەرواری وەرگرتن"
+    ,lastLogin: "دوایین چوونەژوورەوە"
+    ,securitySettings: "ڕێکخستنەکانی پاراستن"
+    ,changePassword: "گۆڕینی وشەی نهێنی"
+    ,currentPasswordPlaceholder: "وشەی نهێنی ئێستا بنووسە"
+    ,newPasswordPlaceholder: "وشەی نهێنی نوێ بنووسە"
+    ,confirmPasswordPlaceholder: "پشتڕاستکردنەوەی وشەی نهێنی نوێ"
+    ,updatePassword: "نوێکردنەوەی وشەی نهێنی"
+    // Settings Page (Kurdish)
+    ,settingsPage: "ڕێکخستنەکان"
+    ,customizePreferences: "ڕێکخستنی پەسەند و پاراستن"
+    ,securityAndPrivacy: "پاراستن و تایبەتمەندی"
+    ,addExtraLayer: "زیادکردنی توێژێکی زیادە بۆ پاراستن"
+    ,twoFactorAuth: "پشتڕاستکردنەوەی دوو هێما"
+    ,notificationsSettings: "ئاگادارییەکان"
+    ,systemNotifications: "ئاگادارییەکانی سیستم"
+    ,receiveSystemAlerts: "وەرگرتنی ئاماژەکان و نوێکارییەکانی سیستم"
+    ,emailNotifs: "ئاگادارییەکانی ئیمەیڵ"
+    ,getEmailUpdates: "وەرگرتنی نوێکارییە گرنگەکان لە ڕێگەی ئیمەیڵ"
+    ,appearance: "دیمەن"
+    ,darkModeLabel: "دۆخی تاریک"
+    ,darkModeDesc: "بەکارهێنانی ڕووکاری تاریک بۆ بینینی باشتر"
+    ,languagePreference: "پەسەندی زمان"
+    ,chooseLanguage: "زمانی پەسەندت هەڵبژێرە"
+    ,systemPreferences: "پەسەندەکانی سیستم"
+    ,autoBackup: "پاشەکەوتی خۆکار"
+    ,autoBackupDesc: "پاشەکەوتکردنی بنکەدراوە بە شێوەیەکی خۆکار هەموو ڕۆژێک"
+    ,maintenanceMode: "دۆخی چاککردنەوە"
+    ,maintenanceModeDesc: "چالاککردنی دۆخی چاککردنەوە بۆ نوێکارییەکانی سیستم"
+    // Notifications Page (Kurdish)
+    ,notificationsPage: "ئاگادارییەکان"
+    ,stayUpdated: "بە نوێکاری بمێنەوە لەگەڵ ئاماژەکانی سیستم"
+    ,markAllRead: "نیشانکردنی هەموو وەک خوێندراوە"
+    ,clearAll: "پاککردنەوەی هەموو"
+    ,unreadNotifications: "نەخوێندراوە"
+    ,allNotifications: "هەموو"
+    ,failedLoginAttempt: "هەوڵی چوونەژوورەوەی سەرکەوتوو نەبوو"
+    ,newAdminCreated: "بەڕێوەبەری نوێ دروستکرا"
+    ,highServerLoad: "باری زۆری سێرڤەر"
+    ,markAsRead: "نیشانکردن وەک خوێندراوە"
+    ,deleteNotification: "سڕینەوە"
+    ,noNotifications: "هیچ ئاگادارییەک نییە"
+    ,allCaughtUp: "تۆ لەسەر هەموو شتێک نوێی!"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -3178,5 +3618,115 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   restoreFromBackup: "Yedekten Geri Yükle",
   clearCache: "Önbelleği Temizle",
   clearing: "Temizleniyor...",
+  // Programs Page (Turkish)
+  programsManagement: "Program Yönetimi",
+  createAndManagePrograms: "Antrenman ve beslenme programları oluştur ve yönet",
+  nutritionPrograms: "Beslenme Programları",
+  workoutPrograms: "Antrenman Programları",
+  searchPrograms: "Program ara...",
+  createNewProgram: "Yeni Program Oluştur",
+  programName: "Program Adı",
+  description: "Açıklama",
+  assignToUsers: "Kullanıcılara Ata",
+  selectUsers: "Kullanıcıları Seç",
+  searchByName: "İsme göre ara...",
+  selected: "Seçildi",
+  weeklySchedule: "Haftalık Program",
+  addMeal: "Öğün Ekle",
+  addExercise: "Egzersiz Ekle",
+  mealLibrary: "Öğün Kütüphanesi",
+  exerciseLibrary: "Egzersiz Kütüphanesi",
+  calories: "Kalori",
+  protein: "Protein",
+  carbs: "Karbonhidrat",
+  fats: "Yağ",
+  sets: "Set",
+  reps: "Tekrar",
+  rest: "Dinlenme",
+  instructions: "Talimatlar",
+  ingredients: "İçindekiler",
+  noProgramsFound: "Program bulunamadı",
+  createFirstProgram: "Yukarıdan ilk programınızı oluşturun",
+  // Videos Page (Turkish)
+  firebaseVideos: "Firebase Videoları",
+  checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",
+  refreshVideos: "Yenile",
+  videoName: "Video Adı",
+  fileSize: "Dosya Boyutu",
+  uploadDate: "Yükleme Tarihi",
+  download: "İndir",
+  noVideosFound: "Video bulunamadı",
+  uploadVideosFirst: "Önce videoları Firebase'e yükleyin",
+  // Logs Page (Turkish)
+  systemLogs: "Sistem Günlükleri",
+  monitorSystemActivity: "Sistem aktivitesini ve olaylarını izle",
+  searchLogs: "Günlüklerde ara...",
+  filterByType: "Türe göre filtrele",
+  exportLogs: "Günlükleri Dışa Aktar",
+  allLogs: "Tüm Günlükler",
+  errors: "Hatalar",
+  warnings: "Uyarılar",
+  infoLogs: "Bilgi",
+  timestamp: "Zaman",
+  message: "Mesaj",
+  details: "Detaylar",
+  noLogsFound: "Günlük bulunamadı",
+  error: "Hata",
+  warning: "Uyarı",
+  info: "Bilgi",
+  // Profile Page (Turkish)
+  myProfile: "Profilim",
+  manageAccountInfo: "Hesap bilgilerini yönet",
+  systemAdministrator: "Sistem Yöneticisi",
+  editProfile: "Profili Düzenle",
+  cancelEdit: "İptal",
+  personalInfo: "Kişisel Bilgi",
+  firstName: "Ad",
+  lastName: "Soyad",
+  fullAccess: "Tam Erişim",
+  accountInfo: "Hesap Bilgisi",
+  joinedDate: "Katılım Tarihi",
+  lastLogin: "Son Giriş",
+  securitySettings: "Güvenlik Ayarları",
+  changePassword: "Şifre Değiştir",
+  currentPasswordPlaceholder: "Mevcut şifrenizi girin",
+  newPasswordPlaceholder: "Yeni şifrenizi girin",
+  confirmPasswordPlaceholder: "Yeni şifrenizi onaylayın",
+  updatePassword: "Şifreyi Güncelle",
+  // Settings Page (Turkish)
+  settingsPage: "Ayarlar",
+  customizePreferences: "Tercihlerinizi ve güvenliği özelleştirin",
+  securityAndPrivacy: "Güvenlik ve Gizlilik",
+  addExtraLayer: "Güvenlik için ekstra katman ekle",
+  twoFactorAuth: "İki Faktörlü Kimlik Doğrulama",
+  notificationsSettings: "Bildirimler",
+  systemNotifications: "Sistem Bildirimleri",
+  receiveSystemAlerts: "Sistem uyarıları ve güncellemeleri al",
+  emailNotifs: "E-posta Bildirimleri",
+  getEmailUpdates: "Önemli güncellemeleri e-postayla al",
+  appearance: "Görünüm",
+  darkModeLabel: "Karanlık Mod",
+  darkModeDesc: "Daha iyi görünüm için koyu tema kullan",
+  languagePreference: "Dil Tercihi",
+  chooseLanguage: "Tercih ettiğiniz dili seçin",
+  systemPreferences: "Sistem Tercihleri",
+  autoBackup: "Otomatik Yedekleme",
+  autoBackupDesc: "Veritabanını her gün otomatik olarak yedekle",
+  maintenanceMode: "Bakım Modu",
+  maintenanceModeDesc: "Sistem güncellemeleri için bakım modunu etkinleştir",
+  // Notifications Page (Turkish)
+  notificationsPage: "Bildirimler",
+  stayUpdated: "Sistem uyarılarıyla güncel kalın",
+  markAllRead: "Tümünü Okundu İşaretle",
+  clearAll: "Tümünü Temizle",
+  unreadNotifications: "Okunmamış",
+  allNotifications: "Tümü",
+  failedLoginAttempt: "Başarısız giriş denemesi",
+  newAdminCreated: "Yeni yönetici oluşturuldu",
+  highServerLoad: "Yüksek sunucu yükü",
+  markAsRead: "Okundu İşaretle",
+  deleteNotification: "Sil",
+  noNotifications: "Bildirim yok",
+  allCaughtUp: "Her şey tamam!",
   },
 }
