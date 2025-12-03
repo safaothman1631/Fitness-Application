@@ -13,7 +13,7 @@ import { useLanguage } from "@/hooks/useLanguage"
 
 export default function UsersPage() {
   const { t } = useLanguage()
-  const [activeTab, setActiveTab] = useState<'users' | 'requests'>('users')
+  const [activeTab, setActiveTab] = useState<'users' | 'requests' | 'renewals'>('users')
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isCreating, setIsCreating] = useState(false)
@@ -552,6 +552,19 @@ export default function UsersPage() {
                 )}
               </div>
             </button>
+            <button
+              onClick={() => setActiveTab('renewals')}
+              className={`px-6 py-3 font-semibold transition-all duration-300 ${
+                activeTab === 'renewals'
+                  ? 'text-cyan-400 border-b-2 border-cyan-400 bg-gradient-to-t from-cyan-500/10 to-transparent'
+                  : 'text-gray-400 hover:text-gray-300'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                <Activity className="w-4 h-4" />
+                {t("renewSubscription")}
+              </div>
+            </button>
           </div>
 
           {/* Stats Grid - Only show for users tab */}
@@ -756,6 +769,117 @@ export default function UsersPage() {
                           </td>
                         </tr>
                       ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          )}
+
+          {/* Subscription Renewals Tab */}
+          {activeTab === 'renewals' && (
+          <Card className="bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/40 border-slate-700/50 backdrop-blur-sm">
+            <CardHeader className="border-b border-slate-800/50 bg-gradient-to-r from-slate-900/50 to-slate-800/30">
+              <CardTitle className="text-white flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                  <Activity className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">{t("renewSubscription")}</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <div className="inline-block w-12 h-12 border-4 border-green-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                  <p className="text-gray-400">{t("loading")}...</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-slate-800/50">
+                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">User</th>
+                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Current Plan</th>
+                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Expires On</th>
+                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Status</th>
+                        <th className="text-right p-4 text-gray-400 font-semibold text-sm">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {users
+                        .filter((user) => user.membership === 'Pro' || user.role === 'trainer')
+                        .map((user) => {
+                          const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
+                          const daysLeft = expiryDate ? Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0
+                          const isExpiringSoon = daysLeft <= 7 && daysLeft > 0
+                          const isExpired = daysLeft <= 0
+
+                          return (
+                            <tr key={user.id || user.uid} className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 transition-all duration-300">
+                              <td className="p-4">
+                                <div className="flex items-center gap-3">
+                                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 via-emerald-500 to-green-600 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-green-500/30 ring-2 ring-green-400/20">
+                                    {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
+                                  </div>
+                                  <div>
+                                    <p className="text-white font-semibold">{user.name || "No Name"}</p>
+                                    <p className="text-gray-400 text-sm">{user.email}</p>
+                                  </div>
+                                </div>
+                              </td>
+                              <td className="p-4">
+                                <span className="px-4 py-1.5 rounded-full text-xs font-bold shadow-lg bg-gradient-to-r from-yellow-500/40 via-amber-500/30 to-orange-500/20 text-yellow-300 border border-yellow-400/50 shadow-yellow-500/30">
+                                  PRO
+                                </span>
+                              </td>
+                              <td className="p-4">
+                                {expiryDate ? (
+                                  <div>
+                                    <p className="text-white font-semibold text-sm">
+                                      {expiryDate.toLocaleDateString()}
+                                    </p>
+                                    <p className={`text-xs mt-1 ${
+                                      isExpired ? 'text-red-400' : 
+                                      isExpiringSoon ? 'text-orange-400' : 
+                                      'text-gray-400'
+                                    }`}>
+                                      {isExpired ? 'Expired' : isExpiringSoon ? `${daysLeft} days left` : `${daysLeft} days left`}
+                                    </p>
+                                  </div>
+                                ) : (
+                                  <span className="text-gray-500">-</span>
+                                )}
+                              </td>
+                              <td className="p-4">
+                                <span className={`px-4 py-1.5 rounded-full text-xs font-bold shadow-lg ${
+                                  isExpired
+                                    ? "bg-gradient-to-r from-red-500/30 via-red-600/20 to-red-500/10 text-red-300 border border-red-400/40 shadow-red-500/20"
+                                    : isExpiringSoon
+                                    ? "bg-gradient-to-r from-orange-500/30 via-orange-600/20 to-orange-500/10 text-orange-300 border border-orange-400/40 shadow-orange-500/20"
+                                    : "bg-gradient-to-r from-green-500/30 via-green-600/20 to-green-500/10 text-green-300 border border-green-400/40 shadow-green-500/20"
+                                }`}>
+                                  {isExpired ? 'Expired' : isExpiringSoon ? 'Expiring Soon' : 'Active'}
+                                </span>
+                              </td>
+                              <td className="p-4 text-right">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => {
+                                    setSelectedProRequest({ ...user, userId: user.id || user.uid, userEmail: user.email, userName: user.name })
+                                    setProFormData({ amount: '', duration: '1' })
+                                    setShowProDialog(true)
+                                  }}
+                                  className="border-green-700/50 text-green-400 hover:bg-gradient-to-r hover:from-green-600/30 hover:to-green-700/20 hover:border-green-500/60 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300"
+                                >
+                                  <Activity className="w-4 h-4 mr-1" />
+                                  نوێکردنەوە
+                                </Button>
+                              </td>
+                            </tr>
+                          )
+                        })}
                     </tbody>
                   </table>
                 </div>
@@ -1092,7 +1216,7 @@ export default function UsersPage() {
                   <Crown className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">پەسەندکردن بۆ PRO</div>
+                  <div className="text-white">{selectedProRequest?.id ? 'پەسەندکردن بۆ PRO' : 'نوێکردنەوەی ئیشتراک'}</div>
                   {selectedProRequest && (
                     <div className="text-sm text-purple-300 font-normal mt-1">
                       {selectedProRequest.userName}
@@ -1202,16 +1326,29 @@ export default function UsersPage() {
                       amount: proFormData.amount
                     })
                     
-                    const response = await fetch(`/api/pro-requests/${selectedProRequest.id}`, {
-                      method: 'PUT',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        status: 'approved',
-                        proDuration: duration * 30, // Convert months to days
-                        userId: selectedProRequest.userId,
-                        amount: proFormData.amount
-                      })
-                    })
+                    // Check if this is a renewal (no request ID) or new approval
+                    const isRenewal = !selectedProRequest.id
+                    
+                    const response = isRenewal 
+                      ? await fetch(`/api/users?id=${selectedProRequest.userId}`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            extendSubscription: true,
+                            additionalDays: duration * 30,
+                            amount: proFormData.amount
+                          })
+                        })
+                      : await fetch(`/api/pro-requests/${selectedProRequest.id}`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            status: 'approved',
+                            proDuration: duration * 30, // Convert months to days
+                            userId: selectedProRequest.userId,
+                            amount: proFormData.amount
+                          })
+                        })
                     
                     console.log('📥 Pro approval response status:', response.status, response.statusText)
                     

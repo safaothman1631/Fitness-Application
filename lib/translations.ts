@@ -574,6 +574,8 @@ export type TranslationKey =
   | "healthy"
   | "running"
   | "percentUsed"
+  | "trainers"
+  | "totalTrainers"
   // Users Management
   | "userManagementTitle"
   | "manageYourUsers"
@@ -1536,6 +1538,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   healthy: "Healthy",
   running: "Running",
   percentUsed: "Used",
+  trainers: "Trainers",
+  totalTrainers: "Total Trainers",
   // Users Management (English)
   userManagementTitle: "User Management",
   manageYourUsers: "Manage and monitor all users",
@@ -2417,6 +2421,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,healthy: "سليم"
   ,running: "يعمل"
   ,percentUsed: "مستخدم"
+  ,trainers: "المدربون"
+  ,totalTrainers: "إجمالي المدربين"
   // Users Management (Arabic)
   ,userManagementTitle: "إدارة المستخدمين"
   ,manageYourUsers: "إدارة ومراقبة جميع المستخدمين"
@@ -3301,6 +3307,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,healthy: "تەندروست"
     ,running: "کاردەکات"
     ,percentUsed: "بەکارهاتوو"
+    ,trainers: "ترەینەرەکان"
+    ,totalTrainers: "کۆی گشتی ترەینەرەکان"
     // Users Management (Kurdish)
     ,userManagementTitle: "بەڕێوەبردنی بەکارهێنەران"
     ,manageYourUsers: "بەڕێوەبردن و چاودێریکردنی هەموو بەکارهێنەران"
@@ -4183,6 +4191,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   healthy: "Sağlıklı",
   running: "Çalışıyor",
   percentUsed: "Kullanılıyor",
+  trainers: "Antrenörler",
+  totalTrainers: "Toplam Antrenörler",
   // Users Management (Turkish)
   userManagementTitle: "Kullanıcı Yönetimi",
   manageYourUsers: "Tüm kullanıcıları yönet ve izle",

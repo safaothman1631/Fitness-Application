@@ -127,14 +127,68 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const { id, ...updateData } = body
+    const { searchParams } = new URL(request.url)
+    const userId = searchParams.get("id") || body.id
 
-    if (!id) {
+    if (!userId) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 })
     }
 
+    // Check if this is a subscription renewal
+    if (body.extendSubscription && body.additionalDays) {
+      console.log(`🔄 Extending subscription for user ${userId} by ${body.additionalDays} days`)
+      
+      // Get current user data
+      const userDoc = await adminDb.collection("users").doc(userId).get()
+      const userData = userDoc.data()
+      
+      if (!userData) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 })
+      }
+
+      // Calculate new subscription end date
+      const currentEnd = userData.subscriptionEnd ? new Date(userData.subscriptionEnd) : new Date()
+      const now = new Date()
+      
+      // If current subscription is still active, extend from current end date
+      // Otherwise, start from now
+      const baseDate = currentEnd > now ? currentEnd : now
+      const newEndDate = new Date(baseDate.getTime() + body.additionalDays * 24 * 60 * 60 * 1000)
+
+      // Update user subscription
+      await adminDb.collection("users").doc(userId).update({
+        membership: "Pro",
+        subscriptionStatus: "active",
+        subscriptionEnd: newEndDate.toISOString(),
+        isActive: true,
+        updatedAt: new Date().toISOString(),
+      })
+
+      // Record expense if amount is provided
+      if (body.amount) {
+        await adminDb.collection("expenses").add({
+          userId,
+          type: "subscription_renewal",
+          amount: parseInt(body.amount),
+          currency: "IQD",
+          duration: body.additionalDays,
+          createdAt: new Date().toISOString(),
+        })
+      }
+
+      console.log(`✅ Subscription extended until ${newEndDate.toISOString()}`)
+      return NextResponse.json({ 
+        success: true, 
+        message: "Subscription renewed successfully",
+        newEndDate: newEndDate.toISOString()
+      })
+    }
+
+    // Regular update
+    const { id, ...updateData } = body
+
     // Update in Firestore
-    await adminDb.collection("users").doc(id).update({
+    await adminDb.collection("users").doc(userId).update({
       ...updateData,
       updatedAt: new Date().toISOString(),
     })

@@ -74,7 +74,7 @@ export default function SuperAdminPage() {
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-gray-400 text-sm mb-1">ترەینەرەکان</p>
+                    <p className="text-gray-400 text-sm mb-1">{t("trainers")}</p>
                     <h3 className="text-3xl font-bold text-white">
                       {stats.loading ? '...' : stats.trainers}
                     </h3>
@@ -83,7 +83,7 @@ export default function SuperAdminPage() {
                     <Shield className="w-6 h-6 text-purple-400" />
                   </div>
                 </div>
-                <p className="text-gray-500 text-xs mt-2">کۆی گشتی ترەینەرەکان</p>
+                <p className="text-gray-500 text-xs mt-2">{t("totalTrainers")}</p>
               </CardContent>
             </Card>
           </div>
