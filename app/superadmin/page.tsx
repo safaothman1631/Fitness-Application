@@ -71,30 +71,6 @@ export default function SuperAdminPage() {
             </Card>
           </div>
 
-          {/* Quick Actions */}
-          <Card className="bg-slate-900/50 border-slate-800">
-            <CardContent className="p-6">
-              <h2 className="text-white text-lg font-semibold mb-4 flex items-center gap-2">
-                <Zap className="w-5 h-5 text-cyan-400" />
-                {t("quickActions")}
-              </h2>
-              <div className="grid grid-cols-2 gap-3">
-                <button className="p-4 rounded-2xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  👥 {t("manageUsers")}
-                </button>
-                <button className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  🔑 {t("generateKeys")}
-                </button>
-                <button className="p-4 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  📊 {t("viewReports")}
-                </button>
-                <button className="p-4 rounded-2xl bg-gradient-to-br from-orange-500/20 to-red-500/20 border border-orange-500/30 text-white font-medium hover:scale-95 active:scale-90 transition-transform">
-                  ⚙️ {t("settings")}
-                </button>
-              </div>
-            </CardContent>
-          </Card>
-
           {/* System Status */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardContent className="p-6">
