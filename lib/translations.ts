@@ -613,6 +613,74 @@ export type TranslationKey =
   | "pending"
   | "approved"
   | "rejected"
+  // Access Keys Page
+  | "accessKeysPage"
+  | "generateAndManageKeys"
+  | "generateNewKey"
+  | "generating"
+  | "totalKeys"
+  | "expired"
+  | "quickKeyGenerator"
+  | "generateKeysInstantly"
+  | "trialOneUse"
+  | "standardFiveUses"
+  | "premiumTenUses"
+  | "allAccessKeys"
+  | "keyColumn"
+  | "typeColumn"
+  | "usesColumn"
+  | "statusColumn"
+  | "expiresColumn"
+  | "actionsColumn"
+  | "trial"
+  | "standard"
+  | "premium"
+  | "used"
+  | "copyKey"
+  // Analytics Page
+  | "analyticsDashboard"
+  | "trackPerformance"
+  | "loadingAnalytics"
+  | "keyMetrics"
+  | "totalUsers"
+  | "activeUsers24h"
+  | "proMembers"
+  | "totalWorkouts"
+  | "userGrowth"
+  | "userDistribution"
+  | "recentActivity"
+  | "newUserRegistered"
+  // Database Page
+  | "databaseManagement"
+  | "monitorDatabase"
+  | "refresh"
+  | "backup"
+  | "creatingBackup"
+  | "healthStatus"
+  | "databaseStatus"
+  | "allSystemsOperational"
+  | "lastChecked"
+  | "justNow"
+  | "uptime"
+  | "storageUsed"
+  | "totalRecords"
+  | "activeConnections"
+  | "collectionsColumn"
+  | "collectionsOverview"
+  | "loadingCollections"
+  | "documents"
+  | "view"
+  | "recentBackups"
+  | "noBackupsYet"
+  | "createFirstBackup"
+  | "success"
+  | "maintenance"
+  | "optimizeDatabase"
+  | "optimizing"
+  | "createBackupNow"
+  | "restoreFromBackup"
+  | "clearCache"
+  | "clearing"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -1221,6 +1289,74 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   pending: "Pending",
   approved: "Approved",
   rejected: "Rejected",
+  // Access Keys Page (English)
+  accessKeysPage: "Access Keys",
+  generateAndManageKeys: "Generate and manage access keys",
+  generateNewKey: "Generate New Key",
+  generating: "Generating...",
+  totalKeys: "Total Keys",
+  expired: "Expired",
+  quickKeyGenerator: "Quick Key Generator",
+  generateKeysInstantly: "Generate access keys for new members instantly",
+  trialOneUse: "Trial (1 use)",
+  standardFiveUses: "Standard (5 uses)",
+  premiumTenUses: "Premium (10 uses)",
+  allAccessKeys: "All Access Keys",
+  keyColumn: "Key",
+  typeColumn: "Type",
+  usesColumn: "Uses",
+  statusColumn: "Status",
+  expiresColumn: "Expires",
+  actionsColumn: "Actions",
+  trial: "Trial",
+  standard: "Standard",
+  premium: "Premium",
+  used: "Used",
+  copyKey: "Copy Key",
+  // Analytics Page (English)
+  analyticsDashboard: "Analytics Dashboard",
+  trackPerformance: "Track performance and insights",
+  loadingAnalytics: "Loading analytics...",
+  keyMetrics: "Key Metrics",
+  totalUsers: "Total Users",
+  activeUsers24h: "Active Users (24h)",
+  proMembers: "Pro Members",
+  totalWorkouts: "Total Workouts",
+  userGrowth: "User Growth",
+  userDistribution: "User Distribution",
+  recentActivity: "Recent Activity",
+  newUserRegistered: "New user registered",
+  // Database Page (English)
+  databaseManagement: "Database Management",
+  monitorDatabase: "Monitor and manage database operations",
+  refresh: "Refresh",
+  backup: "Backup",
+  creatingBackup: "Creating Backup...",
+  healthStatus: "Health Status",
+  databaseStatus: "Database Status",
+  allSystemsOperational: "All systems operational",
+  lastChecked: "Last checked",
+  justNow: "Just now",
+  uptime: "Uptime",
+  storageUsed: "Storage Used",
+  totalRecords: "Total Records",
+  activeConnections: "Active Users",
+  collectionsColumn: "Collections",
+  collectionsOverview: "Collections Overview",
+  loadingCollections: "Loading collections...",
+  documents: "documents",
+  view: "View",
+  recentBackups: "Recent Backups",
+  noBackupsYet: "No backups yet",
+  createFirstBackup: "Create your first backup above",
+  success: "Success",
+  maintenance: "Maintenance",
+  optimizeDatabase: "Optimize Database",
+  optimizing: "Optimizing...",
+  createBackupNow: "Create Backup Now",
+  restoreFromBackup: "Restore from Backup",
+  clearCache: "Clear Cache",
+  clearing: "Clearing...",
   },
   // Minimal Arabic placeholders (update with full translations later)
   ar: {
@@ -1759,6 +1895,74 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,pending: "قيد الانتظار"
   ,approved: "تمت الموافقة"
   ,rejected: "مرفوض"
+  // Access Keys Page (Arabic)
+  ,accessKeysPage: "مفاتيح الوصول"
+  ,generateAndManageKeys: "إنشاء وإدارة مفاتيح الوصول"
+  ,generateNewKey: "إنشاء مفتاح جديد"
+  ,generating: "جارٍ الإنشاء..."
+  ,totalKeys: "إجمالي المفاتيح"
+  ,expired: "منتهية"
+  ,quickKeyGenerator: "مولد المفاتيح السريع"
+  ,generateKeysInstantly: "إنشاء مفاتيح الوصول للأعضاء الجدد فوراً"
+  ,trialOneUse: "تجريبي (استخدام واحد)"
+  ,standardFiveUses: "قياسي (5 استخدامات)"
+  ,premiumTenUses: "مميز (10 استخدامات)"
+  ,allAccessKeys: "جميع مفاتيح الوصول"
+  ,keyColumn: "المفتاح"
+  ,typeColumn: "النوع"
+  ,usesColumn: "الاستخدامات"
+  ,statusColumn: "الحالة"
+  ,expiresColumn: "تنتهي"
+  ,actionsColumn: "الإجراءات"
+  ,trial: "تجريبي"
+  ,standard: "قياسي"
+  ,premium: "مميز"
+  ,used: "مستخدم"
+  ,copyKey: "نسخ المفتاح"
+  // Analytics Page (Arabic)
+  ,analyticsDashboard: "لوحة التحليلات"
+  ,trackPerformance: "تتبع الأداء والرؤى"
+  ,loadingAnalytics: "جارٍ تحميل التحليلات..."
+  ,keyMetrics: "المقاييس الرئيسية"
+  ,totalUsers: "إجمالي المستخدمين"
+  ,activeUsers24h: "المستخدمون النشطون (24 ساعة)"
+  ,proMembers: "الأعضاء المميزون"
+  ,totalWorkouts: "إجمالي التمارين"
+  ,userGrowth: "نمو المستخدمين"
+  ,userDistribution: "توزيع المستخدمين"
+  ,recentActivity: "النشاط الأخير"
+  ,newUserRegistered: "تسجيل مستخدم جديد"
+  // Database Page (Arabic)
+  ,databaseManagement: "إدارة قاعدة البيانات"
+  ,monitorDatabase: "مراقبة وإدارة عمليات قاعدة البيانات"
+  ,refresh: "تحديث"
+  ,backup: "نسخة احتياطية"
+  ,creatingBackup: "جارٍ إنشاء النسخة..."
+  ,healthStatus: "حالة الصحة"
+  ,databaseStatus: "حالة قاعدة البيانات"
+  ,allSystemsOperational: "جميع الأنظمة تعمل"
+  ,lastChecked: "آخر فحص"
+  ,justNow: "الآن"
+  ,uptime: "وقت التشغيل"
+  ,storageUsed: "المساحة المستخدمة"
+  ,totalRecords: "إجمالي السجلات"
+  ,activeConnections: "المستخدمون النشطون"
+  ,collectionsColumn: "المجموعات"
+  ,collectionsOverview: "نظرة عامة على المجموعات"
+  ,loadingCollections: "جارٍ تحميل المجموعات..."
+  ,documents: "مستندات"
+  ,view: "عرض"
+  ,recentBackups: "النسخ الاحتياطية الأخيرة"
+  ,noBackupsYet: "لا توجد نسخ احتياطية بعد"
+  ,createFirstBackup: "قم بإنشاء نسختك الاحتياطية الأولى أعلاه"
+  ,success: "نجح"
+  ,maintenance: "الصيانة"
+  ,optimizeDatabase: "تحسين قاعدة البيانات"
+  ,optimizing: "جارٍ التحسين..."
+  ,createBackupNow: "إنشاء نسخة احتياطية الآن"
+  ,restoreFromBackup: "استعادة من نسخة احتياطية"
+  ,clearCache: "مسح ذاكرة التخزين المؤقت"
+  ,clearing: "جارٍ المسح..."
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -2300,6 +2504,74 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,pending: "چاوەڕوانکراو"
     ,approved: "پەسەندکراو"
     ,rejected: "ڕەتکراوەتەوە"
+    // Access Keys Page (Kurdish)
+    ,accessKeysPage: "کلیلەکانی دەستگەیشتن"
+    ,generateAndManageKeys: "دروستکردن و بەڕێوەبردنی کلیلەکانی دەستگەیشتن"
+    ,generateNewKey: "دروستکردنی کلیلی نوێ"
+    ,generating: "دروستدەکرێت..."
+    ,totalKeys: "کۆی کلیلەکان"
+    ,expired: "بەسەرچووە"
+    ,quickKeyGenerator: "دروستکەری خێرای کلیل"
+    ,generateKeysInstantly: "دروستکردنی کلیلەکانی دەستگەیشتن بۆ ئەندامانی نوێ بە خێرایی"
+    ,trialOneUse: "تاقیکردنەوە (1 بەکارهێنان)"
+    ,standardFiveUses: "ئاسایی (5 بەکارهێنان)"
+    ,premiumTenUses: "پڕۆ (10 بەکارهێنان)"
+    ,allAccessKeys: "هەموو کلیلەکانی دەستگەیشتن"
+    ,keyColumn: "کلیل"
+    ,typeColumn: "جۆر"
+    ,usesColumn: "بەکارهێنان"
+    ,statusColumn: "دۆخ"
+    ,expiresColumn: "بەسەردەچێت"
+    ,actionsColumn: "کردارەکان"
+    ,trial: "تاقیکردنەوە"
+    ,standard: "ئاسایی"
+    ,premium: "پڕۆ"
+    ,used: "بەکارهاتوو"
+    ,copyKey: "کۆپی کردنی کلیل"
+    // Analytics Page (Kurdish)
+    ,analyticsDashboard: "داشبۆردی شیکاری"
+    ,trackPerformance: "چاودێریکردنی کارکرد و تێگەیشتنەکان"
+    ,loadingAnalytics: "بارکردنی شیکاری..."
+    ,keyMetrics: "پێوەرە سەرەکیەکان"
+    ,totalUsers: "کۆی بەکارهێنەران"
+    ,activeUsers24h: "بەکارهێنەرە چالاکەکان (24 کاتژمێر)"
+    ,proMembers: "ئەندامانی پڕۆ"
+    ,totalWorkouts: "کۆی وەرزشەکان"
+    ,userGrowth: "گەشەی بەکارهێنەران"
+    ,userDistribution: "دابەشبوونی بەکارهێنەران"
+    ,recentActivity: "چالاکی دواییان"
+    ,newUserRegistered: "بەکارهێنەری نوێ تۆمارکرا"
+    // Database Page (Kurdish)
+    ,databaseManagement: "بەڕێوەبردنی بنکەی دراوە"
+    ,monitorDatabase: "چاودێری و بەڕێوەبردنی کردارەکانی بنکەی دراوە"
+    ,refresh: "نوێکردنەوە"
+    ,backup: "کۆپی پاشەکەوت"
+    ,creatingBackup: "دروستکردنی کۆپی پاشەکەوت..."
+    ,healthStatus: "دۆخی تەندروستی"
+    ,databaseStatus: "دۆخی بنکەی دراوە"
+    ,allSystemsOperational: "هەموو سیستەمەکان کاردەکەن"
+    ,lastChecked: "دوایین پشکنین"
+    ,justNow: "هەر ئێستا"
+    ,uptime: "کاتی کارکردن"
+    ,storageUsed: "کۆگای بەکارهاتوو"
+    ,totalRecords: "کۆی تۆمارەکان"
+    ,activeConnections: "بەکارهێنەرە چالاکەکان"
+    ,collectionsColumn: "کۆمەڵەکان"
+    ,collectionsOverview: "سەرنجی کۆمەڵەکان"
+    ,loadingCollections: "بارکردنی کۆمەڵەکان..."
+    ,documents: "بەڵگەنامەکان"
+    ,view: "بینین"
+    ,recentBackups: "کۆپی پاشەکەوتە دواییەکان"
+    ,noBackupsYet: "هێشتا کۆپی پاشەکەوت نییە"
+    ,createFirstBackup: "یەکەم کۆپی پاشەکەوتت دروست بکە لە سەرەوە"
+    ,success: "سەرکەوتوو"
+    ,maintenance: "چاککردنەوە"
+    ,optimizeDatabase: "باشترکردنی بنکەی دراوە"
+    ,optimizing: "باشتردەکرێت..."
+    ,createBackupNow: "ئێستا کۆپی پاشەکەوت دروست بکە"
+    ,restoreFromBackup: "گەڕانەوە لە کۆپی پاشەکەوت"
+    ,clearCache: "پاککردنەوەی کاش"
+    ,clearing: "پاکدەکرێتەوە..."
   },
   // Minimal Turkish placeholders
   tr: {
@@ -2838,5 +3110,73 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   pending: "Beklemede",
   approved: "Onaylandı",
   rejected: "Reddedildi",
+  // Access Keys Page (Turkish)
+  accessKeysPage: "Erişim Anahtarları",
+  generateAndManageKeys: "Erişim anahtarlarını oluştur ve yönet",
+  generateNewKey: "Yeni Anahtar Oluştur",
+  generating: "Oluşturuluyor...",
+  totalKeys: "Toplam Anahtarlar",
+  expired: "Süresi Doldu",
+  quickKeyGenerator: "Hızlı Anahtar Oluşturucu",
+  generateKeysInstantly: "Yeni üyeler için anında erişim anahtarları oluştur",
+  trialOneUse: "Deneme (1 kullanım)",
+  standardFiveUses: "Standart (5 kullanım)",
+  premiumTenUses: "Premium (10 kullanım)",
+  allAccessKeys: "Tüm Erişim Anahtarları",
+  keyColumn: "Anahtar",
+  typeColumn: "Tip",
+  usesColumn: "Kullanım",
+  statusColumn: "Durum",
+  expiresColumn: "Bitiş",
+  actionsColumn: "İşlemler",
+  trial: "Deneme",
+  standard: "Standart",
+  premium: "Premium",
+  used: "Kullanıldı",
+  copyKey: "Anahtarı Kopyala",
+  // Analytics Page (Turkish)
+  analyticsDashboard: "Analitik Paneli",
+  trackPerformance: "Performansı ve içgörüleri takip et",
+  loadingAnalytics: "Analitikler yükleniyor...",
+  keyMetrics: "Anahtar Metrikler",
+  totalUsers: "Toplam Kullanıcı",
+  activeUsers24h: "Aktif Kullanıcılar (24s)",
+  proMembers: "Pro Üyeler",
+  totalWorkouts: "Toplam Antrenman",
+  userGrowth: "Kullanıcı Artışı",
+  userDistribution: "Kullanıcı Dağılımı",
+  recentActivity: "Son Aktivite",
+  newUserRegistered: "Yeni kullanıcı kaydedildi",
+  // Database Page (Turkish)
+  databaseManagement: "Veritabanı Yönetimi",
+  monitorDatabase: "Veritabanı işlemlerini izle ve yönet",
+  refresh: "Yenile",
+  backup: "Yedekle",
+  creatingBackup: "Yedek Oluşturuluyor...",
+  healthStatus: "Sağlık Durumu",
+  databaseStatus: "Veritabanı Durumu",
+  allSystemsOperational: "Tüm sistemler çalışıyor",
+  lastChecked: "Son kontrol",
+  justNow: "Şimdi",
+  uptime: "Çalışma Süresi",
+  storageUsed: "Kullanılan Depolama",
+  totalRecords: "Toplam Kayıt",
+  activeConnections: "Aktif Kullanıcılar",
+  collectionsColumn: "Koleksiyonlar",
+  collectionsOverview: "Koleksiyonlara Genel Bakış",
+  loadingCollections: "Koleksiyonlar yükleniyor...",
+  documents: "belgeler",
+  view: "Görüntüle",
+  recentBackups: "Son Yedekler",
+  noBackupsYet: "Henüz yedek yok",
+  createFirstBackup: "Yukarıdan ilk yedeğinizi oluşturun",
+  success: "Başarılı",
+  maintenance: "Bakım",
+  optimizeDatabase: "Veritabanını Optimize Et",
+  optimizing: "Optimize ediliyor...",
+  createBackupNow: "Şimdi Yedekle",
+  restoreFromBackup: "Yedekten Geri Yükle",
+  clearCache: "Önbelleği Temizle",
+  clearing: "Temizleniyor...",
   },
 }
