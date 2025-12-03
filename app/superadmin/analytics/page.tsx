@@ -2,11 +2,13 @@
 
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
+import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { TrendingUp, Users, Activity, DollarSign, ArrowUp, ArrowDown, BarChart3, PieChart, Crown } from "lucide-react"
 import { useState, useEffect } from "react"
 
 export default function AnalyticsPage() {
+  const { t } = useLanguage()
   const [isLoading, setIsLoading] = useState(true)
   const [analytics, setAnalytics] = useState<any>(null)
 
@@ -47,7 +49,7 @@ export default function AnalyticsPage() {
           <div className="flex items-center justify-center h-screen">
             <div className="text-center">
               <div className="inline-block w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-              <p className="text-gray-400">Loading analytics...</p>
+              <p className="text-gray-400">{t("loadingAnalytics")}</p>
             </div>
           </div>
         </SidebarSleek>
@@ -65,8 +67,8 @@ export default function AnalyticsPage() {
               <TrendingUp className="w-6 h-6 text-white" />
             </div>
             <div>
-              <h1 className="text-3xl font-bold text-white">Analytics Dashboard</h1>
-              <p className="text-gray-400 text-sm">Track performance and insights</p>
+              <h1 className="text-3xl font-bold text-white">{t("analyticsDashboard")}</h1>
+              <p className="text-gray-400 text-sm">{t("trackPerformance")}</p>
             </div>
           </div>
 
@@ -80,7 +82,7 @@ export default function AnalyticsPage() {
                 <p className="text-2xl font-bold text-white mb-1">
                   {analytics?.metrics?.totalUsers || 0}
                 </p>
-                <p className="text-xs text-gray-400">Total Users</p>
+                <p className="text-xs text-gray-400">{t("totalUsers")}</p>
               </CardContent>
             </Card>
 
@@ -92,7 +94,7 @@ export default function AnalyticsPage() {
                 <p className="text-2xl font-bold text-white mb-1">
                   {analytics?.metrics?.activeUsers || 0}
                 </p>
-                <p className="text-xs text-gray-400">Active Users (24h)</p>
+                <p className="text-xs text-gray-400">{t("activeUsers24h")}</p>
               </CardContent>
             </Card>
 
@@ -104,7 +106,7 @@ export default function AnalyticsPage() {
                 <p className="text-2xl font-bold text-white mb-1">
                   {analytics?.metrics?.proMembers || 0}
                 </p>
-                <p className="text-xs text-gray-400">Pro Members ({analytics?.metrics?.proPercentage || 0}%)</p>
+                <p className="text-xs text-gray-400">{t("proMembers")} ({analytics?.metrics?.proPercentage || 0}%)</p>
               </CardContent>
             </Card>
 
@@ -116,7 +118,7 @@ export default function AnalyticsPage() {
                 <p className="text-2xl font-bold text-white mb-1">
                   {analytics?.metrics?.totalWorkouts || 0}
                 </p>
-                <p className="text-xs text-gray-400">Total Workouts</p>
+                <p className="text-xs text-gray-400">{t("totalWorkouts")}</p>
               </CardContent>
             </Card>
           </div>
@@ -127,7 +129,7 @@ export default function AnalyticsPage() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <BarChart3 className="w-5 h-5 text-cyan-400" />
-                  User Growth
+                  {t("userGrowth")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -153,7 +155,7 @@ export default function AnalyticsPage() {
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
                   <PieChart className="w-5 h-5 text-purple-400" />
-                  User Distribution
+                  {t("userDistribution")}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -189,10 +191,10 @@ export default function AnalyticsPage() {
           {/* Activity Timeline */}
           <Card className="bg-slate-900/50 border-slate-800">
             <CardHeader>
-              <CardTitle className="text-white flex items-center gap-2">
-                <Activity className="w-5 h-5 text-green-400" />
-                Recent Activity
-              </CardTitle>
+                <CardTitle className="text-white flex items-center gap-2">
+                  <Activity className="w-5 h-5 text-green-400" />
+                  {t("recentActivity")}
+                </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -203,7 +205,7 @@ export default function AnalyticsPage() {
                     </div>
                     <div className="flex-1">
                       <p className="text-white font-medium mb-1">
-                        {activity.action || 'New user registered'}
+                        {activity.action || t("newUserRegistered")}
                       </p>
                       <p className="text-gray-400 text-sm">
                         {activity.user || activity.userName || 'Unknown User'} • {activity.time}
