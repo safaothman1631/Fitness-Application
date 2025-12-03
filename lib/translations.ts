@@ -688,11 +688,13 @@ export type TranslationKey =
   | "workoutPrograms"
   | "searchPrograms"
   | "createNewProgram"
+  | "createNutritionProgram"
   | "programName"
   | "description"
   | "assignToUsers"
   | "selectUsers"
   | "searchByName"
+  | "searchByNameOrEmail"
   | "selected"
   | "weeklySchedule"
   | "addMeal"
@@ -710,6 +712,48 @@ export type TranslationKey =
   | "ingredients"
   | "noProgramsFound"
   | "createFirstProgram"
+  | "imageUrl"
+  | "userSelection"
+  | "onlyProUsers"
+  | "selectAllUsers"
+  | "clearAll"
+  | "noteLabel"
+  | "onlyProUsersShown"
+  | "freeUsersHidden"
+  | "adminsHidden"
+  | "setMealsForEachDay"
+  | "restDay"
+  | "noMealsAdded"
+  | "copyToAnotherDay"
+  | "weekSummary"
+  | "activeDays"
+  | "restDays"
+  | "totalMeals"
+  | "uniqueMeals"
+  | "fillBasicInfo"
+  | "whenComplete"
+  | "clickSave"
+  | "level"
+  | "beginner"
+  | "intermediate"
+  | "advanced"
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday"
+  | "selectDayFrom7Days"
+  | "clickAddExercise"
+  | "canAddMultipleExercises"
+  | "ifRestDayTurnOn"
+  | "noPROusers"
+  | "noUsersFound"
+  | "freeUsersNotShown"
+  | "programWillBeSentTo"
+  | "PROusers"
+  | "setMealsDescription"
   // Videos Page
   | "firebaseVideos"
   | "checkFirebaseVideos"
@@ -1474,11 +1518,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   workoutPrograms: "Workout Programs",
   searchPrograms: "Search programs...",
   createNewProgram: "Create New Program",
+  createNutritionProgram: "Create Nutrition Program",
   programName: "Program Name",
   description: "Description",
   assignToUsers: "Assign to Users",
   selectUsers: "Select Users",
   searchByName: "Search by name...",
+  searchByNameOrEmail: "Search by name or email...",
   selected: "selected",
   weeklySchedule: "Weekly Schedule",
   addMeal: "Add Meal",
@@ -1496,6 +1542,48 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ingredients: "Ingredients",
   noProgramsFound: "No programs found",
   createFirstProgram: "Create your first program above",
+  imageUrl: "Image URL",
+  userSelection: "User Selection",
+  onlyProUsers: "Only PRO users (excluding free and admins)",
+  selectAllUsers: "Select All",
+  clearAll: "Clear All",
+  noteLabel: "Note:",
+  onlyProUsersShown: "Only PRO users are shown",
+  freeUsersHidden: "Free users are hidden",
+  adminsHidden: "Admins, Superadmins, Physios, Trainers are hidden",
+  setMealsForEachDay: "Set meals for each day",
+  restDay: "Rest day?",
+  noMealsAdded: "No meals added",
+  copyToAnotherDay: "Copy to another day",
+  weekSummary: "Week summary:",
+  activeDays: "Active",
+  restDays: "Rest",
+  totalMeals: "Meals",
+  uniqueMeals: "Unique",
+  fillBasicInfo: "Fill in basic information (name, description, duration...)",
+  whenComplete: "When complete, click Save",
+  clickSave: "Click Save",
+  level: "Level",
+  beginner: "Beginner",
+  intermediate: "Intermediate",
+  advanced: "Advanced",
+  monday: "Monday",
+  tuesday: "Tuesday",
+  wednesday: "Wednesday",
+  thursday: "Thursday",
+  friday: "Friday",
+  saturday: "Saturday",
+  sunday: "Sunday",
+  selectDayFrom7Days: "Select a day from the 7 days (Monday to Sunday)",
+  clickAddExercise: "Click 'Add Exercise' to add exercises",
+  canAddMultipleExercises: "You can add multiple exercises per day",
+  ifRestDayTurnOn: "If it's a rest day, turn on 'Rest Day'",
+  noPROusers: "No regular users (user) with PRO",
+  noUsersFound: "No users found",
+  freeUsersNotShown: "Free users and admin/physio are not shown",
+  programWillBeSentTo: "This program will be sent to",
+  PROusers: "PRO users",
+  setMealsDescription: "Set meals for each day",
   // Videos Page (English)
   firebaseVideos: "Firebase Storage Videos",
   checkFirebaseVideos: "Check Firebase Storage videos (exercises/ & videos/)",
@@ -2190,11 +2278,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,workoutPrograms: "برامج التمارين"
   ,searchPrograms: "البحث عن البرامج..."
   ,createNewProgram: "إنشاء برنامج جديد"
+  ,createNutritionProgram: "إنشاء برنامج تغذية"
   ,programName: "اسم البرنامج"
   ,description: "الوصف"
   ,assignToUsers: "تعيين للمستخدمين"
   ,selectUsers: "اختر المستخدمين"
   ,searchByName: "البحث بالاسم..."
+  ,searchByNameOrEmail: "البحث بالاسم أو البريد الإلكتروني..."
   ,selected: "محدد"
   ,weeklySchedule: "الجدول الأسبوعي"
   ,addMeal: "إضافة وجبة"
@@ -2212,6 +2302,48 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,ingredients: "المكونات"
   ,noProgramsFound: "لا توجد برامج"
   ,createFirstProgram: "قم بإنشاء برنامجك الأول أعلاه"
+  ,imageUrl: "رابط الصورة"
+  ,userSelection: "اختيار المستخدمين"
+  ,onlyProUsers: "المستخدمون المميزون فقط (باستثناء المجانيين والمشرفين)"
+  ,selectAllUsers: "تحديد الكل"
+  ,clearAll: "مسح الكل"
+  ,noteLabel: "ملاحظة:"
+  ,onlyProUsersShown: "يتم عرض المستخدمين المميزين فقط"
+  ,freeUsersHidden: "المستخدمون المجانيون مخفيون"
+  ,adminsHidden: "المشرفون والمدربون مخفيون"
+  ,setMealsForEachDay: "تحديد الوجبات لكل يوم"
+  ,restDay: "يوم راحة؟"
+  ,noMealsAdded: "لم تتم إضافة وجبات"
+  ,copyToAnotherDay: "نسخ إلى يوم آخر"
+  ,weekSummary: "ملخص الأسبوع:"
+  ,activeDays: "نشط"
+  ,restDays: "راحة"
+  ,totalMeals: "وجبات"
+  ,uniqueMeals: "فريد"
+  ,fillBasicInfo: "املأ المعلومات الأساسية (الاسم، الوصف، المدة...)"
+  ,whenComplete: "عند الانتهاء، انقر على حفظ"
+  ,clickSave: "انقر على حفظ"
+  ,level: "المستوى"
+  ,beginner: "مبتدئ"
+  ,intermediate: "متوسط"
+  ,advanced: "متقدم"
+  ,monday: "الاثنين"
+  ,tuesday: "الثلاثاء"
+  ,wednesday: "الأربعاء"
+  ,thursday: "الخميس"
+  ,friday: "الجمعة"
+  ,saturday: "السبت"
+  ,sunday: "الأحد"
+  ,selectDayFrom7Days: "اختر يومًا من الأيام السبعة (الاثنين إلى الأحد)"
+  ,clickAddExercise: "انقر على 'إضافة تمرين' لإضافة التمارين"
+  ,canAddMultipleExercises: "يمكنك إضافة عدة تمارين لكل يوم"
+  ,ifRestDayTurnOn: "إذا كان يوم راحة، قم بتشغيل 'يوم راحة'"
+  ,noPROusers: "لا يوجد مستخدمون عاديون (user) مع PRO"
+  ,noUsersFound: "لم يتم العثور على مستخدمين"
+  ,freeUsersNotShown: "المستخدمون المجانيون والمشرفون غير معروضين"
+  ,programWillBeSentTo: "سيتم إرسال هذا البرنامج إلى"
+  ,PROusers: "مستخدمي PRO"
+  ,setMealsDescription: "تحديد الوجبات لكل يوم"
   // Videos Page (Arabic)
   ,firebaseVideos: "فيديوهات Firebase"
   ,checkFirebaseVideos: "التحقق من فيديوهات Firebase (exercises/ & videos/)"
@@ -2909,11 +3041,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,workoutPrograms: "پرۆگرامەکانی ڕاهێنان"
     ,searchPrograms: "گەڕان بۆ پرۆگرامەکان..."
     ,createNewProgram: "دروستکردنی پرۆگرامی نوێ"
+    ,createNutritionProgram: "دروستکردنی بەرنامەی خواردن"
     ,programName: "ناوی پرۆگرام"
     ,description: "وەسف"
     ,assignToUsers: "دیاریکردن بۆ بەکارهێنەران"
     ,selectUsers: "بەکارهێنەران هەڵبژێرە"
     ,searchByName: "گەڕان بە ناو..."
+    ,searchByNameOrEmail: "گەڕان بە ناو یان ئیمەیڵ..."
     ,selected: "هەڵبژێردراو"
     ,weeklySchedule: "خشتەی هەفتانە"
     ,addMeal: "زیادکردنی ژەمی خۆراک"
@@ -2931,6 +3065,48 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,ingredients: "پێکهاتەکان"
     ,noProgramsFound: "هیچ پرۆگرامێک نەدۆزرایەوە"
     ,createFirstProgram: "یەکەم پرۆگرامەکەت لە سەرەوە دروست بکە"
+    ,imageUrl: "لینکی وێنە"
+    ,userSelection: "هەڵبژاردنی یوزەرەکان"
+    ,onlyProUsers: "تەنها یوزەرە پرۆکان (بەبێ فریی و ئەدمین)"
+    ,selectAllUsers: "هەڵبژاردنی هەموو"
+    ,clearAll: "سڕینەوەی هەموو"
+    ,noteLabel: "تێبینی:"
+    ,onlyProUsersShown: "تەنها یوزەرە پرۆکان پیشان دەدرێن"
+    ,freeUsersHidden: "یوزەری فریی شاراوەیە"
+    ,adminsHidden: "ئەدمین، سوپەرئەدمین، فیزیۆ، تریینەر شاراوەن"
+    ,setMealsForEachDay: "خواردنەکانی هەر رۆژێک دیاری بکە"
+    ,restDay: "رۆژی پشوو؟"
+    ,noMealsAdded: "هیچ خواردنێک زیاد نەکراوە"
+    ,copyToAnotherDay: "کۆپی بۆ رۆژی تر"
+    ,weekSummary: "پوختەی هەفتە:"
+    ,activeDays: "چالاک"
+    ,restDays: "پشوو"
+    ,totalMeals: "خواردن"
+    ,uniqueMeals: "جیاواز"
+    ,fillBasicInfo: "زانیاریەکانی سەرەتایی پڕبکەرەوە (ناو، وەسف، کات...)"
+    ,whenComplete: "کاتێک تەواو بووی کلیک لە پاشەکەوتکردن بکە"
+    ,clickSave: "کلیک لە پاشەکەوتکردن بکە"
+    ,level: "ئاست"
+    ,beginner: "سەرەتایی"
+    ,intermediate: "مامناوەند"
+    ,advanced: "پێشکەوتوو"
+    ,monday: "دووشەممە"
+    ,tuesday: "سێشەممە"
+    ,wednesday: "چوارشەممە"
+    ,thursday: "پێنجشەممە"
+    ,friday: "هەینی"
+    ,saturday: "شەممە"
+    ,sunday: "یەکشەممە"
+    ,selectDayFrom7Days: "رۆژێک هەڵبژێرە لە 7 رۆژەکە (دووشەممە تا یەکشەممە)"
+    ,clickAddExercise: "کلیک لە 'زیادکردنی یاری' بکە بۆ زیادکردنی یاری"
+    ,canAddMultipleExercises: "دەتوانی چەند یارییەک زیاد بکەیت بۆ هەر رۆژێک"
+    ,ifRestDayTurnOn: "ئەگەر رۆژێک پشوو بێت، 'رۆژی پشوو' لەسەر ON بکە"
+    ,noPROusers: "هیچ یوزەرێکی ئاسایی (user) بە PRO نییە"
+    ,noUsersFound: "هیچ یوزەرێک نەدۆزرایەوە"
+    ,freeUsersNotShown: "یوزەرە فریەکان و ئەدمین/فیزیۆ پیشان نادرێن"
+    ,programWillBeSentTo: "ئەم بەرنامەیە بۆ"
+    ,PROusers: "یوزەری PRO دەنێردرێت"
+    ,setMealsDescription: "خواردنەکانی هەر رۆژێک دیاری بکە"
     // Videos Page (Kurdish)
     ,firebaseVideos: "ڤیدیۆکانی Firebase"
     ,checkFirebaseVideos: "پشکنینی ڤیدیۆکانی Firebase (exercises/ & videos/)"
@@ -3625,11 +3801,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   workoutPrograms: "Antrenman Programları",
   searchPrograms: "Program ara...",
   createNewProgram: "Yeni Program Oluştur",
+  createNutritionProgram: "Beslenme Programı Oluştur",
   programName: "Program Adı",
   description: "Açıklama",
   assignToUsers: "Kullanıcılara Ata",
   selectUsers: "Kullanıcıları Seç",
   searchByName: "İsme göre ara...",
+  searchByNameOrEmail: "İsim veya e-posta ile ara...",
   selected: "Seçildi",
   weeklySchedule: "Haftalık Program",
   addMeal: "Öğün Ekle",
@@ -3647,6 +3825,48 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ingredients: "İçindekiler",
   noProgramsFound: "Program bulunamadı",
   createFirstProgram: "Yukarıdan ilk programınızı oluşturun",
+  imageUrl: "Görsel URL",
+  userSelection: "Kullanıcı Seçimi",
+  onlyProUsers: "Sadece PRO kullanıcılar (ücretsiz ve yöneticiler hariç)",
+  selectAllUsers: "Tümünü Seç",
+  clearAll: "Tümünü Temizle",
+  noteLabel: "Not:",
+  onlyProUsersShown: "Sadece PRO kullanıcılar gösterilir",
+  freeUsersHidden: "Ücretsiz kullanıcılar gizlidir",
+  adminsHidden: "Yöneticiler, eğitmenler gizlidir",
+  setMealsForEachDay: "Her gün için öğünleri ayarla",
+  restDay: "Dinlenme günü?",
+  noMealsAdded: "Öğün eklenmedi",
+  copyToAnotherDay: "Başka güne kopyala",
+  weekSummary: "Hafta özeti:",
+  activeDays: "Aktif",
+  restDays: "Dinlenme",
+  totalMeals: "Öğün",
+  uniqueMeals: "Benzersiz",
+  fillBasicInfo: "Temel bilgileri doldurun (ad, açıklama, süre...)",
+  whenComplete: "Tamamlandığında, Kaydet'e tıklayın",
+  clickSave: "Kaydet'e tıklayın",
+  level: "Seviye",
+  beginner: "Başlangıç",
+  intermediate: "Orta",
+  advanced: "İleri",
+  monday: "Pazartesi",
+  tuesday: "Salı",
+  wednesday: "Çarşamba",
+  thursday: "Perşembe",
+  friday: "Cuma",
+  saturday: "Cumartesi",
+  sunday: "Pazar",
+  selectDayFrom7Days: "7 günden birini seçin (Pazartesi'den Pazar'a)",
+  clickAddExercise: "Egzersiz eklemek için 'Egzersiz Ekle'ye tıklayın",
+  canAddMultipleExercises: "Her gün için birden fazla egzersiz ekleyebilirsiniz",
+  ifRestDayTurnOn: "Dinlenme günü ise, 'Dinlenme günü'nü açın",
+  noPROusers: "PRO'ya sahip normal kullanıcı yok",
+  noUsersFound: "Kullanıcı bulunamadı",
+  freeUsersNotShown: "Ücretsiz kullanıcılar ve admin/fizyoterapist gösterilmez",
+  programWillBeSentTo: "Bu program",
+  PROusers: "PRO kullanıcılara gönderilecek",
+  setMealsDescription: "Her gün için öğünleri ayarla",
   // Videos Page (Turkish)
   firebaseVideos: "Firebase Videoları",
   checkFirebaseVideos: "Firebase videolarını kontrol et (exercises/ & videos/)",
