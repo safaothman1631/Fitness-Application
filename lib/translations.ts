@@ -763,6 +763,21 @@ export type TranslationKey =
   | "restLabel"
   | "exercisesLabel"
   | "uniqueLabel"
+  | "noMealsAdded"
+  | "addMeal"
+  | "copyMealToOtherDay"
+  | "restDayMessage"
+  | "timeForRestAndRecovery"
+  | "weekSummary"
+  | "active"
+  | "rest"
+  | "meals"
+  | "different"
+  | "weekUniqueMeals"
+  | "types"
+  | "mealLibrary"
+  | "savedMeals"
+  | "saveMealToLibrary"
   | "cancelAction"
   | "saveProgram"
   | "addExerciseTitle"
@@ -1671,6 +1686,21 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   restLabel: "Rest",
   exercisesLabel: "Exercises",
   uniqueLabel: "Unique",
+  noMealsAdded: "No meals added",
+  addMeal: "Add Meal",
+  copyMealToOtherDay: "Copy to Another Day",
+  restDayMessage: "It's a rest day 😴",
+  timeForRestAndRecovery: "Time for rest and recovery",
+  weekSummary: "Week Summary:",
+  active: "Active",
+  rest: "Rest",
+  meals: "Meals",
+  different: "Different",
+  weekUniqueMeals: "Week's Unique Meals",
+  types: "types",
+  mealLibrary: "Meal Library",
+  savedMeals: "Saved Meals",
+  saveMealToLibrary: "Save to Library",
   cancelAction: "Cancel",
   saveProgram: "Save",
   addExerciseTitle: "Add Exercise",
@@ -2498,6 +2528,21 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,restLabel: "راحة"
   ,exercisesLabel: "تمارين"
   ,uniqueLabel: "فريد"
+  ,noMealsAdded: "لم تتم إضافة وجبات"
+  ,addMeal: "إضافة وجبة"
+  ,copyMealToOtherDay: "نسخ إلى يوم آخر"
+  ,restDayMessage: "إنه يوم راحة 😴"
+  ,timeForRestAndRecovery: "وقت الراحة والتعافي"
+  ,weekSummary: "ملخص الأسبوع:"
+  ,active: "نشط"
+  ,rest: "راحة"
+  ,meals: "وجبات"
+  ,different: "مختلف"
+  ,weekUniqueMeals: "وجبات الأسبوع الفريدة"
+  ,types: "أنواع"
+  ,mealLibrary: "مكتبة الوجبات"
+  ,savedMeals: "الوجبات المحفوظة"
+  ,saveMealToLibrary: "حفظ في المكتبة"
   ,cancelAction: "إلغاء"
   ,saveProgram: "حفظ"
   ,addExerciseTitle: "إضافة تمرين"
@@ -3329,6 +3374,21 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,restLabel: "پشوو"
     ,exercisesLabel: "یاری"
     ,uniqueLabel: "جیاواز"
+    ,noMealsAdded: "هیچ خواردنێک زیاد نەکراوە"
+    ,addMeal: "زیادکردنی خواردن"
+    ,copyMealToOtherDay: "کۆپی بۆ ڕۆژی تر"
+    ,restDayMessage: "ڕۆژی پشووە 😴"
+    ,timeForRestAndRecovery: "کاتی ئاسایش و باشبوونەوەیە"
+    ,weekSummary: "پوختەی هەفتە:"
+    ,active: "چالاک"
+    ,rest: "پشوو"
+    ,meals: "خواردن"
+    ,different: "جیاواز"
+    ,weekUniqueMeals: "خواردنە جیاوازەکانی هەفتە"
+    ,types: "جۆر"
+    ,mealLibrary: "کتێبخانەی خواردن"
+    ,savedMeals: "خواردنە هەڵگیراوەکان"
+    ,saveMealToLibrary: "خەزنکردن بۆ کتێبخانە"
     ,cancelAction: "پاشگەزبوونەوە"
     ,saveProgram: "پاشەکەوتکردن"
     ,addExerciseTitle: "زیادکردنی یاری"
@@ -4157,6 +4217,21 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   restLabel: "Dinlenme",
   exercisesLabel: "Egzersizler",
   uniqueLabel: "Benzersiz",
+  noMealsAdded: "Öğün eklenmedi",
+  addMeal: "Öğün Ekle",
+  copyMealToOtherDay: "Başka Güne Kopyala",
+  restDayMessage: "Dinlenme günü 😴",
+  timeForRestAndRecovery: "Dinlenme ve toparlanma zamanı",
+  weekSummary: "Hafta Özeti:",
+  active: "Aktif",
+  rest: "Dinlenme",
+  meals: "Öğünler",
+  different: "Farklı",
+  weekUniqueMeals: "Haftanın Benzersiz Öğünleri",
+  types: "tür",
+  mealLibrary: "Öğün Kütüphanesi",
+  savedMeals: "Kaydedilen Öğünler",
+  saveMealToLibrary: "Kütüphaneye Kaydet",
   cancelAction: "İptal",
   saveProgram: "Kaydet",
   addExerciseTitle: "Egzersiz Ekle",

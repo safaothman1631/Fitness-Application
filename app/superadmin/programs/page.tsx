@@ -2014,7 +2014,7 @@ export default function ProgramsPage() {
                             ) : (
                               <div className="text-center py-6 border-2 border-dashed border-slate-700 rounded-lg">
                                 <Utensils className="w-10 h-10 text-gray-600 mx-auto mb-2" />
-                                <p className="text-gray-400 text-sm">هیچ خواردنێک زیاد نەکراوە</p>
+                                <p className="text-gray-400 text-sm">{t("noMealsAdded")}</p>
                               </div>
                             )}
 
@@ -2024,7 +2024,7 @@ export default function ProgramsPage() {
                                 className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700"
                               >
                                 <Plus className="w-5 h-5 mr-2" />
-                                زیادکردنی خواردن
+                                {t("addMeal")}
                               </Button>
                               <Button
                                 onClick={() => {
@@ -2036,7 +2036,7 @@ export default function ProgramsPage() {
                                 disabled={!newProgram.weeklySchedule?.[currentDay]?.meals?.length}
                               >
                                 <Coffee className="w-5 h-5 mr-2" />
-                                کۆپی بۆ رۆژی تر
+                                {t("copyMealToOtherDay")}
                               </Button>
                             </div>
                           </div>
@@ -2054,19 +2054,19 @@ export default function ProgramsPage() {
                     <Card className="bg-slate-800/30 border-slate-700">
                       <CardContent className="p-3">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-gray-400">پوختەی هەفتە:</span>
+                          <span className="text-xs font-semibold text-gray-400">{t("weekSummary")}</span>
                           <div className="flex gap-3 text-xs">
                             <span className="text-green-400">
-                              ✓ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.meals?.length > 0).length} چالاک
+                              ✓ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.meals?.length > 0).length} {t("active")}
                             </span>
                             <span className="text-orange-400">
-                              ○ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length} پشوو
+                              ○ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length} {t("rest")}
                             </span>
                             <span className="text-green-400">
-                              Σ {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.meals?.length || 0), 0)} خواردن
+                              Σ {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.meals?.length || 0), 0)} {t("meals")}
                             </span>
                             <span className="text-purple-400">
-                              ◇ {getAllUniqueMeals().length} جیاواز
+                              ◇ {getAllUniqueMeals().length} {t("different")}
                             </span>
                           </div>
                         </div>
@@ -2080,10 +2080,10 @@ export default function ProgramsPage() {
                           <div className="flex items-center justify-between">
                             <h4 className="text-white font-bold text-sm flex items-center gap-2">
                               <Pizza className="w-4 h-4 text-purple-400" />
-                              خواردنە جیاوازەکانی هەفتە
+                              {t("weekUniqueMeals")}
                             </h4>
                             <span className="text-xs text-purple-300">
-                              {getAllUniqueMeals().length} جۆر
+                              {getAllUniqueMeals().length} {t("types")}
                             </span>
                           </div>
                         </CardHeader>
@@ -2858,15 +2858,15 @@ export default function ProgramsPage() {
                   <Utensils className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">زیادکردنی خواردن</div>
+                  <div className="text-white">{t("addMeal")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1">
-                    {currentEditingDay === 'monday' && '📅 دووشەممە'}
-                    {currentEditingDay === 'tuesday' && '📅 سێشەممە'}
-                    {currentEditingDay === 'wednesday' && '📅 چوارشەممە'}
-                    {currentEditingDay === 'thursday' && '📅 پێنجشەممە'}
-                    {currentEditingDay === 'friday' && '📅 هەینی'}
-                    {currentEditingDay === 'saturday' && '📅 شەممە'}
-                    {currentEditingDay === 'sunday' && '📅 یەکشەممە'}
+                    {currentEditingDay === 'monday' && '📅 ' + t('monday')}
+                    {currentEditingDay === 'tuesday' && '📅 ' + t('tuesday')}
+                    {currentEditingDay === 'wednesday' && '📅 ' + t('wednesday')}
+                    {currentEditingDay === 'thursday' && '📅 ' + t('thursday')}
+                    {currentEditingDay === 'friday' && '📅 ' + t('friday')}
+                    {currentEditingDay === 'saturday' && '📅 ' + t('saturday')}
+                    {currentEditingDay === 'sunday' && '📅 ' + t('sunday')}
                   </div>
                 </div>
               </DialogTitle>
@@ -2881,7 +2881,7 @@ export default function ProgramsPage() {
                   className="flex-1 border-purple-500/30 text-purple-400 hover:bg-purple-500/10 h-10"
                 >
                   <Pizza className="w-4 h-4 mr-2" />
-                  کتێبخانەی خواردن
+                  {t("mealLibrary")}
                 </Button>
                 <Button
                   onClick={handleSaveMealToLibrary}
@@ -2889,7 +2889,7 @@ export default function ProgramsPage() {
                   className="flex-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 h-10"
                 >
                   <Save className="w-4 h-4 mr-2" />
-                  خەزنکردن بۆ کتێبخانە
+                  {t("saveMealToLibrary")}
                 </Button>
               </div>
 
@@ -3197,7 +3197,7 @@ export default function ProgramsPage() {
                   <Pizza className="w-6 h-6 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">کتێبخانەی خواردن</div>
+                  <div className="text-white">{t("mealLibrary")}</div>
                   <div className="text-sm text-gray-400 font-normal mt-1">
                     {mealLibrary.length} خواردنی خەزێنکراو
                   </div>
