@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useLanguage } from "@/hooks/useLanguage"
 import { Button } from "@/components/ui/button"
 import { Video, RefreshCw, Download } from "lucide-react"
 
@@ -16,6 +17,7 @@ interface VideoData {
 }
 
 export default function VideosTestPage() {
+  const { t } = useLanguage()
   const [videos, setVideos] = useState<VideoData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -68,9 +70,9 @@ export default function VideosTestPage() {
           <div>
             <h1 className="text-4xl font-bold text-white mb-2 flex items-center gap-3">
               <Video className="w-10 h-10 text-blue-400" />
-              Firebase Storage Videos
+              {t("firebaseVideos")}
             </h1>
-            <p className="text-gray-400">پشکنینی ڤیدیۆکانی فایربەیس ستۆرج (exercises/ & videos/)</p>
+            <p className="text-gray-400">{t("checkFirebaseVideos")}</p>
           </div>
           <Button 
             onClick={fetchVideos} 
@@ -78,7 +80,7 @@ export default function VideosTestPage() {
             className="bg-blue-500 hover:bg-blue-600"
           >
             <RefreshCw className={`w-4 h-4 mr-2 ${isLoading ? 'animate-spin' : ''}`} />
-            نوێکردنەوە
+            {t("refreshVideos")}
           </Button>
         </div>
 
@@ -86,7 +88,7 @@ export default function VideosTestPage() {
           <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-8 text-center">
               <div className="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-              <p className="text-gray-400">چاوەڕوانبە، ڤیدیۆکان دەخوێنرێنەوە...</p>
+              <p className="text-gray-400">{t("loadingAnalytics")}</p>
             </CardContent>
           </Card>
         ) : error ? (
@@ -94,7 +96,7 @@ export default function VideosTestPage() {
             <CardContent className="p-8">
               <div className="text-center mb-4">
                 <div className="text-6xl mb-4">❌</div>
-                <p className="text-red-400 font-bold mb-2 text-xl">هەڵە!</p>
+                <p className="text-red-400 font-bold mb-2 text-xl">{t("error")}</p>
               </div>
               <div className="bg-slate-900/50 rounded-lg p-4 text-left">
                 <pre className="text-gray-300 text-sm whitespace-pre-wrap break-words">{error}</pre>
@@ -102,7 +104,7 @@ export default function VideosTestPage() {
               <div className="mt-4 text-center">
                 <Button onClick={fetchVideos} className="bg-blue-500 hover:bg-blue-600">
                   <RefreshCw className="w-4 h-4 mr-2" />
-                  دووبارە هەوڵبدەرەوە
+                  {t("refreshVideos")}
                 </Button>
               </div>
             </CardContent>
@@ -111,8 +113,8 @@ export default function VideosTestPage() {
           <Card className="bg-slate-800/50 border-slate-700">
             <CardContent className="p-12 text-center">
               <Video className="w-20 h-20 text-gray-600 mx-auto mb-4" />
-              <p className="text-xl font-bold text-white mb-2">هیچ ڤیدیۆیەک نەدۆزرایەوە</p>
-              <p className="text-gray-400">فایربەیس ستۆرج بەتاڵە یان هیچ ڤیدیۆیەک لە فۆڵدەری "exercises/" یان "videos/" نییە</p>
+              <p className="text-xl font-bold text-white mb-2">{t("noVideosFound")}</p>
+              <p className="text-gray-400">{t("uploadVideosFirst")}</p>
             </CardContent>
           </Card>
         ) : (
@@ -122,7 +124,7 @@ export default function VideosTestPage() {
                 <CardContent className="p-6">
                   <div className="text-center">
                     <p className="text-4xl font-bold text-white mb-2">{videos.length}</p>
-                    <p className="text-blue-400">کۆی ڤیدیۆکان</p>
+                    <p className="text-blue-400">{t("totalWorkouts")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -133,7 +135,7 @@ export default function VideosTestPage() {
                     <p className="text-4xl font-bold text-white mb-2">
                       {formatFileSize(videos.reduce((sum, v) => sum + v.size, 0))}
                     </p>
-                    <p className="text-green-400">قەبارەی گشتی</p>
+                    <p className="text-green-400">{t("fileSize")}</p>
                   </div>
                 </CardContent>
               </Card>
@@ -179,7 +181,7 @@ export default function VideosTestPage() {
                           className="bg-blue-500 hover:bg-blue-600"
                         >
                           <Video className="w-4 h-4 mr-2" />
-                          بینین
+                          {t("view")}
                         </Button>
                         <Button
                           onClick={() => {
@@ -191,7 +193,7 @@ export default function VideosTestPage() {
                           variant="outline"
                           className="border-slate-600"
                         >
-                          <Download className="w-4 h-4" />
+                          <Download className="w-4 h-4" title={t("download")} />
                         </Button>
                       </div>
                     </div>
