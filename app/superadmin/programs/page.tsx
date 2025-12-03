@@ -14,8 +14,10 @@ import {
   Calendar, Lightbulb, Users, UserPlus, Check, Video, Play
 } from "lucide-react"
 import { useState, useEffect } from "react"
+import { useLanguage } from "@/hooks/useLanguage"
 
 export default function ProgramsPage() {
+  const { t } = useLanguage()
   const [activeTab, setActiveTab] = useState<'nutrition' | 'workout'>('nutrition')
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -758,7 +760,7 @@ export default function ProgramsPage() {
                           بەرنامەی خواردن
                         </span>
                       </h1>
-                      <p className="text-gray-400 text-lg">Manage nutrition plans, meals & diet programs</p>
+                      <p className="text-gray-400 text-lg">{t("createAndManagePrograms")}</p>
                     </div>
                   </div>
                   <Button 
@@ -769,7 +771,7 @@ export default function ProgramsPage() {
                     className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-xl shadow-green-500/30 px-8 py-6 text-lg rounded-2xl"
                   >
                     <Plus className="w-6 h-6 mr-2" />
-                    Add Nutrition Plan
+                    {t("createNewProgram")}
                   </Button>
                 </div>
               </div>
