@@ -3,24 +3,35 @@ import { adminDb } from "@/lib/firebase-admin"
 
 export const dynamic = 'force-dynamic'
 
-// Get all physio requests for a user
+// Get physio requests - either for a user or for a physiotherapist
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get("userId")
+    const physioId = searchParams.get("physioId")
 
-    console.log("🔍 Fetching physio requests for userId:", userId)
+    console.log("🔍 Fetching physio requests - userId:", userId, "physioId:", physioId)
 
-    if (!userId) {
-      return NextResponse.json({ error: "Missing userId parameter" }, { status: 400 })
+    if (!userId && !physioId) {
+      return NextResponse.json({ error: "Missing userId or physioId parameter" }, { status: 400 })
     }
 
-    const snapshot = await adminDb
-      .collection('physio-requests')
-      .where('userId', '==', userId)
-      .get()
-
-    console.log("📊 Found", snapshot.size, "requests for user:", userId)
+    let snapshot
+    if (physioId) {
+      // Get all requests for this physiotherapist
+      snapshot = await adminDb
+        .collection('physio-requests')
+        .where('physioId', '==', physioId)
+        .get()
+      console.log("📊 Found", snapshot.size, "requests for physio:", physioId)
+    } else {
+      // Get all requests from this user
+      snapshot = await adminDb
+        .collection('physio-requests')
+        .where('userId', '==', userId)
+        .get()
+      console.log("📊 Found", snapshot.size, "requests for user:", userId)
+    }
 
     const requests = snapshot.docs.map(doc => ({ 
       id: doc.id, 

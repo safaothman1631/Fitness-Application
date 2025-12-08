@@ -2496,8 +2496,8 @@ export default function ProgramsPage() {
                       className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
                     >
                       <option value="all">{t("allGenders")}</option>
-                      <option value="male">{t("male")}</option>
-                      <option value="female">{t("female")}</option>
+                      <option value="male">Male</option>
+                      <option value="female">Female</option>
                     </select>
 
                     {/* Level Filter */}

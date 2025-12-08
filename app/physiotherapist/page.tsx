@@ -2,123 +2,349 @@
 
 import FitproLayout from "@/components/fitpro-layout"
 import AuthGuard from "@/components/auth-guard"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, Activity, MessageCircle, TrendingUp } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useLanguage } from "@/hooks/useLanguage"
+import { Card, CardContent } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { Calendar, Users, ClipboardList, Bone, Activity, Plus, Clock } from "lucide-react"
+import { useState, useEffect } from "react"
 import { dbService } from "@/lib/db-service"
 import { toast } from "sonner"
 
-interface SimplePatient {
+interface Appointment {
+	id: string
+	time: string
+	patientName: string
+	patientId: string
+	type: string
+	status: "completed" | "upcoming" | "cancelled"
+	date: string
+	notes?: string
+	price?: string
+}
+
+interface Patient {
 	id: string
 	name: string
-	progress: number
+	email: string
+	phone?: string
 	isActive: boolean
 }
 
 export default function PhysiotherapistDashboard() {
-	const [patients, setPatients] = useState<SimplePatient[]>([])
-	const [unreadMessages, setUnreadMessages] = useState(0)
-	const physiotherapistId = "physiotherapist_1" // placeholder until auth integrated
+	const { t } = useLanguage()
+	const [appointments, setAppointments] = useState<Appointment[]>([])
+	const [patients, setPatients] = useState<Patient[]>([])
+	const [loading, setLoading] = useState(true)
+	const [newAppointment, setNewAppointment] = useState({
+		patientId: "",
+		date: "",
+		time: "",
+		type: "Initial Assessment",
+		notes: "",
+		price: ""
+	})
+	const [isDialogOpen, setIsDialogOpen] = useState(false)
 
 	useEffect(() => {
-		const load = async () => {
-			try {
-				const data = await dbService.getPatients(physiotherapistId)
-				// Map to simplified structure (fallbacks for missing fields)
-				setPatients(
-					data.map((p: any) => ({
-						id: p.id,
-						name: p.name || "Unnamed",
-						progress: typeof p.progress === "number" ? p.progress : 0,
-						isActive: p.isActive !== false,
-					}))
-				)
-				// Future: fetch messages separately
-				setUnreadMessages(0)
-			} catch (e) {
-				console.error(e)
-				toast.error("Failed to load patients")
-			}
-		}
-		load()
+		loadData()
 	}, [])
 
-	const activeCount = patients.filter((p) => p.isActive).length
-	const avgProgress = patients.length ? Math.round(patients.reduce((a, p) => a + p.progress, 0) / patients.length) : 0
+	const loadData = async () => {
+		try {
+			setLoading(true)
+			// Load patients with role 'user'
+			const usersData = await dbService.getUsers()
+			const patientsList = usersData
+				.filter((u: any) => u.role === 'user')
+				.map((u: any) => ({
+					id: u.id,
+					name: u.name || u.fullName || u.email?.split('@')[0] || 'Unknown',
+					email: u.email || '',
+					phone: u.phone || '',
+					isActive: u.status === 'active'
+				}))
+			setPatients(patientsList)
+
+			// TODO: Load real appointments from Firestore when collection is ready
+			setAppointments([])
+		} catch (error) {
+			console.error('Error loading data:', error)
+			toast.error('Failed to load data')
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	const handleCreateAppointment = async () => {
+		if (!newAppointment.patientId || !newAppointment.date || !newAppointment.time) {
+			toast.error('Please fill all required fields')
+			return
+		}
+
+		const patient = patients.find(p => p.id === newAppointment.patientId)
+		if (!patient) return
+
+		const appointment: Appointment = {
+			id: Date.now().toString(),
+			patientId: newAppointment.patientId,
+			patientName: patient.name,
+			date: newAppointment.date,
+			time: newAppointment.time,
+			type: newAppointment.type,
+			status: "upcoming",
+			notes: newAppointment.notes,
+			price: newAppointment.price
+		}
+
+		setAppointments([...appointments, appointment])
+		setIsDialogOpen(false)
+		setNewAppointment({ patientId: "", date: "", time: "", type: "Initial Assessment", notes: "", price: "" })
+		toast.success('Appointment created successfully')
+	}
+
+	const todayAppointments = appointments.filter(apt => {
+		const today = new Date().toISOString().split('T')[0]
+		return apt.date === today
+	})
+
+	const stats = {
+		todayAppointments: todayAppointments.length,
+		totalPatients: patients.length,
+		activePatients: patients.filter(p => p.isActive).length,
+		completedToday: todayAppointments.filter(apt => apt.status === 'completed').length
+	}
 
 	return (
 		<AuthGuard requiredRole="physiotherapist">
 			<FitproLayout role="physiotherapist">
 				<div className="space-y-6">
-				<div>
-					<h1 className="text-3xl font-bold text-white mb-2">Physiotherapist Dashboard</h1>
-					<p className="text-gray-400">Overview of your patients and recent performance metrics.</p>
-				</div>
+					{/* Welcome Section */}
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-3">
+							<div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#10B2E3] to-[#73E8FF] flex items-center justify-center shadow-lg shadow-[#10B2E3]/30">
+								<Activity className="w-6 h-6 text-white" />
+							</div>
+							<div>
+								<h1 className="text-2xl font-bold text-white">{t("welcomeBack")}, Dr. Admin</h1>
+								<p className="text-[#B6C4CF] text-sm">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+							</div>
+						</div>
+						<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+							<DialogTrigger asChild>
+								<Button className="bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] hover:from-[#0E9FCC] hover:to-[#5DD5EE] text-white px-6 py-6 text-base font-bold shadow-lg shadow-[#10B2E3]/30">
+									<Plus className="w-5 h-5 mr-2" />
+									New Appointment
+								</Button>
+							</DialogTrigger>
+							<DialogContent className="bg-[#101A23] border-[#2E3944]">
+								<DialogHeader>
+									<DialogTitle className="text-white">Schedule New Appointment</DialogTitle>
+								</DialogHeader>
+								<div className="space-y-4 mt-4">
+									<div>
+										<Label className="text-[#B6C4CF]">Patient</Label>
+										<select
+											className="w-full mt-1 bg-[#0E151B] border-[#2E3944] text-white rounded-lg p-2"
+											value={newAppointment.patientId}
+											onChange={(e) => setNewAppointment({ ...newAppointment, patientId: e.target.value })}
+										>
+											<option value="">Select Patient</option>
+											{patients.map(p => (
+												<option key={p.id} value={p.id}>{p.name}</option>
+											))}
+										</select>
+									</div>
+									<div>
+										<Label className="text-[#B6C4CF]">Date</Label>
+										<Input
+											type="date"
+											className="mt-1 bg-[#0E151B] border-[#2E3944] text-white"
+											value={newAppointment.date}
+											onChange={(e) => setNewAppointment({ ...newAppointment, date: e.target.value })}
+										/>
+									</div>
+									<div>
+										<Label className="text-[#B6C4CF]">Time</Label>
+										<Input
+											type="time"
+											className="mt-1 bg-[#0E151B] border-[#2E3944] text-white"
+											value={newAppointment.time}
+											onChange={(e) => setNewAppointment({ ...newAppointment, time: e.target.value })}
+										/>
+									</div>
+									<div>
+										<Label className="text-[#B6C4CF]">Type</Label>
+										<select
+											className="w-full mt-1 bg-[#0E151B] border-[#2E3944] text-white rounded-lg p-2"
+											value={newAppointment.type}
+											onChange={(e) => setNewAppointment({ ...newAppointment, type: e.target.value })}
+										>
+											<option>Initial Assessment</option>
+											<option>Follow-up</option>
+											<option>Therapy Session</option>
+											<option>Check-up</option>
+											<option>Consultation</option>
+										</select>
+									</div>
+									<div>
+										<Label className="text-[#B6C4CF]">Price (IQD)</Label>
+										<Input
+											type="number"
+											className="mt-1 bg-[#0E151B] border-[#2E3944] text-white"
+											value={newAppointment.price}
+											onChange={(e) => setNewAppointment({ ...newAppointment, price: e.target.value })}
+											placeholder="25000"
+										/>
+									</div>
+									<div>
+										<Label className="text-[#B6C4CF]">Notes (Optional)</Label>
+										<Input
+											className="mt-1 bg-[#0E151B] border-[#2E3944] text-white"
+											value={newAppointment.notes}
+											onChange={(e) => setNewAppointment({ ...newAppointment, notes: e.target.value })}
+											placeholder="Any additional notes..."
+										/>
+									</div>
+									<Button
+										className="w-full bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] hover:from-[#0E9FCC] hover:to-[#5DD5EE] text-white"
+										onClick={handleCreateAppointment}
+									>
+										Create Appointment
+									</Button>
+								</div>
+							</DialogContent>
+						</Dialog>
+					</div>
 
-				<div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-					<Card className="fitpro-card">
-						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-gray-400 text-sm mb-1">Total Patients</p>
-									<p className="text-3xl font-bold text-white">{patients.length}</p>
+					{/* Stats Grid */}
+					<div className="grid grid-cols-2 gap-4 mb-6">
+						<Card className="bg-gradient-to-br from-[#10B2E3]/10 to-[#73E8FF]/5 border-[#10B2E3]/30 backdrop-blur-sm">
+							<CardContent className="p-4">
+								<div className="flex items-center justify-between mb-2">
+									<Calendar className="w-8 h-8 text-[#73E8FF]" />
 								</div>
-								<Users className="w-10 h-10 text-blue-500" />
-							</div>
-						</CardContent>
-					</Card>
-					<Card className="fitpro-card">
-						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-gray-400 text-sm mb-1">Active Patients</p>
-									<p className="text-3xl font-bold text-white">{activeCount}</p>
-								</div>
-								<Activity className="w-10 h-10 text-green-500" />
-							</div>
-						</CardContent>
-					</Card>
-					<Card className="fitpro-card">
-						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-gray-400 text-sm mb-1">Unread Messages</p>
-									<p className="text-3xl font-bold text-white">{unreadMessages}</p>
-								</div>
-								<MessageCircle className="w-10 h-10 text-cyan-500" />
-							</div>
-						</CardContent>
-					</Card>
-					<Card className="fitpro-card">
-						<CardContent className="p-6">
-							<div className="flex items-center justify-between">
-								<div>
-									<p className="text-gray-400 text-sm mb-1">Average Progress</p>
-									<p className="text-3xl font-bold text-yellow-500">{avgProgress}%</p>
-								</div>
-								<TrendingUp className="w-10 h-10 text-yellow-500" />
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+								<p className="text-3xl font-bold text-white mb-1">{loading ? "..." : stats.todayAppointments}</p>
+								<p className="text-[#B6C4CF] text-xs">Today's Appointments</p>
+							</CardContent>
+						</Card>
 
-				<Card className="fitpro-card">
-					<CardHeader>
-						<CardTitle className="text-white">Recent Patients</CardTitle>
-					</CardHeader>
-					<CardContent className="space-y-3">
-						{patients.slice(0, 6).map((p) => (
-							<div key={p.id} className="p-3 bg-slate-800/50 rounded-lg flex items-center justify-between">
-								<div>
-									<p className="text-white font-semibold text-sm">{p.name}</p>
-									<p className="text-gray-400 text-xs">Progress {p.progress}%</p>
+						<Card className="bg-gradient-to-br from-green-500/10 to-emerald-500/5 border-green-500/30 backdrop-blur-sm">
+							<CardContent className="p-4">
+								<div className="flex items-center justify-between mb-2">
+									<Users className="w-8 h-8 text-green-400" />
 								</div>
-								<span className={`px-2 py-1 rounded text-xs font-semibold ${p.isActive ? "bg-green-500/20 text-green-400" : "bg-red-500/20 text-red-400"}`}>{p.isActive ? "Active" : "Inactive"}</span>
+								<p className="text-3xl font-bold text-white mb-1">{loading ? "..." : stats.totalPatients}</p>
+								<p className="text-[#B6C4CF] text-xs">Total Patients</p>
+							</CardContent>
+						</Card>
+
+						<Card className="bg-gradient-to-br from-orange-500/10 to-amber-500/5 border-orange-500/30 backdrop-blur-sm">
+							<CardContent className="p-4">
+								<div className="flex items-center justify-between mb-2">
+									<Users className="w-8 h-8 text-orange-400" />
+								</div>
+								<p className="text-3xl font-bold text-white mb-1">{loading ? "..." : stats.activePatients}</p>
+								<p className="text-[#B6C4CF] text-xs">Active Patients</p>
+							</CardContent>
+						</Card>
+
+						<Card className="bg-gradient-to-br from-purple-500/10 to-pink-500/5 border-purple-500/30 backdrop-blur-sm">
+							<CardContent className="p-4">
+								<div className="flex items-center justify-between mb-2">
+									<Activity className="w-8 h-8 text-purple-400" />
+								</div>
+								<p className="text-3xl font-bold text-white mb-1">{loading ? "..." : stats.completedToday}</p>
+								<p className="text-[#B6C4CF] text-xs">Completed Today</p>
+							</CardContent>
+						</Card>
+					</div>
+
+					{/* Quick Actions */}
+					<Card className="bg-[#101A23]/95 border-[#2E3944] mb-6">
+						<CardContent className="p-5">
+							<h2 className="text-white font-semibold mb-4 flex items-center gap-2">
+								<Bone className="w-5 h-5 text-[#73E8FF]" />
+								Quick Actions
+							</h2>
+							<div className="grid grid-cols-2 gap-3">
+								<button 
+									onClick={() => setIsDialogOpen(true)}
+									className="p-4 rounded-2xl bg-gradient-to-br from-[#10B2E3]/20 to-[#73E8FF]/10 border border-[#10B2E3]/30 hover:scale-95 active:scale-90 transition-all duration-300"
+								>
+									<Calendar className="w-6 h-6 text-[#73E8FF] mb-2" />
+									<p className="text-white text-sm font-semibold">New Appointment</p>
+								</button>
+								<button 
+									onClick={() => toast.info('Patients page coming soon')}
+									className="p-4 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-500/30 hover:scale-95 active:scale-90 transition-all duration-300"
+								>
+									<Users className="w-6 h-6 text-green-400 mb-2" />
+									<p className="text-white text-sm font-semibold">View Patients</p>
+								</button>
+								<button 
+									onClick={() => window.location.href = '/physiotherapist/anatomy'}
+									className="p-4 rounded-2xl bg-gradient-to-br from-orange-500/20 to-amber-500/10 border border-orange-500/30 hover:scale-95 active:scale-90 transition-all duration-300"
+								>
+									<Bone className="w-6 h-6 text-orange-400 mb-2" />
+									<p className="text-white text-sm font-semibold">Anatomy Tool</p>
+								</button>
+								<button 
+									onClick={() => toast.info('Report writing coming soon')}
+									className="p-4 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 border border-purple-500/30 hover:scale-95 active:scale-90 transition-all duration-300"
+								>
+									<ClipboardList className="w-6 h-6 text-purple-400 mb-2" />
+									<p className="text-white text-sm font-semibold">Write Report</p>
+								</button>
 							</div>
-						))}
-						{patients.length === 0 && <p className="text-gray-400 text-sm">No patients yet.</p>}
-					</CardContent>
-				</Card>
+						</CardContent>
+					</Card>
+
+					{/* Today's Appointments */}
+					<Card className="bg-[#101A23]/95 border-[#2E3944]">
+						<CardContent className="p-5">
+							<h2 className="text-white font-semibold mb-4 flex items-center gap-2">
+								<Calendar className="w-5 h-5 text-[#73E8FF]" />
+								Today's Appointments
+							</h2>
+							<div className="space-y-3">
+								{loading ? (
+									<p className="text-[#B6C4CF] text-sm text-center py-4">Loading appointments...</p>
+								) : todayAppointments.length === 0 ? (
+									<div className="text-center py-8">
+										<Clock className="w-12 h-12 text-[#B6C4CF] mx-auto mb-3 opacity-50" />
+										<p className="text-[#B6C4CF] text-sm">No appointments scheduled for today</p>
+										<p className="text-[#B6C4CF] text-xs mt-1">Click "New Appointment" to schedule one</p>
+									</div>
+								) : (
+									todayAppointments.map((apt) => (
+										<div key={apt.id} className="p-4 rounded-xl bg-[#0E151B]/50 border border-[#2E3944] hover:border-[#10B2E3]/30 transition-all duration-300">
+											<div className="flex items-center justify-between mb-2">
+												<div className="flex items-center gap-3">
+													<div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#10B2E3] to-[#73E8FF] flex items-center justify-center">
+														<span className="text-white font-bold text-sm">{apt.patientName.charAt(0)}</span>
+													</div>
+													<div>
+														<p className="text-white font-semibold text-sm">{apt.patientName}</p>
+														<p className="text-[#B6C4CF] text-xs">{apt.type}</p>
+													</div>
+												</div>
+												<span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+													apt.status === 'completed' 
+														? 'bg-green-500/20 text-green-400' 
+														: 'bg-[#10B2E3]/20 text-[#73E8FF]'
+												}`}>
+													{apt.status === 'completed' ? 'Completed' : apt.time}
+												</span>
+											</div>
+										</div>
+									))
+								)}
+							</div>
+						</CardContent>
+					</Card>
 				</div>
 			</FitproLayout>
 		</AuthGuard>

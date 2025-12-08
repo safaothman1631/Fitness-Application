@@ -50,6 +50,9 @@ function PaymentContent() {
   }
 
   const selectedPrice = prices[plan] || 99
+  const platformFee = Math.round(selectedPrice * 0.15) // 15% platform commission
+  const tax = Math.round(selectedPrice * 0.2) // 20% tax
+  const totalPrice = selectedPrice + platformFee + tax
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -151,7 +154,7 @@ function PaymentContent() {
               </Card>
 
               <Button type="submit" className="w-full h-12 text-lg bg-gradient-to-r from-primary to-secondary hover:opacity-90" disabled={processing}>
-                {processing ? t("processing") : `${t("pay")} ${isRTL ? convertToArabicNumerals(Math.round(selectedPrice * 1.2)) : Math.round(selectedPrice * 1.2)}$`}
+                {processing ? t("processing") : `${t("pay")} ${isRTL ? convertToArabicNumerals(totalPrice) : totalPrice}$`}
               </Button>
               <div className={`flex items-center justify-center gap-2 text-sm text-muted-foreground ${isRTL ? "flex-row-reverse" : ""}`}>
                 <Lock className="w-4 h-4" />
@@ -181,12 +184,16 @@ function PaymentContent() {
                     <span dir={isRTL ? "rtl" : "ltr"}>{isRTL ? `${convertToArabicNumerals(selectedPrice)}$` : `$${selectedPrice}`}</span>
                   </div>
                   <div className={`flex justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
+                    <span className="text-muted-foreground">{t("platformFee")} ({isRTL ? "٪١٥" : "15%"})</span>
+                    <span dir={isRTL ? "rtl" : "ltr"}>{isRTL ? `${convertToArabicNumerals(platformFee)}$` : `$${platformFee}`}</span>
+                  </div>
+                  <div className={`flex justify-between ${isRTL ? "flex-row-reverse" : ""}`}>
                     <span className="text-muted-foreground">{t("tax")} ({isRTL ? "٪٢٠" : "20%"})</span>
-                    <span dir={isRTL ? "rtl" : "ltr"}>{isRTL ? `${convertToArabicNumerals(Math.round(selectedPrice * 0.2))}$` : `$${Math.round(selectedPrice * 0.2)}`}</span>
+                    <span dir={isRTL ? "rtl" : "ltr"}>{isRTL ? `${convertToArabicNumerals(tax)}$` : `$${tax}`}</span>
                   </div>
                   <div className={`flex justify-between pt-2 border-t border-border font-semibold text-base ${isRTL ? "flex-row-reverse" : ""}`}>
                     <span>{t("total")}</span>
-                    <span dir={isRTL ? "rtl" : "ltr"}>{isRTL ? `${convertToArabicNumerals(Math.round(selectedPrice * 1.2))}$` : `$${Math.round(selectedPrice * 1.2)}`}</span>
+                    <span dir={isRTL ? "rtl" : "ltr"}>{isRTL ? `${convertToArabicNumerals(totalPrice)}$` : `$${totalPrice}`}</span>
                   </div>
                 </div>
               </div>

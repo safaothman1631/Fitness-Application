@@ -58,10 +58,30 @@ export async function GET(request: NextRequest) {
     const profileDoc = await getDoc(profileDocRef)
 
     if (!profileDoc.exists()) {
-      return NextResponse.json(
-        { error: "Profile not found" },
-        { status: 404 }
-      )
+      // Create default profile if it doesn't exist
+      const defaultProfile = {
+        profile: {
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          bio: "",
+          avatar: ""
+        },
+        professional: {
+          licenseNumber: "",
+          specialization: [],
+          yearsOfExperience: 0,
+          education: [],
+          certifications: [],
+          languages: []
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      }
+      
+      await setDoc(profileDocRef, defaultProfile)
+      return NextResponse.json(defaultProfile)
     }
 
     return NextResponse.json(profileDoc.data())

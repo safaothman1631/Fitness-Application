@@ -24,8 +24,11 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
   physiotherapist: {
     main: [
       { key: "dashboard", path: "/physiotherapist", icon: "Home" },
+      { key: "requests", path: "/physiotherapist/requests", icon: "Bell" },
       { key: "patients", path: "/physiotherapist/patients", icon: "Users" },
-      { key: "activities", path: "/physiotherapist/activities", icon: "TrendingUp" },
+      { key: "appointments", path: "/physiotherapist/appointments", icon: "Dumbbell" },
+      { key: "anatomy3D", path: "/physiotherapist/anatomy", icon: "Bone" },
+      { key: "progress", path: "/physiotherapist/progress", icon: "TrendingUp" },
     ],
     menu: [
       { key: "profile", path: "/physiotherapist/profile", icon: "User" },

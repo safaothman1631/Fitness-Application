@@ -15,6 +15,7 @@
     "firebase:serve": "firebase serve"
   },
   "dependencies": {
+    "@google-cloud/storage": "^7.18.0",
     "@hookform/resolvers": "^3.10.0",
     "@opentelemetry/api": "^1.9.0",
     "@radix-ui/react-accordion": "latest",
@@ -44,6 +45,8 @@
     "@radix-ui/react-toggle": "latest",
     "@radix-ui/react-toggle-group": "latest",
     "@radix-ui/react-tooltip": "latest",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.4.2",
     "@vercel/analytics": "latest",
     "autoprefixer": "^10.4.20",
     "class-variance-authority": "^0.7.1",
@@ -71,6 +74,7 @@
     "sonner": "latest",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
+    "three": "^0.181.2",
     "vaul": "latest",
     "zod": "3.25.76"
   },

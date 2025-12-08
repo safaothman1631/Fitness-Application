@@ -193,7 +193,7 @@ export default function VideosTestPage() {
                           variant="outline"
                           className="border-slate-600"
                         >
-                          <Download className="w-4 h-4" title={t("download")} />
+                          <Download className="w-4 h-4" aria-label={t("download")} />
                         </Button>
                       </div>
                     </div>

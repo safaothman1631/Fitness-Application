@@ -45,9 +45,21 @@ export const dbService = {
 
   // ===== PHYSIOTHERAPIST PROFILE =====
   async getPhysiotherapistProfile(id: string) {
-    const response = await fetch(`/api/physiotherapist/profile?id=${id}`)
-    if (!response.ok) throw new Error("Failed to fetch profile")
-    return response.json()
+    try {
+      const response = await fetch(`/api/physiotherapist/profile?id=${id}`, {
+        cache: 'no-store'
+      })
+      
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.error || "Failed to fetch profile")
+      }
+      
+      return response.json()
+    } catch (error: any) {
+      console.error("Error fetching physiotherapist profile:", error)
+      throw error
+    }
   },
 
   async updatePhysiotherapistProfile(id: string, profileData: any) {
@@ -227,6 +239,21 @@ export const dbService = {
   // ===== PHYSIO REQUESTS =====
   async getPhysioRequests(userId: string) {
     const response = await fetch(`/api/physio-requests?userId=${userId}`)
+    if (!response.ok) {
+      const errorText = await response.text()
+      console.error("Fetch physio requests error - Status:", response.status, "Body:", errorText)
+      try {
+        const errorData = JSON.parse(errorText)
+        throw new Error(`Failed to fetch physio requests: ${errorData.error} ${errorData.details || ""}`)
+      } catch {
+        throw new Error(`Failed to fetch physio requests (Status ${response.status}): ${errorText}`)
+      }
+    }
+    return response.json()
+  },
+
+  async getPhysioRequestsForPhysiotherapist(physioId: string) {
+    const response = await fetch(`/api/physio-requests?physioId=${physioId}`)
     if (!response.ok) {
       const errorText = await response.text()
       console.error("Fetch physio requests error - Status:", response.status, "Body:", errorText)

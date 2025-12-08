@@ -1,10 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Textarea } from "@/components/ui/textarea"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import FitproLayout from "@/components/fitpro-layout"
-import { Heart, MessageCircle, Share2, User, Award, Zap } from "lucide-react"
+import { Heart, MessageCircle, Share2, User, Award, Zap, Plus } from "lucide-react"
+import { toast } from "sonner"
 
 interface CommunityPost {
   id: string
@@ -18,7 +21,12 @@ interface CommunityPost {
 }
 
 export default function CommunityPage() {
-  const [posts, setPosts] = useState<CommunityPost[]>([
+  const [newPost, setNewPost] = useState("")
+  const [showPostDialog, setShowPostDialog] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [posting, setPosting] = useState(false)
+  
+  const [posts, setPosts] = useState<CommunityPost[]>([])
     {
       id: "1",
       author: "John Doe",
@@ -61,13 +69,83 @@ export default function CommunityPage() {
     )
   }
 
+  const createPost = async () => {
+    if (!newPost.trim()) {
+      toast.error("Please write something")
+      return
+    }
+    
+    try {
+      const userId = localStorage.getItem("userId") || "guest"
+      const userName = localStorage.getItem("userName") || "You"
+      
+      const post: CommunityPost = {
+        id: Date.now().toString(),
+        author: userName,
+        avatar: userName.substring(0, 2).toUpperCase(),
+        achievement: newPost,
+        timestamp: "Just now",
+        likes: 0,
+        comments: 0,
+        liked: false,
+      }
+      
+      setPosts([post, ...posts])
+      setNewPost("")
+      setShowPostDialog(false)
+      toast.success("Post created successfully!")
+    } catch (error) {
+      console.error("Error creating post:", error)
+      toast.error("Failed to create post")
+    }
+  }
+
   return (
     <FitproLayout role="user">
       <div className="max-w-2xl mx-auto space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Community</h1>
-          <p className="text-gray-400">Share your fitness journey with others</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Community</h1>
+            <p className="text-gray-400">Share your fitness journey with others</p>
+          </div>
+          <Button 
+            onClick={() => setShowPostDialog(true)}
+            className="bg-gradient-to-r from-blue-500 to-cyan-500 hover:from-blue-600 hover:to-cyan-600"
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Create Post
+          </Button>
         </div>
+
+        {/* Create Post Dialog */}
+        <Dialog open={showPostDialog} onOpenChange={setShowPostDialog}>
+          <DialogContent className="bg-slate-900 border-slate-800">
+            <DialogHeader>
+              <DialogTitle className="text-white">Create New Post</DialogTitle>
+              <DialogDescription className="text-gray-400">
+                Share your fitness achievement or progress with the community
+              </DialogDescription>
+            </DialogHeader>
+            <Textarea
+              value={newPost}
+              onChange={(e) => setNewPost(e.target.value)}
+              placeholder="What's your fitness achievement today? 💪"
+              className="min-h-[120px] bg-slate-800/50 border-slate-700 text-white"
+            />
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setShowPostDialog(false)}>
+                Cancel
+              </Button>
+              <Button 
+                onClick={createPost}
+                disabled={!newPost.trim()}
+                className="bg-gradient-to-r from-blue-500 to-cyan-500"
+              >
+                Post
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
 
         {/* Posts Feed */}
         <div className="space-y-4">

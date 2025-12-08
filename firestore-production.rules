@@ -1,0 +1,522 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // ==========================================
+    // HELPER FUNCTIONS
+    // ==========================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function getUserRole() {
+      return isAuthenticated() ? getUserData().role : null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && getUserRole() in ['admin', 'superadmin', 'owner'];
+    }
+    
+    function isSuperadmin() {
+      return isAuthenticated() && getUserRole() in ['superadmin', 'owner'];
+    }
+    
+    function isOwnerRole() {
+      return isAuthenticated() && getUserRole() == 'owner';
+    }
+    
+    function isTrainer() {
+      return isAuthenticated() && getUserRole() == 'trainer';
+    }
+    
+    function isPhysiotherapist() {
+      return isAuthenticated() && getUserRole() == 'physiotherapist';
+    }
+    
+    function isUser() {
+      return isAuthenticated() && getUserRole() == 'user';
+    }
+    
+    // ==========================================
+    // USERS COLLECTION
+    // ==========================================
+    
+    match /users/{userId} {
+      // Anyone can read user profiles (needed for display names, avatars, etc.)
+      allow read: if true;
+      
+      // Anyone can create (for registration) - but validate required fields
+      allow create: if request.resource.data.keys().hasAll(['email', 'role']) &&
+                       request.resource.data.role in ['user', 'trainer', 'physiotherapist'] &&
+                       (!request.resource.data.keys().hasAny(['isAdmin', 'isSuperadmin']));
+      
+      // Users can update their own profile, admins can update any
+      allow update: if isOwner(userId) || isAdmin();
+      
+      // Only superadmin can delete users
+      allow delete: if isSuperadmin();
+    }
+    
+    // ==========================================
+    // TRAINERS COLLECTION
+    // ==========================================
+    
+    match /trainers/{trainerId} {
+      // Public read for trainer listings
+      allow read: if true;
+      
+      // Trainers can create their own profile, admins can create any
+      allow create: if (isTrainer() && request.resource.data.userId == request.auth.uid) || isAdmin();
+      
+      // Owner or admin can update
+      allow update: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isAdmin();
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // PHYSIOTHERAPISTS COLLECTION
+    // ==========================================
+    
+    match /physiotherapists/{physioId} {
+      // Public read for physiotherapist listings
+      allow read: if true;
+      
+      // Physiotherapists can create their own profile, admins can create any
+      allow create: if (isPhysiotherapist() && request.resource.data.userId == request.auth.uid) || isAdmin();
+      
+      // Owner or admin can update
+      allow update: if (isAuthenticated() && resource.data.userId == request.auth.uid) || isAdmin();
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // PATIENTS COLLECTION
+    // ==========================================
+    
+    match /patients/{patientId} {
+      // Physiotherapist can read their patients, admins can read all
+      allow read: if isAuthenticated() && (
+        isAdmin() || 
+        (isPhysiotherapist() && resource.data.physiotherapistId == request.auth.uid) ||
+        resource.data.userId == request.auth.uid
+      );
+      
+      // Physiotherapist or admin can create
+      allow create: if isPhysiotherapist() || isAdmin();
+      
+      // Owner physiotherapist or admin can update
+      allow update: if isAuthenticated() && (
+        isAdmin() || 
+        (isPhysiotherapist() && resource.data.physiotherapistId == request.auth.uid)
+      );
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // PHYSIO REQUESTS COLLECTION
+    // ==========================================
+    
+    match /physio-requests/{requestId} {
+      // User can read their own requests, physiotherapist can read requests to them
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        resource.data.physioId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Any authenticated user can create a request
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Physiotherapist can update requests to them, user can update their requests
+      allow update: if isAuthenticated() && (
+        resource.data.physioId == request.auth.uid ||
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // User or admin can delete
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    // ==========================================
+    // APPOINTMENTS COLLECTION
+    // ==========================================
+    
+    match /appointments/{appointmentId} {
+      // Physiotherapist can read their appointments, patients can read theirs
+      allow read: if isAuthenticated() && (
+        resource.data.physioId == request.auth.uid ||
+        resource.data.patientId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Physiotherapist or admin can create
+      allow create: if (isPhysiotherapist() || isAdmin()) && 
+                       request.resource.data.physioId == request.auth.uid;
+      
+      // Owner physiotherapist or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.physioId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Only owner physiotherapist or admin can delete
+      allow delete: if isAuthenticated() && (
+        resource.data.physioId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    // ==========================================
+    // WORKOUTS COLLECTION
+    // ==========================================
+    
+    match /workouts/{workoutId} {
+      // Public read for workout library
+      allow read: if true;
+      
+      // Trainer or admin can create
+      allow create: if isTrainer() || isAdmin();
+      
+      // Creator or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // EXERCISES COLLECTION
+    // ==========================================
+    
+    match /exercises/{exerciseId} {
+      // Public read for exercise library
+      allow read: if true;
+      
+      // Trainer or admin can create
+      allow create: if isTrainer() || isAdmin();
+      
+      // Creator or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // WORKOUT PROGRAMS COLLECTION
+    // ==========================================
+    
+    match /workout-programs/{programId} {
+      // Public read
+      allow read: if true;
+      
+      // Trainer, admin, or superadmin can create
+      allow create: if isTrainer() || isAdmin();
+      
+      // Creator or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // NUTRITION PROGRAMS COLLECTION
+    // ==========================================
+    
+    match /nutrition-programs/{programId} {
+      // Public read
+      allow read: if true;
+      
+      // Trainer or admin can create
+      allow create: if isTrainer() || isAdmin();
+      
+      // Creator or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.createdBy == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // ACCESS KEYS COLLECTION
+    // ==========================================
+    
+    match /access-keys/{keyId} {
+      // Only admin can read
+      allow read: if isAdmin();
+      
+      // Only admin can create
+      allow create: if isAdmin();
+      
+      // Only admin can update
+      allow update: if isAdmin();
+      
+      // Only superadmin can delete
+      allow delete: if isSuperadmin();
+    }
+    
+    // ==========================================
+    // SETTINGS COLLECTION
+    // ==========================================
+    
+    match /settings/{userId} {
+      // User can read their own settings, admin can read all
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Anyone can create settings (for new users)
+      allow create: if true;
+      
+      // User can update their own settings
+      allow update: if isOwner(userId);
+      
+      // User or admin can delete
+      allow delete: if isOwner(userId) || isAdmin();
+    }
+    
+    // ==========================================
+    // NOTIFICATIONS COLLECTION
+    // ==========================================
+    
+    match /notifications/{notificationId} {
+      // User can read their own notifications
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      
+      // System or admin can create notifications
+      allow create: if isAdmin() || isAuthenticated();
+      
+      // User can update their own notifications (mark as read)
+      allow update: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      
+      // User can delete their own notifications
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+    
+    // ==========================================
+    // COMMUNITY POSTS COLLECTION
+    // ==========================================
+    
+    match /community-posts/{postId} {
+      // Everyone can read posts
+      allow read: if true;
+      
+      // Authenticated users can create posts
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Owner or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Owner or admin can delete
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    // ==========================================
+    // PAYMENTS COLLECTION
+    // ==========================================
+    
+    match /payments/{paymentId} {
+      // User can read their own payments, admin can read all
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // User can create their own payment record
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Only admin can update payments (for verification, refunds, etc.)
+      allow update: if isAdmin();
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // SUBSCRIPTIONS COLLECTION
+    // ==========================================
+    
+    match /subscriptions/{subscriptionId} {
+      // User can read their own subscription, admin can read all
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // System or admin can create
+      allow create: if isAdmin();
+      
+      // Only admin can update
+      allow update: if isAdmin();
+      
+      // Only admin can delete
+      allow delete: if isAdmin();
+    }
+    
+    // ==========================================
+    // WORKOUT LOGS COLLECTION
+    // ==========================================
+    
+    match /workout-logs/{logId} {
+      // User can read their own logs, trainer/admin can read all
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isTrainer() ||
+        isAdmin()
+      );
+      
+      // User can create their own logs
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Owner or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Owner or admin can delete
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    // ==========================================
+    // MEAL LOGS COLLECTION
+    // ==========================================
+    
+    match /meal-logs/{logId} {
+      // User can read their own logs, trainer/admin can read all
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isTrainer() ||
+        isAdmin()
+      );
+      
+      // User can create their own logs
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Owner or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Owner or admin can delete
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    // ==========================================
+    // PROGRESS TRACKING COLLECTION
+    // ==========================================
+    
+    match /progress/{progressId} {
+      // User can read their own progress, trainer/admin can read all
+      allow read: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isTrainer() ||
+        isPhysiotherapist() ||
+        isAdmin()
+      );
+      
+      // User can create their own progress entries
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      
+      // Owner or admin can update
+      allow update: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+      
+      // Owner or admin can delete
+      allow delete: if isAuthenticated() && (
+        resource.data.userId == request.auth.uid ||
+        isAdmin()
+      );
+    }
+    
+    // ==========================================
+    // VIDEOS COLLECTION (Exercise Videos)
+    // ==========================================
+    
+    match /videos/{videoId} {
+      // Everyone can read videos
+      allow read: if true;
+      
+      // Only admin can create
+      allow create: if isAdmin();
+      
+      // Only admin can update
+      allow update: if isAdmin();
+      
+      // Only superadmin can delete
+      allow delete: if isSuperadmin();
+    }
+    
+    // ==========================================
+    // SYSTEM LOGS COLLECTION
+    // ==========================================
+    
+    match /system-logs/{logId} {
+      // Only admin can read logs
+      allow read: if isAdmin();
+      
+      // System can create logs
+      allow create: if true;
+      
+      // No updates allowed
+      allow update: if false;
+      
+      // Only superadmin can delete
+      allow delete: if isSuperadmin();
+    }
+    
+    // ==========================================
+    // BLOCK ALL OTHER COLLECTIONS
+    // ==========================================
+    
+    match /{document=**} {
+      allow read: if false;
+      allow write: if false;
+    }
+  }
+}

@@ -40,6 +40,11 @@ export type TranslationKey =
   | "physiotherapist"
   | "progress"
   | "profile"
+  | "requests"
+  | "anatomy3D"
+  | "anatomyEngineer"
+  | "unirigDemo"
+  | "3dModelViewer"
   | "breakfast"
   | "lunch"
   | "snacks"
@@ -1008,6 +1013,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     physiotherapist: "Doctor",
     progress: "Progress",
     profile: "Profile",
+    requests: "Requests",
+    anatomy3D: "🦴 Anatomy 3D Viewer",
+    anatomyEngineer: "🔧 Anatomy Lab",
+    unirigDemo: "⚡ UniRig Demo",
+    "3dModelViewer": "👁️ 3D Model Viewer",
     breakfast: "Breakfast",
     lunch: "Lunch",
     snacks: "Snacks",
@@ -1273,6 +1283,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   orderSummary: "Order Summary",
   oneTimePayment: "One-time payment",
   subtotal: "Subtotal",
+  platformFee: "Platform Fee",
   tax: "Tax",
   total: "Total",
   includedInPlan: "Included in this Plan:",
@@ -1950,6 +1961,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signInToAccount: "سجّل الدخول إلى حسابك في فيت برو"
   ,owner: "مالك"
   ,trainer: "مدرب"
+  ,requests: "الطلبات"
+  ,anatomy3D: "🦴 عارض التشريح ثلاثي الأبعاد"
+  ,anatomyEngineer: "🔧 مختبر التشريح"
+  ,unirigDemo: "⚡ عرض UniRig"
+  ,"3dModelViewer": "👁️ عارض النماذج 3D"
   ,breakfast: "فطور"
   ,lunch: "غداء"
   ,snacks: "وجبات خفيفة"
@@ -2156,6 +2172,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,orderSummary: "ملخص الطلب"
       ,oneTimePayment: "دفعة واحدة"
       ,subtotal: "المجموع الفرعي"
+      ,platformFee: "رسوم المنصة"
       ,tax: "الضريبة"
       ,total: "الإجمالي"
       ,includedInPlan: "مشمول في الخطة:"
@@ -2833,6 +2850,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,signInToAccount: "چوونەژوورەوە بۆ هەژماری فیتپرو"
   ,owner: "خاوەن"
   ,trainer: "ڕاهێنەر"
+  ,requests: "داواکاریەکان"
+  ,anatomy3D: "🦴 بینەری 3D ی ئەناتۆمی"
+  ,anatomyEngineer: "🔧 تاقیگەی ئەناتۆمی"
+  ,unirigDemo: "⚡ دیمۆی UniRig"
+  ,"3dModelViewer": "👁️ بینەری مۆدێلی 3D"
   ,breakfast: "تایە بەیانی"
   ,lunch: "نانی نیوەڕۆ"
   ,snacks: "خواردنی سووک"
@@ -3039,6 +3061,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,orderSummary: "کورتەی داواکاری"
       ,oneTimePayment: "پارەدانی یەکجارەکی"
       ,subtotal: "کۆی گشتی"
+      ,platformFee: "کرێی پلاتفۆرم"
       ,tax: "باج"
       ,total: "کۆی گشتی"
       ,includedInPlan: "لەم پلانەدا:"
@@ -3720,6 +3743,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     signInToAccount: "FitPro hesabına giriş yap",
     owner: "Sahip",
     trainer: "Antrenör",
+    requests: "Talepler",
+    anatomy3D: "🦴 Anatomi 3D Görüntüleyici",
+    anatomyEngineer: "🔧 Anatomi Laboratuvarı",
+    unirigDemo: "⚡ UniRig Demo",
+    "3dModelViewer": "👁️ 3D Model Görüntüleyici",
   // Auth & Login (TR placeholders)
     signIn: "Giriş Yap",
     signUp: "Kayıt Ol",
@@ -3926,6 +3954,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   orderSummary: "Sipariş Özeti",
   oneTimePayment: "Tek Seferlik Ödeme",
   subtotal: "Ara Toplam",
+  platformFee: "Platform Ücreti",
   tax: "Vergi",
   total: "Toplam",
   includedInPlan: "Planda Dahil:",
