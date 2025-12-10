@@ -26,7 +26,7 @@ export default function CommunityPage() {
   const [loading, setLoading] = useState(true)
   const [posting, setPosting] = useState(false)
   
-  const [posts, setPosts] = useState<CommunityPost[]>([])
+  const [posts, setPosts] = useState<CommunityPost[]>([
     {
       id: "1",
       author: "John Doe",

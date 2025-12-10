@@ -1,10 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import FitproLayout from "@/components/fitpro-layout"
 import { Trash2, CheckCircle2, AlertCircle, MessageSquare, Dumbbell } from "lucide-react"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { toast } from "sonner"
 
 interface Notification {
   id: string
@@ -16,39 +19,93 @@ interface Notification {
 }
 
 export default function TrainerNotifications() {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "message",
-      title: "Message from Muhammad Ali",
-      message: "Can we reschedule tomorrow's session?",
-      timestamp: "2024-11-09 11:45",
-      isRead: false,
-    },
-    {
-      id: "2",
-      type: "workout",
-      title: "Workout Completed",
-      message: "Aisha Khan completed her upper body workout",
-      timestamp: "2024-11-08 16:30",
-      isRead: false,
-    },
-    {
-      id: "3",
-      type: "alert",
-      title: "Session Reminder",
-      message: "You have a session with Muhammad Ali tomorrow at 10:00 AM",
-      timestamp: "2024-11-07 18:00",
-      isRead: true,
-    },
-  ])
+  const [loading, setLoading] = useState(true)
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [userId, setUserId] = useState<string | null>(null)
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications(notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)))
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const userResponse = await fetch(`/api/users?email=${user.email}`)
+          if (userResponse.ok) {
+            const users = await userResponse.json()
+            const currentUser = users.find((u: any) => u.email === user.email)
+            const uid = currentUser?.id || currentUser?.uid || user.uid
+            setUserId(uid)
+            await fetchNotifications(uid)
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error)
+          toast.error('Failed to load notifications')
+        } finally {
+          setLoading(false)
+        }
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const fetchNotifications = async (uid: string) => {
+    try {
+      const response = await fetch(`/api/notifications?userId=${uid}`)
+      if (response.ok) {
+        const data = await response.json()
+        setNotifications(data)
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error)
+    }
   }
 
-  const handleDelete = (id: string) => {
-    setNotifications(notifications.filter((n) => n.id !== id))
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notifications/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isRead: true })
+      })
+      if (response.ok) {
+        setNotifications(notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)))
+        toast.success('Notification marked as read')
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error)
+      toast.error('Failed to update notification')
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notifications/${id}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        setNotifications(notifications.filter((n) => n.id !== id))
+        toast.success('Notification deleted')
+      }
+    } catch (error) {
+      console.error('Error deleting notification:', error)
+      toast.error('Failed to delete notification')
+    }
+  }
+
+  const handleMarkAllRead = async () => {
+    if (!userId) return
+    try {
+      const response = await fetch('/api/notifications/mark-all-read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      })
+      if (response.ok) {
+        setNotifications(notifications.map(n => ({ ...n, isRead: true })))
+        toast.success('All notifications marked as read')
+      }
+    } catch (error) {
+      console.error('Error marking all as read:', error)
+      toast.error('Failed to update notifications')
+    }
   }
 
   const getIcon = (type: string) => {
@@ -64,12 +121,32 @@ export default function TrainerNotifications() {
     }
   }
 
+  if (loading) {
+    return (
+      <FitproLayout role="trainer">
+        <div className="flex items-center justify-center h-screen">
+          <div className="text-center">
+            <div className="inline-block w-16 h-16 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-400">Loading notifications...</p>
+          </div>
+        </div>
+      </FitproLayout>
+    )
+  }
+
   return (
     <FitproLayout role="trainer">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
-          <p className="text-gray-400">Trainee messages, session reminders, and workout updates</p>
+        <div className="flex justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-bold text-white mb-2">Notifications</h1>
+            <p className="text-gray-400">Trainee messages, session reminders, and workout updates</p>
+          </div>
+          {notifications.filter(n => !n.isRead).length > 0 && (
+            <Button onClick={handleMarkAllRead} variant="outline" className="border-rose-500 text-rose-400 hover:bg-rose-500/10">
+              Mark All as Read
+            </Button>
+          )}
         </div>
 
         {/* Stats */}

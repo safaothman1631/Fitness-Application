@@ -89,7 +89,12 @@ export default function RegisterPage() {
             const user = userCredential.user
             console.log("✅ Firebase Auth user created:", user.uid)
             
-            // 2. Create Firestore user document with the Auth UID
+            // 2. Send email verification
+            const { sendEmailVerification } = await import("firebase/auth")
+            await sendEmailVerification(user)
+            console.log("📧 Verification email sent")
+            
+            // 3. Create Firestore user document with the Auth UID
             const userData = {
                 email: formData.email,
                 name: `${formData.firstName} ${formData.lastName}`,
@@ -100,6 +105,7 @@ export default function RegisterPage() {
                 subscriptionStatus: "inactive",
                 subscriptionEndDate: null,
                 isActive: true,
+                emailVerified: false,
                 joinDate: new Date().toISOString(),
                 createdAt: new Date().toISOString(),
             }
@@ -109,12 +115,15 @@ export default function RegisterPage() {
             
             console.log("✅ Registration complete!")
             
-            // Store user info in localStorage
-            localStorage.setItem("user", JSON.stringify({ id: user.uid, ...userData }))
-            localStorage.setItem("userId", user.uid)
+            // Sign out user until they verify email
+            await auth.signOut()
             
-            // Redirect to dashboard
-            router.push("/dashboard")
+            // Show success message with verification notice
+            setError("")
+            alert(t("registrationSuccessVerifyEmail") || "Registration successful! Please check your email to verify your account before logging in.")
+            
+            // Redirect to login page
+            router.push("/login")
             
         } catch (err: any) {
             console.error("❌ Registration error:", err)

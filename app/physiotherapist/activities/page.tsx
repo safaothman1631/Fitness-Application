@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import FitproLayout from "@/components/fitpro-layout"
+import { useState, useEffect } from "react"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -10,6 +10,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { AddButton, DeleteButton, EditButton, CancelButton, SaveButton } from "@/components/buttons"
 import { LineChart, Activity, TrendingUp, Users, Calendar, Search } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { toast } from "sonner"
 
 interface ActivityLog {
 	id: string
@@ -20,43 +23,49 @@ interface ActivityLog {
 }
 
 export default function ActivitiesPage() {
-	const [activities, setActivities] = useState<ActivityLog[]>([
-		{
-			id: "1",
-			patientName: "Ali Khan",
-			type: "progress",
-			description: "Completed mobility assessment - improved by 10%",
-			timestamp: "2025-11-10 10:30",
-		},
-		{
-			id: "2",
-			patientName: "Fatima Ahmed",
-			type: "session",
-			description: "Attended rehabilitation session",
-			timestamp: "2025-11-10 09:15",
-		},
-		{
-			id: "3",
-			patientName: "Ali Khan",
-			type: "message",
-			description: "Sent message: Hi, I have some pain in my lower back",
-			timestamp: "2025-11-10 08:45",
-		},
-		{
-			id: "4",
-			patientName: "Fatima Ahmed",
-			type: "assessment",
-			description: "Knee injury assessment - initial evaluation completed",
-			timestamp: "2025-11-09 14:20",
-		},
-		{
-			id: "5",
-			patientName: "Ali Khan",
-			type: "session",
-			description: "Attended rehabilitation session",
-			timestamp: "2025-11-09 10:00",
-		},
-	])
+	const [loading, setLoading] = useState(true)
+	const [activities, setActivities] = useState<ActivityLog[]>([])
+	const [physiotherapistId, setPhysiotherapistId] = useState<string | null>(null)
+
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, async (user) => {
+			if (user) {
+				try {
+					// Fetch current physiotherapist
+					const userResponse = await fetch(`/api/users?email=${user.email}`)
+					if (userResponse.ok) {
+						const users = await userResponse.json()
+						const currentUser = users.find((u: any) => u.email === user.email)
+						const uid = currentUser?.id || currentUser?.uid || user.uid
+						setPhysiotherapistId(uid)
+
+						// Fetch activity logs for this physiotherapist
+						const activityResponse = await fetch(`/api/activity-logs?limit=50`)
+						if (activityResponse.ok) {
+							const logs = await activityResponse.json()
+							// Map activity logs to the expected format
+							const mappedActivities = logs.map((log: any) => ({
+								id: log.id,
+								patientName: log.userName || 'Unknown Patient',
+								type: (log.action === 'assessment' ? 'assessment' :
+									   log.action === 'session' ? 'session' :
+									   log.action === 'message' ? 'message' : 'progress') as ActivityLog['type'],
+								description: log.description || log.action,
+								timestamp: log.timestamp ? new Date(log.timestamp).toLocaleString() : ''
+							}))
+							setActivities(mappedActivities)
+						}
+					}
+				} catch (error) {
+					console.error('Error fetching activities:', error)
+					toast.error('Failed to load activities')
+				} finally {
+					setLoading(false)
+				}
+			}
+		})
+		return () => unsubscribe()
+	}, [])
 
 	const [searchActivity, setSearchActivity] = useState("")
 	const [filterType, setFilterType] = useState<string>("all")
@@ -160,8 +169,21 @@ export default function ActivitiesPage() {
 		{ label: "Active Patients", value: 2, icon: Users, color: "text-cyan-400" },
 	]
 
+	if (loading) {
+		return (
+			<SidebarSleek role="physiotherapist">
+				<div className="flex items-center justify-center h-screen">
+					<div className="text-center">
+						<div className="inline-block w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+						<p className="text-gray-400">Loading activities...</p>
+					</div>
+				</div>
+			</SidebarSleek>
+		)
+	}
+
 	return (
-		<FitproLayout role="physiotherapist">
+		<SidebarSleek role="physiotherapist">
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-3xl font-bold text-white mb-2">Activities</h1>
@@ -330,6 +352,7 @@ export default function ActivitiesPage() {
 					</DialogContent>
 				</Dialog>
 			</div>
-		</FitproLayout>
+		</SidebarSleek>
 	)
 }
+

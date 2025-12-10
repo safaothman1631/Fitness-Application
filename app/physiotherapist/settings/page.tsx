@@ -1,19 +1,155 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import FitproLayout from "@/components/fitpro-layout"
-import { Save, Lock, Bell, Eye, Shield } from "lucide-react"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
+import { Save, Lock, Bell, Eye, Shield, Loader2 } from "lucide-react"
+import { useLanguage } from "@/hooks/useLanguage"
+import { toast } from "sonner"
+
+interface NotificationPreferences {
+	patientMessages: boolean
+	appointmentReminders: boolean
+	progressAlerts: boolean
+	emailNotifications: boolean
+}
 
 export default function PhysiotherapistSettings() {
+	const { t } = useLanguage()
+	
+	// TODO: Replace with actual physiotherapist ID from auth
+	const physiotherapistId = "physio1"
+	
+	const [loading, setLoading] = useState(true)
+	const [saving, setSaving] = useState(false)
+	const [updatingPassword, setUpdatingPassword] = useState(false)
+	
+	const [preferences, setPreferences] = useState<NotificationPreferences>({
+		patientMessages: true,
+		appointmentReminders: true,
+		progressAlerts: true,
+		emailNotifications: false,
+	})
+
+	const [passwordData, setPasswordData] = useState({
+		currentPassword: "",
+		newPassword: "",
+		confirmPassword: ""
+	})
+
+	useEffect(() => {
+		loadPreferences()
+	}, [])
+
+	const loadPreferences = async () => {
+		try {
+			setLoading(true)
+			const response = await fetch(`/api/settings?physiotherapistId=${physiotherapistId}`, {
+				cache: 'no-store'
+			})
+			
+			if (response.ok) {
+				const data = await response.json()
+				if (data.preferences) {
+					setPreferences(data.preferences)
+				}
+			}
+		} catch (error) {
+			console.error("Error loading preferences:", error)
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	const handleToggle = (key: keyof NotificationPreferences) => {
+		setPreferences(prev => ({
+			...prev,
+			[key]: !prev[key]
+		}))
+	}
+
+	const handleSavePreferences = async () => {
+		try {
+			setSaving(true)
+			const response = await fetch("/api/settings", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					physiotherapistId,
+					preferences
+				})
+			})
+
+			if (!response.ok) throw new Error("Failed to save preferences")
+
+			toast.success(t("success"))
+		} catch (error) {
+			console.error("Error saving preferences:", error)
+			toast.error("Failed to save preferences")
+		} finally {
+			setSaving(false)
+		}
+	}
+
+	const handleUpdatePassword = async () => {
+		// Validation
+		if (!passwordData.currentPassword || !passwordData.newPassword || !passwordData.confirmPassword) {
+			toast.error("Please fill all password fields")
+			return
+		}
+
+		if (passwordData.newPassword !== passwordData.confirmPassword) {
+			toast.error("New password and confirm password do not match")
+			return
+		}
+
+		if (passwordData.newPassword.length < 6) {
+			toast.error("Password must be at least 6 characters")
+			return
+		}
+
+		try {
+			setUpdatingPassword(true)
+			const response = await fetch("/api/settings/password", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					physiotherapistId,
+					currentPassword: passwordData.currentPassword,
+					newPassword: passwordData.newPassword
+				})
+			})
+
+			const data = await response.json()
+
+			if (!response.ok) {
+				throw new Error(data.error || "Failed to update password")
+			}
+
+			toast.success(t("passwordChanged"))
+			// Clear password fields
+			setPasswordData({
+				currentPassword: "",
+				newPassword: "",
+				confirmPassword: ""
+			})
+		} catch (error: any) {
+			console.error("Error updating password:", error)
+			toast.error(error.message || "Failed to update password")
+		} finally {
+			setUpdatingPassword(false)
+		}
+	}
+	
 	return (
-		<FitproLayout role="physiotherapist">
+		<SidebarSleek role="physiotherapist">
 			<div className="space-y-6">
 				<div>
-					<h1 className="text-3xl font-bold text-white mb-2">Settings</h1>
-					<p className="text-gray-400">Manage your account preferences and security</p>
+					<h1 className="text-3xl font-bold text-white mb-2">{t("settings")}</h1>
+					<p className="text-gray-400">{t("manageAccountPreferences")}</p>
 				</div>
 
 				{/* Account Settings */}
@@ -21,25 +157,56 @@ export default function PhysiotherapistSettings() {
 					<CardHeader>
 						<CardTitle className="text-white flex items-center gap-2">
 							<Shield className="w-5 h-5" />
-							Account Security
+							{t("accountSecurity")}
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-4">
 						<div>
-							<Label className="text-gray-300 mb-2 block">Current Password</Label>
-							<Input type="password" placeholder="Enter current password" className="fitpro-input rounded-xl" />
+							<Label className="text-gray-300 mb-2 block">{t("currentPassword")}</Label>
+							<Input 
+								type="password" 
+								placeholder={t("enterCurrentPassword")} 
+								className="fitpro-input rounded-xl"
+								value={passwordData.currentPassword}
+								onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
+							/>
 						</div>
 						<div>
-							<Label className="text-gray-300 mb-2 block">New Password</Label>
-							<Input type="password" placeholder="Enter new password" className="fitpro-input rounded-xl" />
+							<Label className="text-gray-300 mb-2 block">{t("newPassword")}</Label>
+							<Input 
+								type="password" 
+								placeholder={t("enterNewPassword")} 
+								className="fitpro-input rounded-xl"
+								value={passwordData.newPassword}
+								onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
+							/>
 						</div>
 						<div>
-							<Label className="text-gray-300 mb-2 block">Confirm Password</Label>
-							<Input type="password" placeholder="Confirm new password" className="fitpro-input rounded-xl" />
+							<Label className="text-gray-300 mb-2 block">{t("confirmPassword")}</Label>
+							<Input 
+								type="password" 
+								placeholder={t("confirmNewPassword")} 
+								className="fitpro-input rounded-xl"
+								value={passwordData.confirmPassword}
+								onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
+							/>
 						</div>
-						<Button className="w-full fitpro-button rounded-xl gap-2">
-							<Lock className="w-4 h-4" />
-							Update Password
+						<Button 
+							onClick={handleUpdatePassword}
+							disabled={updatingPassword}
+							className="w-full fitpro-button rounded-xl gap-2"
+						>
+							{updatingPassword ? (
+								<>
+									<Loader2 className="w-4 h-4 animate-spin" />
+									{t("update")}...
+								</>
+							) : (
+								<>
+									<Lock className="w-4 h-4" />
+									{t("updatePassword")}
+								</>
+							)}
 						</Button>
 					</CardContent>
 				</Card>
@@ -49,46 +216,112 @@ export default function PhysiotherapistSettings() {
 					<CardHeader>
 						<CardTitle className="text-white flex items-center gap-2">
 							<Bell className="w-5 h-5" />
-							Notification Preferences
+							{t("notificationPreferences")}
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="space-y-4">
-						<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg">
-							<div>
-								<p className="text-white font-semibold">Patient Messages</p>
-								<p className="text-gray-400 text-sm">Get notified when patients send messages</p>
+						{loading ? (
+							<div className="text-center py-8">
+								<Loader2 className="w-8 h-8 animate-spin mx-auto text-blue-500" />
+								<p className="text-gray-400 mt-2">{t("loading")}...</p>
 							</div>
-							<input type="checkbox" defaultChecked className="w-5 h-5" />
-						</div>
+						) : (
+							<>
+								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+									<div>
+										<p className="text-white font-semibold">{t("patientMessages")}</p>
+										<p className="text-gray-400 text-sm">{t("getNotifiedPatientMessages")}</p>
+									</div>
+									<button
+										onClick={() => handleToggle("patientMessages")}
+										className={`relative w-12 h-6 rounded-full transition-colors ${
+											preferences.patientMessages ? "bg-blue-500" : "bg-gray-600"
+										}`}
+									>
+										<span
+											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+												preferences.patientMessages ? "translate-x-6" : ""
+											}`}
+										/>
+									</button>
+								</div>
 
-						<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg">
-							<div>
-								<p className="text-white font-semibold">Appointment Reminders</p>
-								<p className="text-gray-400 text-sm">Reminder before each appointment</p>
-							</div>
-							<input type="checkbox" defaultChecked className="w-5 h-5" />
-						</div>
+								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+									<div>
+										<p className="text-white font-semibold">{t("appointmentRemindersLabel")}</p>
+										<p className="text-gray-400 text-sm">{t("reminderBeforeAppointment")}</p>
+									</div>
+									<button
+										onClick={() => handleToggle("appointmentReminders")}
+										className={`relative w-12 h-6 rounded-full transition-colors ${
+											preferences.appointmentReminders ? "bg-blue-500" : "bg-gray-600"
+										}`}
+									>
+										<span
+											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+												preferences.appointmentReminders ? "translate-x-6" : ""
+											}`}
+										/>
+									</button>
+								</div>
 
-						<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg">
-							<div>
-								<p className="text-white font-semibold">Progress Alerts</p>
-								<p className="text-gray-400 text-sm">Notify when patient progress is recorded</p>
-							</div>
-							<input type="checkbox" defaultChecked className="w-5 h-5" />
-						</div>
+								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+									<div>
+										<p className="text-white font-semibold">{t("progressAlertsLabel")}</p>
+										<p className="text-gray-400 text-sm">{t("notifyPatientProgress")}</p>
+									</div>
+									<button
+										onClick={() => handleToggle("progressAlerts")}
+										className={`relative w-12 h-6 rounded-full transition-colors ${
+											preferences.progressAlerts ? "bg-blue-500" : "bg-gray-600"
+										}`}
+									>
+										<span
+											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+												preferences.progressAlerts ? "translate-x-6" : ""
+											}`}
+										/>
+									</button>
+								</div>
 
-						<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg">
-							<div>
-								<p className="text-white font-semibold">Email Notifications</p>
-								<p className="text-gray-400 text-sm">Receive daily email summaries</p>
-							</div>
-							<input type="checkbox" className="w-5 h-5" />
-						</div>
+								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+									<div>
+										<p className="text-white font-semibold">{t("emailNotifications")}</p>
+										<p className="text-gray-400 text-sm">{t("receiveDailyEmails")}</p>
+									</div>
+									<button
+										onClick={() => handleToggle("emailNotifications")}
+										className={`relative w-12 h-6 rounded-full transition-colors ${
+											preferences.emailNotifications ? "bg-blue-500" : "bg-gray-600"
+										}`}
+									>
+										<span
+											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+												preferences.emailNotifications ? "translate-x-6" : ""
+											}`}
+										/>
+									</button>
+								</div>
 
-						<Button className="w-full fitpro-button rounded-xl gap-2">
-							<Save className="w-4 h-4" />
-							Save Preferences
-						</Button>
+								<Button 
+									onClick={handleSavePreferences}
+									disabled={saving}
+									className="w-full fitpro-button rounded-xl gap-2"
+								>
+									{saving ? (
+										<>
+											<Loader2 className="w-4 h-4 animate-spin" />
+											{t("save")}...
+										</>
+									) : (
+										<>
+											<Save className="w-4 h-4" />
+											{t("savePreferences")}
+										</>
+									)}
+								</Button>
+							</>
+						)}
 					</CardContent>
 				</Card>
 
@@ -97,7 +330,7 @@ export default function PhysiotherapistSettings() {
 					<CardHeader>
 						<CardTitle className="text-white flex items-center gap-2">
 							<Eye className="w-5 h-5" />
-							Privacy Settings
+							{t("privacySettings")}
 						</CardTitle>
 					</CardHeader>
 				</Card>
@@ -105,16 +338,17 @@ export default function PhysiotherapistSettings() {
 				{/* Danger Zone */}
 				<Card className="fitpro-card border-red-500/20">
 					<CardHeader>
-						<CardTitle className="text-red-400">Danger Zone</CardTitle>
+						<CardTitle className="text-red-400">{t("dangerZone")}</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<Button variant="outline" className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-xl">
-							Delete Account
+							{t("deleteAccount")}
 						</Button>
 					</CardContent>
 				</Card>
 			</div>
-		</FitproLayout>
+		</SidebarSleek>
 	)
 }
+
 

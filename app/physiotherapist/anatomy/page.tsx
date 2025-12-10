@@ -1,7 +1,7 @@
 "use client"
 
 import { Suspense, useState } from "react"
-import FitproLayout from "@/components/fitpro-layout"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -64,7 +64,7 @@ export default function AnatomyToolPage() {
 
   return (
     <AuthGuard>
-      <FitproLayout role="physiotherapist">
+      <SidebarSleek role="physiotherapist">
         <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
           {/* Modern Header with Glassmorphism */}
           <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#10B2E3]/10 via-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-white/10 p-8 mb-6">
@@ -80,10 +80,10 @@ export default function AnatomyToolPage() {
                   </div>
                   <div>
                     <h1 className="text-4xl font-black text-white tracking-tight">
-                      Anatomy 3D Viewer
+                      {t("anatomy3DViewer")}
                     </h1>
                     <p className="text-cyan-400 mt-1 font-medium">
-                      بینینی مۆدێلی سێ ڕەهەندی ئیسکەلێتی مرۆڤ
+                      {t("view3DSkeletonModel")}
                     </p>
                   </div>
                 </div>
@@ -91,7 +91,7 @@ export default function AnatomyToolPage() {
                   <div className="px-4 py-2 rounded-xl bg-green-500/10 border border-green-500/20 backdrop-blur-sm">
                     <div className="flex items-center gap-2">
                       <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse" />
-                      <span className="text-green-400 text-sm font-semibold">LIVE</span>
+                      <span className="text-green-400 text-sm font-semibold">{t("live")}</span>
                     </div>
                   </div>
                 </div>
@@ -148,7 +148,7 @@ export default function AnatomyToolPage() {
                   {/* Corner Info Badge */}
                   <div className="absolute top-4 left-4 z-20">
                     <div className="px-4 py-2 rounded-xl bg-black/40 backdrop-blur-md border border-white/10">
-                      <p className="text-cyan-400 text-xs font-bold">3D MODEL LOADED</p>
+                      <p className="text-cyan-400 text-xs font-bold">{t("modelLoaded")}</p>
                     </div>
                   </div>
                 </div>
@@ -165,7 +165,7 @@ export default function AnatomyToolPage() {
                       <Eye className="w-4 h-4 text-white" />
                     </div>
                     <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent font-bold">
-                      کۆنترۆڵی بینین
+                      {t("viewControl")}
                     </span>
                   </CardTitle>
                 </CardHeader>
@@ -175,7 +175,7 @@ export default function AnatomyToolPage() {
                     <div className="flex justify-between items-center">
                       <label className="text-sm text-slate-300 font-semibold flex items-center gap-2">
                         <RotateCw className="w-4 h-4 text-cyan-400" />
-                        سوڕانەوە
+                        {t("rotation")}
                       </label>
                       <span className="px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-bold">
                         {rotation}°
@@ -196,7 +196,7 @@ export default function AnatomyToolPage() {
                     <div className="flex justify-between items-center">
                       <label className="text-sm text-slate-300 font-semibold flex items-center gap-2">
                         <Eye className="w-4 h-4 text-blue-400" />
-                        زووم
+                        {t("zoom")}
                       </label>
                       <span className="px-3 py-1 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400 text-sm font-bold">
                         {zoom}%
@@ -218,7 +218,7 @@ export default function AnatomyToolPage() {
                     className="w-full bg-gradient-to-r from-slate-700 to-slate-800 hover:from-slate-600 hover:to-slate-700 text-white border border-white/10 shadow-lg transition-all duration-300 hover:scale-105"
                   >
                     <Home className="w-4 h-4 mr-2" />
-                    ڕێکخستنەوە
+                    {t("resetView")}
                   </Button>
                 </CardContent>
               </Card>
@@ -227,24 +227,24 @@ export default function AnatomyToolPage() {
               <Card className="border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-800/80 backdrop-blur-xl shadow-xl">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent font-bold">
-                    زانیاری مۆدێل
+                    {t("modelInfo")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-3">
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 text-xs mb-1">ناو</p>
-                    <p className="text-white font-bold">Skeleton Pre-Cut</p>
+                    <p className="text-slate-400 text-xs mb-1">{t("modelName")}</p>
+                    <p className="text-white font-bold">{t("skeletonPreCut")}</p>
                   </div>
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 text-xs mb-1">فۆرمات</p>
+                    <p className="text-slate-400 text-xs mb-1">{t("format")}</p>
                     <p className="text-white font-bold">GLB (3D Binary)</p>
                   </div>
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 text-xs mb-1">جۆر</p>
-                    <p className="text-white font-bold">Human Skeleton</p>
+                    <p className="text-slate-400 text-xs mb-1">{t("type")}</p>
+                    <p className="text-white font-bold">{t("humanSkeleton")}</p>
                   </div>
                   <div className="p-3 rounded-xl bg-white/5 border border-white/10">
-                    <p className="text-slate-400 text-xs mb-1">قەبارە</p>
+                    <p className="text-slate-400 text-xs mb-1">{t("size")}</p>
                     <p className="text-cyan-400 font-bold">11.4 MB</p>
                   </div>
                 </CardContent>
@@ -254,7 +254,7 @@ export default function AnatomyToolPage() {
               <Card className="border-white/10 bg-gradient-to-br from-purple-900/30 to-pink-900/30 backdrop-blur-xl shadow-xl">
                 <CardHeader className="pb-3">
                   <CardTitle className="text-lg bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-bold">
-                    ڕێنمایی
+                    {t("instructions")}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2 text-sm">
@@ -263,8 +263,8 @@ export default function AnatomyToolPage() {
                       <RotateCw className="w-3 h-3 text-purple-400" />
                     </div>
                     <div>
-                      <p className="text-white font-semibold">سوڕانەوە</p>
-                      <p className="text-slate-400 text-xs">slider بەکاربهێنە بۆ سوڕاندنی مۆدێل</p>
+                      <p className="text-white font-semibold">{t("rotation")}</p>
+                      <p className="text-slate-400 text-xs">{t("useSliderToRotate")}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors">
@@ -272,8 +272,8 @@ export default function AnatomyToolPage() {
                       <Eye className="w-3 h-3 text-blue-400" />
                     </div>
                     <div>
-                      <p className="text-white font-semibold">زووم</p>
-                      <p className="text-slate-400 text-xs">slider بەکاربهێنە بۆ نزیک و دوورکردنەوە</p>
+                      <p className="text-white font-semibold">{t("zoom")}</p>
+                      <p className="text-slate-400 text-xs">{t("useSliderToZoom")}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2 p-2 rounded-lg hover:bg-white/5 transition-colors">
@@ -281,8 +281,8 @@ export default function AnatomyToolPage() {
                       <Home className="w-3 h-3 text-green-400" />
                     </div>
                     <div>
-                      <p className="text-white font-semibold">ڕێکخستنەوە</p>
-                      <p className="text-slate-400 text-xs">دوگمەی Reset بۆ گەڕانەوە بۆ دۆخی یەکەم</p>
+                      <p className="text-white font-semibold">{t("resetView")}</p>
+                      <p className="text-slate-400 text-xs">{t("clickButtonToReset")}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -290,9 +290,10 @@ export default function AnatomyToolPage() {
             </div>
           </div>
         </div>
-      </FitproLayout>
+      </SidebarSleek>
     </AuthGuard>
   )
 }
+
 
 

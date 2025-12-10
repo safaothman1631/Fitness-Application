@@ -2,7 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import FitproLayout from "@/components/fitpro-layout"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import { SendButton } from "@/components/buttons"
 import { HelpCircle, Mail, Phone, Clock, ChevronDown } from "lucide-react"
 import { useState } from "react"
@@ -39,7 +39,7 @@ export default function PhysiotherapistHelp() {
 	]
 
 	return (
-		<FitproLayout role="physiotherapist">
+		<SidebarSleek role="physiotherapist">
 			<div className="space-y-6">
 				<div>
 					<h1 className="text-3xl font-bold text-white mb-2">Help & Support</h1>
@@ -135,7 +135,8 @@ export default function PhysiotherapistHelp() {
 					</CardContent>
 				</Card>
 			</div>
-		</FitproLayout>
+		</SidebarSleek>
 	)
 }
+
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useLanguage } from "@/contexts/language-context"
-import FitproLayout from "@/components/fitpro-layout"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -94,7 +94,7 @@ export default function UniRigDemoPage() {
 
   return (
     <AuthGuard>
-      <FitproLayout role="physiotherapist">
+      <SidebarSleek role="physiotherapist">
         <div className="space-y-6">
           {/* Header */}
           <div>
@@ -318,7 +318,8 @@ export default function UniRigDemoPage() {
             </div>
           </div>
         </div>
-      </FitproLayout>
+      </SidebarSleek>
     </AuthGuard>
   )
 }
+

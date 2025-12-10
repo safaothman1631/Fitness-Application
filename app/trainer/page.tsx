@@ -14,6 +14,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
 import { getPlan, savePlan, planSummary } from "@/lib/plans"
 import { getMealSubmissions, getWorkoutSubmissions } from "@/lib/submissions"
 import { toast } from "sonner"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
 
 interface Trainee {
   id: string
@@ -28,37 +30,45 @@ interface Trainee {
 }
 
 export default function TrainerPage() {
+  const [loading, setLoading] = useState(true)
+  const [trainerId, setTrainerId] = useState<string | null>(null)
   const [mealSubs, setMealSubs] = useState<any[]>([])
   const [workoutSubs, setWorkoutSubs] = useState<any[]>([])
+  const [trainees, setTrainees] = useState<Trainee[]>([])
+  
   useEffect(() => {
-    // Load recent submissions (client-only)
-    setMealSubs(getMealSubmissions().slice(-10).reverse())
-    setWorkoutSubs(getWorkoutSubmissions().slice(-10).reverse())
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          // Fetch trainer profile
+          const userResponse = await fetch(`/api/users?email=${user.email}`)
+          if (userResponse.ok) {
+            const users = await userResponse.json()
+            const currentUser = users.find((u: any) => u.email === user.email)
+            const uid = currentUser?.id || currentUser?.uid || user.uid
+            setTrainerId(uid)
+
+            // Fetch trainees for this trainer
+            const traineesResponse = await fetch(`/api/trainees?trainerId=${uid}`)
+            if (traineesResponse.ok) {
+              const traineesData = await traineesResponse.json()
+              setTrainees(traineesData)
+            }
+
+            // Load recent submissions (client-only)
+            setMealSubs(getMealSubmissions().slice(-10).reverse())
+            setWorkoutSubs(getWorkoutSubmissions().slice(-10).reverse())
+          }
+        } catch (error) {
+          console.error('Error fetching trainer data:', error)
+          toast.error('Failed to load trainer data')
+        } finally {
+          setLoading(false)
+        }
+      }
+    })
+    return () => unsubscribe()
   }, [])
-  const [trainees, setTrainees] = useState<Trainee[]>([
-    {
-      id: "1",
-      name: "Muhammad Ali",
-      email: "ali@example.com",
-      phone: "+92-300-1234567",
-      goal: "Build Muscle",
-      joinDate: "2024-01-15",
-      progress: 65,
-      sessionsCompleted: 12,
-      isActive: true,
-    },
-    {
-      id: "2",
-      name: "Aisha Khan",
-      email: "aisha@example.com",
-      phone: "+92-300-7654321",
-      goal: "Weight Loss",
-      joinDate: "2024-02-01",
-      progress: 45,
-      sessionsCompleted: 8,
-      isActive: true,
-    },
-  ])
 
   const [searchTrainee, setSearchTrainee] = useState("")
   const [modalOpen, setModalOpen] = useState(false)
@@ -95,26 +105,59 @@ export default function TrainerPage() {
     setModalOpen(true)
   }
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!formData.name || !formData.email) {
-      alert("Please fill all required fields")
+      toast.error("Please fill all required fields")
       return
     }
 
-    if (editingId) {
-      setTrainees(trainees.map((t) => (t.id === editingId ? { ...t, ...formData } : t)))
-    } else {
-      const newTrainee: Trainee = {
-        id: Date.now().toString(),
-        ...formData,
-        joinDate: new Date().toISOString().split("T")[0],
-        progress: 0,
-        sessionsCompleted: 0,
-        isActive: true,
-      }
-      setTrainees([...trainees, newTrainee])
+    if (!trainerId) {
+      toast.error("Trainer ID not found")
+      return
     }
-    setModalOpen(false)
+
+    try {
+      if (editingId) {
+        // Update existing trainee
+        const response = await fetch(`/api/trainees/${editingId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ ...formData, trainerId })
+        })
+        if (response.ok) {
+          const updated = await response.json()
+          setTrainees(trainees.map((t) => (t.id === editingId ? updated : t)))
+          toast.success("Trainee updated successfully")
+        } else {
+          toast.error("Failed to update trainee")
+        }
+      } else {
+        // Create new trainee
+        const response = await fetch('/api/trainees', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            ...formData,
+            trainerId,
+            joinDate: new Date().toISOString().split("T")[0],
+            progress: 0,
+            sessionsCompleted: 0,
+            isActive: true
+          })
+        })
+        if (response.ok) {
+          const newTrainee = await response.json()
+          setTrainees([...trainees, newTrainee])
+          toast.success("Trainee added successfully")
+        } else {
+          toast.error("Failed to add trainee")
+        }
+      }
+      setModalOpen(false)
+    } catch (error) {
+      console.error('Error saving trainee:', error)
+      toast.error("Failed to save trainee")
+    }
   }
 
   const handleDeleteClick = (trainee: Trainee) => {
@@ -126,10 +169,16 @@ export default function TrainerPage() {
     if (!traineeToDelete) return
     setIsDeleting(true)
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      setTrainees(trainees.filter((t) => t.id !== traineeToDelete.id))
-      toast.success("Trainee deleted successfully")
-      setDeleteDialogOpen(false)
+      const response = await fetch(`/api/trainees/${traineeToDelete.id}`, {
+        method: 'DELETE'
+      })
+      if (response.ok) {
+        setTrainees(trainees.filter((t) => t.id !== traineeToDelete.id))
+        toast.success("Trainee deleted successfully")
+        setDeleteDialogOpen(false)
+      } else {
+        toast.error("Failed to delete trainee")
+      }
     } catch (error) {
       toast.error("Failed to delete trainee")
       console.error(error)
@@ -167,6 +216,21 @@ export default function TrainerPage() {
     savePlan({ userId: planUserId, date: today, workouts: workoutItems, meals: mealItems })
     toast.success("Plan saved")
     setPlanOpen(false)
+  }
+
+  if (loading) {
+    return (
+      <AuthGuard requiredRole="trainer">
+        <FitproLayout role="trainer">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="inline-block w-16 h-16 border-4 border-rose-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-400">Loading trainer dashboard...</p>
+            </div>
+          </div>
+        </FitproLayout>
+      </AuthGuard>
+    )
   }
 
   return (
@@ -229,27 +293,6 @@ export default function TrainerPage() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Quick Actions */}
-        <Card className="trainer-card">
-          <CardContent className="p-6">
-            <h2 className="text-xl font-bold text-white mb-4">Quick Actions</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-              <Button className="trainer-button w-full gap-2" onClick={handleAdd}>
-                <Plus className="w-5 h-5" />
-                Add Trainee
-              </Button>
-              <Button className="trainer-button w-full gap-2">
-                <Target className="w-5 h-5" />
-                Set Goals
-              </Button>
-              <Button className="trainer-button w-full gap-2">
-                <Award className="w-5 h-5" />
-                View Reports
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
 
         {/* Recent Submissions */}
         <Card className="trainer-card">

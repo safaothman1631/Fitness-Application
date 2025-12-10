@@ -1,13 +1,16 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useLanguage } from "@/contexts/language-context"
 import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
-import FitproLayout from "@/components/fitpro-layout"
-import { LineChart, Plus, Trash2, Search, TrendingUp, Activity } from "lucide-react"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
+import { LineChart, Plus, Trash2, Search, TrendingUp, Activity, Loader2, Calendar, Users, Gauge, Dumbbell, Heart, FileText, Save, X } from "lucide-react"
+import { dbService } from "@/lib/db-service"
+import { toast } from "sonner"
 
 interface Patient {
 	id: string
@@ -27,44 +30,13 @@ interface ProgressRecord {
 }
 
 export default function PhysiotherapistProgressPage() {
-	const [patients] = useState<Patient[]>([
-		{ id: "1", name: "Ali Khan", condition: "Back Pain" },
-		{ id: "2", name: "Fatima Ahmed", condition: "Knee Injury" },
-	])
+	const { t } = useLanguage()
+	// Mock physiotherapist ID - replace with actual auth
+	const physiotherapistId = "physio-001"
 
-	const [progressRecords, setProgressRecords] = useState<ProgressRecord[]>([
-		{
-			id: "1",
-			patientId: "1",
-			patientName: "Ali Khan",
-			date: "2024-11-08",
-			mobility: 65,
-			strength: 70,
-			pain: 35,
-			notes: "Good improvement in lower back flexibility",
-		},
-		{
-			id: "2",
-			patientId: "1",
-			patientName: "Ali Khan",
-			date: "2024-11-01",
-			mobility: 55,
-			strength: 60,
-			pain: 55,
-			notes: "Initial assessment completed",
-		},
-		{
-			id: "3",
-			patientId: "2",
-			patientName: "Fatima Ahmed",
-			date: "2024-11-07",
-			mobility: 45,
-			strength: 40,
-			pain: 60,
-			notes: "Started knee rehabilitation exercises",
-		},
-	])
-
+	const [patients, setPatients] = useState<Patient[]>([])
+	const [progressRecords, setProgressRecords] = useState<ProgressRecord[]>([])
+	const [loading, setLoading] = useState(true)
 	const [searchPatient, setSearchPatient] = useState("")
 	const [selectedPatientId, setSelectedPatientId] = useState<string | null>(null)
 	const [progressModalOpen, setProgressModalOpen] = useState(false)
@@ -77,6 +49,29 @@ export default function PhysiotherapistProgressPage() {
 		pain: 50,
 		notes: "",
 	})
+
+	// Load patients and progress records
+	useEffect(() => {
+		loadData()
+	}, [])
+
+	const loadData = async () => {
+		try {
+			setLoading(true)
+			// Load patients assigned to this physiotherapist
+			const patientsData = await dbService.getPatients(physiotherapistId)
+			setPatients(patientsData)
+
+			// Load all progress records for this physiotherapist
+			const progressData = await dbService.getProgress(physiotherapistId)
+			setProgressRecords(progressData)
+		} catch (error: any) {
+			console.error("Error loading data:", error)
+			toast.error(error.message || "Failed to load data")
+		} finally {
+			setLoading(false)
+		}
+	}
 
 	const filteredPatients = patients.filter((p) => p.name.toLowerCase().includes(searchPatient.toLowerCase()))
 
@@ -92,30 +87,55 @@ export default function PhysiotherapistProgressPage() {
 		setProgressModalOpen(true)
 	}
 
-	const handleSaveProgress = () => {
+	const handleSaveProgress = async () => {
 		if (!progressForm.patientId) {
-			alert("Please select a patient")
+			toast.error("Please select a patient")
 			return
 		}
 
-		const patientName = patients.find((p) => p.id === progressForm.patientId)?.name || "Unknown"
-		const newRecord: ProgressRecord = {
-			id: Date.now().toString(),
-			patientId: progressForm.patientId,
-			patientName: patientName,
-			date: progressForm.date,
-			mobility: progressForm.mobility,
-			strength: progressForm.strength,
-			pain: progressForm.pain,
-			notes: progressForm.notes,
+		try {
+			const patientName = patients.find((p) => p.id === progressForm.patientId)?.name || "Unknown"
+			
+			const newRecord = await dbService.createProgress({
+				physiotherapistId,
+				patientId: progressForm.patientId,
+				patientName,
+				date: progressForm.date,
+				mobility: progressForm.mobility,
+				strength: progressForm.strength,
+				pain: progressForm.pain,
+				notes: progressForm.notes,
+			})
+
+			setProgressRecords([newRecord, ...progressRecords])
+			setProgressModalOpen(false)
+			toast.success("Progress record saved successfully")
+			
+			// Reset form
+			setProgressForm({
+				patientId: "",
+				date: new Date().toISOString().split("T")[0],
+				mobility: 50,
+				strength: 50,
+				pain: 50,
+				notes: "",
+			})
+		} catch (error: any) {
+			console.error("Error saving progress:", error)
+			toast.error(error.message || "Failed to save progress record")
 		}
-		setProgressRecords([...progressRecords, newRecord])
-		setProgressModalOpen(false)
 	}
 
-	const handleDeleteProgress = (id: string) => {
-		if (confirm("Delete this progress record?")) {
+	const handleDeleteProgress = async (id: string) => {
+		if (!confirm("Delete this progress record?")) return
+
+		try {
+			await dbService.deleteProgress(id)
 			setProgressRecords(progressRecords.filter((r) => r.id !== id))
+			toast.success("Progress record deleted")
+		} catch (error: any) {
+			console.error("Error deleting progress:", error)
+			toast.error(error.message || "Failed to delete progress record")
 		}
 	}
 
@@ -124,13 +144,18 @@ export default function PhysiotherapistProgressPage() {
 	}
 
 	return (
-		<FitproLayout role="physiotherapist">
-			<div className="space-y-6">
-				{/* Header */}
-				<div>
-					<h1 className="text-3xl font-bold text-white mb-2">Patient Progress Tracking</h1>
-					<p className="text-gray-400">Monitor and record patient recovery progress</p>
+		<SidebarSleek role="physiotherapist">
+			{loading ? (
+				<div className="flex items-center justify-center min-h-screen">
+					<Loader2 className="w-8 h-8 animate-spin text-emerald-500" />
 				</div>
+			) : (
+				<div className="space-y-6">
+					{/* Header */}
+					<div>
+						<h1 className="text-3xl font-bold text-white mb-2">{t("progressTracking")}</h1>
+						<p className="text-gray-400">{t("monitorRecovery")}</p>
+					</div>
 
 				{/* Stats */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -138,7 +163,7 @@ export default function PhysiotherapistProgressPage() {
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between">
 								<div>
-									<p className="text-gray-400 text-sm mb-1">Total Records</p>
+									<p className="text-gray-400 text-sm mb-1">{t("totalRecords")}</p>
 									<p className="text-3xl font-bold text-white">{progressRecords.length}</p>
 								</div>
 								<LineChart className="w-10 h-10 text-blue-500" />
@@ -150,7 +175,7 @@ export default function PhysiotherapistProgressPage() {
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between">
 								<div>
-									<p className="text-gray-400 text-sm mb-1">Patients Tracked</p>
+									<p className="text-gray-400 text-sm mb-1">{t("patientsTracked")}</p>
 									<p className="text-3xl font-bold text-white">{new Set(progressRecords.map((r) => r.patientId)).size}</p>
 								</div>
 								<Activity className="w-10 h-10 text-green-500" />
@@ -162,7 +187,7 @@ export default function PhysiotherapistProgressPage() {
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between">
 								<div>
-									<p className="text-gray-400 text-sm mb-1">Avg Improvement</p>
+									<p className="text-gray-400 text-sm mb-1">{t("avgImprovement")}</p>
 									<p className="text-3xl font-bold text-yellow-500">+18%</p>
 								</div>
 								<TrendingUp className="w-10 h-10 text-yellow-500" />
@@ -179,7 +204,7 @@ export default function PhysiotherapistProgressPage() {
 								<Search className="absolute left-3 top-3 w-5 h-5 text-gray-500" />
 								<Input
 									type="text"
-									placeholder="Search patients..."
+									placeholder={t("searchPatients")}
 									value={searchPatient}
 									onChange={(e) => setSearchPatient(e.target.value)}
 									className="fitpro-input pl-10 rounded-xl"
@@ -187,7 +212,7 @@ export default function PhysiotherapistProgressPage() {
 							</div>
 							<Button className="fitpro-button rounded-xl gap-2" onClick={() => setProgressModalOpen(true)}>
 								<Plus className="w-4 h-4" />
-								Add Progress
+								{t("addProgressRecord")}
 							</Button>
 						</div>
 
@@ -221,7 +246,7 @@ export default function PhysiotherapistProgressPage() {
 
 															<div className="grid grid-cols-3 gap-4 mb-3">
 																<div>
-																	<p className="text-gray-400 text-xs mb-2">Mobility</p>
+																	<p className="text-gray-400 text-xs mb-2">{t("mobilityLevel")}</p>
 																	<div className="flex items-center gap-2">
 																		<div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
 																			<div className="h-full bg-green-500" style={{ width: `${record.mobility}%` }}></div>
@@ -230,7 +255,7 @@ export default function PhysiotherapistProgressPage() {
 																	</div>
 																</div>
 																<div>
-																	<p className="text-gray-400 text-xs mb-2">Strength</p>
+																	<p className="text-gray-400 text-xs mb-2">{t("strengthLevel")}</p>
 																	<div className="flex items-center gap-2">
 																		<div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
 																			<div className="h-full bg-blue-500" style={{ width: `${record.strength}%` }}></div>
@@ -239,7 +264,7 @@ export default function PhysiotherapistProgressPage() {
 																	</div>
 																</div>
 																<div>
-																	<p className="text-gray-400 text-xs mb-2">Pain Level</p>
+																	<p className="text-gray-400 text-xs mb-2">{t("painLevel")}</p>
 																	<div className="flex items-center gap-2">
 																		<div className="flex-1 h-2 bg-slate-700 rounded-full overflow-hidden">
 																			<div className="h-full bg-red-500" style={{ width: `${record.pain}%` }}></div>
@@ -260,7 +285,7 @@ export default function PhysiotherapistProgressPage() {
 									)
 								})
 							) : (
-								<p className="text-gray-400 text-center py-8">No patients found</p>
+								<p className="text-gray-400 text-center py-8">{t("noPatients")}</p>
 							)}
 						</div>
 					</CardContent>
@@ -268,20 +293,32 @@ export default function PhysiotherapistProgressPage() {
 
 				{/* Progress Modal */}
 				<Dialog open={progressModalOpen} onOpenChange={setProgressModalOpen}>
-					<DialogContent className="bg-slate-900 border-slate-700">
-						<DialogHeader>
-							<DialogTitle className="text-white">Add Progress Record</DialogTitle>
-							<DialogDescription className="text-gray-400">Record patient's recovery progress</DialogDescription>
+					<DialogContent className="bg-slate-900 border-slate-700 max-w-2xl max-h-[90vh] overflow-y-auto">
+						<DialogHeader className="space-y-3">
+							<div className="flex items-center gap-3">
+								<div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20">
+									<Activity className="w-6 h-6 text-blue-400" />
+								</div>
+								<div>
+									<DialogTitle className="text-xl text-white">{t("addProgressRecord")}</DialogTitle>
+									<DialogDescription className="text-gray-400 text-sm">{t("recordRecoveryProgress")}</DialogDescription>
+								</div>
+							</div>
 						</DialogHeader>
-						<div className="space-y-4">
-							<div>
-								<Label className="text-gray-300 mb-2 block">Patient</Label>
+
+						<div className="space-y-6 py-4">
+							{/* Patient Selection */}
+							<div className="space-y-2">
+								<Label className="text-gray-300 flex items-center gap-2">
+									<Users className="w-4 h-4 text-blue-400" />
+									{t("patient")}
+								</Label>
 								<select
 									value={progressForm.patientId}
 									onChange={(e) => setProgressForm({ ...progressForm, patientId: e.target.value })}
-									className="fitpro-input rounded-xl w-full py-2"
+									className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white focus:outline-none focus:border-blue-500 transition-colors"
 								>
-									<option value="">Select a patient</option>
+									<option value="">{t("selectPatient")}</option>
 									{patients.map((p) => (
 										<option key={p.id} value={p.id}>
 											{p.name} - {p.condition}
@@ -290,8 +327,12 @@ export default function PhysiotherapistProgressPage() {
 								</select>
 							</div>
 
-							<div>
-								<Label className="text-gray-300 mb-2 block">Date</Label>
+							{/* Date Selection */}
+							<div className="space-y-2">
+								<Label className="text-gray-300 flex items-center gap-2">
+									<Calendar className="w-4 h-4 text-blue-400" />
+									Date
+								</Label>
 								<Input
 									type="date"
 									value={progressForm.date}
@@ -300,65 +341,131 @@ export default function PhysiotherapistProgressPage() {
 								/>
 							</div>
 
-							<div>
-								<Label className="text-gray-300 mb-2 block">Mobility {progressForm.mobility}%</Label>
-								<input
-									type="range"
-									min="0"
-									max="100"
-									value={progressForm.mobility}
-									onChange={(e) => setProgressForm({ ...progressForm, mobility: parseInt(e.target.value) })}
-									className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
-								/>
+							{/* Metrics Section */}
+							<div className="space-y-5 p-4 rounded-xl bg-slate-800/50 border border-slate-700">
+								<h3 className="text-sm font-medium text-gray-300 flex items-center gap-2">
+									<Gauge className="w-4 h-4 text-blue-400" />
+									Progress Metrics
+								</h3>
+
+								{/* Mobility */}
+								<div className="space-y-3">
+									<div className="flex items-center justify-between">
+										<Label className="text-gray-300 flex items-center gap-2">
+											<Activity className="w-4 h-4 text-green-400" />
+											Mobility
+										</Label>
+										<span className="text-2xl font-bold text-green-400">{progressForm.mobility}%</span>
+									</div>
+									<input
+										type="range"
+										min="0"
+										max="100"
+										value={progressForm.mobility}
+										onChange={(e) => setProgressForm({ ...progressForm, mobility: parseInt(e.target.value) })}
+										className="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer slider-green"
+										style={{
+											background: `linear-gradient(to right, #10b981 0%, #10b981 ${progressForm.mobility}%, #334155 ${progressForm.mobility}%, #334155 100%)`
+										}}
+									/>
+									<div className="flex justify-between text-xs text-gray-500">
+										<span>Low</span>
+										<span>Excellent</span>
+									</div>
+								</div>
+
+								{/* Strength */}
+								<div className="space-y-3">
+									<div className="flex items-center justify-between">
+										<Label className="text-gray-300 flex items-center gap-2">
+											<Dumbbell className="w-4 h-4 text-blue-400" />
+											Strength
+										</Label>
+										<span className="text-2xl font-bold text-blue-400">{progressForm.strength}%</span>
+									</div>
+									<input
+										type="range"
+										min="0"
+										max="100"
+										value={progressForm.strength}
+										onChange={(e) => setProgressForm({ ...progressForm, strength: parseInt(e.target.value) })}
+										className="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer slider-blue"
+										style={{
+											background: `linear-gradient(to right, #3b82f6 0%, #3b82f6 ${progressForm.strength}%, #334155 ${progressForm.strength}%, #334155 100%)`
+										}}
+									/>
+									<div className="flex justify-between text-xs text-gray-500">
+										<span>Weak</span>
+										<span>Strong</span>
+									</div>
+								</div>
+
+								{/* Pain Level */}
+								<div className="space-y-3">
+									<div className="flex items-center justify-between">
+										<Label className="text-gray-300 flex items-center gap-2">
+											<Heart className="w-4 h-4 text-red-400" />
+											Pain Level
+										</Label>
+										<span className="text-2xl font-bold text-red-400">{progressForm.pain}%</span>
+									</div>
+									<input
+										type="range"
+										min="0"
+										max="100"
+										value={progressForm.pain}
+										onChange={(e) => setProgressForm({ ...progressForm, pain: parseInt(e.target.value) })}
+										className="w-full h-3 bg-slate-700 rounded-lg appearance-none cursor-pointer slider-red"
+										style={{
+											background: `linear-gradient(to right, #ef4444 0%, #ef4444 ${progressForm.pain}%, #334155 ${progressForm.pain}%, #334155 100%)`
+										}}
+									/>
+									<div className="flex justify-between text-xs text-gray-500">
+										<span>No Pain</span>
+										<span>Severe</span>
+									</div>
+								</div>
 							</div>
 
-							<div>
-								<Label className="text-gray-300 mb-2 block">Strength {progressForm.strength}%</Label>
-								<input
-									type="range"
-									min="0"
-									max="100"
-									value={progressForm.strength}
-									onChange={(e) => setProgressForm({ ...progressForm, strength: parseInt(e.target.value) })}
-									className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
-								/>
-							</div>
-
-							<div>
-								<Label className="text-gray-300 mb-2 block">Pain Level {progressForm.pain}%</Label>
-								<input
-									type="range"
-									min="0"
-									max="100"
-									value={progressForm.pain}
-									onChange={(e) => setProgressForm({ ...progressForm, pain: parseInt(e.target.value) })}
-									className="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer"
-								/>
-							</div>
-
-							<div>
-								<Label className="text-gray-300 mb-2 block">Notes</Label>
-								<Input
+							{/* Clinical Notes */}
+							<div className="space-y-2">
+								<Label className="text-gray-300 flex items-center gap-2">
+									<FileText className="w-4 h-4 text-blue-400" />
+									{t("clinicalNotes")}
+								</Label>
+								<textarea
 									value={progressForm.notes}
 									onChange={(e) => setProgressForm({ ...progressForm, notes: e.target.value })}
-									placeholder="Add clinical notes..."
-									className="fitpro-input rounded-xl"
+									placeholder={t("enterNotes")}
+									className="w-full px-4 py-3 rounded-xl bg-slate-800 border border-slate-700 text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 min-h-[100px] resize-none"
+									rows={4}
 								/>
 							</div>
 						</div>
 
-						<DialogFooter>
-							<Button variant="outline" onClick={() => setProgressModalOpen(false)} className="border-slate-600">
-								Cancel
+						<DialogFooter className="gap-2">
+							<Button 
+								variant="outline" 
+								onClick={() => setProgressModalOpen(false)} 
+								className="border-slate-600 hover:bg-slate-800"
+							>
+								<X className="w-4 h-4 mr-2" />
+								{t("cancel")}
 							</Button>
-							<Button className="fitpro-button" onClick={handleSaveProgress}>
-								Save Record
+							<Button 
+								className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700" 
+								onClick={handleSaveProgress}
+							>
+								<Save className="w-4 h-4 mr-2" />
+								{t("saveRecord")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
-			</div>
-		</FitproLayout>
+				</div>
+			)}
+		</SidebarSleek>
 	)
 }
+
 

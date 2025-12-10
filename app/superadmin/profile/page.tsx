@@ -8,11 +8,111 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { User, Mail, Phone, MapPin, Calendar, Shield, Crown, Save, Camera, Lock, Zap } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
 
 export default function SuperAdminProfile() {
   const { t } = useLanguage()
   const [editing, setEditing] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [userData, setUserData] = useState<any>(null)
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    phone: '',
+    location: '',
+    department: '',
+    timezone: '',
+    language: 'en'
+  })
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          const response = await fetch(`/api/users?email=${user.email}`)
+          if (response.ok) {
+            const users = await response.json()
+            const currentUser = users.find((u: any) => u.email === user.email)
+            if (currentUser) {
+              setUserData(currentUser)
+              setFormData({
+                firstName: currentUser.firstName || currentUser.name?.split(' ')[0] || '',
+                lastName: currentUser.lastName || currentUser.name?.split(' ').slice(1).join(' ') || '',
+                phone: currentUser.phone || '',
+                location: currentUser.location || '',
+                department: currentUser.department || 'System Administration',
+                timezone: currentUser.timezone || 'GMT+3 (Baghdad)',
+                language: currentUser.language || 'en'
+              })
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error)
+        } finally {
+          setLoading(false)
+        }
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const handleSave = async () => {
+    if (!userData) return
+    
+    setSaving(true)
+    try {
+      const response = await fetch(`/api/users?id=${userData.id || userData.uid}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          phone: formData.phone,
+          location: formData.location,
+          department: formData.department,
+          timezone: formData.timezone,
+          language: formData.language
+        })
+      })
+
+      if (response.ok) {
+        alert('✅ Profile updated successfully!')
+        setEditing(false)
+        // Refresh data
+        const updatedResponse = await fetch(`/api/users?email=${userData.email}`)
+        if (updatedResponse.ok) {
+          const users = await updatedResponse.json()
+          const updated = users.find((u: any) => u.email === userData.email)
+          if (updated) setUserData(updated)
+        }
+      } else {
+        alert('❌ Failed to update profile')
+      }
+    } catch (error) {
+      console.error('Error saving profile:', error)
+      alert('❌ Error saving profile')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <AuthGuard requiredRole="superadmin">
+        <SidebarSleek role="superadmin">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="inline-block w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-400">{t("loading")}...</p>
+            </div>
+          </div>
+        </SidebarSleek>
+      </AuthGuard>
+    )
+  }
 
   return (
     <AuthGuard requiredRole="superadmin">
@@ -42,8 +142,8 @@ export default function SuperAdminProfile() {
                   </button>
                 </div>
                 <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-2xl font-bold text-white mb-1">{t("systemAdministrator")}</h2>
-                  <p className="text-gray-400 mb-4">admin@fitpro.com</p>
+                  <h2 className="text-2xl font-bold text-white mb-1">{userData?.name || `${formData.firstName} ${formData.lastName}`.trim() || t("systemAdministrator")}</h2>
+                  <p className="text-gray-400 mb-4">{userData?.email || 'admin@fitpro.com'}</p>
                   <div className="flex flex-wrap gap-2 justify-center md:justify-start">
                     <span className="px-4 py-2 rounded-full bg-red-500/20 text-red-400 border border-red-500/30 text-sm font-semibold flex items-center gap-2">
                       <Crown className="w-4 h-4" />
@@ -81,7 +181,8 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("firstName")}</Label>
                   <Input 
-                    defaultValue="System" 
+                    value={formData.firstName}
+                    onChange={(e) => setFormData({...formData, firstName: e.target.value})}
                     disabled={!editing}
                     className="bg-slate-800/50 border-slate-700 text-white disabled:opacity-100"
                   />
@@ -89,7 +190,8 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("lastName")}</Label>
                   <Input 
-                    defaultValue="Administrator" 
+                    value={formData.lastName}
+                    onChange={(e) => setFormData({...formData, lastName: e.target.value})}
                     disabled={!editing}
                     className="bg-slate-800/50 border-slate-700 text-white disabled:opacity-100"
                   />
@@ -97,7 +199,7 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("emailAddress")}</Label>
                   <Input 
-                    defaultValue="admin@fitpro.com" 
+                    value={userData?.email || ''}
                     disabled
                     className="bg-slate-800/50 border-slate-700 text-white opacity-60 cursor-not-allowed"
                   />
@@ -106,7 +208,8 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("phoneNumber")}</Label>
                   <Input 
-                    defaultValue="+964 750 123 4567" 
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
                     disabled={!editing}
                     className="bg-slate-800/50 border-slate-700 text-white disabled:opacity-100"
                   />
@@ -126,7 +229,8 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("department")}</Label>
                   <Input 
-                    defaultValue="System Administration" 
+                    value={formData.department}
+                    onChange={(e) => setFormData({...formData, department: e.target.value})}
                     disabled={!editing}
                     className="bg-slate-800/50 border-slate-700 text-white disabled:opacity-100"
                   />
@@ -134,7 +238,8 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("location")}</Label>
                   <Input 
-                    defaultValue="Erbil, Kurdistan" 
+                    value={formData.location}
+                    onChange={(e) => setFormData({...formData, location: e.target.value})}
                     disabled={!editing}
                     className="bg-slate-800/50 border-slate-700 text-white disabled:opacity-100"
                   />
@@ -142,7 +247,8 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("timezone")}</Label>
                   <Input 
-                    defaultValue="GMT+3 (Baghdad)" 
+                    value={formData.timezone}
+                    onChange={(e) => setFormData({...formData, timezone: e.target.value})}
                     disabled={!editing}
                     className="bg-slate-800/50 border-slate-700 text-white disabled:opacity-100"
                   />
@@ -150,13 +256,15 @@ export default function SuperAdminProfile() {
                 <div>
                   <Label className="text-gray-400 text-sm mb-2 block">{t("languagePreference")}</Label>
                   <select 
+                    value={formData.language}
+                    onChange={(e) => setFormData({...formData, language: e.target.value})}
                     disabled={!editing}
                     className="w-full bg-slate-800/50 border border-slate-700 text-white rounded-lg px-3 py-2 disabled:opacity-100"
                   >
-                    <option>English</option>
-                    <option>Kurdish</option>
-                    <option>Arabic</option>
-                    <option>Turkish</option>
+                    <option value="en">English</option>
+                    <option value="ku">Kurdish</option>
+                    <option value="ar">Arabic</option>
+                    <option value="tr">Turkish</option>
                   </select>
                 </div>
               </CardContent>
@@ -224,9 +332,13 @@ export default function SuperAdminProfile() {
 
           {/* Save Button */}
           {editing && (
-            <Button className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg py-6 text-lg">
+            <Button 
+              onClick={handleSave}
+              disabled={saving}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg py-6 text-lg disabled:opacity-50"
+            >
               <Save className="w-5 h-5 mr-2" />
-              {t("saveChanges")}
+              {saving ? t("saving") + '...' : t("saveChanges")}
             </Button>
           )}
         </div>

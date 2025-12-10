@@ -3,6 +3,7 @@
 import { ReactNode, useState } from "react"
 import { usePathname, useRouter } from "next/navigation"
 import { Logo } from "@/components/logo"
+import { useLanguage } from "@/hooks/useLanguage"
 import { 
   Home, Users, Settings, Bell, User, TrendingUp, 
   Shield, Key, Database, Activity, FileText, Zap,
@@ -24,22 +25,44 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [mobileOpen, setMobileOpen] = useState(false)
+  const { t } = useLanguage()
 
-  // Superadmin specific navigation
-  const mainNavItems = [
-    { label: "Dashboard", path: "/superadmin", icon: "Home" },
-    { label: "Users", path: "/superadmin/users", icon: "Users" },
-    { label: "Programs", path: "/superadmin/programs", icon: "Zap" },
-    { label: "Database", path: "/superadmin/database", icon: "Database" },
-    { label: "Analytics", path: "/superadmin/analytics", icon: "TrendingUp" },
-    { label: "System Logs", path: "/superadmin/logs", icon: "FileText" },
-  ]
+  // Role-specific navigation
+  const navigationConfig = {
+    superadmin: {
+      main: [
+        { label: t("dashboard"), path: "/superadmin", icon: "Home" },
+        { label: t("users"), path: "/superadmin/users", icon: "Users" },
+        { label: t("programs"), path: "/superadmin/programs", icon: "Zap" },
+        { label: t("database"), path: "/superadmin/database", icon: "Database" },
+        { label: t("analytics"), path: "/superadmin/analytics", icon: "TrendingUp" },
+        { label: t("systemLogs"), path: "/superadmin/logs", icon: "FileText" },
+      ],
+      menu: [
+        { label: t("profile"), path: "/superadmin/profile", icon: "User" },
+        { label: t("settings"), path: "/superadmin/settings", icon: "Settings" },
+        { label: t("notifications"), path: "/superadmin/notifications", icon: "Bell" },
+      ]
+    },
+    physiotherapist: {
+      main: [
+        { label: t("dashboard"), path: "/physiotherapist", icon: "Home" },
+        { label: t("requests"), path: "/physiotherapist/requests", icon: "Bell" },
+        { label: t("patients"), path: "/physiotherapist/patients", icon: "Users" },
+        { label: t("appointments"), path: "/physiotherapist/appointments", icon: "Activity" },
+        { label: t("anatomy3D"), path: "/physiotherapist/anatomy", icon: "Zap" },
+        { label: t("progress"), path: "/physiotherapist/progress", icon: "TrendingUp" },
+      ],
+      menu: [
+        { label: t("profile"), path: "/physiotherapist/profile", icon: "User" },
+        { label: t("settings"), path: "/physiotherapist/settings", icon: "Settings" },
+        { label: t("notifications"), path: "/physiotherapist/notifications", icon: "Bell" },
+      ]
+    }
+  }
 
-  const menuItems = [
-    { label: "Profile", path: "/superadmin/profile", icon: "User" },
-    { label: "Settings", path: "/superadmin/settings", icon: "Settings" },
-    { label: "Notifications", path: "/superadmin/notifications", icon: "Bell" },
-  ]
+  const mainNavItems = navigationConfig[role]?.main || navigationConfig.superadmin.main
+  const menuItems = navigationConfig[role]?.menu || navigationConfig.superadmin.menu
 
   const isActive = (path: string) => {
     if (path === "/superadmin") {
@@ -82,12 +105,24 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
       {/* Logo Section */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-            <Shield className="w-6 h-6 text-white" />
+          <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
+            role === 'physiotherapist' 
+              ? 'bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-500/30' 
+              : 'bg-gradient-to-br from-cyan-500 to-blue-600 shadow-cyan-500/30'
+          }`}>
+            {role === 'physiotherapist' ? (
+              <Activity className="w-6 h-6 text-white" />
+            ) : (
+              <Shield className="w-6 h-6 text-white" />
+            )}
           </div>
           <div>
-            <h1 className="text-white font-bold text-lg">SuperAdmin</h1>
-            <p className="text-xs text-gray-400">Control Panel</p>
+            <h1 className="text-white font-bold text-lg">
+              {role === 'physiotherapist' ? 'Physiotherapist' : 'SuperAdmin'}
+            </h1>
+            <p className="text-xs text-gray-400">
+              {role === 'physiotherapist' ? t("medicalDashboard") : t("controlPanel")}
+            </p>
           </div>
         </div>
       </div>
@@ -96,7 +131,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
       <div className="flex-1 overflow-y-auto p-4 space-y-1">
         <div className="mb-6">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
-            Main Menu
+            {t("mainMenu")}
           </p>
           {mainNavItems.map((item, idx) => {
             const Icon = iconMap[item.icon] || Home
@@ -126,7 +161,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
 
         <div className="border-t border-white/10 pt-4">
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
-            Account
+            {t("account")}
           </p>
           {menuItems.map((item, idx) => {
             const Icon = iconMap[item.icon] || Settings
@@ -155,12 +190,20 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
       {/* User Profile & Logout */}
       <div className="p-4 border-t border-white/10 space-y-2">
         <div className="flex items-center gap-3 px-3 py-2 rounded-xl bg-white/5">
-          <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold">
-            SA
+          <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
+            role === 'physiotherapist'
+              ? 'bg-gradient-to-br from-emerald-500 to-teal-500'
+              : 'bg-gradient-to-br from-purple-500 to-pink-500'
+          }`}>
+            {role === 'physiotherapist' ? 'PT' : 'SA'}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white font-medium text-sm truncate">Super Admin</p>
-            <p className="text-xs text-gray-400 truncate">admin@system.com</p>
+            <p className="text-white font-medium text-sm truncate">
+              {role === 'physiotherapist' ? 'Physiotherapist' : 'Super Admin'}
+            </p>
+            <p className="text-xs text-gray-400 truncate">
+              {role === 'physiotherapist' ? 'physio@clinic.com' : 'admin@system.com'}
+            </p>
           </div>
         </div>
         <button
@@ -168,7 +211,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
           className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
         >
           <LogOut className="w-5 h-5" />
-          <span className="font-medium">Logout</span>
+          <span className="font-medium">{t("logout")}</span>
         </button>
       </div>
     </div>
@@ -213,7 +256,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
             <div className="p-2 rounded-xl text-gray-400">
               <Menu className="w-5 h-5" />
             </div>
-            <span className="text-xs font-medium text-gray-400">More</span>
+            <span className="text-xs font-medium text-gray-400">{t("more")}</span>
           </button>
         </div>
       </div>
@@ -223,7 +266,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
         <div className="lg:hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur-xl">
           <div className="h-full flex flex-col">
             <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
-              <span className="text-white font-bold text-lg">Menu</span>
+              <span className="text-white font-bold text-lg">{t("menu")}</span>
               <button
                 onClick={() => setMobileOpen(false)}
                 className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white"

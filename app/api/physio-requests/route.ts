@@ -72,6 +72,9 @@ export async function POST(request: NextRequest) {
     const requestData = {
       userId,
       userName: userName || "User",
+      userEmail: body.userEmail || "",
+      userPhone: body.userPhone || "",
+      userAge: body.userAge || 0,
       physioId,
       physioName: physioName || "Unknown",
       injuryType,

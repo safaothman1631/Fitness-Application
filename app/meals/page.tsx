@@ -91,29 +91,95 @@ export default function MealsPage() {
       console.log("🔍 Fetching meal programs for user:", userId)
       const response = await fetch(`/api/programs?type=nutrition&userId=${userId}`)
       
+      console.log("📡 Response status:", response.status)
+      
       if (response.ok) {
         const programs = await response.json()
         console.log("✅ Fetched meal programs:", programs)
+        console.log("📊 Number of programs:", programs.length)
         
         if (programs.length > 0) {
-          // Use the first program's weekly schedule
+          // Use the first program's meals
           const program = programs[0]
-          const weeklySchedule = program.weeklySchedule || {}
+          console.log("📋 Program data:", program)
+          console.log("🍽️ Program meals:", program.meals)
+          console.log("📅 Program weeklySchedule:", program.weeklySchedule)
           
-          // Convert to DayMeal format
-          const schedule: DayMeal[] = [
-            "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
-          ].map(day => {
-            const dayKey = day.toLowerCase()
-            const dayData = weeklySchedule[dayKey]
-            return {
-              day,
-              meals: dayData?.meals || []
+          // Check if program has weeklySchedule first (new format)
+          if (program.weeklySchedule && Object.keys(program.weeklySchedule).length > 0) {
+            console.log("✅ Using weeklySchedule format")
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            const dayMapping: { [key: string]: string } = {
+              'Sunday': 'sunday',
+              'Monday': 'monday',
+              'Tuesday': 'tuesday',
+              'Wednesday': 'wednesday',
+              'Thursday': 'thursday',
+              'Friday': 'friday',
+              'Saturday': 'saturday'
             }
-          })
-          
-          setMealSchedule(schedule)
-          console.log("✅ Meal schedule loaded:", schedule)
+            
+            const schedule: DayMeal[] = daysOfWeek.map((day) => {
+              const dayKey = dayMapping[day]
+              const dayData = program.weeklySchedule[dayKey]
+              const dayMeals = (dayData?.meals || []).map((meal: any) => ({
+                ...meal,
+                calories: Number(meal.calories || 0),
+                protein: Number(meal.protein || 0),
+                carbs: Number(meal.carbs || 0),
+                fat: Number(meal.fat || meal.fats || 0),
+                imageUrl: meal.imageUrl,
+                ingredients: meal.ingredients ? 
+                  (typeof meal.ingredients === 'string' ? 
+                    meal.ingredients.split('\n').filter(Boolean) : 
+                    meal.ingredients) : 
+                  []
+              }))
+              
+              return {
+                day,
+                meals: dayMeals
+              }
+            })
+            
+            setMealSchedule(schedule)
+            console.log("✅ Meal schedule loaded from weeklySchedule:", schedule)
+          }
+          // Fall back to old meals array format
+          else if (program.meals && Array.isArray(program.meals) && program.meals.length > 0) {
+            console.log("✅ Using meals array format (fallback)")
+            const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+            const mealsPerDay = Math.ceil(program.meals.length / 7)
+            
+            const schedule: DayMeal[] = daysOfWeek.map((day, index) => {
+              const startIndex = index * mealsPerDay
+              const endIndex = startIndex + mealsPerDay
+              const dayMeals = program.meals.slice(startIndex, endIndex).map((meal: any) => ({
+                ...meal,
+                calories: Number(meal.calories || 0),
+                protein: Number(meal.protein || 0),
+                carbs: Number(meal.carbs || 0),
+                fat: Number(meal.fat || meal.fats || 0),
+                imageUrl: meal.imageUrl,
+                ingredients: meal.ingredients ? 
+                  (typeof meal.ingredients === 'string' ? 
+                    meal.ingredients.split('\n').filter(Boolean) : 
+                    meal.ingredients) : 
+                  []
+              }))
+              
+              return {
+                day,
+                meals: dayMeals
+              }
+            })
+            
+            setMealSchedule(schedule)
+            console.log("✅ Meal schedule loaded from meals array:", schedule)
+          } else {
+            console.log("⚠️ Program has no meals or weeklySchedule")
+            setMealSchedule(defaultMealSchedule)
+          }
         } else {
           console.log("ℹ️ No meal programs assigned to user")
           setMealSchedule(defaultMealSchedule)
@@ -388,7 +454,7 @@ export default function MealsPage() {
                 .find(d => d.day === selectedDay)
                 ?.meals.map((meal, idx) => (
                   <Card
-                    key={meal.id}
+                    key={`${selectedDay}-meal-${idx}`}
                     className="bg-slate-900/70 border-slate-800 hover:border-amber-500/50 transition-all cursor-pointer"
                     onClick={() => setSelectedMeal(meal)}
                   >

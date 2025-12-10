@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import AuthGuard from "@/components/auth-guard"
@@ -56,6 +56,9 @@ import {
   Save,
 } from "lucide-react"
 import { useLanguage } from "@/contexts/language-context"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { toast } from "sonner"
 
 interface Permission {
   id: string
@@ -105,11 +108,64 @@ interface SystemSettings {
 export default function OwnerPage() {
   const router = useRouter()
   const { t } = useLanguage()
+  const [loading, setLoading] = useState(true)
   const [showPassword, setShowPassword] = useState(false)
   const [selectedUser, setSelectedUser] = useState<User | null>(null)
   const [isCreatingUser, setIsCreatingUser] = useState(false)
   const [isEditingPermissions, setIsEditingPermissions] = useState(false)
   const [editingUser, setEditingUser] = useState<User | null>(null)
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    activeUsers: 0,
+    totalRevenue: 0,
+    newUsersThisMonth: 0
+  })
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
+          // Fetch all users
+          const usersResponse = await fetch('/api/users')
+          if (usersResponse.ok) {
+            const allUsers = await usersResponse.json()
+            setUsers(allUsers.map((u: any) => ({
+              ...u,
+              name: `${u.firstName || ''} ${u.lastName || ''}`.trim() || u.name || u.email,
+              permissions: rolePermissionTemplates.find((r) => r.role === u.role)?.permissions || []
+            })))
+            
+            // Calculate stats
+            const activeCount = allUsers.filter((u: any) => u.status === 'active').length
+            setStats({
+              totalUsers: allUsers.length,
+              activeUsers: activeCount,
+              totalRevenue: 0, // Placeholder - would need revenue API
+              newUsersThisMonth: allUsers.filter((u: any) => {
+                const createdDate = new Date(u.createdAt)
+                const now = new Date()
+                return createdDate.getMonth() === now.getMonth() && 
+                       createdDate.getFullYear() === now.getFullYear()
+              }).length
+            })
+          }
+
+          // Fetch activity logs
+          const activityResponse = await fetch('/api/activity-logs?limit=50')
+          if (activityResponse.ok) {
+            const logs = await activityResponse.json()
+            setRecentActivity(logs)
+          }
+        } catch (error) {
+          console.error('Error fetching owner data:', error)
+          toast.error('Failed to load dashboard data')
+        } finally {
+          setLoading(false)
+        }
+      }
+    })
+    return () => unsubscribe()
+  }, [])
 
   const [allPermissions] = useState<Permission[]>([
     // Kullan─▒c─▒ Y├╢netimi
@@ -441,52 +497,10 @@ export default function OwnerPage() {
     },
   ])
 
-  const [users, setUsers] = useState<User[]>([
-    {
-      id: "1",
-      firstName: "Super",
-      lastName: "Admin",
-      name: "Super Admin",
-      email: "superadmin@fitness.com",
-      phone: "+90 555 111 1111",
-      role: "superadmin",
-      status: "active",
-      createdAt: "2024-01-01",
-      lastLogin: "Bug├╝n",
-      permissions: rolePermissionTemplates.find((r) => r.role === "superadmin")?.permissions || [],
-      gender: "erkek",
-    },
-    {
-      id: "2",
-      firstName: "Admin",
-      lastName: "User",
-      name: "Admin User",
-      email: "admin@fitness.com",
-      phone: "+90 555 222 2222",
-      role: "admin",
-      status: "active",
-      createdAt: "2024-01-05",
-      lastLogin: "D├╝n",
-      permissions: rolePermissionTemplates.find((r) => r.role === "admin")?.permissions || [],
-      gender: "erkek",
-    },
-    {
-      id: "3",
-      firstName: "Ahmet",
-      lastName: "Y─▒lmaz",
-      name: "Dr. Ahmet Y─▒lmaz",
-      email: "ahmet@fitness.com",
-      phone: "+90 555 333 3333",
-      role: "physiotherapist",
-      status: "active",
-      createdAt: "2024-01-10",
-      lastLogin: "Bug├╝n",
-      permissions: rolePermissionTemplates.find((r) => r.role === "physiotherapist")?.permissions || [],
-      gender: "erkek",
-    },
-    {
-      id: "4",
-      firstName: "Ay┼ƒe",
+  const [users, setUsers] = useState<User[]>([])
+  const [recentActivity, setRecentActivity] = useState<any[]>([])
+
+  // Removed hardcoded users - now fetched from database in useEffect
       lastName: "Demir",
       name: "Ay┼ƒe Demir",
       email: "ayse@fitness.com",
@@ -696,6 +710,20 @@ export default function OwnerPage() {
     }
   }
 
+  if (loading) {
+    return (
+      <AuthGuard requiredRole="owner">
+        <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-amber-950/20 via-orange-950/20 to-yellow-950/20" />
+          <div className="relative z-10 text-center">
+            <div className="inline-block w-16 h-16 border-4 border-amber-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p className="text-gray-400">Loading Owner Dashboard...</p>
+          </div>
+        </div>
+      </AuthGuard>
+    )
+  }
+
   return (
     <AuthGuard requiredRole="owner">
     <div className="min-h-screen relative overflow-hidden">
@@ -786,7 +814,7 @@ export default function OwnerPage() {
                   <div>
                     <p className="text-sm text-muted-foreground">Adminler</p>
                     <p className="text-2xl font-bold">
-                      {users.filter((u) => u.role === "admin" || u.role === "superadmin").length}
+                      {users.filter((u) => u.role === "superadmin").length}
                     </p>
                   </div>
                 </div>
@@ -1173,7 +1201,7 @@ export default function OwnerPage() {
 
               <div className="space-y-4">
                 {users
-                  .filter((u) => u.role === "admin" || u.role === "superadmin")
+                  .filter((u) => u.role === "superadmin")
                   .map((user) => (
                     <Card key={user.id} className="p-6 glass-effect border-border/50">
                       <div className="flex items-start justify-between gap-4">

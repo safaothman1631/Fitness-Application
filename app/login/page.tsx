@@ -98,6 +98,17 @@ export default function LoginPage() {
             const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password)
             const user = userCredential.user
             
+            // Check if email is verified
+            if (!user.emailVerified) {
+                toast.error(t("emailNotVerified"), {
+                    description: t("pleaseCheckYourEmail"),
+                    duration: 6000,
+                })
+                await auth.signOut()
+                setLoading(false)
+                return
+            }
+            
             // Get user data from Firestore to determine role
             const userDoc = await getDoc(doc(db, "users", user.uid))
             let role = "user"

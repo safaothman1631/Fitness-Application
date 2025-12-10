@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 
 interface AuthGuardProps {
   children: React.ReactNode
-  requiredRole?: "admin" | "superadmin" | "trainer" | "physiotherapist" | "user" | "owner" | "patient"
+  requiredRole?: "superadmin" | "trainer" | "physiotherapist" | "user" | "owner" | "patient"
   redirectTo?: string
 }
 

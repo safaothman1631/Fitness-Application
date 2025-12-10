@@ -1,4 +1,4 @@
-export type AppRole = "user" | "physiotherapist" | "trainer" | "superadmin" | "admin" | "owner"
+export type AppRole = "user" | "physiotherapist" | "trainer" | "superadmin" | "owner"
 
 // Navigation keys correspond to translation keys used in layout
 export interface RoleConfig {
@@ -40,8 +40,9 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
   trainer: {
     main: [
       { key: "dashboard", path: "/trainer", icon: "Home" },
-      { key: "trainees", path: "/trainer", icon: "Users" },
-      { key: "workouts", path: "/workouts", icon: "Dumbbell" },
+      { key: "trainees", path: "/trainer/trainees", icon: "Users" },
+      { key: "traineeMeals", path: "/trainer/meals", icon: "Utensils" },
+      { key: "traineeWorkouts", path: "/trainer/workouts", icon: "Dumbbell" },
     ],
     menu: [
       { key: "profile", path: "/trainer/profile", icon: "User" },
@@ -63,22 +64,10 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
   // Help removed
     ],
   },
-  admin: {
-    main: [
-      { key: "dashboard", path: "/admin", icon: "Home" },
-      { key: "management", path: "/admin", icon: "Settings" },
-      { key: "reports", path: "/reports", icon: "TrendingUp" },
-    ],
-    menu: [
-      { key: "profile", path: "/admin/profile", icon: "User" },
-      { key: "notifications", path: "/admin/notifications", icon: "Bell" },
-      { key: "settings", path: "/admin/settings", icon: "Settings" },
-  // Help removed
-    ],
-  },
   owner: {
     main: [
       { key: "dashboard", path: "/owner", icon: "Home" },
+      { key: "activityLogs", path: "/owner/activity-logs", icon: "Activity" },
       { key: "management", path: "/owner", icon: "Settings" },
     ],
     menu: [

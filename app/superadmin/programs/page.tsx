@@ -206,7 +206,7 @@ export default function ProgramsPage() {
           const subStatus = (user.subscriptionStatus || 'inactive').toLowerCase()
           
           // Exclude admin roles
-          const isAdminRole = role === 'admin' || role === 'superadmin' || role === 'physiotherapist' || role === 'trainer'
+          const isAdminRole = role === 'superadmin' || role === 'physiotherapist' || role === 'trainer'
           
           // Check if PRO (membership is Pro/Premium OR subscriptionStatus is active)
           const isPro = membership === 'pro' || membership === 'premium' || subStatus === 'active'
@@ -931,12 +931,54 @@ export default function ProgramsPage() {
                           </div>
                         )}
 
+                        {/* Assigned Users */}
+                        {program.assignedUsers && program.assignedUsers.length > 0 && (
+                          <div className="pt-2 border-t border-slate-700/50">
+                            <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                              <Users className="w-3 h-3" />
+                              <span>{t("assignedTo")} ({program.assignedUsers.length})</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              {program.assignedUsers.slice(0, 3).map((userId: string) => {
+                                const user = users.find(u => u.id === userId)
+                                return (
+                                  <span 
+                                    key={userId}
+                                    className="px-2 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                                  >
+                                    {user?.name || user?.email || 'User'}
+                                  </span>
+                                )
+                              })}
+                              {program.assignedUsers.length > 3 && (
+                                <span className="px-2 py-1 rounded-full text-xs bg-slate-700 text-gray-300">
+                                  +{program.assignedUsers.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         <div className="flex gap-2 pt-2">
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => {
-                              setNewProgram(program)
+                              // Ensure weeklySchedule exists with all days
+                              const scheduleWithAllDays = {
+                                monday: program.weeklySchedule?.monday || { exercises: [], meals: [], rest: false },
+                                tuesday: program.weeklySchedule?.tuesday || { exercises: [], meals: [], rest: false },
+                                wednesday: program.weeklySchedule?.wednesday || { exercises: [], meals: [], rest: false },
+                                thursday: program.weeklySchedule?.thursday || { exercises: [], meals: [], rest: false },
+                                friday: program.weeklySchedule?.friday || { exercises: [], meals: [], rest: false },
+                                saturday: program.weeklySchedule?.saturday || { exercises: [], meals: [], rest: false },
+                                sunday: program.weeklySchedule?.sunday || { exercises: [], meals: [], rest: false }
+                              }
+                              setNewProgram({
+                                ...program,
+                                weeklySchedule: scheduleWithAllDays
+                              })
+                              setCurrentDay('monday')
                               setIsDialogOpen(true)
                             }}
                             className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 hover:border-green-500/50 hover:text-green-400 transition-all"
@@ -1128,12 +1170,54 @@ export default function ProgramsPage() {
                           )}
                         </div>
 
+                        {/* Assigned Users */}
+                        {program.assignedUsers && program.assignedUsers.length > 0 && (
+                          <div className="pt-2 border-t border-slate-700/50">
+                            <div className="flex items-center gap-2 text-xs text-gray-400 mb-2">
+                              <Users className="w-3 h-3" />
+                              <span>{t("assignedTo")} ({program.assignedUsers.length})</span>
+                            </div>
+                            <div className="flex flex-wrap gap-1">
+                              {program.assignedUsers.slice(0, 3).map((userId: string) => {
+                                const user = users.find(u => u.id === userId)
+                                return (
+                                  <span 
+                                    key={userId}
+                                    className="px-2 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
+                                  >
+                                    {user?.name || user?.email || 'User'}
+                                  </span>
+                                )
+                              })}
+                              {program.assignedUsers.length > 3 && (
+                                <span className="px-2 py-1 rounded-full text-xs bg-slate-700 text-gray-300">
+                                  +{program.assignedUsers.length - 3}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
+
                         <div className="flex gap-2 pt-2">
                           <Button 
                             variant="outline" 
                             size="sm"
                             onClick={() => {
-                              setNewProgram(program)
+                              // Ensure weeklySchedule exists with all days
+                              const scheduleWithAllDays = {
+                                monday: program.weeklySchedule?.monday || { exercises: [], meals: [], rest: false },
+                                tuesday: program.weeklySchedule?.tuesday || { exercises: [], meals: [], rest: false },
+                                wednesday: program.weeklySchedule?.wednesday || { exercises: [], meals: [], rest: false },
+                                thursday: program.weeklySchedule?.thursday || { exercises: [], meals: [], rest: false },
+                                friday: program.weeklySchedule?.friday || { exercises: [], meals: [], rest: false },
+                                saturday: program.weeklySchedule?.saturday || { exercises: [], meals: [], rest: false },
+                                sunday: program.weeklySchedule?.sunday || { exercises: [], meals: [], rest: false }
+                              }
+                              setNewProgram({
+                                ...program,
+                                weeklySchedule: scheduleWithAllDays
+                              })
+                              setCurrentDay('monday')
                               setIsDialogOpen(true)
                             }}
                             className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 hover:border-blue-500/50 hover:text-blue-400 transition-all"

@@ -1,6 +1,6 @@
 "use client"
 
-import FitproLayout from "@/components/fitpro-layout"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,7 +20,7 @@ export default function AnatomyEngineerPage() {
 
 	return (
 		<AuthGuard>
-			<FitproLayout>
+			<SidebarSleek role="physiotherapist">
 				<div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-8">
 					<div className="max-w-[1800px] mx-auto">
 						{/* Header */}
@@ -229,7 +229,8 @@ export default function AnatomyEngineerPage() {
 						</div>
 					</div>
 				</div>
-			</FitproLayout>
+			</SidebarSleek>
 		</AuthGuard>
 	)
 }
+

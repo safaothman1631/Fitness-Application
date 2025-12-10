@@ -28,7 +28,7 @@ export default function ExerciseDetailPage() {
     setExercise(ex)
 
     const userRole = localStorage.getItem("userRole")
-    const isAdmin = userRole === "admin" || userRole === "superadmin" || userRole === "physiotherapist"
+    const isAdmin = userRole === "superadmin" || userRole === "physiotherapist"
 
     if (isAdmin) {
       // Admins can view all exercises

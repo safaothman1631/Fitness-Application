@@ -8,13 +8,97 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Settings, Lock, Shield, Bell, Monitor, Palette, Globe, Zap, Save, Download, Upload } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
 
 export default function SuperAdminSettings() {
   const { t } = useLanguage()
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
   const [notificationsEnabled, setNotificationsEnabled] = useState(true)
   const [darkMode, setDarkMode] = useState(true)
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(true)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+  const [emailNotifications, setEmailNotifications] = useState(true)
+  const [language, setLanguage] = useState('en')
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid)
+        await fetchSettings(user.uid)
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const fetchSettings = async (uid: string) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/settings?userId=${uid}`)
+      if (response.ok) {
+        const data = await response.json()
+        if (data) {
+          setNotificationsEnabled(data.notificationsEnabled ?? true)
+          setDarkMode(data.darkMode ?? true)
+          setTwoFactorEnabled(data.twoFactorEnabled ?? false)
+          setEmailNotifications(data.emailNotifications ?? true)
+          setLanguage(data.language || 'en')
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching settings:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleSaveSettings = async () => {
+    if (!userId) return
+    
+    setSaving(true)
+    try {
+      const response = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId,
+          notificationsEnabled,
+          darkMode,
+          twoFactorEnabled,
+          emailNotifications,
+          language
+        })
+      })
+
+      if (response.ok) {
+        alert('✅ Settings saved successfully!')
+      } else {
+        alert('❌ Failed to save settings')
+      }
+    } catch (error) {
+      console.error('Error saving settings:', error)
+      alert('❌ Error saving settings')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  if (loading) {
+    return (
+      <AuthGuard requiredRole="superadmin">
+        <SidebarSleek role="superadmin">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="inline-block w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-400">{t("loading")}...</p>
+            </div>
+          </div>
+        </SidebarSleek>
+      </AuthGuard>
+    )
+  }
 
   return (
     <AuthGuard requiredRole="superadmin">
@@ -243,9 +327,13 @@ export default function SuperAdminSettings() {
           </Card>
 
           {/* Save All Button */}
-          <Button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg py-6 text-lg">
+          <Button 
+            onClick={handleSaveSettings}
+            disabled={saving}
+            className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-lg py-6 text-lg disabled:opacity-50"
+          >
             <Save className="w-5 h-5 mr-2" />
-            {t("saveAllSettings")}
+            {saving ? t("saving") + '...' : t("saveAllSettings")}
           </Button>
         </div>
       </SidebarSleek>

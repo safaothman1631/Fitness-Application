@@ -45,7 +45,65 @@ physiotherapists/
 │   └── createdAt: timestamp
 ```
 
-### 3. **patients** Collection (Under Physiotherapist)
+### 3. **physio-requests** Collection
+```
+physio-requests/
+├── {requestId}/
+│   ├── userId: string (user who sent the request)
+│   ├── userName: string
+│   ├── userEmail: string
+│   ├── userPhone: string
+│   ├── userAge: number
+│   ├── physioId: string (physiotherapist ID)
+│   ├── physioName: string
+│   ├── injuryType: string (condition/reason)
+│   ├── painPercent: number (0-100)
+│   ├── notes: string
+│   ├── status: "pending" | "accepted" | "rejected"
+│   ├── completed: boolean
+│   ├── createdAt: timestamp
+│   └── updatedAt: timestamp
+```
+**Auto-conversion**: When status changes to "accepted", a patient record is automatically created under `physiotherapists/{physioId}/patients/`
+
+### 4. **progress** Collection
+```
+progress/
+├── {progressId}/
+│   ├── physiotherapistId: string
+│   ├── patientId: string
+│   ├── patientName: string
+│   ├── date: string (YYYY-MM-DD)
+│   ├── mobility: number (0-100)
+│   ├── strength: number (0-100)
+│   ├── pain: number (0-100)
+│   ├── notes: string
+│   ├── createdAt: timestamp
+│   └── updatedAt: timestamp
+```
+
+### 5. **appointments** Collection
+```
+appointments/
+├── {appointmentId}/
+│   ├── physiotherapistId: string
+│   ├── patientName: string
+│   ├── patientId: string
+│   ├── date: string (YYYY-MM-DD)
+│   ├── time: string (HH:MM)
+│   ├── duration: number (minutes)
+│   ├── type: "in-person" | "video" | "phone"
+│   ├── status: "scheduled" | "confirmed" | "completed" | "cancelled" | "no-show"
+│   ├── reason: string (appointment reason)
+│   ├── location: string (for in-person)
+│   ├── notes: string
+│   ├── fee: number (appointment fee)
+│   ├── platformCommission: number (15% of fee)
+│   ├── createdAt: timestamp
+│   └── updatedAt: timestamp
+```
+
+### 6. **patients** Collection (Under Physiotherapist)
 ```
 physiotherapists/{physiotherapistId}/patients/
 ├── {patientId}/
@@ -58,7 +116,7 @@ physiotherapists/{physiotherapistId}/patients/
 │   └── joinedAt: timestamp
 ```
 
-### 4. **trainees** Collection (Under Trainer)
+### 7. **trainees** Collection (Under Trainer)
 ```
 trainers/{trainerId}/trainees/
 ├── {traineeId}/
@@ -72,7 +130,7 @@ trainers/{trainerId}/trainees/
 │   └── isActive: boolean
 ```
 
-### 5. **workouts** Collection
+### 8. **workouts** Collection
 ```
 workouts/
 ├── {workoutId}/

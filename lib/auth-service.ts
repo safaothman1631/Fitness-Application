@@ -20,7 +20,6 @@ export interface LoginResult {
 const MOCK_CREDENTIALS = [
 // ...existing code...
   { email: "user@darinfitness.com", password: "11111111", role: "user" },
-  { email: "admin@darinfitness.com", password: "11111111", role: "admin" },
   { email: "superadmin@darinfitness.com", password: "11111111", role: "superadmin" },
   { email: "trainer@darinfitness.com", password: "11111111", role: "trainer" },
   { email: "physio@darinfitness.com", password: "11111111", role: "physiotherapist" },
@@ -28,7 +27,6 @@ const MOCK_CREDENTIALS = [
   { email: "patient@darinfitness.com", password: "11111111", role: "patient" },
 // ...existing code...
   { email: "user@darinfitness.com", password: "user1234", role: "user" },
-  { email: "admin@darinfitness.com", password: "DarinFitness2025!", role: "admin" },
   { email: "superadmin@darinfitness.com", password: "DarinFitness2025!", role: "superadmin" },
   { email: "trainer@darinfitness.com", password: "trainer1234", role: "trainer" },
   { email: "physio@darinfitness.com", password: "physio1234", role: "physiotherapist" },
@@ -125,7 +123,6 @@ async function getUserRole(userId: string): Promise<string | null> {
   // Define collection names and their corresponding roles
   const roleCollections = [
     { collection: "users", role: "user" },
-    { collection: "admins", role: "admin" },
     { collection: "superadmins", role: "superadmin" },
     { collection: "trainers", role: "trainer" },
     { collection: "physiotherapists", role: "physiotherapist" },
@@ -173,7 +170,6 @@ async function getUserRole(userId: string): Promise<string | null> {
 function getRedirectUrl(role: string): string {
   const redirectMap: Record<string, string> = {
     superadmin: "/superadmin",
-    admin: "/admin",
     physiotherapist: "/physiotherapist",
     trainer: "/trainer",
     owner: "/owner",

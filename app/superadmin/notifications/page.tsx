@@ -1,12 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import AuthGuard from "@/components/auth-guard"
 import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Bell, Trash2, CheckCircle2, AlertCircle, Shield, Activity, Info, XCircle, Eye, Filter } from "lucide-react"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+
 interface Notification {
   id: string
   type: "alert" | "activity" | "security"
@@ -18,39 +21,81 @@ interface Notification {
 
 export default function SuperAdminNotifications() {
   const { t } = useLanguage()
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "security",
-      title: "Failed Login Attempt",
-      message: "3 failed login attempts from IP 192.168.1.100",
-      timestamp: "2024-11-09 14:20",
-      isRead: false,
-    },
-    {
-      id: "2",
-      type: "activity",
-      title: "New Admin Created",
-      message: "User 'john@example.com' was promoted to Admin",
-      timestamp: "2024-11-09 10:15",
-      isRead: false,
-    },
-    {
-      id: "3",
-      type: "alert",
-      title: "High Server Load",
-      message: "CPU usage is at 85% - monitor performance",
-      timestamp: "2024-11-08 16:45",
-      isRead: true,
-    },
-  ])
+  const [notifications, setNotifications] = useState<Notification[]>([])
+  const [loading, setLoading] = useState(true)
+  const [userId, setUserId] = useState<string | null>(null)
 
-  const handleMarkAsRead = (id: string) => {
-    setNotifications(notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)))
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid)
+        await fetchNotifications(user.uid)
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const fetchNotifications = async (uid: string) => {
+    setLoading(true)
+    try {
+      const response = await fetch(`/api/notifications?userId=${uid}`)
+      if (response.ok) {
+        const data = await response.json()
+        setNotifications(data)
+      }
+    } catch (error) {
+      console.error('Error fetching notifications:', error)
+    } finally {
+      setLoading(false)
+    }
   }
 
-  const handleDelete = (id: string) => {
-    setNotifications(notifications.filter((n) => n.id !== id))
+  const handleMarkAsRead = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notifications/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isRead: true })
+      })
+      
+      if (response.ok) {
+        setNotifications(notifications.map((n) => (n.id === id ? { ...n, isRead: true } : n)))
+      }
+    } catch (error) {
+      console.error('Error marking notification as read:', error)
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    try {
+      const response = await fetch(`/api/notifications/${id}`, {
+        method: 'DELETE'
+      })
+      
+      if (response.ok) {
+        setNotifications(notifications.filter((n) => n.id !== id))
+      }
+    } catch (error) {
+      console.error('Error deleting notification:', error)
+    }
+  }
+
+  const handleMarkAllRead = async () => {
+    if (!userId) return
+    
+    try {
+      const response = await fetch('/api/notifications/mark-all-read', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+      })
+      
+      if (response.ok) {
+        setNotifications(notifications.map((n) => ({ ...n, isRead: true })))
+      }
+    } catch (error) {
+      console.error('Error marking all as read:', error)
+    }
   }
 
   const getIcon = (type: string) => {
@@ -64,6 +109,21 @@ export default function SuperAdminNotifications() {
       default:
         return <AlertCircle className="w-5 h-5 text-gray-400" />
     }
+  }
+
+  if (loading) {
+    return (
+      <AuthGuard requiredRole="superadmin">
+        <SidebarSleek role="superadmin">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="inline-block w-16 h-16 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-400">{t("loading")}...</p>
+            </div>
+          </div>
+        </SidebarSleek>
+      </AuthGuard>
+    )
   }
 
   return (
@@ -86,7 +146,11 @@ export default function SuperAdminNotifications() {
                 <Filter className="w-4 h-4 mr-2" />
                 {t("filterByType")}
               </Button>
-              <Button variant="outline" className="border-slate-700 text-gray-300 hover:bg-slate-800">
+              <Button 
+                onClick={handleMarkAllRead}
+                variant="outline" 
+                className="border-slate-700 text-gray-300 hover:bg-slate-800"
+              >
                 <CheckCircle2 className="w-4 h-4 mr-2" />
                 {t("markAllRead")}
               </Button>
@@ -153,9 +217,15 @@ export default function SuperAdminNotifications() {
                 </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="space-y-3">
-                {notifications.length > 0 ? (
-                  notifications.map((notif) => {
+              {notifications.length === 0 ? (
+                <div className="text-center py-12">
+                  <Bell className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400 text-lg mb-2">No notifications</p>
+                  <p className="text-gray-500 text-sm">You're all caught up!</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {notifications.map((notif) => {
                     const typeColors = {
                       security: { bg: "from-red-500/10 to-red-600/10", border: "border-red-500/30", icon: "text-red-400" },
                       activity: { bg: "from-blue-500/10 to-blue-600/10", border: "border-blue-500/30", icon: "text-blue-400" },
@@ -215,14 +285,9 @@ export default function SuperAdminNotifications() {
                         </div>
                       </div>
                     )
-                  })
-                ) : (
-                  <div className="text-center py-12">
-                    <Bell className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                    <p className="text-gray-400 text-lg">{t("noNotifications")}</p>
-                    <p className="text-gray-500 text-sm">{t("allCaughtUp")}</p>
-                  </div>
-                )}              </div>
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

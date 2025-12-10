@@ -24,7 +24,7 @@ export default function ExercisesPage() {
 
   useEffect(() => {
     const userRole = localStorage.getItem("userRole")
-    const isAdmin = userRole === "admin" || userRole === "superadmin" || userRole === "physiotherapist"
+    const isAdmin = userRole === "superadmin" || userRole === "physiotherapist"
 
     if (!isAdmin) {
       router.push("/dashboard")

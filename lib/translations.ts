@@ -41,6 +41,7 @@ export type TranslationKey =
   | "progress"
   | "profile"
   | "requests"
+  | "activityLogs"
   | "anatomy3D"
   | "anatomyEngineer"
   | "unirigDemo"
@@ -109,6 +110,8 @@ export type TranslationKey =
   | "patients"
   | "activities"
   | "trainees"
+  | "traineeMeals"
+  | "traineeWorkouts"
   | "analytics"
   | "reports"
   | "management"
@@ -353,6 +356,9 @@ export type TranslationKey =
   | "invalidEmail"
   | "alreadyHaveAccount"
   | "signInLink"
+  | "emailNotVerified"
+  | "pleaseCheckYourEmail"
+  | "registrationSuccessVerifyEmail"
   // Subscription Warning
   | "subscriptionExpired"
   | "actionRequired"
@@ -361,6 +367,7 @@ export type TranslationKey =
   | "mealPlans"
   | "progressTracking"
   | "expertSupport"
+  | "assignedTo"
   | "renewSubscriptionNow"
   | "subscriptionExpiringSoon"
   | "subscriptionExpiresInDays"
@@ -518,6 +525,7 @@ export type TranslationKey =
   | "accountActions"
   | "accountActionsDesc"
   | "logoutButton"
+  | "more"
   // Manage Profile Dialog
   | "manageProfile"
   | "changeAvatar"
@@ -620,6 +628,13 @@ export type TranslationKey =
   | "pending"
   | "approved"
   | "rejected"
+  | "pendingUserApprovals"
+  | "emailVerified"
+  | "userApproved"
+  | "canNowLogin"
+  | "user"
+  | "joinedDate"
+  | "actionsColumn"
   // Access Keys Page
   | "accessKeysPage"
   | "generateAndManageKeys"
@@ -963,6 +978,258 @@ export type TranslationKey =
   | "deleteNotification"
   | "noNotifications"
   | "allCaughtUp"
+  // Physiotherapist Dashboard
+  | "physioWelcome"
+  | "totalPatients"
+  | "todayAppointments"
+  | "pendingRequests"
+  | "completedSessions"
+  | "upcomingAppointments"
+  | "recentActivities"
+  | "patientList"
+  | "manageAllPatients"
+  | "searchPatients"
+  | "addPatient"
+  | "activePatients"
+  | "avgProgress"
+  | "condition"
+  | "sessions"
+  | "viewDetails"
+  | "sendMessage"
+  | "editPatient"
+  | "deletePatient"
+  | "noPatients"
+  | "patientName"
+  | "patientEmail"
+  | "patientPhone"
+  | "patientAge"
+  | "medicalCondition"
+  | "fillAllFields"
+  | "patientAdded"
+  | "patientUpdated"
+  | "patientDeleted"
+  | "confirmDelete"
+  // Appointments
+  | "myAppointments"
+  | "scheduleAppointments"
+  | "totalAppointments"
+  | "todayScheduled"
+  | "upcomingCount"
+  | "completedCount"
+  | "addAppointment"
+  | "appointmentDate"
+  | "appointmentTime"
+  | "duration"
+  | "appointmentType"
+  | "inPerson"
+  | "videoCall"
+  | "phoneCall"
+  | "appointmentReason"
+  | "appointmentLocation"
+  | "appointmentNotes"
+  | "appointmentFee"
+  | "scheduled"
+  | "confirmed"
+  | "completed"
+  | "cancelled"
+  | "noShow"
+  | "appointmentScheduled"
+  | "appointmentUpdated"
+  | "appointmentCancelled"
+  | "minutes"
+  // Progress Tracking
+  | "progressTracking"
+  | "monitorRecovery"
+  | "totalRecords"
+  | "patientsTracked"
+  | "addProgressRecord"
+  | "selectPatient"
+  | "recordDate"
+  | "mobilityLevel"
+  | "strengthLevel"
+  | "painLevel"
+  | "clinicalNotes"
+  | "progressSaved"
+  | "progressDeleted"
+  | "noProgressYet"
+  // Requests
+  | "patientRequests"
+  | "manageRequests"
+  | "newRequests"
+  | "acceptedRequests"
+  | "rejectedRequests"
+  | "requestFrom"
+  | "injuryType"
+  | "painLevel"
+  | "requestNotes"
+  | "acceptRequest"
+  | "rejectRequest"
+  | "pending"
+  | "accepted"
+  | "rejected"
+  | "requestAccepted"
+  | "requestRejected"
+  | "requestCompleted"
+  | "noRequests"
+  | "patientNotes"
+  | "yourResponse"
+  | "responseRequired"
+  | "responseRequiredMessage"
+  | "enterResponseMessage"
+  | "previousResponse"
+  | "markCompleted"
+  | "scheduleAppointment"
+  | "appointmentDate"
+  | "appointmentTime"
+  | "sessionPrice"
+  | "additionalNotes"
+  | "confirmAccept"
+  | "appointmentScheduled"
+  | "fillAllAppointmentDetails"
+  | "requestDetails"
+  | "requestsAppearHere"
+  | "loadingRequests"
+  | "searchRequests"
+  | "totalRequests"
+  | "viewDetails"
+  | "complete"
+  | "date"
+  | "live"
+  | "modelLoaded"
+  | "modelName"
+  | "skeletonPreCut"
+  | "format"
+  | "type"
+  | "humanSkeleton"
+  | "size"
+  | "anatomy3DViewer"
+  | "view3DSkeletonModel"
+  | "viewControl"
+  | "rotation"
+  | "zoom"
+  | "resetView"
+  | "modelInfo"
+  | "instructions"
+  | "useSliderToRotate"
+  | "useSliderToZoom"
+  | "clickButtonToReset"
+  | "medicalDashboard"
+  | "mainMenu"
+  | "controlPanel"
+  | "appointments"
+  | "programs"
+  | "viewProgress"
+  | "patientProgress"
+  | "totalSessions"
+  | "typeYourMessage"
+  | "pleaseEnterMessage"
+  | "messageSent"
+  | "to"
+  | "enterSessionCount"
+  | "sessionCountHint"
+  | "success"
+  | "patientAddedSuccessfully"
+  | "selectFromList"
+  | "enterManually"
+  | "selectPatient"
+  | "noPatientsAvailable"
+  | "newPatientInfo"
+  | "pleaseCompletePatientInfo"
+  | "patientWillBeAddedAutomatically"
+  | "enterEmail"
+  | "enterPhone"
+  | "age"
+  | "enterAge"
+  | "enterCondition"
+  // Appointments missing keys
+  | "loadingAppointments"
+  | "newAppointment"
+  | "enterFullName"
+  | "minutes30"
+  | "minutes45"
+  | "minutes60"
+  | "minutes90"
+  | "enterReason"
+  | "location"
+  | "enterLocation"
+  | "platformCommission"
+  | "notes"
+  | "enterNotes"
+  | "scheduleAppointment"
+  | "totalRevenue"
+  | "searchAppointments"
+  | "allStatus"
+  | "allTypes"
+  | "pastAppointments"
+  | "noAppointments"
+  | "scheduleFirstAppointment"
+  | "confirm"
+  | "cancel"
+  | "appointmentNotes"
+  | "initialAssessment"
+  | "followUp"
+  | "therapySession"
+  | "checkUp"
+  | "consultation"
+  | "completedToday"
+  | "viewPatients"
+  | "anatomyTool"
+  | "writeReport"
+  | "noAppointmentsToday"
+  // Profile & Settings
+  | "myProfile"
+  | "professionalInfo"
+  | "licenseNumber"
+  | "specialization"
+  | "yearsExperience"
+  | "certifications"
+  | "updateProfile"
+  | "profileUpdated"
+  | "changePassword"
+  | "currentPassword"
+  | "newPassword"
+  | "confirmPassword"
+  | "passwordChanged"
+  | "languagePreferences"
+  | "notificationSettings"
+  | "emailNotifications"
+  | "smsNotifications"
+  | "pushNotificationsLabel"
+  | "privacySettings"
+  | "showProfile"
+  | "allowMessages"
+  // Settings Page Keys
+  | "manageAccountPreferences"
+  | "accountSecurity"
+  | "enterCurrentPassword"
+  | "enterNewPassword"
+  | "confirmNewPassword"
+  | "updatePassword"
+  | "notificationPreferences"
+  | "patientMessages"
+  | "getNotifiedPatientMessages"
+  | "appointmentRemindersLabel"
+  | "reminderBeforeAppointment"
+  | "progressAlertsLabel"
+  | "notifyPatientProgress"
+  | "receiveDailyEmails"
+  | "savePreferences"
+  | "dangerZone"
+  | "deleteAccount"
+  // Notifications Page Keys
+  | "stayUpdatedMessages"
+  | "totalNotifications"
+  | "unread"
+  | "read"
+  | "recentNotifications"
+  | "noNotifications"
+  | "newMessageFrom"
+  | "appointmentReminderTitle"
+  | "patientProgressAlertTitle"
+  | "severePainLowerBack"
+  | "appointmentTomorrow"
+  | "hasNotRecordedProgress"
+  | "markAsRead"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -1014,6 +1281,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     progress: "Progress",
     profile: "Profile",
     requests: "Requests",
+    activityLogs: "Activity Logs",
     anatomy3D: "🦴 Anatomy 3D Viewer",
     anatomyEngineer: "🔧 Anatomy Lab",
     unirigDemo: "⚡ UniRig Demo",
@@ -1082,6 +1350,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   patients: "Patients",
   activities: "Activities",
   trainees: "Trainees",
+  traineeMeals: "Trainee Meals",
+  traineeWorkouts: "Trainee Workouts",
   analytics: "📊 Analytics",
   reports: "Reports",
   management: "Management",
@@ -1324,6 +1594,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   invalidEmail: "Invalid email address",
   alreadyHaveAccount: "Already have an account?",
   signInLink: "Sign in",
+  emailNotVerified: "Email Not Verified",
+  pleaseCheckYourEmail: "Please verify your email before logging in. Check your inbox for the verification link.",
+  registrationSuccessVerifyEmail: "Registration successful! Please check your email to verify your account before logging in.",
   // Subscription Warning
   subscriptionExpired: "Subscription Expired",
   actionRequired: "Action Required",
@@ -1477,6 +1750,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   accountActions: "Account Actions",
   accountActionsDesc: "Logging out will clear your session and return you to the login screen.",
   logoutButton: "Logout",
+  more: "More",
   // Manage Profile Dialog (English)
   manageProfile: "Manage Profile",
   changeAvatar: "Change Avatar",
@@ -1590,6 +1864,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   pending: "Pending",
   approved: "Approved",
   rejected: "Rejected",
+  pendingUserApprovals: "Pending User Approvals",
+  emailVerified: "Email Verified",
+  userApproved: "User Approved",
+  canNowLogin: "can now login",
+  user: "User",
+  joinedDate: "Joined Date",
+  actionsColumn: "Actions",
   // Access Keys Page (English)
   accessKeysPage: "Access Keys",
   generateAndManageKeys: "Generate and manage access keys",
@@ -1669,6 +1950,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   programName: "Program Name",
   description: "Description",
   assignToUsers: "Assign to Users",
+  assignedTo: "Assigned to",
   selectUsers: "Select Users",
   searchByName: "Search by name...",
   searchByNameOrEmail: "Search by name or email...",
@@ -1922,6 +2204,257 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   deleteNotification: "Delete",
   noNotifications: "No notifications",
   allCaughtUp: "You're all caught up!",
+  // Physiotherapist English
+  physioWelcome: "Welcome to Physiotherapy Dashboard",
+  totalPatients: "Total Patients",
+  todayAppointments: "Today's Appointments",
+  pendingRequests: "Pending Requests",
+  completedSessions: "Completed Sessions",
+  upcomingAppointments: "Upcoming Appointments",
+  recentActivities: "Recent Activities",
+  patientList: "Patient List",
+  manageAllPatients: "Manage All Your Patients",
+  searchPatients: "Search patients...",
+  addPatient: "Add Patient",
+  activePatients: "Active Patients",
+  avgProgress: "Avg Progress",
+  condition: "Condition",
+  sessions: "Sessions",
+  viewDetails: "View Details",
+  sendMessage: "Send Message",
+  editPatient: "Edit Patient",
+  deletePatient: "Delete Patient",
+  noPatients: "No patients found",
+  patientName: "Patient Name",
+  patientEmail: "Patient Email",
+  patientPhone: "Phone Number",
+  patientAge: "Age",
+  medicalCondition: "Medical Condition",
+  fillAllFields: "Please fill all fields",
+  patientAdded: "Patient added successfully",
+  patientUpdated: "Patient updated successfully",
+  patientDeleted: "Patient deleted successfully",
+  confirmDelete: "Are you sure you want to delete?",
+  // Appointments English
+  myAppointments: "My Appointments",
+  scheduleAppointments: "Schedule & Manage Appointments",
+  totalAppointments: "Total Appointments",
+  todayScheduled: "Today's Schedule",
+  upcomingCount: "Upcoming",
+  completedCount: "Completed",
+  addAppointment: "Add Appointment",
+  appointmentDate: "Appointment Date",
+  appointmentTime: "Appointment Time",
+  duration: "Duration",
+  appointmentType: "Appointment Type",
+  inPerson: "In Person",
+  videoCall: "Video Call",
+  phoneCall: "Phone Call",
+  appointmentReason: "Reason for Appointment",
+  appointmentLocation: "Location",
+  appointmentNotes: "Notes",
+  appointmentFee: "Fee",
+  scheduled: "Scheduled",
+  confirmed: "Confirmed",
+  completed: "Completed",
+  cancelled: "Cancelled",
+  noShow: "No Show",
+  appointmentScheduled: "Appointment scheduled successfully",
+  appointmentUpdated: "Appointment updated successfully",
+  appointmentCancelled: "Appointment cancelled",
+  minutes: "minutes",
+  // Progress English
+  progressTracking: "Progress Tracking",
+  monitorRecovery: "Monitor Patient Recovery Progress",
+  totalRecords: "Total Records",
+  patientsTracked: "Patients Tracked",
+  addProgressRecord: "Add Progress Record",
+  selectPatient: "Select a Patient",
+  recordDate: "Date",
+  mobilityLevel: "Mobility",
+  strengthLevel: "Strength",
+  painLevel: "Pain Level",
+  clinicalNotes: "Clinical Notes",
+  progressSaved: "Progress record saved",
+  progressDeleted: "Progress record deleted",
+  noProgressYet: "No progress records yet",
+  // Requests English
+  patientRequests: "Patient Requests",
+  manageRequests: "Manage Patient Requests",
+  newRequests: "New Requests",
+  acceptedRequests: "Accepted",
+  rejectedRequests: "Rejected",
+  requestFrom: "Request from",
+  injuryType: "Injury Type",
+  painLevel: "Pain Level",
+  requestNotes: "Request Notes",
+  acceptRequest: "Accept",
+  rejectRequest: "Reject",
+  pending: "Pending",
+  accepted: "Accepted",
+  rejected: "Rejected",
+  requestAccepted: "Request accepted",
+  requestRejected: "Request rejected",
+  requestCompleted: "Request marked as completed",
+  noRequests: "No requests found",
+  patientNotes: "Patient Notes",
+  yourResponse: "Your Response",
+  responseRequired: "Response Required",
+  responseRequiredMessage: "Please enter a response message before accepting the request.",
+  enterResponseMessage: "Add a message for the patient...",
+  previousResponse: "Your Previous Response",
+  scheduleAppointment: "Schedule Appointment",
+  appointmentDate: "Appointment Date",
+  appointmentTime: "Appointment Time",
+  sessionPrice: "Session Price",
+  additionalNotes: "Additional Notes (Optional)",
+  confirmAccept: "Confirm & Accept",
+  appointmentScheduled: "Appointment scheduled! Patient added to your list.",
+  fillAllAppointmentDetails: "Please fill in all appointment details (date, time, and price)",
+  markCompleted: "Mark as Completed",
+  requestDetails: "Request Details",
+  requestsAppearHere: "Patient requests will appear here",
+  loadingRequests: "Loading requests...",
+  searchRequests: "Search by patient name or injury type...",
+  totalRequests: "Total Requests",
+  viewDetails: "View Details",
+  complete: "Complete",
+  date: "Date",
+  live: "LIVE",
+  modelLoaded: "3D MODEL LOADED",
+  modelName: "Name",
+  skeletonPreCut: "Skeleton Pre-Cut",
+  format: "Format",
+  type: "Type",
+  humanSkeleton: "Human Skeleton",
+  size: "Size",
+  anatomy3DViewer: "Anatomy 3D Viewer",
+  view3DSkeletonModel: "View 3D human skeleton model",
+  viewControl: "View Control",
+  rotation: "Rotation",
+  zoom: "Zoom",
+  resetView: "Reset View",
+  modelInfo: "Model Info",
+  instructions: "Instructions",
+  useSliderToRotate: "Use slider to rotate the model",
+  useSliderToZoom: "Use slider to zoom in and out",
+  clickButtonToReset: "Click button to return to initial view",
+  medicalDashboard: "Medical Dashboard",
+  mainMenu: "MAIN MENU",
+  controlPanel: "Control Panel",
+  appointments: "Appointments",
+  programs: "Programs",
+  viewProgress: "View Progress",
+  patientProgress: "Patient Progress",
+  totalSessions: "Total Sessions",
+  typeYourMessage: "Type your message here...",
+  pleaseEnterMessage: "Please enter a message",
+  messageSent: "Message sent successfully",
+  to: "To",
+  enterSessionCount: "Enter number of sessions",
+  sessionCountHint: "How many times the patient has visited the doctor",
+  success: "Success",
+  patientAddedSuccessfully: "Patient added to your list successfully",
+  selectFromList: "Select from List",
+  enterManually: "Enter Manually",
+  selectPatient: "Select a patient",
+  noPatientsAvailable: "No patients available",
+  newPatientInfo: "New Patient Information",
+  pleaseCompletePatientInfo: "Please complete patient information",
+  patientWillBeAddedAutomatically: "This patient will be added to your list automatically",
+  enterEmail: "Enter email address",
+  enterPhone: "Enter phone number",
+  age: "Age",
+  enterAge: "Enter age",
+  enterCondition: "Enter medical condition",
+  loadingAppointments: "Loading appointments...",
+  newAppointment: "New Appointment",
+  enterFullName: "Enter full name",
+  minutes30: "30 minutes",
+  minutes45: "45 minutes",
+  minutes60: "60 minutes",
+  minutes90: "90 minutes",
+  enterReason: "e.g., Physical therapy session",
+  location: "Location",
+  enterLocation: "Room number or location",
+  platformCommission: "Platform commission",
+  notes: "Notes (Optional)",
+  enterNotes: "Additional notes or instructions",
+  scheduleAppointment: "Schedule Appointment",
+  totalRevenue: "Total Revenue",
+  searchAppointments: "Search by patient name or reason...",
+  allStatus: "All Status",
+  allTypes: "All Types",
+  pastAppointments: "Past Appointments",
+  noAppointments: "No appointments found",
+  scheduleFirstAppointment: "Click \"New Appointment\" to schedule your first appointment",
+  confirm: "Confirm",
+  cancel: "Cancel",
+  appointmentNotes: "Notes",
+  initialAssessment: "Initial Assessment",
+  followUp: "Follow-up",
+  therapySession: "Therapy Session",
+  checkUp: "Check-up",
+  consultation: "Consultation",
+  completedToday: "Completed Today",
+  viewPatients: "View Patients",
+  anatomyTool: "Anatomy Tool",
+  writeReport: "Write Report",
+  noAppointmentsToday: "No appointments scheduled for today",
+  // Profile & Settings English
+  myProfile: "My Profile",
+  professionalInfo: "Professional Information",
+  licenseNumber: "License Number",
+  specialization: "Specialization",
+  yearsExperience: "Years of Experience",
+  certifications: "Certifications",
+  updateProfile: "Update Profile",
+  profileUpdated: "Profile updated successfully",
+  changePassword: "Change Password",
+  currentPassword: "Current Password",
+  newPassword: "New Password",
+  confirmPassword: "Confirm Password",
+  passwordChanged: "Password changed successfully",
+  languagePreferences: "Language Preferences",
+  notificationSettings: "Notification Settings",
+  emailNotifications: "Email Notifications",
+  smsNotifications: "SMS Notifications",
+  pushNotificationsLabel: "Push Notifications",
+  privacySettings: "Privacy Settings",
+  showProfile: "Show Profile Publicly",
+  allowMessages: "Allow Messages",
+  // Settings Page Translations
+  manageAccountPreferences: "Manage your account preferences and security",
+  accountSecurity: "Account Security",
+  enterCurrentPassword: "Enter current password",
+  enterNewPassword: "Enter new password",
+  confirmNewPassword: "Confirm new password",
+  updatePassword: "Update Password",
+  notificationPreferences: "Notification Preferences",
+  patientMessages: "Patient Messages",
+  getNotifiedPatientMessages: "Get notified when patients send messages",
+  appointmentRemindersLabel: "Appointment Reminders",
+  reminderBeforeAppointment: "Reminder before each appointment",
+  progressAlertsLabel: "Progress Alerts",
+  notifyPatientProgress: "Notify when patient progress is recorded",
+  receiveDailyEmails: "Receive daily email summaries",
+  savePreferences: "Save Preferences",
+  dangerZone: "Danger Zone",
+  deleteAccount: "Delete Account",
+  // Notifications Page Translations
+  stayUpdatedMessages: "Stay updated with patient messages and appointment reminders",
+  totalNotifications: "Total Notifications",
+  unread: "Unread",
+  read: "Read",
+  recentNotifications: "Recent Notifications",
+  noNotifications: "No notifications",
+  newMessageFrom: "New Message from",
+  appointmentReminderTitle: "Appointment Reminder",
+  patientProgressAlertTitle: "Patient Progress Alert",
+  severePainLowerBack: "I have severe pain in my lower back",
+  appointmentTomorrow: "appointment is tomorrow at",
+  hasNotRecordedProgress: "has not recorded progress in 5 days",
+  markAsRead: "Mark as Read",
   },
   // Minimal Arabic placeholders (update with full translations later)
   ar: {
@@ -1932,6 +2465,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     physiotherapist: "طبيب",
     progress: "التقدم",
     profile: "الملف الشخصي",
+    activityLogs: "سجل النشاطات",
     logout: "تسجيل الخروج",
     accessKeys: "مفاتيح الوصول",
     notifications: "الإشعارات",
@@ -1942,6 +2476,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     patients: "المرضى"
     ,activities: "الأنشطة"
     ,trainees: "المتدربون"
+    ,traineeMeals: "وجبات المتدربين"
+    ,traineeWorkouts: "تمارين المتدربين"
     ,analytics: "التحليلات 📊"
     ,reports: "التقارير"
     ,management: "الإدارة"
@@ -2212,6 +2748,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,invalidEmail: "عنوان البريد الإلكتروني غير صالح"
       ,alreadyHaveAccount: "لديك حساب بالفعل؟"
       ,signInLink: "سجّل الدخول"
+      ,emailNotVerified: "البريد الإلكتروني غير مُوثَّق"
+      ,pleaseCheckYourEmail: "يرجى التحقق من بريدك الإلكتروني قبل تسجيل الدخول. تحقق من صندوق الوارد للحصول على رابط التحقق."
+      ,registrationSuccessVerifyEmail: "تم التسجيل بنجاح! يرجى التحقق من بريدك الإلكتروني لتأكيد حسابك قبل تسجيل الدخول."
       // Subscription Warning (Arabic)
       ,subscriptionExpired: "انتهى الاشتراك"
       ,actionRequired: "يتطلب إجراء"
@@ -2363,6 +2902,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,accountActions: "إجراءات الحساب"
   ,accountActionsDesc: "تسجيل الخروج سيمسح جلستك ويعيدك إلى شاشة تسجيل الدخول."
   ,logoutButton: "تسجيل الخروج"
+  ,more: "المزيد"
   // Manage Profile Dialog (Arabic)
   ,manageProfile: "إدارة الملف الشخصي"
   ,changeAvatar: "تغيير الصورة"
@@ -2479,6 +3019,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,pending: "قيد الانتظار"
   ,approved: "تمت الموافقة"
   ,rejected: "مرفوض"
+  ,pendingUserApprovals: "موافقات المستخدمين المعلقة"
+  ,emailVerified: "البريد الإلكتروني موثق"
+  ,userApproved: "تمت الموافقة على المستخدم"
+  ,canNowLogin: "يمكنه الآن تسجيل الدخول"
+  ,user: "المستخدم"
+  ,joinedDate: "تاريخ الانضمام"
+  ,actionsColumn: "الإجراءات"
   // Access Keys Page (Arabic)
   ,accessKeysPage: "مفاتيح الوصول"
   ,generateAndManageKeys: "إنشاء وإدارة مفاتيح الوصول"
@@ -2558,6 +3105,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,programName: "اسم البرنامج"
   ,description: "الوصف"
   ,assignToUsers: "تعيين للمستخدمين"
+  ,assignedTo: "معين لـ"
   ,selectUsers: "اختر المستخدمين"
   ,searchByName: "البحث بالاسم..."
   ,searchByNameOrEmail: "البحث بالاسم أو البريد الإلكتروني..."
@@ -2811,6 +3359,85 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,deleteNotification: "حذف"
   ,noNotifications: "لا توجد إشعارات"
   ,allCaughtUp: "أنت على اطلاع على كل شيء!"
+  ,live: "مباشر"
+  ,modelLoaded: "تم تحميل النموذج ثلاثي الأبعاد"
+  ,modelName: "الاسم"
+  ,skeletonPreCut: "الهيكل العظمي مسبق القطع"
+  ,format: "التنسيق"
+  ,type: "النوع"
+  ,humanSkeleton: "الهيكل العظمي البشري"
+  ,size: "الحجم"
+  ,anatomy3DViewer: "عارض التشريح ثلاثي الأبعاد"
+  ,view3DSkeletonModel: "عرض نموذج الهيكل العظمي البشري ثلاثي الأبعاد"
+  ,viewControl: "التحكم بالعرض"
+  ,rotation: "الدوران"
+  ,zoom: "التكبير"
+  ,resetView: "إعادة تعيين العرض"
+  ,modelInfo: "معلومات النموذج"
+  ,instructions: "التعليمات"
+  ,useSliderToRotate: "استخدم شريط التمرير لتدوير النموذج"
+  ,useSliderToZoom: "استخدم شريط التمرير للتكبير والتصغير"
+  ,clickButtonToReset: "انقر على الزر للعودة إلى العرض الأولي"
+  ,medicalDashboard: "لوحة التحكم الطبية"
+  ,mainMenu: "القائمة الرئيسية"
+  ,controlPanel: "لوحة التحكم"
+  ,appointments: "المواعيد"
+  ,programs: "البرامج"
+  ,viewProgress: "عرض التقدم"
+  ,patientProgress: "تقدم المريض"
+  ,totalSessions: "إجمالي الجلسات"
+  ,typeYourMessage: "اكتب رسالتك هنا..."
+  ,pleaseEnterMessage: "يرجى إدخال رسالة"
+  ,messageSent: "تم إرسال الرسالة بنجاح"
+  ,to: "إلى"
+  ,enterSessionCount: "أدخل عدد الجلسات"
+  ,sessionCountHint: "عدد مرات زيارة المريض للطبيب"
+  ,success: "نجاح"
+  ,patientAddedSuccessfully: "تمت إضافة المريض إلى قائمتك بنجاح"
+  ,selectFromList: "اختر من القائمة"
+  ,enterManually: "أدخل يدوياً"
+  ,selectPatient: "اختر مريض"
+  ,noPatientsAvailable: "لا يوجد مرضى متاحون"
+  ,newPatientInfo: "معلومات المريض الجديد"
+  ,pleaseCompletePatientInfo: "يرجى إكمال معلومات المريض"
+  ,patientWillBeAddedAutomatically: "سيتم إضافة هذا المريض إلى قائمتك تلقائياً"
+  ,enterEmail: "أدخل البريد الإلكتروني"
+  ,enterPhone: "أدخل رقم الهاتف"
+  ,age: "العمر"
+  ,enterAge: "أدخل العمر"
+  ,enterCondition: "أدخل الحالة الطبية"
+  // Settings Page Arabic
+  ,manageAccountPreferences: "إدارة تفضيلات حسابك والأمان"
+  ,accountSecurity: "أمان الحساب"
+  ,enterCurrentPassword: "أدخل كلمة المرور الحالية"
+  ,enterNewPassword: "أدخل كلمة المرور الجديدة"
+  ,confirmNewPassword: "تأكيد كلمة المرور الجديدة"
+  ,updatePassword: "تحديث كلمة المرور"
+  ,notificationPreferences: "تفضيلات الإشعارات"
+  ,patientMessages: "رسائل المرضى"
+  ,getNotifiedPatientMessages: "احصل على إشعار عندما يرسل المرضى رسائل"
+  ,appointmentRemindersLabel: "تذكيرات المواعيد"
+  ,reminderBeforeAppointment: "تذكير قبل كل موعد"
+  ,progressAlertsLabel: "تنبيهات التقدم"
+  ,notifyPatientProgress: "إشعار عند تسجيل تقدم المريض"
+  ,receiveDailyEmails: "استلام ملخصات يومية عبر البريد الإلكتروني"
+  ,savePreferences: "حفظ التفضيلات"
+  ,dangerZone: "منطقة الخطر"
+  ,deleteAccount: "حذف الحساب"
+  // Notifications Page Arabic
+  ,stayUpdatedMessages: "ابق على اطلاع برسائل المرضى وتذكيرات المواعيد"
+  ,totalNotifications: "إجمالي الإشعارات"
+  ,unread: "غير مقروءة"
+  ,read: "مقروءة"
+  ,recentNotifications: "الإشعارات الأخيرة"
+  ,noNotifications: "لا توجد إشعارات"
+  ,newMessageFrom: "رسالة جديدة من"
+  ,appointmentReminderTitle: "تذكير بموعد"
+  ,patientProgressAlertTitle: "تنبيه تقدم المريض"
+  ,severePainLowerBack: "لدي ألم شديد في أسفل ظهري"
+  ,appointmentTomorrow: "موعد غداً في الساعة"
+  ,hasNotRecordedProgress: "لم يسجل تقدماً منذ 5 أيام"
+  ,markAsRead: "وضع علامة كمقروء"
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -2821,6 +3448,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     physiotherapist: "دکتۆر",
     progress: "پێشکەوتن",
     profile: "پڕۆفایل",
+    activityLogs: "لۆگی چالاکیەکان",
     logout: "دەرچوون",
     accessKeys: "کلیلی دەستگەیشتن",
     notifications: "ئاگانامەکان",
@@ -2831,6 +3459,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     patients: "نەخوشەکان"
     ,activities: "چالاکیەکان"
     ,trainees: "فێركراوەکان"
+    ,traineeMeals: "خواردنی فێركراوان"
+    ,traineeWorkouts: "ڕاهێنانی فێركراوان"
     ,analytics: "ئەنالیتیکس 📊"
     ,reports: "ڕاپۆرتەکان"
     ,management: "بەڕێوەبردن"
@@ -3101,6 +3731,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,invalidEmail: "ئیمەیڵەکە دروست نییە"
       ,alreadyHaveAccount: "پێشتر هەژمارت هەیە؟"
       ,signInLink: "چوونەژوورەوە"
+      ,emailNotVerified: "ئیمەیڵەکە پشتڕاست نەکراوەتەوە"
+      ,pleaseCheckYourEmail: "تکایە پێش چوونەژوورەوە ئیمەیڵەکەت پشتڕاست بکەرەوە. سەیری inbox-ەکەت بکە بۆ لینکی پشتڕاستکردنەوە."
+      ,registrationSuccessVerifyEmail: "تۆمارکردن سەرکەوتوو بوو! تکایە سەیری ئیمەیڵەکەت بکە بۆ پشتڕاستکردنەوەی هەژمارەکەت پێش چوونەژوورەوە."
       // Subscription Warning (Kurdish)
       ,subscriptionExpired: "بەشداریت بەسەرچووە"
       ,actionRequired: "کردار پێویستە"
@@ -3254,6 +3887,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,accountActions: "کردارەکانی هەژمار"
     ,accountActionsDesc: "دەرچوون دەبێتە هۆی پاککردنەوەی دانیشتنەکەت و گەڕانەوەت بۆ پەڕەی چوونەژوورەوە."
     ,logoutButton: "دەرچوون"
+    ,more: "زیاتر"
     // Manage Profile Dialog (Kurdish)
     ,manageProfile: "بەڕێوەبردنی پڕۆفایل"
     ,changeAvatar: "گۆڕینی وێنە"
@@ -3372,6 +4006,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,pending: "چاوەڕوانکراو"
     ,approved: "پەسەندکراو"
     ,rejected: "ڕەتکراوەتەوە"
+    ,pendingUserApprovals: "پەسەندکردنی یوزەرە چاوەڕوانکراوەکان"
+    ,emailVerified: "ئیمەیڵ پشتڕاستکراوەتەوە"
+    ,userApproved: "یوزەر پەسەندکرا"
+    ,canNowLogin: "دەتوانێت ئێستا بچێتە ژوورەوە"
+    ,user: "یوزەر"
+    ,joinedDate: "بەرواری پەیوەندیکردن"
+    ,actionsColumn: "کردارەکان"
     // Access Keys Page (Kurdish)
     ,accessKeysPage: "کلیلەکانی دەستگەیشتن"
     ,generateAndManageKeys: "دروستکردن و بەڕێوەبردنی کلیلەکانی دەستگەیشتن"
@@ -3451,6 +4092,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,programName: "ناوی پرۆگرام"
     ,description: "وەسف"
     ,assignToUsers: "دیاریکردن بۆ بەکارهێنەران"
+    ,assignedTo: "دیاریکراوە بۆ"
     ,selectUsers: "بەکارهێنەران هەڵبژێرە"
     ,searchByName: "گەڕان بە ناو..."
     ,searchByNameOrEmail: "گەڕان بە ناو یان ئیمەیڵ..."
@@ -3704,6 +4346,258 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,deleteNotification: "سڕینەوە"
     ,noNotifications: "هیچ ئاگادارییەک نییە"
     ,allCaughtUp: "تۆ لەسەر هەموو شتێک نوێی!"
+    // Physiotherapist Kurdish
+    ,physioWelcome: "بەخێربێیت بۆ داشبۆردی فیزۆثێراپی"
+    ,totalPatients: "کۆی نەخۆشەکان"
+    ,todayAppointments: "نۆرەکانی ئەمڕۆ"
+    ,pendingRequests: "داواکارییە چاوەڕوانەکان"
+    ,completedSessions: "دانیشتنە تەواوبووەکان"
+    ,upcomingAppointments: "نۆرەکانی داهاتوو"
+    ,recentActivities: "چالاکییە تازەکان"
+    ,patientList: "لیستی نەخۆشەکان"
+    ,manageAllPatients: "بەڕێوەبردنی هەموو نەخۆشەکان"
+    ,searchPatients: "گەڕان بە دوای نەخۆشەکان..."
+    ,addPatient: "زیادکردنی نەخۆش"
+    ,activePatients: "نەخۆشە چالاکەکان"
+    ,avgProgress: "پێشکەوتنی ناوەند"
+    ,condition: "حاڵەت"
+    ,sessions: "دانیشتنەکان"
+    ,viewDetails: "بینینی وردەکاری"
+    ,sendMessage: "ناردنی پەیام"
+    ,editPatient: "دەستکاریکردنی نەخۆش"
+    ,deletePatient: "سڕینەوەی نەخۆش"
+    ,noPatients: "هیچ نەخۆشێک نەدۆزرایەوە"
+    ,patientName: "ناوی نەخۆش"
+    ,patientEmail: "ئیمەیڵی نەخۆش"
+    ,patientPhone: "ژمارە تەلەفۆن"
+    ,patientAge: "تەمەن"
+    ,medicalCondition: "حاڵەتی تەندروستی"
+    ,fillAllFields: "تکایە هەموو خانەکان پڕبکەرەوە"
+    ,patientAdded: "نەخۆش بە سەرکەوتوویی زیادکرا"
+    ,patientUpdated: "نەخۆش بە سەرکەوتوویی نوێکرایەوە"
+    ,patientDeleted: "نەخۆش بە سەرکەوتوویی سڕایەوە"
+    ,confirmDelete: "دڵنیایت لە سڕینەوە؟"
+    // Appointments Kurdish
+    ,myAppointments: "نۆرەکانم"
+    ,scheduleAppointments: "خشتەی نۆرەکان"
+    ,totalAppointments: "کۆی نۆرەکان"
+    ,todayScheduled: "نۆرەکانی ئەمڕۆ"
+    ,upcomingCount: "نۆرەکانی داهاتوو"
+    ,completedCount: "نۆرە تەواوبووەکان"
+    ,addAppointment: "زیادکردنی نۆرە"
+    ,appointmentDate: "بەرواری نۆرە"
+    ,appointmentTime: "کاتی نۆرە"
+    ,duration: "ماوە"
+    ,appointmentType: "جۆری نۆرە"
+    ,inPerson: "ڕووبەڕوو"
+    ,videoCall: "پەیوەندی ڤیدیۆیی"
+    ,phoneCall: "پەیوەندی تەلەفۆنی"
+    ,appointmentReason: "هۆکاری نۆرە"
+    ,appointmentLocation: "شوێنی نۆرە"
+    ,appointmentNotes: "تێبینیەکان"
+    ,appointmentFee: "نرخی نۆرە"
+    ,scheduled: "خشتەکرا"
+    ,confirmed: "پشتڕاستکرایەوە"
+    ,completed: "تەواوبوو"
+    ,cancelled: "هەڵوەشایەوە"
+    ,noShow: "نەهات"
+    ,appointmentScheduled: "نۆرە بە سەرکەوتوویی خشتەکرا"
+    ,appointmentUpdated: "نۆرە بە سەرکەوتوویی نوێکرایەوە"
+    ,appointmentCancelled: "نۆرە هەڵوەشایەوە"
+    ,minutes: "خولەک"
+    // Progress Kurdish
+    ,progressTracking: "چاودێری پێشکەوتن"
+    ,monitorRecovery: "چاودێری چاکبوونەوە"
+    ,totalRecords: "کۆی تۆمارەکان"
+    ,patientsTracked: "نەخۆشە چاودێریکراوەکان"
+    ,addProgressRecord: "زیادکردنی تۆماری پێشکەوتن"
+    ,selectPatient: "هەڵبژاردنی نەخۆش"
+    ,recordDate: "بەرواری تۆمار"
+    ,mobilityLevel: "ئاستی جموجوڵ"
+    ,strengthLevel: "ئاستی هێز"
+    ,painLevel: "ئاستی ئازار"
+    ,clinicalNotes: "تێبینیەکانی کلینیکی"
+    ,progressSaved: "پێشکەوتن تۆمارکرا"
+    ,progressDeleted: "پێشکەوتن سڕایەوە"
+    ,noProgressYet: "هێشتا هیچ پێشکەوتنێک تۆمار نەکراوە"
+    // Requests Kurdish
+    ,patientRequests: "داواکارییەکانی نەخۆشەکان"
+    ,manageRequests: "بەڕێوەبردنی داواکارییەکان"
+    ,newRequests: "داواکارییە تازەکان"
+    ,acceptedRequests: "داواکاری قەبووڵکراوەکان"
+    ,rejectedRequests: "داواکاری ڕەتکراوەکان"
+    ,requestFrom: "داواکاری لە"
+    ,injuryType: "جۆری برینداربوون"
+    ,painLevel: "ئاستی ئازار"
+    ,requestNotes: "تێبینیەکانی داواکاری"
+    ,acceptRequest: "قەبووڵکردن"
+    ,rejectRequest: "ڕەتکردنەوە"
+    ,pending: "چاوەڕوان"
+    ,accepted: "قەبووڵکرا"
+    ,rejected: "ڕەتکرایەوە"
+    ,requestAccepted: "داواکاری قەبووڵکرا"
+    ,requestRejected: "داواکاری ڕەتکرایەوە"
+    ,requestCompleted: "داواکاری وەک تەواو نیشانکرا"
+    ,noRequests: "هیچ داواکارییەک نییە"
+    ,patientNotes: "تێبینییەکانی نەخۆش"
+    ,yourResponse: "وەڵامی تۆ"
+    ,responseRequired: "وەڵام پێویستە"
+    ,responseRequiredMessage: "تکایە وەڵامێک بنووسە پێش لە قەبووڵکردنی داواکارییەکە"
+    ,responseRequiredMessage: "تکایە وەڵامێک بنووسە پێش لە قەبووڵکردنی داواکاریکە"
+    ,enterResponseMessage: "پەیامێک بۆ نەخۆش بنووسە..."
+    ,previousResponse: "وەڵامی پێشووت"
+    ,markCompleted: "وەک تەواوکراو نیشانبکە"
+    ,requestDetails: "وردەکارییەکانی داواکاری"
+    ,scheduleAppointment: "دانانی نۆرە"
+    ,appointmentDate: "بەرواری نۆرە"
+    ,appointmentTime: "کاتژمێری نۆرە"
+    ,sessionPrice: "نرخی جلسە"
+    ,additionalNotes: "تێبینییە زیادەکان (ئارەزوومەندانە)"
+    ,confirmAccept: "دڵنیاکردنەوە و قەبووڵکردن"
+    ,appointmentScheduled: "نۆرە دانرا! نەخۆش زیادکرا بۆ لیستەکەت."
+    ,fillAllAppointmentDetails: "تکایە هەموو وردەکارییەکانی نۆرە پڕبکەرەوە (بەروار، کاتژمێر و نرخ)"
+    ,requestsAppearHere: "داواکارییەکانی نەخۆش لێرە دەردەکەون"
+    ,loadingRequests: "باریکردنی داواکارییەکان..."
+    ,searchRequests: "بگەڕێ بە ناوی نەخۆش یان جۆری برین..."
+    ,totalRequests: "کۆی داواکارییەکان"
+    ,viewDetails: "وردەکاری ببینە"
+    ,complete: "تەواوکردن"
+    ,date: "بەروار"
+    ,live: "زیندوو"
+    ,modelLoaded: "مۆدێلی ٣ڕەهەند باریکرا"
+    ,modelName: "ناو"
+    ,skeletonPreCut: "ئیسکەلێتی پێش بڕین"
+    ,format: "فۆرمات"
+    ,type: "جۆر"
+    ,humanSkeleton: "ئیسکەلێتی مرۆڤ"
+    ,size: "قەبارە"
+    ,anatomy3DViewer: "بینەری ئەناتۆمی ٣ ڕەهەندی"
+    ,view3DSkeletonModel: "بینینی مۆدێلی سێ ڕەهەندی ئیسکەلێتی مرۆڤ"
+    ,viewControl: "کۆنترۆڵی بینین"
+    ,rotation: "سوڕانەوە"
+    ,zoom: "زووم"
+    ,resetView: "ڕێکخستنەوە"
+    ,modelInfo: "زانیاری مۆدێل"
+    ,instructions: "ڕێنمایی"
+    ,useSliderToRotate: "خشۆکە بەکاربهێنە بۆ سوڕاندنی مۆدێل"
+    ,useSliderToZoom: "خشۆکە بەکاربهێنە بۆ نزیک و دوورکردنەوە"
+    ,clickButtonToReset: "دوگمە بۆ گەڕانەوە بۆ دۆخی یەکەم"
+    ,medicalDashboard: "داشبۆردی پزیشکی"
+    ,mainMenu: "لیستی سەرەکی"
+    ,controlPanel: "پانیلی کۆنترۆڵ"
+    ,appointments: "چاوپێکەوتنەکان"
+    ,programs: "بەرنامەکان"
+    ,viewProgress: "بینینی پێشکەوتن"
+    ,patientProgress: "پێشکەوتنی نەخۆش"
+    ,totalSessions: "کۆی دانیشتنەکان"
+    ,typeYourMessage: "پەیامەکەت لێرە بنووسە..."
+    ,pleaseEnterMessage: "تکایە پەیامێک بنووسە"
+    ,messageSent: "پەیامەکە بە سەرکەوتوویی نێردرا"
+    ,to: "بۆ"
+    ,enterSessionCount: "ژمارەی دانیشتنەکان بنووسە"
+    ,sessionCountHint: "چەند جار نەخۆشەکە سەردانی دکتۆری کردووە"
+    ,success: "سەرکەوتوو"
+    ,patientAddedSuccessfully: "نەخۆشەکە بە سەرکەوتوویی زیادکرا بۆ لیستەکەت"
+    ,selectFromList: "لە لیستەکە هەڵبژێرە"
+    ,enterManually: "بە دەست بنووسە"
+    ,selectPatient: "نەخۆشێک هەڵبژێرە"
+    ,noPatientsAvailable: "هیچ نەخۆشێک بەردەست نییە"
+    ,newPatientInfo: "زانیاری نەخۆشی نوێ"
+    ,pleaseCompletePatientInfo: "تکایە زانیاری نەخۆشەکە تەواو بکە"
+    ,patientWillBeAddedAutomatically: "ئەم نەخۆشە بە ئۆتۆماتیک زیاد دەکرێتە لیستەکەت"
+    ,enterEmail: "ئیمەیڵ بنووسە"
+    ,enterPhone: "ژمارەی تەلەفۆن بنووسە"
+    ,age: "تەمەن"
+    ,enterAge: "تەمەن بنووسە"
+    ,enterCondition: "حاڵەتی تەندروستی بنووسە"
+    ,loadingAppointments: "باریکردنی چاوپێکەوتنەکان..."
+    ,newAppointment: "چاوپێکەوتنی نوێ"
+    ,enterFullName: "ناوی تەواو بنووسە"
+    ,minutes30: "٣٠ خولەک"
+    ,minutes45: "٤٥ خولەک"
+    ,minutes60: "٦٠ خولەک"
+    ,minutes90: "٩٠ خولەک"
+    ,enterReason: "نموونە: دانیشتنی چارەسەری فیزیۆثێراپی"
+    ,location: "شوێن"
+    ,enterLocation: "ژمارەی ژوور یان شوێن"
+    ,platformCommission: "کۆمیشنی پلاتفۆرم"
+    ,notes: "تێبینییەکان (ئیختیاری)"
+    ,enterNotes: "تێبینی یان ڕێنمایی زیادە"
+    ,scheduleAppointment: "چاوپێکەوتن دیاریبکە"
+    ,totalRevenue: "کۆی داهات"
+    ,searchAppointments: "بگەڕێ بە ناوی نەخۆش یان هۆکار..."
+    ,allStatus: "هەموو دۆخەکان"
+    ,allTypes: "هەموو جۆرەکان"
+    ,pastAppointments: "چاوپێکەوتنەکانی ڕابردوو"
+    ,noAppointments: "هیچ چاوپێکەوتنێک نەدۆزرایەوە"
+    ,scheduleFirstAppointment: "کرتە بکە لەسەر \"چاوپێکەوتنی نوێ\" بۆ دیاریکردنی یەکەم چاوپێکەوتن"
+    ,confirm: "پشتڕاستکردنەوە"
+    ,cancel: "هەڵوەشاندنەوە"
+    ,appointmentNotes: "تێبینییەکانی چاوپێکەوتن"
+    ,initialAssessment: "هەڵسەنگاندنی سەرەتایی"
+    ,followUp: "شوێنکەوتن"
+    ,therapySession: "دانیشتنی چارەسەری"
+    ,checkUp: "پشکنین"
+    ,consultation: "ڕاوێژ"
+    ,completedToday: "تەواوکراوی ئەمڕۆ"
+    ,viewPatients: "بینینی نەخۆشەکان"
+    ,anatomyTool: "ئامرازی ئەناتۆمی"
+    ,writeReport: "نووسینی ڕاپۆرت"
+    ,noAppointmentsToday: "هیچ چاوپێکەوتنێک بۆ ئەمڕۆ دیارینەکراوە"
+    // Profile & Settings Kurdish
+    ,myProfile: "پڕۆفایلی من"
+    ,professionalInfo: "زانیاری پیشەیی"
+    ,licenseNumber: "ژمارەی مۆڵەت"
+    ,specialization: "پسپۆڕی"
+    ,yearsExperience: "ساڵانی ئەزموون"
+    ,certifications: "بڕوانامەکان"
+    ,updateProfile: "نوێکردنەوەی پڕۆفایل"
+    ,profileUpdated: "پڕۆفایل نوێکرایەوە"
+    ,changePassword: "گۆڕینی وشەی نهێنی"
+    ,currentPassword: "وشەی نهێنی ئێستا"
+    ,newPassword: "وشەی نهێنی نوێ"
+    ,confirmPassword: "پشتڕاستکردنەوەی وشەی نهێنی"
+    ,passwordChanged: "وشەی نهێنی گۆڕدرا"
+    ,languagePreferences: "هەڵبژاردنی زمان"
+    ,notificationSettings: "ڕێکخستنەکانی ئاگاداری"
+    ,emailNotifications: "ئاگاداریەکانی ئیمەیڵ"
+    ,smsNotifications: "ئاگاداریەکانی SMS"
+    ,pushNotificationsLabel: "ئاگاداریەکانی Push"
+    ,privacySettings: "ڕێکخستنەکانی تایبەتێتی"
+    ,showProfile: "پیشاندانی پڕۆفایل"
+    ,allowMessages: "ڕێگەدان بە پەیامەکان"
+    // Settings Page Kurdish
+    ,manageAccountPreferences: "بەڕێوەبردنی ڕێکخستنەکانی ئەکاونت و پاراستن"
+    ,accountSecurity: "پاراستنی ئەکاونت"
+    ,enterCurrentPassword: "وشەی نهێنی ئێستا بنووسە"
+    ,enterNewPassword: "وشەی نهێنی نوێ بنووسە"
+    ,confirmNewPassword: "وشەی نهێنی نوێ پشتڕاست بکەرەوە"
+    ,updatePassword: "نوێکردنەوەی وشەی نهێنی"
+    ,notificationPreferences: "هەڵبژاردنەکانی ئاگاداری"
+    ,patientMessages: "پەیامەکانی نەخۆش"
+    ,getNotifiedPatientMessages: "ئاگادارم بکەرەوە کاتێک نەخۆشەکان پەیام دەنێرن"
+    ,appointmentRemindersLabel: "بیرخستنەوەی چاوپێکەوتن"
+    ,reminderBeforeAppointment: "بیرخستنەوە پێش هەر چاوپێکەوتنێک"
+    ,progressAlertsLabel: "ئاگاداریەکانی پێشکەوتن"
+    ,notifyPatientProgress: "ئاگادارم بکەرەوە کاتێک پێشکەوتنی نەخۆش تۆمار دەکرێت"
+    ,receiveDailyEmails: "وەرگرتنی کورتەی ڕۆژانە بە ئیمەیڵ"
+    ,savePreferences: "پاشەکەوتکردنی هەڵبژاردنەکان"
+    ,dangerZone: "ناوچەی مەترسی"
+    ,deleteAccount: "سڕینەوەی ئەکاونت"
+    // Notifications Page Kurdish
+    ,stayUpdatedMessages: "لەسەر پەیامەکانی نەخۆش و بیرخستنەوەکانی چاوپێکەوتن تازە بە"
+    ,totalNotifications: "کۆی گشتی ئاگادارییەکان"
+    ,unread: "نەخوێنراوە"
+    ,read: "خوێنراوەتەوە"
+    ,recentNotifications: "ئاگاداریە تازەکان"
+    ,noNotifications: "هیچ ئاگاداریێک نییە"
+    ,newMessageFrom: "پەیامی نوێ لە"
+    ,appointmentReminderTitle: "بیرخستنەوەی چاوپێکەوتن"
+    ,patientProgressAlertTitle: "ئاگاداری پێشکەوتنی نەخۆش"
+    ,severePainLowerBack: "ئازاری توندم هەیە لە پشتی خوارەوە"
+    ,appointmentTomorrow: "چاوپێکەوتنی بەیانی لە کاتژمێر"
+    ,hasNotRecordedProgress: "لە ماوەی 5 ڕۆژدا هیچ پێشکەوتنێکی تۆمار نەکردووە"
+    ,markAsRead: "وەک خوێندراوە نیشانی بکە"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -3724,6 +4618,8 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     patients: "Hastalar",
   activities: "Aktiviteler",
   trainees: "Öğrenciler",
+  traineeMeals: "Öğrenci Yemekleri",
+  traineeWorkouts: "Öğrenci Antrenmanları",
   analytics: "📊 Analitik",
   reports: "Raporlar",
   management: "Yönetim",
@@ -4145,6 +5041,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   accountActions: "Hesap İşlemleri",
   accountActionsDesc: "Çıkış yapmak oturumunuzu temizler ve giriş ekranına döndürür.",
   logoutButton: "Çıkış Yap",
+  more: "Daha Fazla",
   // Manage Profile Dialog (Turkish)
   manageProfile: "Profili Yönet",
   changeAvatar: "Avatarı Değiştir",
@@ -4262,6 +5159,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   pending: "Beklemede",
   approved: "Onaylandı",
   rejected: "Reddedildi",
+  pendingUserApprovals: "Bekleyen Kullanıcı Onayları",
+  emailVerified: "E-posta Doğrulandı",
+  userApproved: "Kullanıcı Onaylandı",
+  canNowLogin: "artık giriş yapabilir",
+  user: "Kullanıcı",
+  joinedDate: "Katılma Tarihi",
+  actionsColumn: "İşlemler",
+  rejected: "Reddedildi",
   // Access Keys Page (Turkish)
   accessKeysPage: "Erişim Anahtarları",
   generateAndManageKeys: "Erişim anahtarlarını oluştur ve yönet",
@@ -4341,6 +5246,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   programName: "Program Adı",
   description: "Açıklama",
   assignToUsers: "Kullanıcılara Ata",
+  assignedTo: "Atanan",
   selectUsers: "Kullanıcıları Seç",
   searchByName: "İsme göre ara...",
   searchByNameOrEmail: "İsim veya e-posta ile ara...",
@@ -4594,5 +5500,84 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   deleteNotification: "Sil",
   noNotifications: "Bildirim yok",
   allCaughtUp: "Her şey tamam!",
+  live: "CANLI",
+  modelLoaded: "3D MODEL YÜKLENDİ",
+  modelName: "İsim",
+  skeletonPreCut: "Önceden Kesilmiş İskelet",
+  format: "Format",
+  type: "Tür",
+  humanSkeleton: "İnsan İskeleti",
+  size: "Boyut",
+  anatomy3DViewer: "3D Anatomi Görüntüleyici",
+  view3DSkeletonModel: "3D insan iskelet modelini görüntüle",
+  viewControl: "Görüntü Kontrolü",
+  rotation: "Döndürme",
+  zoom: "Yakınlaştırma",
+  resetView: "Görünümü Sıfırla",
+  modelInfo: "Model Bilgisi",
+  instructions: "Talimatlar",
+  useSliderToRotate: "Modeli döndürmek için kaydırıcıyı kullanın",
+  useSliderToZoom: "Yakınlaştırmak ve uzaklaştırmak için kaydırıcıyı kullanın",
+  clickButtonToReset: "Başlangıç görünümüne dönmek için düğmeye tıklayın",
+  medicalDashboard: "Tıbbi Kontrol Paneli",
+  mainMenu: "ANA MENÜ",
+  controlPanel: "Kontrol Paneli",
+  appointments: "Randevular",
+  programs: "Programlar",
+  viewProgress: "İlerlemeyi Görüntüle",
+  patientProgress: "Hasta İlerlemesi",
+  totalSessions: "Toplam Seans",
+  typeYourMessage: "Mesajınızı buraya yazın...",
+  pleaseEnterMessage: "Lütfen bir mesaj girin",
+  messageSent: "Mesaj başarıyla gönderildi",
+  to: "Kime",
+  enterSessionCount: "Seans sayısını girin",
+  sessionCountHint: "Hastanın kaç kez doktora gittiği",
+  success: "Başarılı",
+  patientAddedSuccessfully: "Hasta listenize başarıyla eklendi",
+  selectFromList: "Listeden Seç",
+  enterManually: "Manuel Gir",
+  selectPatient: "Hasta seçin",
+  noPatientsAvailable: "Mevcut hasta yok",
+  newPatientInfo: "Yeni Hasta Bilgileri",
+  pleaseCompletePatientInfo: "Lütfen hasta bilgilerini tamamlayın",
+  patientWillBeAddedAutomatically: "Bu hasta otomatik olarak listenize eklenecek",
+  enterEmail: "E-posta adresini girin",
+  enterPhone: "Telefon numarasını girin",
+  age: "Yaş",
+  enterAge: "Yaşı girin",
+  enterCondition: "Tıbbi durumu girin",
+  // Settings Page Turkish
+  manageAccountPreferences: "Hesap tercihlerinizi ve güvenliğinizi yönetin",
+  accountSecurity: "Hesap Güvenliği",
+  enterCurrentPassword: "Mevcut şifrenizi girin",
+  enterNewPassword: "Yeni şifrenizi girin",
+  confirmNewPassword: "Yeni şifreyi onaylayın",
+  updatePassword: "Şifreyi Güncelle",
+  notificationPreferences: "Bildirim Tercihleri",
+  patientMessages: "Hasta Mesajları",
+  getNotifiedPatientMessages: "Hastalar mesaj gönderdiğinde bildirim al",
+  appointmentRemindersLabel: "Randevu Hatırlatıcıları",
+  reminderBeforeAppointment: "Her randevudan önce hatırlatıcı",
+  progressAlertsLabel: "İlerleme Uyarıları",
+  notifyPatientProgress: "Hasta ilerlemesi kaydedildiğinde bildir",
+  receiveDailyEmails: "Günlük e-posta özetleri al",
+  savePreferences: "Tercihleri Kaydet",
+  dangerZone: "Tehlike Bölgesi",
+  deleteAccount: "Hesabı Sil",
+  // Notifications Page Turkish
+  stayUpdatedMessages: "Hasta mesajları ve randevu hatırlatıcıları ile güncel kalın",
+  totalNotifications: "Toplam Bildirimler",
+  unread: "Okunmamış",
+  read: "Okunmuş",
+  recentNotifications: "Son Bildirimler",
+  noNotifications: "Bildirim yok",
+  newMessageFrom: "Yeni mesaj:",
+  appointmentReminderTitle: "Randevu Hatırlatıcısı",
+  patientProgressAlertTitle: "Hasta İlerleme Uyarısı",
+  severePainLowerBack: "Alt sırtımda şiddetli ağrı var",
+  appointmentTomorrow: "randevusu yarın saat",
+  hasNotRecordedProgress: "5 gündür ilerleme kaydetmedi",
+  markAsRead: "Okundu Olarak İşaretle",
   },
 }

@@ -1,16 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminDb } from '@/lib/firebase-admin'
 
-export async function PATCH(
+export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
     const body = await request.json()
-    const { read } = body
+    const { isRead } = body
 
-    if (typeof read !== 'boolean') {
+    if (typeof isRead !== 'boolean') {
       return NextResponse.json(
         { error: 'Read status must be a boolean' },
         { status: 400 }
@@ -18,7 +18,7 @@ export async function PATCH(
     }
 
     await adminDb.collection('notifications').doc(id).update({
-      read,
+      isRead,
       updatedAt: new Date().toISOString()
     })
 
@@ -34,10 +34,10 @@ export async function PATCH(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = params
+    const { id } = await params
 
     await adminDb.collection('notifications').doc(id).delete()
 

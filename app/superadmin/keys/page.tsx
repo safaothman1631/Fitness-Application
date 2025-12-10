@@ -6,24 +6,99 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Key, Plus, Copy, Trash2, Clock, CheckCircle, XCircle, Sparkles } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
 
 export default function AccessKeysPage() {
   const { t } = useLanguage()
   const [generating, setGenerating] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [keys, setKeys] = useState<any[]>([])
 
-  const keys = [
-    { id: 1, key: "FP-2024-A7B3C9", type: "Premium", uses: "5/10", status: "Active", created: "2024-11-20", expires: "2025-11-20" },
-    { id: 2, key: "FP-2024-X8Y2Z4", type: "Standard", uses: "3/5", status: "Active", created: "2024-11-15", expires: "2025-05-15" },
-    { id: 3, key: "FP-2024-M5N1P7", type: "Trial", uses: "1/1", status: "Used", created: "2024-11-10", expires: "2024-12-10" },
-    { id: 4, key: "FP-2024-Q3R9S2", type: "Premium", uses: "0/10", status: "Active", created: "2024-11-18", expires: "2025-11-18" },
-    { id: 5, key: "FP-2024-T6U4V8", type: "Standard", uses: "5/5", status: "Expired", created: "2024-10-01", expires: "2024-11-01" },
-  ]
+  useEffect(() => {
+    fetchKeys()
+  }, [])
 
-  const handleGenerate = () => {
+  const fetchKeys = async () => {
+    setLoading(true)
+    try {
+      const response = await fetch('/api/access-keys')
+      if (response.ok) {
+        const data = await response.json()
+        setKeys(data)
+      }
+    } catch (error) {
+      console.error('Error fetching keys:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGenerate = async () => {
     setGenerating(true)
-    setTimeout(() => setGenerating(false), 1500)
+    try {
+      const response = await fetch('/api/access-keys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          type: 'Premium',
+          maxUses: 10,
+          duration: 365
+        })
+      })
+      
+      if (response.ok) {
+        alert('✅ Access key generated successfully!')
+        fetchKeys()
+      } else {
+        alert('❌ Failed to generate key')
+      }
+    } catch (error) {
+      console.error('Error generating key:', error)
+      alert('❌ Error generating key')
+    } finally {
+      setGenerating(false)
+    }
+  }
+
+  const handleDelete = async (keyId: string) => {
+    if (!confirm('⚠️ Are you sure you want to delete this key?')) return
+    
+    try {
+      const response = await fetch(`/api/access-keys?id=${keyId}`, {
+        method: 'DELETE'
+      })
+      
+      if (response.ok) {
+        alert('✅ Key deleted successfully!')
+        fetchKeys()
+      } else {
+        alert('❌ Failed to delete key')
+      }
+    } catch (error) {
+      console.error('Error deleting key:', error)
+      alert('❌ Error deleting key')
+    }
+  }
+
+  const handleCopy = (key: string) => {
+    navigator.clipboard.writeText(key)
+    alert('✅ Key copied to clipboard!')
+  }
+
+  if (loading) {
+    return (
+      <AuthGuard requiredRole="superadmin">
+        <SidebarSleek role="superadmin">
+          <div className="flex items-center justify-center h-screen">
+            <div className="text-center">
+              <div className="inline-block w-16 h-16 border-4 border-purple-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+              <p className="text-gray-400">{t("loading")}...</p>
+            </div>
+          </div>
+        </SidebarSleek>
+      </AuthGuard>
+    )
   }
 
   return (
@@ -139,61 +214,79 @@ export default function AccessKeysPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-slate-800">
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("keyColumn")}</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("typeColumn")}</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("usesColumn")}</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("statusColumn")}</th>
-                      <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("expiresColumn")}</th>
-                      <th className="text-right text-gray-400 text-sm font-semibold p-3">{t("actionsColumn")}</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {keys.map((key) => (
-                      <tr key={key.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
-                        <td className="p-3">
-                          <div className="flex items-center gap-2">
-                            <code className="text-cyan-400 font-mono text-sm bg-slate-800/50 px-3 py-1 rounded-lg">
-                              {key.key}
-                            </code>
-                            <button className="text-gray-400 hover:text-cyan-400 transition-colors">
-                              <Copy className="w-4 h-4" />
-                            </button>
-                          </div>
-                        </td>
-                        <td className="p-3">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            key.type === "Premium" ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" :
-                            key.type === "Standard" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
-                            "bg-gray-500/20 text-gray-400 border border-gray-500/30"
-                          }`}>
-                            {key.type}
-                          </span>
-                        </td>
-                        <td className="p-3 text-gray-400 font-mono text-sm">{key.uses}</td>
-                        <td className="p-3">
-                          <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            key.status === "Active" ? "bg-green-500/20 text-green-400 border border-green-500/30" :
-                            key.status === "Used" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
-                            "bg-red-500/20 text-red-400 border border-red-500/30"
-                          }`}>
-                            {key.status}
-                          </span>
-                        </td>
-                        <td className="p-3 text-gray-400 text-sm">{key.expires}</td>
-                        <td className="p-3 text-right">
-                          <Button variant="ghost" size="sm" className="text-red-400 hover:bg-red-500/10 hover:text-red-300">
-                            <Trash2 className="w-4 h-4" />
-                          </Button>
-                        </td>
+              {keys.length === 0 ? (
+                <div className="text-center py-12">
+                  <Key className="w-16 h-16 text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-400 text-lg mb-2">No access keys found</p>
+                  <p className="text-gray-500 text-sm">Generate your first key to get started</p>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-slate-800">
+                        <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("keyColumn")}</th>
+                        <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("typeColumn")}</th>
+                        <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("usesColumn")}</th>
+                        <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("statusColumn")}</th>
+                        <th className="text-left text-gray-400 text-sm font-semibold p-3">{t("expiresColumn")}</th>
+                        <th className="text-right text-gray-400 text-sm font-semibold p-3">{t("actionsColumn")}</th>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                    </thead>
+                    <tbody>
+                      {keys.map((key) => (
+                        <tr key={key.id} className="border-b border-slate-800/50 hover:bg-slate-800/30 transition-colors">
+                          <td className="p-3">
+                            <div className="flex items-center gap-2">
+                              <code className="text-cyan-400 font-mono text-sm bg-slate-800/50 px-3 py-1 rounded-lg">
+                                {key.key}
+                              </code>
+                              <button 
+                                onClick={() => handleCopy(key.key)}
+                                className="text-gray-400 hover:text-cyan-400 transition-colors"
+                              >
+                                <Copy className="w-4 h-4" />
+                              </button>
+                            </div>
+                          </td>
+                          <td className="p-3">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              key.type === "Premium" ? "bg-purple-500/20 text-purple-400 border border-purple-500/30" :
+                              key.type === "Standard" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
+                              "bg-gray-500/20 text-gray-400 border border-gray-500/30"
+                            }`}>
+                              {key.type}
+                            </span>
+                          </td>
+                          <td className="p-3 text-gray-400 font-mono text-sm">{key.usedCount || 0}/{key.maxUses || 0}</td>
+                          <td className="p-3">
+                            <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
+                              key.status === "active" ? "bg-green-500/20 text-green-400 border border-green-500/30" :
+                              key.status === "used" ? "bg-blue-500/20 text-blue-400 border border-blue-500/30" :
+                              "bg-red-500/20 text-red-400 border border-red-500/30"
+                            }`}>
+                              {key.status}
+                            </span>
+                          </td>
+                          <td className="p-3 text-gray-400 text-sm">
+                            {key.expiryDate ? new Date(key.expiryDate).toLocaleDateString() : '-'}
+                          </td>
+                          <td className="p-3 text-right">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              onClick={() => handleDelete(key.id)}
+                              className="text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

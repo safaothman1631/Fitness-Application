@@ -36,6 +36,24 @@ export async function POST(
       updatedAt: new Date().toISOString(),
     })
     
+    // Log activity
+    await adminDb.collection("activity_logs").add({
+      timestamp: new Date().toISOString(),
+      action: "patient_created",
+      actorId: id,
+      actorName: body.actorName || "Physiotherapist",
+      actorRole: "physiotherapist",
+      targetType: "patient",
+      targetId: docRef.id,
+      targetName: body.name,
+      details: {
+        email: body.email,
+        condition: body.condition,
+        age: body.age
+      },
+      description: `Created new patient: ${body.name}`
+    })
+    
     console.log("Patient created with ID:", docRef.id)
     const responseData = {
       id: docRef.id,

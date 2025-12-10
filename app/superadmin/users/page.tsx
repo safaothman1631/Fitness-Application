@@ -19,6 +19,7 @@ export default function UsersPage() {
   const [isCreating, setIsCreating] = useState(false)
   const [users, setUsers] = useState<any[]>([])
   const [proRequests, setProRequests] = useState<any[]>([])
+  const [pendingUsers, setPendingUsers] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
   const [userToDelete, setUserToDelete] = useState<any>(null)
@@ -84,6 +85,21 @@ export default function UsersPage() {
       console.error("Error fetching users:", error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // Fetch pending user approvals
+  const fetchPendingUsers = async () => {
+    try {
+      const response = await fetch("/api/users")
+      if (response.ok) {
+        const data = await response.json()
+        // Filter users with pending approval status
+        const pending = data.filter((u: any) => u.approvalStatus === 'pending' && u.emailVerified)
+        setPendingUsers(pending)
+      }
+    } catch (error) {
+      console.error("Error fetching pending users:", error)
     }
   }
 
@@ -173,12 +189,14 @@ export default function UsersPage() {
       fetchUsers()
     } else {
       fetchProRequests()
+      fetchPendingUsers()
     }
   }, [activeTab])
 
-  // Load pro requests on mount to show badge count
+  // Load pro requests and pending users on mount to show badge count
   useEffect(() => {
     fetchProRequests()
+    fetchPendingUsers()
   }, [])
 
   return (
@@ -545,9 +563,9 @@ export default function UsersPage() {
               <div className="flex items-center gap-2">
                 <Crown className="w-4 h-4" />
                 {t("proRequests")}
-                {proRequests.filter(r => r.status === 'pending').length > 0 && (
+                {(proRequests.filter(r => r.status === 'pending').length + pendingUsers.length) > 0 && (
                   <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
-                    {proRequests.filter(r => r.status === 'pending').length}
+                    {proRequests.filter(r => r.status === 'pending').length + pendingUsers.length}
                   </span>
                 )}
               </div>
@@ -915,6 +933,144 @@ export default function UsersPage() {
                   </table>
                 </div>
               )}
+            </CardContent>
+          </Card>
+          )}
+
+          {/* Pending User Approvals */}
+          {activeTab === 'requests' && pendingUsers.length > 0 && (
+          <Card className="bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/40 border-cyan-700/50 backdrop-blur-sm">
+            <CardHeader className="border-b border-slate-800/50 bg-gradient-to-r from-slate-900/50 to-slate-800/30">
+              <CardTitle className="text-white flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">
+                  <UserCheck className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{t("pendingUserApprovals")}</span>
+                <span className="px-3 py-1 rounded-full text-xs font-bold bg-red-500/20 text-red-300 border border-red-500/40">
+                  {pendingUsers.length}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="overflow-x-auto">
+                <table className="w-full">
+                  <thead>
+                    <tr className="border-b border-slate-800/50">
+                      <th className="text-left p-4 text-gray-400 font-semibold text-sm">{t("user")}</th>
+                      <th className="text-left p-4 text-gray-400 font-semibold text-sm">{t("emailAddressLabel")}</th>
+                      <th className="text-left p-4 text-gray-400 font-semibold text-sm">{t("joinedDate")}</th>
+                      <th className="text-right p-4 text-gray-400 font-semibold text-sm">{t("actionsColumn")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {pendingUsers.map((user) => (
+                      <tr key={user.id || user.uid} className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 transition-all duration-300">
+                        <td className="p-4">
+                          <div className="flex items-center gap-3">
+                            <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 via-blue-500 to-cyan-600 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-cyan-500/30 ring-2 ring-cyan-400/20">
+                              {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
+                            </div>
+                            <div>
+                              <p className="text-white font-semibold">{user.name || "No Name"}</p>
+                              <span className="px-2 py-0.5 rounded-full text-xs font-bold bg-orange-500/20 text-orange-300 border border-orange-500/40">
+                                {t("emailVerified")} ✓
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <p className="text-gray-300 text-sm">{user.email}</p>
+                        </td>
+                        <td className="p-4 text-gray-400 text-sm">
+                          {user.joinDate ? new Date(user.joinDate).toLocaleDateString() : "-"}
+                        </td>
+                        <td className="p-4 text-right">
+                          <div className="flex items-center justify-end gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={async () => {
+                                try {
+                                  const response = await fetch('/api/users/approve', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                      userId: user.id || user.uid,
+                                      action: 'approve',
+                                      adminId: 'superadmin'
+                                    })
+                                  })
+                                  
+                                  if (response.ok) {
+                                    // Success animation
+                                    const successDiv = document.createElement('div')
+                                    successDiv.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-[9999] animate-in fade-in zoom-in duration-300'
+                                    successDiv.innerHTML = `
+                                      <div class="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl p-8 max-w-md border border-green-400/30">
+                                        <div class="text-center">
+                                          <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center mx-auto mb-6">
+                                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                                            </svg>
+                                          </div>
+                                          <h3 class="text-3xl font-bold mb-3">✅ ${t("userApproved")}!</h3>
+                                          <p class="text-green-100 mb-2 text-lg">${user.name || user.email} ${t("canNowLogin")}</p>
+                                        </div>
+                                      </div>
+                                    `
+                                    document.body.appendChild(successDiv)
+                                    setTimeout(() => {
+                                      successDiv.style.animation = 'fade-out 300ms ease-out'
+                                      setTimeout(() => successDiv.remove(), 300)
+                                    }, 3000)
+                                    
+                                    fetchPendingUsers()
+                                    fetchUsers()
+                                  }
+                                } catch (error) {
+                                  console.error('Error approving user:', error)
+                                }
+                              }}
+                              className="border-green-700/50 text-green-400 hover:bg-gradient-to-r hover:from-green-600/30 hover:to-green-700/20 hover:border-green-500/60 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300"
+                            >
+                              <UserCheck className="w-4 h-4 mr-1" />
+                              {t("approve")}
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={async () => {
+                                try {
+                                  const response = await fetch('/api/users/approve', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                      userId: user.id || user.uid,
+                                      action: 'reject',
+                                      adminId: 'superadmin'
+                                    })
+                                  })
+                                  
+                                  if (response.ok) {
+                                    fetchPendingUsers()
+                                    fetchUsers()
+                                  }
+                                } catch (error) {
+                                  console.error('Error rejecting user:', error)
+                                }
+                              }}
+                              className="border-red-700/50 text-red-400 hover:bg-gradient-to-r hover:from-red-600/30 hover:to-red-700/20 hover:border-red-500/60 hover:text-red-300 hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+                            >
+                              <X className="w-4 h-4 mr-1" />
+                              {t("reject")}
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </CardContent>
           </Card>
           )}

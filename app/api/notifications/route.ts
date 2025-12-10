@@ -4,22 +4,26 @@ import { adminDb } from '@/lib/firebase-admin'
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const userId = searchParams.get('userId')
+    const physiotherapistId = searchParams.get('physiotherapistId')
 
-    if (!userId) {
-      return NextResponse.json({ error: 'User ID is required' }, { status: 400 })
+    if (!physiotherapistId) {
+      return NextResponse.json({ error: 'Physiotherapist ID is required' }, { status: 400 })
     }
 
     const notificationsRef = adminDb
       .collection('notifications')
-      .where('userId', '==', userId)
-      .orderBy('timestamp', 'desc')
+      .where('physiotherapistId', '==', physiotherapistId)
 
     const snapshot = await notificationsRef.get()
-    const notifications = snapshot.docs.map(doc => ({
-      id: doc.id,
-      ...doc.data()
-    }))
+    const notifications = snapshot.docs
+      .map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }))
+      .sort((a: any, b: any) => {
+        // Sort by timestamp descending (newest first)
+        return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      })
 
     return NextResponse.json({ notifications })
   } catch (error: any) {
@@ -34,22 +38,22 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { userId, type, title, message } = body
+    const { physiotherapistId, type, title, message, isRead = false } = body
 
-    if (!userId || !type || !title || !message) {
+    if (!physiotherapistId || !type || !title || !message) {
       return NextResponse.json(
-        { error: 'Missing required fields: userId, type, title, message' },
+        { error: 'Missing required fields: physiotherapistId, type, title, message' },
         { status: 400 }
       )
     }
 
     const notification = {
-      userId,
+      physiotherapistId,
       type,
       title,
       message,
       timestamp: new Date().toISOString(),
-      read: false,
+      isRead,
       createdAt: new Date().toISOString()
     }
 

@@ -343,4 +343,214 @@ export const dbService = {
     if (!response.ok) throw new Error("Failed to delete notification")
     return response.json()
   },
+
+  // ===== PROGRESS TRACKING =====
+  async getProgress(physiotherapistId: string, patientId?: string) {
+    const query = patientId 
+      ? `?physiotherapistId=${physiotherapistId}&patientId=${patientId}`
+      : `?physiotherapistId=${physiotherapistId}`
+    const response = await fetch(`/api/progress${query}`)
+    if (!response.ok) throw new Error("Failed to fetch progress records")
+    return response.json()
+  },
+
+  async createProgress(progressData: {
+    physiotherapistId: string
+    patientId: string
+    patientName: string
+    date: string
+    mobility: number
+    strength: number
+    pain: number
+    notes: string
+  }) {
+    const response = await fetch("/api/progress", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(progressData),
+    })
+    if (!response.ok) throw new Error("Failed to create progress record")
+    return response.json()
+  },
+
+  async updateProgress(id: string, progressData: any) {
+    const response = await fetch(`/api/progress/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(progressData),
+    })
+    if (!response.ok) throw new Error("Failed to update progress record")
+    return response.json()
+  },
+
+  async deleteProgress(id: string) {
+    const response = await fetch(`/api/progress/${id}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) throw new Error("Failed to delete progress record")
+    return response.json()
+  },
+
+  // ===== APPOINTMENTS =====
+  async getAppointments(physiotherapistId: string) {
+    const response = await fetch(`/api/appointments?physiotherapistId=${physiotherapistId}`)
+    if (!response.ok) throw new Error("Failed to fetch appointments")
+    return response.json()
+  },
+
+  async createAppointment(appointmentData: {
+    physiotherapistId: string
+    patientName: string
+    patientId?: string
+    date: string
+    time: string
+    duration: number
+    type: "in-person" | "video" | "phone"
+    reason: string
+    location?: string
+    notes?: string
+    fee?: number
+  }) {
+    const response = await fetch("/api/appointments", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(appointmentData),
+    })
+    if (!response.ok) throw new Error("Failed to create appointment")
+    return response.json()
+  },
+
+  async updateAppointment(id: string, appointmentData: any) {
+    const response = await fetch(`/api/appointments/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(appointmentData),
+    })
+    if (!response.ok) throw new Error("Failed to update appointment")
+    return response.json()
+  },
+
+  async deleteAppointment(id: string) {
+    const response = await fetch(`/api/appointments/${id}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) throw new Error("Failed to delete appointment")
+    return response.json()
+  },
+
+  // ===== NOTIFICATIONS =====
+  async getNotifications(physiotherapistId: string) {
+    const response = await fetch(`/api/notifications?physiotherapistId=${physiotherapistId}`, {
+      cache: 'no-store'
+    })
+    if (!response.ok) throw new Error("Failed to fetch notifications")
+    return response.json()
+  },
+
+  async createNotification(notificationData: {
+    physiotherapistId: string
+    type: "message" | "appointment" | "alert"
+    title: string
+    message: string
+    isRead?: boolean
+  }) {
+    const response = await fetch("/api/notifications", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(notificationData),
+    })
+    if (!response.ok) throw new Error("Failed to create notification")
+    return response.json()
+  },
+
+  async markNotificationAsRead(id: string) {
+    const response = await fetch(`/api/notifications/${id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ isRead: true }),
+    })
+    if (!response.ok) throw new Error("Failed to mark notification as read")
+    return response.json()
+  },
+
+  async deleteNotification(id: string) {
+    const response = await fetch(`/api/notifications/${id}`, {
+      method: "DELETE",
+    })
+    if (!response.ok) throw new Error("Failed to delete notification")
+    return response.json()
+  },
+
+  // ===== ACTIVITY LOGS =====
+  async getActivityLogs(options?: { limit?: number; actorId?: string; action?: string }) {
+    const params = new URLSearchParams()
+    if (options?.limit) params.append("limit", options.limit.toString())
+    if (options?.actorId) params.append("actorId", options.actorId)
+    if (options?.action) params.append("action", options.action)
+    
+    const query = params.toString() ? `?${params.toString()}` : ""
+    const response = await fetch(`/api/activity-logs${query}`, { cache: 'no-store' })
+    if (!response.ok) throw new Error("Failed to fetch activity logs")
+    return response.json()
+  },
+
+  async createActivityLog(logData: {
+    action: string
+    actorId: string
+    actorName?: string
+    actorRole: string
+    targetType?: string
+    targetId?: string
+    targetName?: string
+    details?: any
+    description?: string
+  }) {
+    const response = await fetch("/api/activity-logs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(logData),
+    })
+    if (!response.ok) throw new Error("Failed to create activity log")
+    return response.json()
+  },
+
+  // ===== MEAL PLANS =====
+  async getMealPlans(traineeId?: string) {
+    const query = traineeId ? `?traineeId=${traineeId}` : ""
+    const response = await fetch(`/api/meals${query}`, {
+      cache: 'no-store'
+    })
+    if (!response.ok) throw new Error("Failed to fetch meal plans")
+    return response.json()
+  },
+
+  async createMealPlan(mealData: any) {
+    const response = await fetch("/api/meals", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(mealData),
+    })
+    if (!response.ok) throw new Error("Failed to create meal plan")
+    return response.json()
+  },
+
+  // ===== WORKOUT PLANS =====
+  async getWorkoutPlans(traineeId?: string) {
+    const query = traineeId ? `?traineeId=${traineeId}` : ""
+    const response = await fetch(`/api/workout-plans${query}`, {
+      cache: 'no-store'
+    })
+    if (!response.ok) throw new Error("Failed to fetch workout plans")
+    return response.json()
+  },
+
+  async createWorkoutPlan(workoutData: any) {
+    const response = await fetch("/api/workout-plans", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(workoutData),
+    })
+    if (!response.ok) throw new Error("Failed to create workout plan")
+    return response.json()
+  },
 }
