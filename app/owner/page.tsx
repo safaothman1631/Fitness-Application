@@ -501,20 +501,6 @@ export default function OwnerPage() {
   const [recentActivity, setRecentActivity] = useState<any[]>([])
 
   // Removed hardcoded users - now fetched from database in useEffect
-      lastName: "Demir",
-      name: "Ay┼ƒe Demir",
-      email: "ayse@fitness.com",
-      phone: "+90 555 444 4444",
-      role: "member",
-      status: "active",
-      createdAt: "2024-01-15",
-      lastLogin: "2 saat ├╢nce",
-      permissions: rolePermissionTemplates.find((r) => r.role === "member")?.permissions || [],
-      gender: "kadin",
-      membershipType: "Premium",
-      duration: "6",
-    },
-  ])
 
   const [systemSettings, setSystemSettings] = useState<SystemSettings>({
     siteName: "FitnessApp Pro",

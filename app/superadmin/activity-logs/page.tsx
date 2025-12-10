@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { SidebarSleek } from "@/components/sidebar-sleek"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
