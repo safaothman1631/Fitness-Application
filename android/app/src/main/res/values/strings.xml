@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">FitPro</string>
+    <string name="title_activity_main">FitPro</string>
+    <string name="package_name">com.safaothman.fitpro</string>
+    <string name="custom_url_scheme">com.safaothman.fitpro</string>
+</resources>

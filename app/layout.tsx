@@ -20,6 +20,19 @@ export const metadata: Metadata = {
   title: "FitPro - Your Personal Fitness App",
   description: "Professional exercise programs, workout tracking, and fitness management",
   generator: "v0.app",
+  manifest: "/manifest.json",
+  themeColor: "#06b6d4",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "FitPro",
+  },
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
 }
 
 export default function RootLayout({
