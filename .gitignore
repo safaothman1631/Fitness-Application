@@ -36,3 +36,35 @@ next-env.d.ts
 
 .vercel
 .env*.local
+
+# Service Account Keys
+final-database-*.json
+project-*.json
+
+# Environment files
+.env.local
+.vercel
+
+# Test/Demo files
+test-*.js
+test-*.html
+check-*.js
+create-*.js
+add-*.js
+remove-*.js
+delete-*.js
+reset-*.js
+verify-*.js
+update-*.js
+assign-*.js
+migrate-*.js
+setup-*.js
+populate-*.js
+import-*.js
+link-*.js
+upload-*.js
+fix-*.js
+
+# Temp files
+temp-*
+temp_*
