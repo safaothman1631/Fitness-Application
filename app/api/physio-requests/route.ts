@@ -88,6 +88,29 @@ export async function POST(request: NextRequest) {
 
     const docRef = await adminDb.collection('physio-requests').add(requestData)
 
+    // Create notification for the physiotherapist
+    try {
+      await adminDb.collection('notifications').add({
+        userId: physioId,
+        title: "ریکوێستی نەخۆشی نوێ",
+        message: `${userName || "نەخۆشێک"} (${body.userEmail || "بێ ئیمەیڵ"}) ریکوێستی ناردووە بۆ تۆ`,
+        type: "info",
+        category: "request",
+        metadata: {
+          requestId: docRef.id,
+          patientName: userName,
+          patientEmail: body.userEmail,
+          injuryType: injuryType
+        },
+        read: false,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      })
+      console.log("✅ Notification created for physio:", physioId)
+    } catch (notifError) {
+      console.error("⚠️ Failed to create notification:", notifError)
+    }
+
     const newRequest = {
       id: docRef.id,
       ...requestData

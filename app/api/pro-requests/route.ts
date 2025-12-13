@@ -35,6 +35,31 @@ export async function POST(request: NextRequest) {
 
     console.log("📝 Creating Pro upgrade request:", { userId, userEmail, requestedDuration })
 
+    // Check if user already has a pending or approved request
+    const existingRequests = await adminDb
+      .collection('pro-requests')
+      .where('userId', '==', userId)
+      .where('status', 'in', ['pending', 'approved'])
+      .get()
+
+    if (!existingRequests.empty) {
+      const existingRequest = existingRequests.docs[0].data()
+      console.log("⚠️ User already has an active request:", existingRequest.status)
+      return NextResponse.json({ 
+        error: "You already have an active Pro request",
+        status: existingRequest.status
+      }, { status: 400 })
+    }
+
+    // Check if user is already Pro
+    const userDoc = await adminDb.collection('users').doc(userId).get()
+    if (userDoc.exists && userDoc.data()?.membership === 'Pro') {
+      console.log("⚠️ User is already Pro member")
+      return NextResponse.json({ 
+        error: "You are already a Pro member"
+      }, { status: 400 })
+    }
+
     const requestData = {
       userId,
       userEmail,

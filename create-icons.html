@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitPro Icon Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #0f172a;
+            color: white;
+        }
+        canvas {
+            border: 2px solid #06b6d4;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+        button {
+            background: #06b6d4;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin: 10px 5px;
+        }
+        button:hover {
+            background: #0891b2;
+        }
+        .preview {
+            display: inline-block;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏋️ FitPro Icon Generator</h1>
+    <p>Click buttons to download app icons:</p>
+    
+    <div class="preview">
+        <h3>192x192 Icon:</h3>
+        <canvas id="icon192" width="192" height="192"></canvas>
+        <br>
+        <button onclick="download192()">Download 192x192</button>
+    </div>
+    
+    <div class="preview">
+        <h3>512x512 Icon:</h3>
+        <canvas id="icon512" width="512" height="512"></canvas>
+        <br>
+        <button onclick="download512()">Download 512x512</button>
+    </div>
+
+    <script>
+        function drawIcon(canvas, size) {
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const gradient = ctx.createLinearGradient(0, 0, size, size);
+            gradient.addColorStop(0, '#06b6d4'); // cyan
+            gradient.addColorStop(1, '#0891b2'); // darker cyan
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, size, size);
+            
+            // Draw "FitPro" icon
+            ctx.fillStyle = 'white';
+            ctx.font = `bold ${size * 0.15}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            
+            // Draw dumbbell icon
+            const centerX = size / 2;
+            const centerY = size / 2.5;
+            const barWidth = size * 0.4;
+            const barHeight = size * 0.05;
+            const plateSize = size * 0.08;
+            
+            // Bar
+            ctx.fillRect(centerX - barWidth/2, centerY - barHeight/2, barWidth, barHeight);
+            
+            // Left plates
+            ctx.fillRect(centerX - barWidth/2 - plateSize, centerY - plateSize*1.5, plateSize, plateSize*3);
+            ctx.fillRect(centerX - barWidth/2 - plateSize*1.8, centerY - plateSize*1.2, plateSize*0.8, plateSize*2.4);
+            
+            // Right plates
+            ctx.fillRect(centerX + barWidth/2, centerY - plateSize*1.5, plateSize, plateSize*3);
+            ctx.fillRect(centerX + barWidth/2 + plateSize, centerY - plateSize*1.2, plateSize*0.8, plateSize*2.4);
+            
+            // Text
+            ctx.font = `bold ${size * 0.12}px Arial`;
+            ctx.fillText('FitPro', centerX, size * 0.7);
+        }
+
+        // Draw both icons
+        drawIcon(document.getElementById('icon192'), 192);
+        drawIcon(document.getElementById('icon512'), 512);
+
+        function download192() {
+            const canvas = document.getElementById('icon192');
+            const link = document.createElement('a');
+            link.download = 'icon-192.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function download512() {
+            const canvas = document.getElementById('icon512');
+            const link = document.createElement('a');
+            link.download = 'icon-512.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>

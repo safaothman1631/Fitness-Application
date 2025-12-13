@@ -3,7 +3,12 @@ import { adminDb } from '@/lib/firebase-admin'
 
 export async function GET() {
   try {
-    const trainersSnapshot = await adminDb.collection('trainers').get()
+    // Get trainers from users collection where role = "trainer"
+    const trainersSnapshot = await adminDb
+      .collection('users')
+      .where('role', '==', 'trainer')
+      .get()
+    
     const trainers = trainersSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()

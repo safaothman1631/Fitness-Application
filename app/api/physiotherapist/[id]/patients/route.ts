@@ -10,8 +10,17 @@ export async function GET(
 ) {
   try {
     const { id } = await params
-    const snapshot = await adminDb.collection(`physiotherapists/${id}/patients`).get()
+    console.log("Fetching patients for physiotherapist ID:", id)
+    
+    // Query from the main physiotherapist_patients collection
+    const snapshot = await adminDb
+      .collection("physiotherapist_patients")
+      .where("physiotherapistId", "==", id)
+      .get()
+    
     const patients = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    console.log(`Found ${patients.length} patients for physio ${id}`)
+    
     return NextResponse.json(patients)
   } catch (error) {
     console.error("Error fetching patients:", error)
@@ -30,8 +39,18 @@ export async function POST(
     const body = await request.json()
     console.log("Patient data:", body)
     
-    const docRef = await adminDb.collection(`physiotherapists/${id}/patients`).add({
+    // Get physiotherapist info
+    const physioDoc = await adminDb.collection("users").doc(id).get()
+    const physioData = physioDoc.data()
+    
+    // Add to main collection with physiotherapist reference
+    const docRef = await adminDb.collection("physiotherapist_patients").add({
       ...body,
+      physiotherapistId: id,
+      physiotherapistName: physioData?.name || "Unknown",
+      sessionPrice: body.sessionPrice || 50, // Default price if not provided
+      status: body.status || "active", // Default status is active
+      notes: body.notes || "", // Optional notes
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     })
@@ -58,6 +77,11 @@ export async function POST(
     const responseData = {
       id: docRef.id,
       ...body,
+      physiotherapistId: id,
+      physiotherapistName: physioData?.name || "Unknown",
+      sessionPrice: body.sessionPrice || 50,
+      status: body.status || "active",
+      notes: body.notes || "",
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
     }

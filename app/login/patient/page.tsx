@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input"
 import { Logo } from "@/components/logo"
 import { LanguageSelector } from "@/components/language-selector"
 import { UserCircle } from "lucide-react"
+import { signOut } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 
 export default function PatientLoginPage() {
   const router = useRouter()
@@ -16,10 +18,11 @@ export default function PatientLoginPage() {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    const existing = localStorage.getItem("patient")
-    if (existing) {
-      router.replace("/patient-panel")    }
-  }, [router])
+    // Check if already logged in
+    if (localStorage.getItem("patient")) {
+      window.location.replace("/patient-panel")
+    }
+  }, [])
 
   const handleLogin = () => {
     if (!email || !name) return

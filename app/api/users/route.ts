@@ -81,6 +81,7 @@ export async function POST(request: NextRequest) {
         phone: phone || "",
         role: role || "user",
         membership: membership || "Free",
+        membershipDate: membership === "Pro" ? new Date() : null,
         subscriptionStatus: subscriptionStatus || "inactive",
         subscriptionEnd: subscriptionEnd || null,
         isActive: true,
@@ -158,6 +159,7 @@ export async function PUT(request: NextRequest) {
       // Update user subscription
       await adminDb.collection("users").doc(userId).update({
         membership: "Pro",
+        membershipDate: new Date(),
         subscriptionStatus: "active",
         subscriptionEnd: newEndDate.toISOString(),
         isActive: true,
@@ -186,6 +188,15 @@ export async function PUT(request: NextRequest) {
 
     // Regular update
     const { id, ...updateData } = body
+
+    // Get current user data to check if membership is changing
+    const userDoc = await adminDb.collection("users").doc(userId).get()
+    const currentData = userDoc.data()
+    
+    // If changing to Pro membership (and wasn't Pro before), set membershipDate
+    if (updateData.membership === 'Pro' && currentData?.membership !== 'Pro') {
+      updateData.membershipDate = new Date()
+    }
 
     // Update in Firestore
     await adminDb.collection("users").doc(userId).update({

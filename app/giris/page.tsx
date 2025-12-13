@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,6 +14,8 @@ import { AnimatedButton } from "@/components/ui/animated-button"
 import { initializeUserSubscription } from "@/lib/subscription"
 import { loginUser } from "@/lib/auth-service"
 import { toast } from "sonner"
+import { signOut } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 
 export default function LoginPage() {
     const router = useRouter()
@@ -25,6 +27,37 @@ export default function LoginPage() {
         email: "",
         password: "",
     })
+
+    // Check if already logged in and redirect to dashboard
+    useEffect(() => {
+        const userRole = localStorage.getItem("userRole")
+        const userId = localStorage.getItem("userId")
+        
+        console.log('🔍 /giris page loaded - userRole:', userRole, 'userId:', userId)
+        
+        if (userRole && userId) {
+            // Already logged in, redirect to their dashboard
+            // Use window.location.replace to completely replace history entry
+            let targetUrl = "/dashboard"
+            
+            switch (userRole) {
+                case "owner": targetUrl = "/owner"; break
+                case "superadmin": targetUrl = "/superadmin"; break
+                case "admin": targetUrl = "/admin"; break
+                case "trainer": targetUrl = "/trainer"; break
+                case "physiotherapist": targetUrl = "/physiotherapist"; break
+                case "patient": targetUrl = "/patient-panel"; break
+                default: targetUrl = "/dashboard"
+            }
+            
+            console.log('✅ Already logged in as:', userRole, '→ Redirecting to:', targetUrl)
+            
+            // Replace current history entry so back button won't return here
+            window.location.replace(targetUrl)
+        } else {
+            console.log('ℹ️ Not logged in - staying on login page')
+        }
+    }, [])
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()

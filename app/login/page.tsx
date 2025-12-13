@@ -42,9 +42,19 @@ export default function LoginPage() {
     useEffect(() => {
         // Check if user is already logged in
         const userId = localStorage.getItem("userId")
-        if (userId) {
-            // User is already logged in, redirect to dashboard
-            router.replace("/dashboard")
+        const userRole = localStorage.getItem("userRole")
+        if (userId && userRole) {
+            // Already logged in, use window.location.replace to remove from history
+            let targetUrl = "/dashboard"
+            switch (userRole) {
+                case "owner": targetUrl = "/owner"; break
+                case "superadmin": targetUrl = "/superadmin"; break
+                case "admin": targetUrl = "/admin"; break
+                case "trainer": targetUrl = "/trainer"; break
+                case "physiotherapist": targetUrl = "/physiotherapist"; break
+                case "patient": targetUrl = "/patient-panel"; break
+            }
+            window.location.replace(targetUrl)
             return
         }
 
@@ -118,10 +128,21 @@ export default function LoginPage() {
                 const userData = userDoc.data()
                 role = userData.role || "user"
                 
+                // Check if account is pending approval
+                if (role === "user" && !userData.approvedDate) {
+                    // User is registered but not approved yet
+                    localStorage.setItem("userEmail", formData.email)
+                    localStorage.setItem("userId", user.uid)
+                    localStorage.setItem("userRole", "pending")
+                    router.push("/pending-approval")
+                    return
+                }
+                
                 // Determine redirect URL based on role
                 const roleRedirects: Record<string, string> = {
                     superadmin: "/superadmin",
                     admin: "/admin",
+                    "admin-physiotherapist": "/admin-physiotherapist",
                     physiotherapist: "/physiotherapist",
                     trainer: "/trainer",
                     owner: "/owner",

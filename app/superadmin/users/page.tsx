@@ -572,7 +572,7 @@ export default function UsersPage() {
             </button>
             <button
               onClick={() => setActiveTab('renewals')}
-              className={`px-6 py-3 font-semibold transition-all duration-300 ${
+              className={`relative px-6 py-3 font-semibold transition-all duration-300 ${
                 activeTab === 'renewals'
                   ? 'text-cyan-400 border-b-2 border-cyan-400 bg-gradient-to-t from-cyan-500/10 to-transparent'
                   : 'text-gray-400 hover:text-gray-300'
@@ -581,6 +581,11 @@ export default function UsersPage() {
               <div className="flex items-center gap-2">
                 <Activity className="w-4 h-4" />
                 {t("renewSubscription")}
+                {users.filter(u => u.role === 'user' && (u.membership === 'Free' || !u.membership)).length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gray-500 rounded-full text-xs text-white flex items-center justify-center">
+                    {users.filter(u => u.role === 'user' && (u.membership === 'Free' || !u.membership)).length}
+                  </span>
+                )}
               </div>
             </button>
           </div>
@@ -857,7 +862,7 @@ export default function UsersPage() {
                     </thead>
                     <tbody>
                       {users
-                        .filter((user) => user.membership === 'Pro' || user.role === 'trainer')
+                        .filter((user) => user.role === 'user' && (user.membership === 'Free' || !user.membership))
                         .map((user) => {
                           const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
                           const daysLeft = expiryDate ? Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0
@@ -878,8 +883,8 @@ export default function UsersPage() {
                                 </div>
                               </td>
                               <td className="p-4">
-                                <span className="px-4 py-1.5 rounded-full text-xs font-bold shadow-lg bg-gradient-to-r from-yellow-500/40 via-amber-500/30 to-orange-500/20 text-yellow-300 border border-yellow-400/50 shadow-yellow-500/30">
-                                  PRO
+                                <span className="px-4 py-1.5 rounded-full text-xs font-bold shadow-lg bg-gradient-to-r from-gray-500/40 via-slate-500/30 to-gray-500/20 text-gray-300 border border-gray-400/50 shadow-gray-500/30">
+                                  FREE
                                 </span>
                               </td>
                               <td className="p-4">
@@ -1298,18 +1303,28 @@ export default function UsersPage() {
                       try {
                         // Auto-set trainer and superadmin to Pro and Active
                         const isPrivilegedRole = userToEdit.role === 'trainer' || userToEdit.role === 'superadmin'
+                        const newMembership = isPrivilegedRole ? 'Pro' : userToEdit.membership
+                        
+                        // If changing to Pro, add membershipDate
+                        const updatePayload: any = {
+                          firstName: userToEdit.firstName,
+                          lastName: userToEdit.lastName,
+                          email: userToEdit.email,
+                          phone: userToEdit.phone,
+                          role: userToEdit.role,
+                          isActive: isPrivilegedRole ? true : userToEdit.isActive,
+                          membership: newMembership
+                        }
+                        
+                        // Add membershipDate if becoming Pro
+                        if (newMembership === 'Pro') {
+                          updatePayload.membershipDate = new Date()
+                        }
+                        
                         const response = await fetch(`/api/users?id=${userToEdit.id || userToEdit.uid}`, {
                           method: 'PUT',
                           headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            firstName: userToEdit.firstName,
-                            lastName: userToEdit.lastName,
-                            email: userToEdit.email,
-                            phone: userToEdit.phone,
-                            role: userToEdit.role,
-                            isActive: isPrivilegedRole ? true : userToEdit.isActive,
-                            membership: isPrivilegedRole ? 'Pro' : userToEdit.membership
-                          })
+                          body: JSON.stringify(updatePayload)
                         })
 
                         if (!response.ok) {

@@ -1,6 +1,6 @@
 ﻿"use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/useLanguage"
 import { useRouter } from "next/navigation"
@@ -18,6 +18,12 @@ export default function SuperAdminLoginPage() {
     const { t } = useLanguage()
     const [showPassword, setShowPassword] = useState(false)
     const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (localStorage.getItem("userRole") === "superadmin") {
+            window.location.replace("/superadmin")
+        }
+    }, [])
     const [emailError, setEmailError] = useState("")
     const [passwordError, setPasswordError] = useState("")
     const [showErrorModal, setShowErrorModal] = useState(false)

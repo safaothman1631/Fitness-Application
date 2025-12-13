@@ -39,6 +39,9 @@ interface Patient {
 	sessionCount: number
 	progress: number
 	isActive: boolean
+	sessionPrice?: number
+	status?: string
+	notes?: string
 	sessions?: Session[]
 	currentAppointment?: {
 		date: string
@@ -94,6 +97,9 @@ export default function PatientsPage() {
 		age: 0,
 		condition: "",
 		sessionCount: 0,
+		sessionPrice: 50,
+		status: "active",
+		notes: "",
 	})
 
 	// Get physiotherapist ID from localStorage
@@ -134,13 +140,23 @@ export default function PatientsPage() {
 
 	const handleAddPatient = () => {
 		setEditingPatientId(null)
-		setFormData({ name: "", email: "", phone: "", age: 0, condition: "", sessionCount: 0 })
+		setFormData({ name: "", email: "", phone: "", age: 0, condition: "", sessionCount: 0, sessionPrice: 50, status: "active", notes: "" })
 		setPatientModalOpen(true)
 	}
 
 	const handleEditPatient = (patient: Patient) => {
 		setEditingPatientId(patient.id)
-		setFormData({ name: patient.name, email: patient.email, phone: patient.phone, age: patient.age, condition: patient.condition, sessionCount: patient.sessionCount })
+		setFormData({ 
+			name: patient.name, 
+			email: patient.email, 
+			phone: patient.phone, 
+			age: patient.age, 
+			condition: patient.condition, 
+			sessionCount: patient.sessionCount,
+			sessionPrice: patient.sessionPrice || 50,
+			status: patient.status || "active",
+			notes: patient.notes || ""
+		})
 		setPatientModalOpen(true)
 	}
 
@@ -166,7 +182,7 @@ export default function PatientsPage() {
 				toast.success("Patient added successfully")
 			}
 			setPatientModalOpen(false)
-			setFormData({ name: "", email: "", phone: "", age: 0, condition: "", sessionCount: 0 })
+			setFormData({ name: "", email: "", phone: "", age: 0, condition: "", sessionCount: 0, sessionPrice: 50, status: "active", notes: "" })
 		} catch (error: any) {
 			console.error("Error saving patient:", error)
 			toast.error(error.message || "Failed to save patient")
@@ -467,6 +483,28 @@ export default function PatientsPage() {
 								className="fitpro-input rounded-xl"
 							/>
 							</div>
+						<div>
+							<Label className="text-gray-300 mb-2 block">{t("pricePerSession")} ($)</Label>
+							<Input
+								type="number"
+								value={formData.sessionPrice || 50}
+								onChange={(e) => setFormData({ ...formData, sessionPrice: parseInt(e.target.value) || 50 })}
+								placeholder="50"
+								className="fitpro-input rounded-xl"
+								min="0"
+							/>
+							<p className="text-xs text-gray-500 mt-1">Default price: $50</p>
+						</div>
+						<div>
+							<Label className="text-gray-300 mb-2 block">{t("additionalNotes")} ({t("optional")})</Label>
+							<textarea
+								value={formData.notes}
+								onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+								placeholder={t("enterNotes")}
+								className="fitpro-input rounded-xl min-h-[80px] w-full"
+								rows={3}
+							/>
+						</div>
 						{editingPatientId && (
 							<div>
 								<Label className="text-gray-300 mb-2 block">{t("totalSessions")}</Label>

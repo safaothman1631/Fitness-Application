@@ -1,18 +1,27 @@
 ﻿"use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Crown, ArrowLeft, LogIn } from "lucide-react"
+import { signOut } from "firebase/auth"
+import { auth } from "@/lib/firebase"
 
 export default function OwnerLoginPage() {
     const router = useRouter()
     const { t } = useLanguage()
     const [isLoading, setIsLoading] = useState(false)
+
+    // Check if already logged in
+    useEffect(() => {
+        if (localStorage.getItem("userRole") === "owner") {
+            window.location.replace("/owner")
+        }
+    }, [])
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault()

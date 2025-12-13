@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useLanguage } from "@/hooks/useLanguage"
-import { LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, TrendingUp, Calendar, Award, Target, Bell } from "lucide-react"
+import { LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, TrendingUp, Calendar, Award, Target, Bell, Crown, CheckCircle } from "lucide-react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { SubscriptionWarning } from "@/components/subscription-warning"
@@ -13,6 +13,9 @@ import { checkSubscriptionStatus, getSubscriptionExpiry } from "@/lib/subscripti
 import { PageTransition } from "@/components/page-transition"
 import { BottomNav } from "@/components/bottom-nav"
 import AuthGuard from "@/components/auth-guard"
+import { toast } from "sonner"
+import { db } from "@/lib/firebase"
+import { doc, getDoc } from "firebase/firestore"
 
 export default function UserDashboard() {
   const router = useRouter()
@@ -24,6 +27,9 @@ export default function UserDashboard() {
     isExpired: false,
     daysRemaining: 30,
   })
+  const [userData, setUserData] = useState<any>(null)
+  const [requestingPro, setRequestingPro] = useState(false)
+  const [hasActiveProRequest, setHasActiveProRequest] = useState(false)
   const [notifications, setNotifications] = useState([
     {
       id: "1",
@@ -74,9 +80,75 @@ export default function UserDashboard() {
     }
   }
 
+  const requestProUpgrade = async () => {
+    if (!userData) return
+    
+    setRequestingPro(true)
+    try {
+      const userId = localStorage.getItem("userId")
+      const response = await fetch('/api/pro-requests', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: userId,
+          userEmail: userData.email || localStorage.getItem("userEmail"),
+          userName: userData.name || "User",
+          requestedDuration: 30
+        })
+      })
+
+      if (response.ok) {
+        toast.success('Pro upgrade request sent successfully!')
+        setHasActiveProRequest(true)
+      } else {
+        const errorData = await response.json()
+        if (errorData.error === 'You already have an active Pro request') {
+          toast.error('You already have a pending Pro request')
+          setHasActiveProRequest(true)
+        } else if (errorData.error === 'You are already a Pro member') {
+          toast.error('You are already a Pro member')
+        } else {
+          toast.error(errorData.error || 'Failed to send request')
+        }
+      }
+    } catch (error) {
+      console.error('Error requesting Pro upgrade:', error)
+      toast.error('Failed to send Pro upgrade request')
+    } finally {
+      setRequestingPro(false)
+    }
+  }
+
   useEffect(() => {
     const userEmail = localStorage.getItem("userEmail")
     if (!userEmail) router.push("/login")
+
+    // Fetch user data
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem("userId")
+        if (userId) {
+          const userDoc = await getDoc(doc(db, "users", userId))
+          if (userDoc.exists()) {
+            setUserData(userDoc.data())
+            
+            // Check for active Pro request
+            const proRequestsResponse = await fetch(`/api/pro-requests`)
+            if (proRequestsResponse.ok) {
+              const proRequests = await proRequestsResponse.json()
+              const userRequest = proRequests.find((r: any) => 
+                r.userId === userId && r.status === 'pending'
+              )
+              setHasActiveProRequest(!!userRequest)
+            }
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error)
+      }
+    }
+
+    fetchUserData()
 
     // Check subscription status
     const updateSubscriptionStatus = () => {
@@ -107,17 +179,40 @@ export default function UserDashboard() {
   }, [router])
 
   return (
-    <AuthGuard requiredRole="user">
+    <AuthGuard requiredRole="user" allowedRoles={["user"]}>
     <>
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
-        <div className="mb-2">
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent mb-2">
-            {t("welcomeBackUser")}
-          </h1>
-          <p className="text-[#B6C4CF] mb-8">{t("readyForToday")}</p>
+        <div className="mb-2 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent mb-2">
+              {t("welcomeBackUser")}
+            </h1>
+            <p className="text-[#B6C4CF] mb-8">{t("readyForToday")}</p>
+          </div>
+          {userData?.membership !== 'Pro' && (
+            <Button
+              onClick={requestProUpgrade}
+              disabled={requestingPro || hasActiveProRequest}
+              className="bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600 text-white font-bold px-6 py-3 rounded-xl shadow-lg hover:shadow-yellow-500/50 transition-all disabled:opacity-50"
+            >
+              {hasActiveProRequest ? (
+                <>
+                  <CheckCircle className="w-5 h-5 mr-2" />
+                  Request Pending
+                </>
+              ) : requestingPro ? (
+                'Sending...'
+              ) : (
+                <>
+                  <Crown className="w-5 h-5 mr-2" />
+                  Request Pro
+                </>
+              )}
+            </Button>
+          )}
         </div>
 
         {/* Subscription Warning */}

@@ -323,7 +323,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <AuthGuard requiredRole="user">
+    <AuthGuard requiredRole="user" allowedRoles={["user"]}>
     <>
     <Toaster />
     <PageTransition>

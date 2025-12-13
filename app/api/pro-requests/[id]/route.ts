@@ -30,6 +30,7 @@ export async function PUT(
 
       await adminDb.collection('users').doc(userId).update({
         membership: 'Pro',
+        membershipDate: new Date(),
         subscriptionStatus: 'active',
         proExpiryDate: expiryDate,
         subscriptionEnd: expiryDate,

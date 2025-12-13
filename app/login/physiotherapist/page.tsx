@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/useLanguage"
 import { useRouter } from "next/navigation"
@@ -16,6 +16,13 @@ export default function PhysiotherapistLoginPage() {
   const router = useRouter()
   const { t } = useLanguage()
   const [showPassword, setShowPassword] = useState(false)
+  
+  useEffect(() => {
+    if (localStorage.getItem("userRole") === "physiotherapist") {
+      window.location.replace("/physiotherapist")
+    }
+  }, [])
+  
   const [loading, setLoading] = useState(false)
   const [emailError, setEmailError] = useState("")
   const [passwordError, setPasswordError] = useState("")

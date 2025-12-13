@@ -32,6 +32,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
     superadmin: {
       main: [
         { label: t("dashboard"), path: "/superadmin", icon: "Home" },
+        { label: t("registrationRequests"), path: "/superadmin/registration-requests", icon: "Users" },
         { label: t("users"), path: "/superadmin/users", icon: "Users" },
         { label: t("programs"), path: "/superadmin/programs", icon: "Zap" },
         { label: t("database"), path: "/superadmin/database", icon: "Database" },
@@ -42,6 +43,20 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
         { label: t("profile"), path: "/superadmin/profile", icon: "User" },
         { label: t("settings"), path: "/superadmin/settings", icon: "Settings" },
         { label: t("notifications"), path: "/superadmin/notifications", icon: "Bell" },
+      ]
+    },
+    "admin-physiotherapist": {
+      main: [
+        { label: t("dashboard"), path: "/admin-physiotherapist", icon: "Home" },
+        { label: t("allRequests"), path: "/admin-physiotherapist/requests", icon: "FileText" },
+        { label: t("allPatients"), path: "/admin-physiotherapist/patients", icon: "Users" },
+        { label: t("physiotherapistProgress"), path: "/admin-physiotherapist/progress", icon: "TrendingUp" },
+        { label: t("managePhysiotherapists"), path: "/admin-physiotherapist/manage", icon: "Shield" },
+      ],
+      menu: [
+        { label: t("profile"), path: "/admin-physiotherapist/profile", icon: "User" },
+        { label: t("settings"), path: "/admin-physiotherapist/settings", icon: "Settings" },
+        { label: t("notifications"), path: "/admin-physiotherapist/notifications", icon: "Bell" },
       ]
     },
     physiotherapist: {
@@ -65,7 +80,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
   const menuItems = navigationConfig[role]?.menu || navigationConfig.superadmin.menu
 
   const isActive = (path: string) => {
-    if (path === "/superadmin") {
+    if (path === "/superadmin" || path === "/admin-physiotherapist") {
       return pathname === path
     }
     return pathname.startsWith(path)

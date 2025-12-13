@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useLanguage } from "@/hooks/useLanguage"
 import { useRouter } from "next/navigation"
@@ -25,6 +25,12 @@ export default function TrainerLoginPage() {
         email: "",
         password: "",
     })
+
+    useEffect(() => {
+        if (localStorage.getItem("userRole") === "trainer") {
+            window.location.replace("/trainer")
+        }
+    }, [])
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()

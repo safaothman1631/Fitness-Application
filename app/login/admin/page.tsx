@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -25,6 +25,12 @@ export default function AdminLoginPage() {
         email: "",
         password: "",
     })
+
+    useEffect(() => {
+        if (localStorage.getItem("userRole") === "admin") {
+            window.location.replace("/admin")
+        }
+    }, [])
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()

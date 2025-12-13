@@ -96,6 +96,9 @@ export type TranslationKey =
   | "banners"
   | "passwordManagement"
   | "systemSettings"
+  | "allPhysiotherapists"
+  | "registrationRequests"
+  | "adminPhysiotherapist"
   | "notifications"
   | "add"
   | "update"
@@ -913,6 +916,7 @@ export type TranslationKey =
   | "searchLogs"
   | "filterByType"
   | "exportLogs"
+  | "all"
   | "allLogs"
   | "errors"
   | "warnings"
@@ -924,6 +928,11 @@ export type TranslationKey =
   | "error"
   | "warning"
   | "info"
+  | "searchPatient"
+  | "searchDoctor"
+  | "dateFrom"
+  | "dateTo"
+  | "clearFilters"
   // Profile Page
   | "myProfile"
   | "manageAccountInfo"
@@ -1086,6 +1095,12 @@ export type TranslationKey =
   | "confirmAccept"
   | "appointmentScheduled"
   | "fillAllAppointmentDetails"
+  | "patientDetails"
+  | "pricePerSession"
+  | "appointmentHistory"
+  | "assignedPhysiotherapist"
+  | "registrationInfo"
+  | "createdAt"
   | "requestDetails"
   | "requestsAppearHere"
   | "loadingRequests"
@@ -1113,6 +1128,70 @@ export type TranslationKey =
   | "useSliderToRotate"
   | "useSliderToZoom"
   | "clickButtonToReset"
+  | "selectedParts"
+  | "lastSelected"
+  | "clickModelToSelect"
+  | "selectParts"
+  | "clickOnModelToSelect"
+  | "allPatients"
+  | "viewAllPatientsAndSessions"
+  | "patients"
+  | "noPatientsFound"
+  | "personalInfo"
+  | "years"
+  | "sessions"
+  | "appointmentsSessions"
+  | "noAppointments"
+  | "physiotherapistProgress"
+  | "viewAllPhysioData"
+  | "totalPhysiotherapists"
+  | "totalPatients"
+  | "activeSessions"
+  | "completedSessions"
+  | "noPhysiotherapistsFound"
+  | "completed"
+  | "joinDate"
+  | "specialization"
+  | "workingHours"
+  | "managePhysiotherapists"
+  | "approveAndManageRoles"
+  | "pendingRequests"
+  | "activePhysiotherapists"
+  | "revokedAccess"
+  | "pendingApprovalRequests"
+  | "noPendingRequests"
+  | "requestDate"
+  | "approve"
+  | "reject"
+  | "revoked"
+  | "originalJoinDate"
+  | "revokeRole"
+  | "restoreRole"
+  | "doctorApprovedSuccess"
+  | "doctorRejectedSuccess"
+  | "roleRevokedSuccess"
+  | "roleRestoredSuccess"
+  | "errorApprovingDoctor"
+  | "errorRejectingDoctor"
+  | "errorRevokingRole"
+  | "errorRestoringRole"
+  | "errorFetchingData"
+  | "allRequests"
+  | "viewAllPhysiotherapistRequests"
+  | "patientInfo"
+  | "assignedTo"
+  | "approvedDate"
+  | "rejectedDate"
+  | "adminViewOnly"
+  | "cannotModifyRequests"
+  | "noRequestsFound"
+  | "doctorRequests"
+  | "totalAppointments"
+  | "totalApprovedRequests"
+  | "totalCompletedAppointments"
+  | "upcomingAppointments"
+  | "quickAccess"
+  | "scheduledSessions"
   | "medicalDashboard"
   | "mainMenu"
   | "controlPanel"
@@ -1336,6 +1415,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     banners: "Banners",
     passwordManagement: "Password Management",
     systemSettings: "System Settings",
+    allPhysiotherapists: "All Physiotherapists",
+    registrationRequests: "Registration Requests",
+    adminPhysiotherapist: "Admin Physiotherapist",
     notifications: "Notifications",
     add: "Add",
     update: "Update",
@@ -2139,6 +2221,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   searchLogs: "Search logs...",
   filterByType: "Filter by Type",
   exportLogs: "Export Logs",
+  all: "All",
   allLogs: "All Logs",
   errors: "Errors",
   warnings: "Warnings",
@@ -2150,6 +2233,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   error: "Error",
   warning: "Warning",
   info: "Info",
+  searchPatient: "Search patient by name or email",
+  searchDoctor: "Search doctor by name",
+  dateFrom: "From Date",
+  dateTo: "To Date",
+  clearFilters: "Clear Filters",
   // Profile Page (English)
   myProfile: "My Profile",
   manageAccountInfo: "Manage your account information",
@@ -2311,6 +2399,12 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   confirmAccept: "Confirm & Accept",
   appointmentScheduled: "Appointment scheduled! Patient added to your list.",
   fillAllAppointmentDetails: "Please fill in all appointment details (date, time, and price)",
+  patientDetails: "Patient Details",
+  pricePerSession: "Price per Session",
+  appointmentHistory: "Appointment History",
+  assignedPhysiotherapist: "Assigned Physiotherapist",
+  registrationInfo: "Registration Information",
+  createdAt: "Created At",
   markCompleted: "Mark as Completed",
   requestDetails: "Request Details",
   requestsAppearHere: "Patient requests will appear here",
@@ -2339,6 +2433,70 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   useSliderToRotate: "Use slider to rotate the model",
   useSliderToZoom: "Use slider to zoom in and out",
   clickButtonToReset: "Click button to return to initial view",
+  selectedParts: "Selected Parts",
+  lastSelected: "Last Selected",
+  clickModelToSelect: "Click on the 3D model to select body parts",
+  selectParts: "Select Parts",
+  clickOnModelToSelect: "Click on model parts to identify them",
+  allPatients: "All Patients",
+  viewAllPatientsAndSessions: "View all patients with their sessions and appointments",
+  patients: "Patients",
+  noPatientsFound: "No patients found",
+  personalInfo: "Personal Information",
+  years: "years",
+  sessions: "sessions",
+  appointmentsSessions: "Appointments & Sessions",
+  noAppointments: "No appointments found",
+  physiotherapistProgress: "Physiotherapist Progress",
+  viewAllPhysioData: "View all physiotherapist data and progress",
+  totalPhysiotherapists: "Total Physiotherapists",
+  totalPatients: "Total Patients",
+  activeSessions: "Active Sessions",
+  completedSessions: "Completed Sessions",
+  noPhysiotherapistsFound: "No physiotherapists found",
+  completed: "Completed",
+  joinDate: "Join Date",
+  specialization: "Specialization",
+  workingHours: "Working Hours",
+  managePhysiotherapists: "Manage Physiotherapists",
+  approveAndManageRoles: "Approve doctors and manage roles",
+  pendingRequests: "Pending Requests",
+  activePhysiotherapists: "Active Physiotherapists",
+  revokedAccess: "Revoked Access",
+  pendingApprovalRequests: "Pending Approval Requests",
+  noPendingRequests: "No pending requests",
+  requestDate: "Request Date",
+  approve: "Approve",
+  reject: "Reject",
+  revoked: "Revoked",
+  originalJoinDate: "Original Join Date",
+  revokeRole: "Revoke Role",
+  restoreRole: "Restore Role",
+  doctorApprovedSuccess: "Doctor approved successfully",
+  doctorRejectedSuccess: "Doctor rejected successfully",
+  roleRevokedSuccess: "Role revoked successfully",
+  roleRestoredSuccess: "Role restored successfully",
+  errorApprovingDoctor: "Error approving doctor",
+  errorRejectingDoctor: "Error rejecting doctor",
+  errorRevokingRole: "Error revoking role",
+  errorRestoringRole: "Error restoring role",
+  errorFetchingData: "Error fetching data",
+  allRequests: "All Requests",
+  viewAllPhysiotherapistRequests: "View all physiotherapist requests",
+  patientInfo: "Patient Information",
+  assignedTo: "Assigned To",
+  approvedDate: "Approved Date",
+  rejectedDate: "Rejected Date",
+  adminViewOnly: "Admin View Only",
+  cannotModifyRequests: "You cannot modify requests - view only",
+  noRequestsFound: "No requests found",
+  doctorRequests: "Doctor Requests",
+  totalAppointments: "Total Appointments",
+  totalApprovedRequests: "Total Approved Requests",
+  totalCompletedAppointments: "Total Completed Appointments",
+  upcomingAppointments: "Upcoming Appointments",
+  quickAccess: "Quick Access",
+  scheduledSessions: "Scheduled Sessions",
   medicalDashboard: "Medical Dashboard",
   mainMenu: "MAIN MENU",
   controlPanel: "Control Panel",
@@ -2470,6 +2628,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     accessKeys: "مفاتيح الوصول",
     notifications: "الإشعارات",
     systemSettings: "الإعدادات",
+    allPhysiotherapists: "جميع المعالجين الفيزيائيين",
+    registrationRequests: "طلبات التسجيل",
+    adminPhysiotherapist: "مشرف المعالجين الفيزيائيين",
     superadminPanel: "لوحة الإدارة العليا",
   loading: "جارٍ التحميل",
   updating: "جارٍ التحديث...",
@@ -3294,6 +3455,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,searchLogs: "البحث في السجلات..."
   ,filterByType: "التصفية حسب النوع"
   ,exportLogs: "تصدير السجلات"
+  ,all: "الكل"
   ,allLogs: "جميع السجلات"
   ,errors: "الأخطاء"
   ,warnings: "التحذيرات"
@@ -3305,6 +3467,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,error: "خطأ"
   ,warning: "تحذير"
   ,info: "معلومات"
+  ,searchPatient: "البحث عن مريض بالاسم أو البريد الإلكتروني"
+  ,searchDoctor: "البحث عن طبيب بالاسم"
+  ,dateFrom: "من تاريخ"
+  ,dateTo: "إلى تاريخ"
+  ,clearFilters: "مسح الفلاتر"
   // Profile Page (Arabic)
   ,myProfile: "ملفي الشخصي"
   ,manageAccountInfo: "إدارة معلومات حسابك"
@@ -3378,6 +3545,76 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,useSliderToRotate: "استخدم شريط التمرير لتدوير النموذج"
   ,useSliderToZoom: "استخدم شريط التمرير للتكبير والتصغير"
   ,clickButtonToReset: "انقر على الزر للعودة إلى العرض الأولي"
+  ,selectedParts: "الأجزاء المختارة"
+  ,lastSelected: "آخر اختيار"
+  ,clickModelToSelect: "انقر على النموذج ثلاثي الأبعاد لاختيار أجزاء الجسم"
+  ,selectParts: "اختيار الأجزاء"
+  ,clickOnModelToSelect: "انقر على أجزاء النموذج لتحديدها"
+  ,allPatients: "جميع المرضى"
+  ,viewAllPatientsAndSessions: "عرض جميع المرضى مع جلساتهم ومواعيدهم"
+  ,patients: "المرضى"
+  ,noPatientsFound: "لم يتم العثور على مرضى"
+  ,personalInfo: "المعلومات الشخصية"
+  ,years: "سنوات"
+  ,sessions: "جلسات"
+  ,appointmentsSessions: "المواعيد والجلسات"
+  ,noAppointments: "لا توجد مواعيد"
+  ,patientDetails: "تفاصيل المريض"
+  ,pricePerSession: "السعر لكل جلسة"
+  ,appointmentHistory: "سجل المواعيد"
+  ,assignedPhysiotherapist: "أخصائي العلاج الطبيعي المعين"
+  ,registrationInfo: "معلومات التسجيل"
+  ,createdAt: "تاريخ الإنشاء"
+  ,physiotherapistProgress: "تقدم المعالجين الفيزيائيين"
+  ,viewAllPhysioData: "عرض جميع بيانات وتقدم المعالجين الفيزيائيين"
+  ,totalPhysiotherapists: "إجمالي المعالجين الفيزيائيين"
+  ,totalPatients: "إجمالي المرضى"
+  ,activeSessions: "الجلسات النشطة"
+  ,completedSessions: "الجلسات المكتملة"
+  ,noPhysiotherapistsFound: "لم يتم العثور على معالجين فيزيائيين"
+  ,completed: "مكتمل"
+  ,joinDate: "تاريخ الانضمام"
+  ,specialization: "التخصص"
+  ,workingHours: "ساعات العمل"
+  ,managePhysiotherapists: "إدارة المعالجين الفيزيائيين"
+  ,approveAndManageRoles: "الموافقة على الأطباء وإدارة الأدوار"
+  ,pendingRequests: "الطلبات المعلقة"
+  ,activePhysiotherapists: "المعالجون النشطون"
+  ,revokedAccess: "الوصول الملغى"
+  ,pendingApprovalRequests: "طلبات الموافقة المعلقة"
+  ,noPendingRequests: "لا توجد طلبات معلقة"
+  ,requestDate: "تاريخ الطلب"
+  ,approve: "موافقة"
+  ,reject: "رفض"
+  ,revoked: "ملغى"
+  ,originalJoinDate: "تاريخ الانضمام الأصلي"
+  ,revokeRole: "إلغاء الدور"
+  ,restoreRole: "استعادة الدور"
+  ,doctorApprovedSuccess: "تمت الموافقة على الطبيب بنجاح"
+  ,doctorRejectedSuccess: "تم رفض الطبيب بنجاح"
+  ,roleRevokedSuccess: "تم إلغاء الدور بنجاح"
+  ,roleRestoredSuccess: "تمت استعادة الدور بنجاح"
+  ,errorApprovingDoctor: "خطأ في الموافقة على الطبيب"
+  ,errorRejectingDoctor: "خطأ في رفض الطبيب"
+  ,errorRevokingRole: "خطأ في إلغاء الدور"
+  ,errorRestoringRole: "خطأ في استعادة الدور"
+  ,errorFetchingData: "خطأ في جلب البيانات"
+  ,allRequests: "جميع الطلبات"
+  ,viewAllPhysiotherapistRequests: "عرض جميع طلبات المعالجين الفيزيائيين"
+  ,patientInfo: "معلومات المريض"
+  ,assignedTo: "مخصص لـ"
+  ,approvedDate: "تاريخ الموافقة"
+  ,rejectedDate: "تاريخ الرفض"
+  ,adminViewOnly: "عرض المسؤول فقط"
+  ,cannotModifyRequests: "لا يمكنك تعديل الطلبات - عرض فقط"
+  ,noRequestsFound: "لم يتم العثور على طلبات"
+  ,doctorRequests: "طلبات الأطباء"
+  ,totalAppointments: "إجمالي المواعيد"
+  ,totalApprovedRequests: "إجمالي الطلبات المعتمدة"
+  ,totalCompletedAppointments: "إجمالي المواعيد المكتملة"
+  ,upcomingAppointments: "المواعيد القادمة"
+  ,quickAccess: "الوصول السريع"
+  ,scheduledSessions: "الجلسات المجدولة"
   ,medicalDashboard: "لوحة التحكم الطبية"
   ,mainMenu: "القائمة الرئيسية"
   ,controlPanel: "لوحة التحكم"
@@ -3453,6 +3690,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     accessKeys: "کلیلی دەستگەیشتن",
     notifications: "ئاگانامەکان",
     systemSettings: "ڕێکخستنەکانی سیستەم",
+    allPhysiotherapists: "هەموو فیزیۆتێراپیستەکان",
+    registrationRequests: "داواکاری تۆمارکردن",
+    adminPhysiotherapist: "سەرپەرشتیاری فیزیۆتێراپیستەکان",
     superadminPanel: "پەنێڵی سوپرئادمین",
   loading: "بارکردن",
   updating: "نوێکردنەوە...",
@@ -4281,6 +4521,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,searchLogs: "گەڕان لە تۆمارەکان..."
     ,filterByType: "فلتەرکردن بەپێی جۆر"
     ,exportLogs: "هەناردەکردنی تۆمارەکان"
+    ,all: "هەموو"
     ,allLogs: "هەموو تۆمارەکان"
     ,errors: "هەڵەکان"
     ,warnings: "ئاگاداریەکان"
@@ -4292,6 +4533,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,error: "هەڵە"
     ,warning: "ئاگاداری"
     ,info: "زانیاری"
+    ,searchPatient: "گەڕان بە ناوی نەخۆش یان ئیمەیڵ"
+    ,searchDoctor: "گەڕان بە ناوی دکتۆر"
+    ,dateFrom: "لە بەرواری"
+    ,dateTo: "بۆ بەرواری"
+    ,clearFilters: "سڕینەوەی فلتەرەکان"
     // Profile Page (Kurdish)
     ,myProfile: "پرۆفایلی من"
     ,manageAccountInfo: "بەڕێوەبردنی زانیاریەکانی هەژمار"
@@ -4456,6 +4702,12 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,confirmAccept: "دڵنیاکردنەوە و قەبووڵکردن"
     ,appointmentScheduled: "نۆرە دانرا! نەخۆش زیادکرا بۆ لیستەکەت."
     ,fillAllAppointmentDetails: "تکایە هەموو وردەکارییەکانی نۆرە پڕبکەرەوە (بەروار، کاتژمێر و نرخ)"
+    ,patientDetails: "وردەکارییەکانی نەخۆش"
+    ,pricePerSession: "نرخی هەر سیشنێک"
+    ,appointmentHistory: "مێژووی چاوپێکەوتنەکان"
+    ,assignedPhysiotherapist: "دکتۆری دیاریکراو"
+    ,registrationInfo: "زانیاریی تۆمارکردن"
+    ,createdAt: "دروستکراوە لە"
     ,requestsAppearHere: "داواکارییەکانی نەخۆش لێرە دەردەکەون"
     ,loadingRequests: "باریکردنی داواکارییەکان..."
     ,searchRequests: "بگەڕێ بە ناوی نەخۆش یان جۆری برین..."
@@ -4482,6 +4734,70 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,useSliderToRotate: "خشۆکە بەکاربهێنە بۆ سوڕاندنی مۆدێل"
     ,useSliderToZoom: "خشۆکە بەکاربهێنە بۆ نزیک و دوورکردنەوە"
     ,clickButtonToReset: "دوگمە بۆ گەڕانەوە بۆ دۆخی یەکەم"
+    ,selectedParts: "بەشە هەڵبژێردراوەکان"
+    ,lastSelected: "دوایین هەڵبژێردراو"
+    ,clickModelToSelect: "کلیک لەسەر مۆدێلی ٣ ڕەهەندی بکە بۆ هەڵبژاردنی بەشەکانی جەستە"
+    ,selectParts: "هەڵبژاردنی بەشەکان"
+    ,clickOnModelToSelect: "کلیک لەسەر بەشەکانی مۆدێل بکە بۆ دیاریکردنیان"
+    ,allPatients: "هەموو نەخۆشەکان"
+    ,viewAllPatientsAndSessions: "بینینی هەموو نەخۆشەکان لەگەڵ دانیشتن و چاوپێکەوتنەکانیان"
+    ,patients: "نەخۆشەکان"
+    ,noPatientsFound: "هیچ نەخۆشێک نەدۆزرایەوە"
+    ,personalInfo: "زانیاری کەسی"
+    ,years: "ساڵ"
+    ,sessions: "دانیشتنەکان"
+    ,appointmentsSessions: "چاوپێکەوتن و دانیشتنەکان"
+    ,noAppointments: "هیچ چاوپێکەوتنێک نییە"
+    ,physiotherapistProgress: "پێشکەوتنی فیزیۆتێراپیستەکان"
+    ,viewAllPhysioData: "بینینی هەموو داتا و پێشکەوتنی فیزیۆتێراپیستەکان"
+    ,totalPhysiotherapists: "کۆی فیزیۆتێراپیستەکان"
+    ,totalPatients: "کۆی نەخۆشەکان"
+    ,activeSessions: "دانیشتنە چالاکەکان"
+    ,completedSessions: "دانیشتنە تەواوبووەکان"
+    ,noPhysiotherapistsFound: "هیچ فیزیۆتێراپیستێک نەدۆزرایەوە"
+    ,completed: "تەواوبووە"
+    ,joinDate: "بەرواری بەشداربوون"
+    ,specialization: "پسپۆڕی"
+    ,workingHours: "کاتی کار"
+    ,managePhysiotherapists: "بەڕێوەبردنی فیزیۆتێراپیستەکان"
+    ,approveAndManageRoles: "پەسەندکردنی دکتۆرەکان و بەڕێوەبردنی رۆڵەکان"
+    ,pendingRequests: "داواکاری چاوەڕێ"
+    ,activePhysiotherapists: "فیزیۆتێراپیستە چالاکەکان"
+    ,revokedAccess: "دەستڕاگەیشتنی هەڵوەشاوە"
+    ,pendingApprovalRequests: "داواکاری چاوەڕێی پەسەندکردن"
+    ,noPendingRequests: "هیچ داواکاریەکی چاوەڕێ نییە"
+    ,requestDate: "بەرواری داواکاری"
+    ,approve: "پەسەندکردن"
+    ,reject: "ڕەتکردنەوە"
+    ,revoked: "هەڵوەشاوە"
+    ,originalJoinDate: "بەرواری یەکەمی بەشداربوون"
+    ,revokeRole: "هەڵوەشاندنەوەی رۆڵ"
+    ,restoreRole: "گەڕاندنەوەی رۆڵ"
+    ,doctorApprovedSuccess: "دکتۆرەکە بە سەرکەوتوویی پەسەندکرا"
+    ,doctorRejectedSuccess: "دکتۆرەکە بە سەرکەوتوویی ڕەتکرایەوە"
+    ,roleRevokedSuccess: "رۆڵەکە بە سەرکەوتوویی هەڵوەشایەوە"
+    ,roleRestoredSuccess: "رۆڵەکە بە سەرکەوتوویی گەڕایەوە"
+    ,errorApprovingDoctor: "هەڵە لە پەسەندکردنی دکتۆر"
+    ,errorRejectingDoctor: "هەڵە لە ڕەتکردنەوەی دکتۆر"
+    ,errorRevokingRole: "هەڵە لە هەڵوەشاندنەوەی رۆڵ"
+    ,errorRestoringRole: "هەڵە لە گەڕاندنەوەی رۆڵ"
+    ,errorFetchingData: "هەڵە لە هێنانی داتا"
+    ,allRequests: "هەموو داواکاریەکان"
+    ,viewAllPhysiotherapistRequests: "بینینی هەموو داواکاریەکانی فیزیۆتێراپیست"
+    ,patientInfo: "زانیاری نەخۆش"
+    ,assignedTo: "دیاریکراوە بۆ"
+    ,approvedDate: "بەرواری پەسەندکردن"
+    ,rejectedDate: "بەرواری ڕەتکردنەوە"
+    ,adminViewOnly: "تەنها بینین بۆ سەرپەرشتیار"
+    ,cannotModifyRequests: "ناتوانی داواکاریەکان بگۆڕیت - تەنها بینین"
+    ,noRequestsFound: "هیچ داواکاریەک نەدۆزرایەوە"
+    ,doctorRequests: "داواکاریەکانی دکتۆر"
+    ,totalAppointments: "کۆی چاوپێکەوتنەکان"
+    ,totalApprovedRequests: "کۆی داواکاری پەسەندکراوەکان"
+    ,totalCompletedAppointments: "کۆی چاوپێکەوتنە تەواوبووەکان"
+    ,upcomingAppointments: "چاوپێکەوتنە داهاتووەکان"
+    ,quickAccess: "دەستڕاگەیشتنی خێرا"
+    ,scheduledSessions: "دانیشتنە دیاریکراوەکان"
     ,medicalDashboard: "داشبۆردی پزیشکی"
     ,mainMenu: "لیستی سەرەکی"
     ,controlPanel: "پانیلی کۆنترۆڵ"
@@ -4612,6 +4928,9 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     accessKeys: "Erişim Anahtarları",
     notifications: "Bildirimler",
     systemSettings: "Sistem Ayarları",
+    allPhysiotherapists: "Tüm Fizyoterapistler",
+    registrationRequests: "Kayıt İstekleri",
+    adminPhysiotherapist: "Yönetici Fizyoterapist",
     superadminPanel: "Süper Admin Paneli",
     loading: "Yükleniyor",
     updating: "Güncelleniyor...",
@@ -5435,6 +5754,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   searchLogs: "Günlüklerde ara...",
   filterByType: "Türe göre filtrele",
   exportLogs: "Günlükleri Dışa Aktar",
+  all: "Tümü",
   allLogs: "Tüm Günlükler",
   errors: "Hatalar",
   warnings: "Uyarılar",
@@ -5446,6 +5766,11 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   error: "Hata",
   warning: "Uyarı",
   info: "Bilgi",
+  searchPatient: "Hasta adı veya e-posta ile ara",
+  searchDoctor: "Doktor adı ile ara",
+  dateFrom: "Başlangıç Tarihi",
+  dateTo: "Bitiş Tarihi",
+  clearFilters: "Filtreleri Temizle",
   // Profile Page (Turkish)
   myProfile: "Profilim",
   manageAccountInfo: "Hesap bilgilerini yönet",
@@ -5519,6 +5844,76 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   useSliderToRotate: "Modeli döndürmek için kaydırıcıyı kullanın",
   useSliderToZoom: "Yakınlaştırmak ve uzaklaştırmak için kaydırıcıyı kullanın",
   clickButtonToReset: "Başlangıç görünümüne dönmek için düğmeye tıklayın",
+  selectedParts: "Seçili Parçalar",
+  lastSelected: "Son Seçilen",
+  clickModelToSelect: "Vücut parçalarını seçmek için 3D modele tıklayın",
+  selectParts: "Parça Seç",
+  clickOnModelToSelect: "Model parçalarına tıklayarak tanımlayın",
+  allPatients: "Tüm Hastalar",
+  viewAllPatientsAndSessions: "Tüm hastaları seansları ve randevularıyla görüntüle",
+  patients: "Hastalar",
+  noPatientsFound: "Hasta bulunamadı",
+  personalInfo: "Kişisel Bilgiler",
+  years: "yıl",
+  sessions: "seanslar",
+  appointmentsSessions: "Randevular ve Seanslar",
+  noAppointments: "Randevu bulunamadı",
+  patientDetails: "Hasta Detayları",
+  pricePerSession: "Seans Başına Fiyat",
+  appointmentHistory: "Randevu Geçmişi",
+  assignedPhysiotherapist: "Atanan Fizyoterapist",
+  registrationInfo: "Kayıt Bilgileri",
+  createdAt: "Oluşturulma Tarihi",
+  physiotherapistProgress: "Fizyoterapist İlerlemesi",
+  viewAllPhysioData: "Tüm fizyoterapist verilerini ve ilerlemesini görüntüle",
+  totalPhysiotherapists: "Toplam Fizyoterapist",
+  totalPatients: "Toplam Hasta",
+  activeSessions: "Aktif Seanslar",
+  completedSessions: "Tamamlanan Seanslar",
+  noPhysiotherapistsFound: "Fizyoterapist bulunamadı",
+  completed: "Tamamlandı",
+  joinDate: "Katılım Tarihi",
+  specialization: "Uzmanlık",
+  workingHours: "Çalışma Saatleri",
+  managePhysiotherapists: "Fizyoterapistleri Yönet",
+  approveAndManageRoles: "Doktorları onayla ve rolleri yönet",
+  pendingRequests: "Bekleyen Talepler",
+  activePhysiotherapists: "Aktif Fizyoterapistler",
+  revokedAccess: "İptal Edilmiş Erişim",
+  pendingApprovalRequests: "Bekleyen Onay Talepleri",
+  noPendingRequests: "Bekleyen talep yok",
+  requestDate: "Talep Tarihi",
+  approve: "Onayla",
+  reject: "Reddet",
+  revoked: "İptal Edildi",
+  originalJoinDate: "Orijinal Katılım Tarihi",
+  revokeRole: "Rolü İptal Et",
+  restoreRole: "Rolü Geri Yükle",
+  doctorApprovedSuccess: "Doktor başarıyla onaylandı",
+  doctorRejectedSuccess: "Doktor başarıyla reddedildi",
+  roleRevokedSuccess: "Rol başarıyla iptal edildi",
+  roleRestoredSuccess: "Rol başarıyla geri yüklendi",
+  errorApprovingDoctor: "Doktor onaylanırken hata",
+  errorRejectingDoctor: "Doktor reddedilirken hata",
+  errorRevokingRole: "Rol iptal edilirken hata",
+  errorRestoringRole: "Rol geri yüklenirken hata",
+  errorFetchingData: "Veri alınırken hata",
+  allRequests: "Tüm Talepler",
+  viewAllPhysiotherapistRequests: "Tüm fizyoterapist taleplerini görüntüle",
+  patientInfo: "Hasta Bilgileri",
+  assignedTo: "Atandı",
+  approvedDate: "Onay Tarihi",
+  rejectedDate: "Red Tarihi",
+  adminViewOnly: "Sadece Yönetici Görünümü",
+  cannotModifyRequests: "Talepleri değiştiremezsiniz - sadece görüntüleme",
+  noRequestsFound: "Talep bulunamadı",
+  doctorRequests: "Doktor Talepleri",
+  totalAppointments: "Toplam Randevular",
+  totalApprovedRequests: "Toplam Onaylanan Talepler",
+  totalCompletedAppointments: "Toplam Tamamlanan Randevular",
+  upcomingAppointments: "Yaklaşan Randevular",
+  quickAccess: "Hızlı Erişim",
+  scheduledSessions: "Planlanmış Seanslar",
   medicalDashboard: "Tıbbi Kontrol Paneli",
   mainMenu: "ANA MENÜ",
   controlPanel: "Kontrol Paneli",

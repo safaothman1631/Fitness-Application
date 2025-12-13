@@ -113,17 +113,48 @@ export default function RegisterPage() {
             console.log("💾 Creating Firestore document...")
             await setDoc(doc(db, "users", user.uid), userData)
             
+            // 4. Create registration requests for both Superadmin and Admin-Physiotherapist
+            console.log("📋 Creating registration requests...")
+            
+            const requestData = {
+                userId: user.uid,
+                email: formData.email,
+                name: `${formData.firstName} ${formData.lastName}`,
+                firstName: formData.firstName,
+                lastName: formData.lastName,
+                requestDate: new Date(),
+                status: "pending",
+                createdAt: new Date().toISOString()
+            }
+            
+            // Request for Superadmin (can approve as trainer or user)
+            await setDoc(doc(db, "user_registration_requests", user.uid), {
+                ...requestData,
+                requestType: "superadmin",
+                availableRoles: ["trainer", "user"]
+            })
+            
+            // Request for Admin-Physiotherapist (can approve as physiotherapist)
+            await setDoc(doc(db, "doctor_requests", user.uid), {
+                ...requestData,
+                requestType: "admin-physiotherapist",
+                availableRoles: ["physiotherapist"]
+            })
+            
+            console.log("✅ Registration requests created!")
             console.log("✅ Registration complete!")
             
-            // Sign out user until they verify email
-            await auth.signOut()
+            // Store user info for pending approval page
+            localStorage.setItem("userEmail", formData.email)
+            localStorage.setItem("userId", user.uid)
+            localStorage.setItem("userRole", "pending")
             
             // Show success message with verification notice
             setError("")
-            alert(t("registrationSuccessVerifyEmail") || "Registration successful! Please check your email to verify your account before logging in.")
+            alert(t("registrationSuccessVerifyEmail") || "Registration successful! Please check your email to verify your account. After verification, your account will need to be approved by administrators.")
             
-            // Redirect to login page
-            router.push("/login")
+            // Redirect to pending approval page
+            router.push("/pending-approval")
             
         } catch (err: any) {
             console.error("❌ Registration error:", err)
