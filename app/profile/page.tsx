@@ -360,7 +360,7 @@ export default function ProfilePage() {
             <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-800 flex items-center justify-center">
               {avatar ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={avatar} alt="avatar" className="w-full h-full object-cover" />
+                <img src={avatar} alt={`${profile.name}'s profile avatar`} className="w-full h-full object-cover" />
               ) : (
                 <UserIcon className="w-6 h-6 text-slate-400" />
               )}

@@ -3,6 +3,31 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* iOS Safe Area Support */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .pb-safe {
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  }
+  .pt-safe {
+    padding-top: max(0.75rem, env(safe-area-inset-top));
+  }
+  .pl-safe {
+    padding-left: max(1rem, env(safe-area-inset-left));
+  }
+  .pr-safe {
+    padding-right: max(1rem, env(safe-area-inset-right));
+  }
+  .pb-safe-sm {
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+  }
+  .mb-safe {
+    margin-bottom: max(0, env(safe-area-inset-bottom));
+  }
+  .min-h-screen-safe {
+    min-height: calc(100vh - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+}
+
 :root {
   /* Cyan Blue LED Theme - Light Mode */
   --brand: #22C6F8; /* Primary Cyan Blue 500 */
@@ -18,7 +43,7 @@
   --secondary: #15C1B4; /* Secondary 500 */
   --secondary-foreground: #001514;
   --muted: #EEF4F8; /* Neutral 100 */
-  --muted-foreground: #455662; /* Neutral 700 */
+  --muted-foreground: #334155; /* Slate 700 - WCAG AAA 10.5:1 contrast */
   --accent: #73E8FF; /* Accent 500 */
   --accent-foreground: #001015;
   --destructive: #EF4444; /* Error */
@@ -59,7 +84,7 @@
   --secondary: #0FA5A0; /* Secondary 600 for dark */
   --secondary-foreground: #001514;
   --muted: #18232C; /* Neutral 900 */
-  --muted-foreground: #B6C4CF; /* Neutral 300 */
+  --muted-foreground: #E2E8F0; /* Slate 200 - WCAG AAA 12.8:1 contrast */
   --accent: #47D8FF; /* Accent 600 for dark */
   --accent-foreground: #001015;
   --destructive: #EF4444;

@@ -38,7 +38,11 @@ export function BottomNav({ activeTab, setActiveTab }: BottomNavProps) {
   }
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-50">
+    <nav 
+      className="fixed bottom-0 left-0 right-0 bg-[#101A23]/95 backdrop-blur-lg border-t border-[#2E3944] px-4 py-3 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.3)] z-50"
+      role="navigation"
+      aria-label="Main navigation"
+    >
       <style jsx>{`
         @keyframes slideUp {
           from { transform: translateY(10px) scale(0.9); opacity: 0; }
@@ -48,7 +52,7 @@ export function BottomNav({ activeTab, setActiveTab }: BottomNavProps) {
           animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
       `}</style>
-      <div className="max-w-md mx-auto flex items-center justify-between">
+      <div className="max-w-md mx-auto flex items-center justify-between" role="tablist">
         {navItems.map(item => (
           <button
             key={item.id}
@@ -57,6 +61,10 @@ export function BottomNav({ activeTab, setActiveTab }: BottomNavProps) {
               activeTab === item.id ? "slide-scale-active" : "hover:scale-105"
             }`}
             style={{ color: activeTab === item.id ? item.color : "#B6C4CF" }}
+            aria-label={item.label}
+            aria-current={activeTab === item.id ? "page" : undefined}
+            role="tab"
+            aria-selected={activeTab === item.id}
           >
             <div 
               className={`p-2.5 rounded-xl transition-all duration-300 ${
@@ -79,6 +87,6 @@ export function BottomNav({ activeTab, setActiveTab }: BottomNavProps) {
           </button>
         ))}
       </div>
-    </div>
+    </nav>
   )
 }

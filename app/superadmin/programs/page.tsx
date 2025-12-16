@@ -94,6 +94,7 @@ export default function ProgramsPage() {
   const [isDeleting, setIsDeleting] = useState(false)
   const [showDeleteSuccessDialog, setShowDeleteSuccessDialog] = useState(false)
   const [deletedProgramData, setDeletedProgramData] = useState<any>(null)
+  const [stats, setStats] = useState({ exercises: 0, videoGuides: 0, activeUsers: 0, meals: 0, recipes: 0, avgCalories: 0 })
   
   const [newProgram, setNewProgram] = useState<any>({
     title: "",
@@ -121,6 +122,7 @@ export default function ProgramsPage() {
   const [currentDay, setCurrentDay] = useState('monday')
 
   useEffect(() => {
+    fetchStats()
     fetchPrograms()
     fetchUsers()
     fetchVideos()
@@ -145,6 +147,12 @@ export default function ProgramsPage() {
 
       const response = await fetch('/api/videos')
       if (response.ok) {
+        const contentType = response.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+          console.error('videos API returned non-JSON')
+          setIsLoadingVideos(false)
+          return
+        }
         const data = await response.json()
         setAvailableVideos(data)
         // Cache the results
@@ -177,6 +185,12 @@ export default function ProgramsPage() {
 
       const response = await fetch('/api/meal-images')
       if (response.ok) {
+        const contentType = response.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+          console.error('meal-images API returned non-JSON')
+          setIsLoadingMealImages(false)
+          return
+        }
         const data = await response.json()
         setAvailableMealImages(data)
         // Cache the results
@@ -191,10 +205,76 @@ export default function ProgramsPage() {
     }
   }
 
+  const fetchStats = async () => {
+    try {
+      // Only run on client side
+      if (typeof window === 'undefined') return
+      
+      // Fetch video guides count from database-stats
+      const statsRes = await fetch('/api/database-stats')
+      if (statsRes.ok) {
+        const contentType = statsRes.headers.get('content-type')
+        if (contentType?.includes('application/json')) {
+          const statsData = await statsRes.json()
+          console.log('📊 Stats data:', statsData)
+          
+          // Handle both array and object with collections property
+          const collections = Array.isArray(statsData) ? statsData : (statsData.collections || [])
+          const exercisesStats = collections.find((s: any) => s.name === 'exercises')
+          
+          if (exercisesStats) {
+            setStats(prev => ({ 
+              ...prev, 
+              exercises: exercisesStats.count,
+              videoGuides: exercisesStats.count  // All exercises have videos
+            }))
+          }
+        } else {
+          console.error('database-stats returned non-JSON:', await statsRes.text())
+        }
+      }
+      
+      // Fetch active users count
+      const usersRes = await fetch('/api/users')
+      if (usersRes.ok) {
+        const contentType = usersRes.headers.get('content-type')
+        if (contentType?.includes('application/json')) {
+          const users = await usersRes.json()
+          // Filter to only user and trainer roles (same logic as superadmin/users page)
+          const filtered = users.filter((u: any) => {
+            const role = (u.role || 'user').toLowerCase()
+            return role === 'user' || role === 'trainer'
+          })
+          setStats(prev => ({ ...prev, activeUsers: filtered.length }))
+        } else {
+          console.error('users API returned non-JSON:', await usersRes.text())
+        }
+      }
+      
+      // Fetch nutrition programs stats (meals, recipes, avg calories)
+      // For now, set defaults since database doesn't have meal data yet
+      setStats(prev => ({ 
+        ...prev, 
+        meals: 0,
+        recipes: 0,
+        avgCalories: 0
+      }))
+    } catch (error) {
+      console.error('Error fetching stats:', error)
+    }
+  }
+
   const fetchUsers = async () => {
     try {
+      if (typeof window === 'undefined') return
+      
       const response = await fetch('/api/users')
       if (response.ok) {
+        const contentType = response.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+          console.error('users API returned non-JSON')
+          return
+        }
         const data = await response.json()
         console.log('🔍 All users from API:', data)
         console.log('📊 Total users:', data.length)
@@ -226,9 +306,21 @@ export default function ProgramsPage() {
   const fetchPrograms = async () => {
     setIsLoading(true)
     try {
+      if (typeof window === 'undefined') {
+        setIsLoading(false)
+        return
+      }
+      
       console.log(`🔍 Fetching ${activeTab} programs from database...`)
       const response = await fetch(`/api/programs?type=${activeTab}`)
       if (response.ok) {
+        const contentType = response.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+          console.error('programs API returned non-JSON')
+          setPrograms([])
+          setIsLoading(false)
+          return
+        }
         const data = await response.json()
         console.log(`✅ Loaded ${data.length} ${activeTab} programs from Firestore:`, data)
         setPrograms(data)
@@ -268,6 +360,12 @@ export default function ProgramsPage() {
       console.log('📡 Response status:', response.status)
       
       if (response.ok) {
+        const contentType = response.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+          console.error('Create program API returned non-JSON')
+          setIsSaving(false)
+          return
+        }
         const result = await response.json()
         console.log('✅ Program saved successfully:', result)
         
@@ -296,9 +394,18 @@ export default function ProgramsPage() {
           resetForm()
         }, 3500)
       } else {
-        const error = await response.json()
-        console.error('❌ Save failed:', error)
-        alert('❌ هەڵە: ' + (error.error || 'Failed to save'))
+        let errorMsg = 'Failed to save'
+        try {
+          const contentType = response.headers.get('content-type')
+          if (contentType?.includes('application/json')) {
+            const error = await response.json()
+            errorMsg = error.error || errorMsg
+          }
+        } catch (e) {
+          console.error('Could not parse error response')
+        }
+        console.error('❌ Save failed:', response.status)
+        alert('❌ هەڵە: ' + errorMsg)
       }
     } catch (error) {
       console.error('❌ Error saving program:', error)
@@ -325,6 +432,15 @@ export default function ProgramsPage() {
       })
       
       if (response.ok) {
+        // DELETE may return no content, check before parsing
+        const contentType = response.headers.get('content-type')
+        if (contentType?.includes('application/json')) {
+          try {
+            await response.json()
+          } catch (e) {
+            // Ignore JSON parse errors on DELETE
+          }
+        }
         console.log('✅ Program deleted successfully')
         
         // Save deleted program data for success dialog
@@ -799,7 +915,7 @@ export default function ProgramsPage() {
                         <Pizza className="w-8 h-8 text-orange-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">48</p>
+                        <p className="text-3xl font-bold text-white">{stats.meals}</p>
                         <p className="text-sm text-gray-400">{t("meals")}</p>
                       </div>
                     </div>
@@ -813,7 +929,7 @@ export default function ProgramsPage() {
                         <Coffee className="w-8 h-8 text-purple-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">156</p>
+                        <p className="text-3xl font-bold text-white">{stats.recipes}</p>
                         <p className="text-sm text-gray-400">Recipes</p>
                       </div>
                     </div>
@@ -827,7 +943,7 @@ export default function ProgramsPage() {
                         <Flame className="w-8 h-8 text-yellow-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">2.4K</p>
+                        <p className="text-3xl font-bold text-white">{stats.avgCalories > 0 ? (stats.avgCalories >= 1000 ? (stats.avgCalories / 1000).toFixed(1) + 'K' : stats.avgCalories) : 0}</p>
                         <p className="text-sm text-gray-400">Avg Calories</p>
                       </div>
                     </div>
@@ -1061,7 +1177,7 @@ export default function ProgramsPage() {
                         <Zap className="w-8 h-8 text-cyan-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">234</p>
+                        <p className="text-3xl font-bold text-white">{stats.exercises}</p>
                         <p className="text-sm text-gray-400">Exercises</p>
                       </div>
                     </div>
@@ -1075,7 +1191,7 @@ export default function ProgramsPage() {
                         <Heart className="w-8 h-8 text-pink-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">128</p>
+                        <p className="text-3xl font-bold text-white">{stats.videoGuides}</p>
                         <p className="text-sm text-gray-400">Video Guides</p>
                       </div>
                     </div>
@@ -1089,7 +1205,7 @@ export default function ProgramsPage() {
                         <TrendingUp className="w-8 h-8 text-purple-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">856</p>
+                        <p className="text-3xl font-bold text-white">{stats.activeUsers}</p>
                         <p className="text-sm text-gray-400">Active Users</p>
                       </div>
                     </div>

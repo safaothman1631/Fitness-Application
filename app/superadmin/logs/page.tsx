@@ -23,12 +23,20 @@ export default function SystemLogsPage() {
 
   const fetchLogs = async () => {
     try {
+      if (typeof window === 'undefined') return
+      
       setIsLoading(true)
       const url = filterType ? `/api/logs?type=${filterType}` : '/api/logs'
       const response = await fetch(url)
-      const data = await response.json()
       
       if (response.ok) {
+        const contentType = response.headers.get('content-type')
+        if (!contentType?.includes('application/json')) {
+          console.error('logs API returned non-JSON')
+          setIsLoading(false)
+          return
+        }
+        const data = await response.json()
         setLogs(data.logs || [])
         setStats(data.stats || {})
       }

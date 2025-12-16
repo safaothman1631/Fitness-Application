@@ -30,6 +30,12 @@ export default function UserDashboard() {
   const [userData, setUserData] = useState<any>(null)
   const [requestingPro, setRequestingPro] = useState(false)
   const [hasActiveProRequest, setHasActiveProRequest] = useState(false)
+  const [workoutStats, setWorkoutStats] = useState({
+    totalWorkouts: 0,
+    activeStreak: 0,
+    caloriesToday: 0,
+    overallProgress: 0
+  })
   const [notifications, setNotifications] = useState([
     {
       id: "1",
@@ -150,6 +156,29 @@ export default function UserDashboard() {
 
     fetchUserData()
 
+    // Fetch workout stats
+    const fetchWorkoutStats = async () => {
+      try {
+        if (typeof window === 'undefined') return
+        
+        const userId = localStorage.getItem("userId")
+        if (!userId) return
+        
+        // For now, set default values - will be replaced with real API calls later
+        // TODO: Create /api/user/workout-stats endpoint
+        setWorkoutStats({
+          totalWorkouts: 0,
+          activeStreak: 0,
+          caloriesToday: 0,
+          overallProgress: 0
+        })
+      } catch (error) {
+        console.error('Error fetching workout stats:', error)
+      }
+    }
+
+    fetchWorkoutStats()
+
     // Check subscription status
     const updateSubscriptionStatus = () => {
       const expiry = getSubscriptionExpiry()
@@ -234,10 +263,10 @@ export default function UserDashboard() {
         )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value="24" color="#10B2E3" />
-          <StatsCard icon={Calendar} label={t("activeStreak")} value={`7 ${t("days")}`} color="#15C1B4" />
-          <StatsCard icon={Target} label={t("caloriesToday")} value="1,450" color="#73E8FF" />
-          <StatsCard icon={Award} label={t("overallProgress")} value="73%" color="#10B2E3" />
+          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value={workoutStats.totalWorkouts.toString()} color="#10B2E3" />
+          <StatsCard icon={Calendar} label={t("activeStreak")} value={`${workoutStats.activeStreak} ${t("days")}`} color="#15C1B4" />
+          <StatsCard icon={Target} label={t("caloriesToday")} value={workoutStats.caloriesToday.toLocaleString()} color="#73E8FF" />
+          <StatsCard icon={Award} label={t("overallProgress")} value={`${workoutStats.overallProgress}%`} color="#10B2E3" />
         </div>
       </div>
 

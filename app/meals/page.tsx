@@ -564,7 +564,7 @@ export default function MealsPage() {
                             <div className="aspect-video bg-slate-800 rounded-lg overflow-hidden border-2 border-slate-700 hover:border-amber-500/50 transition-all">
                               <img 
                                 src={url.trim()} 
-                                alt={`${selectedMeal.name} ${idx + 1}`}
+                                alt={`${selectedMeal.name} - view ${idx + 1} of ${selectedMeal.imageUrl.split(',').length}`}
                                 className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                                 onError={(e) => {
                                   (e.target as HTMLImageElement).style.display = 'none';
@@ -674,7 +674,7 @@ export default function MealsPage() {
                     <div className="relative max-w-4xl w-full">
                       <img 
                         src={selectedMeal.imageUrl.split(',')[selectedImageIndex]?.trim()} 
-                        alt={selectedMeal.name}
+                        alt={`${selectedMeal.name} - detailed view (${selectedImageIndex + 1} of ${selectedMeal.imageUrl.split(',').length})`}
                         className="w-full h-auto rounded-2xl shadow-2xl border-4 border-amber-500/30"
                       />
                       {/* Image Navigation */}

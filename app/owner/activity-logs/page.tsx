@@ -112,7 +112,7 @@ export default function ActivityLogsPage() {
   })
 
   return (
-    <FitproLayout title={t("activityLogs")}>
+    <FitproLayout role="owner">
       <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
         {/* Header */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-500/20 via-blue-500/10 to-purple-600/5 border-2 border-cyan-500/50 p-8 mb-6">

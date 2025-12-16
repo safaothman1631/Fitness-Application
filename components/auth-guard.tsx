@@ -41,7 +41,7 @@ export default function AuthGuard({ children, requiredRole, allowedRoles, redire
 
   useEffect(() => {
     // Listen to Firebase auth state changes
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
       console.log('🔐 Firebase auth state changed:', user ? user.email : 'No user')
       setHasCheckedOnce(true)
       
@@ -64,7 +64,11 @@ export default function AuthGuard({ children, requiredRole, allowedRoles, redire
         
         // Check if user is pending approval
         if (userRole === "pending") {
-          router.replace("/pending-approval")
+          if (typeof window !== 'undefined') {
+            setTimeout(() => {
+              window.location.href = "/pending-approval"
+            }, 100)
+          }
           return
         }
         
@@ -77,28 +81,18 @@ export default function AuthGuard({ children, requiredRole, allowedRoles, redire
           console.warn(`⚠️ Role mismatch: Expected ${requiredRole}, got ${userRole}`)
           setIsCheckingAuth(false)
           
-          switch (userRole) {
-            case "admin":
-              router.replace("/admin")
-              break
-            case "superadmin":
-              router.replace("/superadmin")
-              break
-            case "trainer":
-              router.replace("/trainer")
-              break
-            case "physiotherapist":
-              router.replace("/physiotherapist")
-              break
-            case "owner":
-              router.replace("/owner")
-              break
-            case "patient":
-              router.replace("/patient-panel")
-              break
-            default:
-              router.replace("/dashboard")
-              break
+          if (typeof window !== 'undefined') {
+            const redirectPath = userRole === "admin" ? "/admin"
+              : userRole === "superadmin" ? "/superadmin"
+              : userRole === "trainer" ? "/trainer"
+              : userRole === "physiotherapist" ? "/physiotherapist"
+              : userRole === "owner" ? "/owner"
+              : userRole === "patient" ? "/patient-panel"
+              : "/dashboard"
+            
+            setTimeout(() => {
+              window.location.href = redirectPath
+            }, 100)
           }
         } else {
           // All checks passed
@@ -110,11 +104,16 @@ export default function AuthGuard({ children, requiredRole, allowedRoles, redire
         // Only redirect if we've actually checked (not just initializing)
         if (hasCheckedOnce) {
           console.warn("⚠️ No Firebase user after check - redirecting to login")
-          const loginPath = requiredRole 
-            ? `/login/${requiredRole}` 
-            : redirectTo || "/giris"
-          router.replace(loginPath)
+          const loginPath = redirectTo || "/login"
+          
           setIsCheckingAuth(false)
+          
+          // Use setTimeout to avoid race conditions with router
+          if (typeof window !== 'undefined') {
+            setTimeout(() => {
+              window.location.href = loginPath
+            }, 100)
+          }
         } else {
           console.log("⏳ Waiting for Firebase to initialize...")
         }

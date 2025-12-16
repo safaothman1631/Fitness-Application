@@ -1,5 +1,8 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
+import { requireAuth } from '@/lib/api-auth'
+import { CreatePatientSchema, validateRequestSafe, sanitizeObject } from '@/lib/validation'
+import { readRateLimit, writeRateLimit, checkRateLimit, getUserIdentifier, formatRateLimitError } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
@@ -9,6 +12,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    await requireAuth(request)
     const { id } = await params
     console.log("Fetching patients for physiotherapist ID:", id)
     
@@ -22,7 +26,16 @@ export async function GET(
     console.log(`Found ${patients.length} patients for physio ${id}`)
     
     return NextResponse.json(patients)
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+      return NextResponse.json(formatRateLimitError(error), { status: 429 })
+    }
+    if (error === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (error === 'FORBIDDEN') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     console.error("Error fetching patients:", error)
     return NextResponse.json({ error: "Failed to fetch patients" }, { status: 500 })
   }
@@ -34,6 +47,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const user = await requireAuth(request)
+    await checkRateLimit(getUserIdentifier(request, user.uid), writeRateLimit)
     const { id } = await params
     console.log("Creating patient for physiotherapist:", id)
     const body = await request.json()
@@ -87,7 +102,16 @@ export async function POST(
     }
     console.log("Sending response:", responseData)
     return NextResponse.json(responseData, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
+    if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+      return NextResponse.json(formatRateLimitError(error), { status: 429 })
+    }
+    if (error === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (error === 'FORBIDDEN') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     console.error("Error creating patient:", error)
     return NextResponse.json({ error: "Failed to create patient", details: String(error) }, { status: 500 })
   }

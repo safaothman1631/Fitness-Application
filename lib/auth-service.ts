@@ -16,24 +16,16 @@ export interface LoginResult {
   error?: string
 }
 
-// Mock test credentials for development
-const MOCK_CREDENTIALS = [
-// ...existing code...
-  { email: "user@darinfitness.com", password: "11111111", role: "user" },
-  { email: "superadmin@darinfitness.com", password: "11111111", role: "superadmin" },
-  { email: "trainer@darinfitness.com", password: "11111111", role: "trainer" },
-  { email: "physio@darinfitness.com", password: "11111111", role: "physiotherapist" },
-  { email: "owner@darinfitness.com", password: "11111111", role: "owner" },
-  { email: "patient@darinfitness.com", password: "11111111", role: "patient" },
-// ...existing code...
-  { email: "user@darinfitness.com", password: "user1234", role: "user" },
-  { email: "superadmin@darinfitness.com", password: "DarinFitness2025!", role: "superadmin" },
-  { email: "trainer@darinfitness.com", password: "trainer1234", role: "trainer" },
-  { email: "physio@darinfitness.com", password: "physio1234", role: "physiotherapist" },
-  { email: "owner@darinfitness.com", password: "owner1234", role: "owner" },
-  { email: "patient@darinfitness.com", password: "patient1234", role: "patient" },
-// ...existing code...
-]
+// SECURITY: Hard-coded credentials removed for production
+// All authentication now uses Firebase Auth + Firestore
+// Test users should be created via /api/users endpoint by admins
+// 
+// Migration note: If you need test credentials, create them properly:
+// 1. Use owner/admin account to create users via UI
+// 2. Or use Firebase Console to create users
+// 3. Or use the /api/users endpoint with proper authentication
+//
+// Previous mock credentials have been removed for security
 
 /**
  * Universal login function that works for all roles
@@ -44,23 +36,10 @@ export async function loginUser(
   password: string
 ): Promise<LoginResult> {
   try {
-    // Check mock credentials first (for development/testing)
-    const mockUser = MOCK_CREDENTIALS.find(
-      (cred) => cred.email === email && cred.password === password
-    )
+    // SECURITY: Mock credentials removed - now using only Firebase Authentication
+    // All users must exist in Firebase Auth and have a corresponding Firestore document
     
-    if (mockUser) {
-      // Mock successful login
-      const redirectUrl = getRedirectUrl(mockUser.role)
-      return {
-        success: true,
-        role: mockUser.role,
-        userId: `mock-${mockUser.role}-id`,
-        redirectUrl,
-      }
-    }
-
-    // Try Firebase Authentication
+    // Authenticate with Firebase
     const userCredential = await signInWithEmailAndPassword(auth, email, password)
     const userId = userCredential.user.uid
 

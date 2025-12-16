@@ -62,24 +62,26 @@ export default function UsersPage() {
         const data = await response.json()
         setUsers(data)
         
-        // Filter to show only user and trainer roles
-        const filteredData = data.filter((u: any) => {
+        // Filter to count users, trainers, and physiotherapists
+        const filteredUsers = data.filter((u: any) => {
           const role = u.role?.toLowerCase()
-          return role === "user" || role === "trainer"
+          return role === "user" || role === "trainer" || role === "physiotherapist"
         })
         
-        // Calculate stats - trainer and superadmin are always active
-        const total = filteredData.length
-        const active = filteredData.filter((u: any) => {
+        const total = filteredUsers.length
+        const active = filteredUsers.filter((u: any) => {
           const role = u.role?.toLowerCase()
-          // Trainers and superadmins are always considered active
-          if (role === "trainer" || role === "superadmin") return true
+          // Trainers and physiotherapists are always considered active
+          if (role === "trainer" || role === "physiotherapist") return true
           return u.isActive
         }).length
         const inactive = total - active
-        const admins = 0 // No admins shown in this view
+        const trainers = filteredUsers.filter((u: any) => {
+          const role = u.role?.toLowerCase()
+          return role === "trainer"
+        }).length
         
-        setStats({ total, active, inactive, admins })
+        setStats({ total, active, inactive, admins: trainers })
       }
     } catch (error) {
       console.error("Error fetching users:", error)

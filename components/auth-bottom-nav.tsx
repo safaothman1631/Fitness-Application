@@ -21,10 +21,10 @@ export default function AuthBottomNav({ current }: AuthBottomNavProps) {
   const pathname = usePathname()
   const { t } = useLanguage()
   const CurrentIcon = roleIconMap[current]
-  const isHelp = pathname.startsWith("/login/help")
+  const isHelp = false // Removed /login/help - no longer exists
   const isProfile = pathname.startsWith("/profile")
   const inLogin = pathname.startsWith("/login")
-  const leftHref = isHelp || isProfile ? "/login" : pathname
+  const leftHref = isProfile ? "/login" : pathname
 
   // Translate current tab label
   const getCurrentLabel = () => {

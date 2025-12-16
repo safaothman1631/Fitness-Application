@@ -1840,9 +1840,9 @@ export default function OwnerDashboard() {
                                     fetchData()
                                   }, 3000)  // چاوەڕێی 3 چرکە بۆ ئەوەی server timestamp تەواو بێت
                                   
-                                } catch (error) {
+                                } catch (error: any) {
                                   console.error('❌ هەڵە:', error)
-                                  toast.error('هەڵە: ' + error.message)
+                                  toast.error('هەڵە: ' + (error?.message || 'Unknown error'))
                                 } finally {
                                   setTimeout(() => {
                                     btn.disabled = false

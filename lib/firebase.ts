@@ -35,13 +35,16 @@ export const auth = getAuth(app)
 
 // Set persistence to LOCAL (keeps user logged in across page refreshes AND browser restarts)
 // User stays logged in until they explicitly logout
-setPersistence(auth, browserLocalPersistence)
-  .then(() => {
-    console.log("✅ Firebase auth persistence set to LOCAL")
-  })
-  .catch((error) => {
-    console.error("❌ Failed to set auth persistence:", error)
-  })
+if (typeof window !== 'undefined') {
+  setPersistence(auth, browserLocalPersistence)
+    .then(() => {
+      console.log("✅ Firebase auth persistence set to LOCAL")
+    })
+    .catch((error) => {
+      console.error("❌ Failed to set auth persistence:", error)
+      // Don't throw - persistence is not critical
+    })
+}
 
 // Initialize Storage
 export const storage = getStorage(app)

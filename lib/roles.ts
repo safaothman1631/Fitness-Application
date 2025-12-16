@@ -60,7 +60,6 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
     main: [
       { key: "dashboard", path: "/trainer", icon: "Home" },
       { key: "trainees", path: "/trainer/trainees", icon: "Users" },
-      { key: "traineeMeals", path: "/trainer/meals", icon: "Utensils" },
       { key: "traineeWorkouts", path: "/trainer/workouts", icon: "Dumbbell" },
     ],
     menu: [

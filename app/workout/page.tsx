@@ -48,6 +48,12 @@ export default function WorkoutPage() {
   const [selectedDay, setSelectedDay] = useState<string | null>(null)
   const [workoutSchedule, setWorkoutSchedule] = useState<DayWorkout[]>([])
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null)
+  const [workoutStats, setWorkoutStats] = useState({
+    totalWorkouts: 0,
+    activeStreak: 0,
+    caloriesBurned: 0,
+    totalTime: 0
+  })
   const [mounted, setMounted] = useState(false)
   const { t, language } = useLanguage()
   const isRTL = language === "ar" || language === "ku"
@@ -59,6 +65,26 @@ export default function WorkoutPage() {
       "exerciseSixth", "exerciseSeventh", "exerciseEighth", "exerciseNinth", "exerciseTenth"
     ]
     return ordinals[num - 1] || "exerciseFirst"
+  }
+
+  const fetchWorkoutStats = async () => {
+    try {
+      if (typeof window === 'undefined') return
+      
+      const userId = localStorage.getItem("userId")
+      if (!userId) return
+      
+      // For now, set default values - will be replaced with real API calls
+      // TODO: Create /api/user/workout-stats endpoint
+      setWorkoutStats({
+        totalWorkouts: 0,
+        activeStreak: 0,
+        caloriesBurned: 0,
+        totalTime: 0
+      })
+    } catch (error) {
+      console.error('Error fetching workout stats:', error)
+    }
   }
 
   useEffect(() => {
@@ -73,6 +99,9 @@ export default function WorkoutPage() {
     
     // Load workout programs from Firestore
     fetchUserWorkoutPrograms()
+    
+    // Fetch workout stats
+    fetchWorkoutStats()
   }, [])
 
   const fetchUserWorkoutPrograms = async () => {
@@ -222,10 +251,10 @@ export default function WorkoutPage() {
         </Card>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value="24" color="#9333EA" isRTL={isRTL} />
-          <StatsCard icon={Calendar} label={t("activeStreak")} value={`7 ${t("days")}`} color="#A855F7" isRTL={isRTL} />
-          <StatsCard icon={Flame} label={t("caloriesBurned")} value="1,450" color="#C084FC" isRTL={isRTL} />
-          <StatsCard icon={Clock} label={t("totalTime")} value={`42 ${t("min")}`} color="#9333EA" isRTL={isRTL} />
+          <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value={workoutStats.totalWorkouts.toString()} color="#9333EA" isRTL={isRTL} />
+          <StatsCard icon={Calendar} label={t("activeStreak")} value={`${workoutStats.activeStreak} ${t("days")}`} color="#A855F7" isRTL={isRTL} />
+          <StatsCard icon={Flame} label={t("caloriesBurned")} value={workoutStats.caloriesBurned.toLocaleString()} color="#C084FC" isRTL={isRTL} />
+          <StatsCard icon={Clock} label={t("totalTime")} value={`${workoutStats.totalTime} ${t("min")}`} color="#9333EA" isRTL={isRTL} />
         </div>
 
       <section className="space-y-4">

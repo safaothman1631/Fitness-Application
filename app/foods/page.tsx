@@ -89,7 +89,7 @@ export default function FoodsPage() {
             >
               <img
                 src={food.image}
-                alt={food.name}
+                alt={`${food.name} - ${food.type} ${food.category}`}
                 className="w-24 h-24 object-cover rounded-lg"
                 onError={e => (e.currentTarget.src = "/placeholder.jpg")}
               />
@@ -125,7 +125,7 @@ export default function FoodsPage() {
               <div className="relative w-full h-64 rounded-xl overflow-hidden bg-slate-900">
                 <img
                   src={selectedFood.image}
-                  alt={selectedFood.name}
+                  alt={`${selectedFood.name} - ${selectedFood.type} ${selectedFood.category} with ${selectedFood.calories} calories`}
                   className="w-full h-full object-cover"
                   onError={e => (e.currentTarget.src = "/placeholder.jpg")}
                 />

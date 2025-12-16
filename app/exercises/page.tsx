@@ -207,7 +207,7 @@ export default function ExercisesPage() {
                 <div className="aspect-video relative overflow-hidden bg-muted">
                   <img
                     src={exercise.thumbnail || "/placeholder.svg"}
-                    alt={exercise.title}
+                    alt={`${exercise.title} - ${exercise.difficulty} level ${exercise.muscleGroup} exercise`}
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                   />
                   <Badge className={`absolute top-3 right-3 ${getDifficultyColor(exercise.difficulty)}`}>

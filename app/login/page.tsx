@@ -158,6 +158,17 @@ export default function LoginPage() {
             localStorage.setItem("userRole", role)
             localStorage.setItem("isAuthenticated", "true")
             
+            // Update lastActive timestamp in Firestore for analytics
+            try {
+                const { doc: firestoreDoc, updateDoc } = await import("firebase/firestore")
+                await updateDoc(firestoreDoc(db, "users", user.uid), {
+                    lastActive: new Date().toISOString(),
+                    lastLogin: new Date().toISOString()
+                })
+            } catch (error) {
+                console.log("Could not update lastActive:", error)
+            }
+            
             // Initialize subscription from Firestore
             await initializeUserSubscription(user.uid, formData.email)
             
@@ -177,9 +188,21 @@ export default function LoginPage() {
             }, 300)
             
         } catch (error: any) {
-            console.error("Login error:", error)
-            setLoginError(t("incorrectCredentials"))
-            toast.error(t("incorrectCredentials"))
+            // Don't log the full Firebase error to console
+            // Just log that login failed
+            console.log("Login failed")
+            
+            // Show friendly error message for invalid credentials
+            if (error?.code === 'auth/invalid-credential' || 
+                error?.code === 'auth/wrong-password' || 
+                error?.code === 'auth/user-not-found') {
+                setLoginError(t("incorrectCredentials"))
+                toast.error(t("incorrectCredentials"))
+            } else {
+                // For other errors, still show generic message
+                setLoginError(t("incorrectCredentials"))
+                toast.error(t("incorrectCredentials"))
+            }
         } finally {
             setLoading(false)
         }

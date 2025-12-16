@@ -26,9 +26,15 @@ export default function SuperAdminPage() {
     async function fetchStats() {
       try {
         const trainersRes = await fetch('/api/trainers')
+        if (!trainersRes.ok) {
+          throw new Error(`Failed to fetch trainers: ${trainersRes.status}`)
+        }
         const trainersData = await trainersRes.json()
         
         const systemRes = await fetch('/api/system-status')
+        if (!systemRes.ok) {
+          throw new Error(`Failed to fetch system status: ${systemRes.status}`)
+        }
         const systemData = await systemRes.json()
         
         setStats({

@@ -1,3 +1,4 @@
+/* DEVELOPMENT RULES - DISABLED FOR PRODUCTION
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
@@ -9,8 +10,9 @@ service cloud.firestore {
     }
   }
 }
+*/
 
-/* PRODUCTION RULES - ENABLE AFTER IMPLEMENTING FIREBASE AUTH
+// PRODUCTION RULES - ENABLED
 
 rules_version = '2';
 service cloud.firestore {
@@ -192,5 +194,3 @@ service cloud.firestore {
     }
   }
 }
-
-*/

@@ -32,7 +32,7 @@ interface PhysioRequest {
 interface Physiotherapist {
   id: string
   name: string
-  specialization?: string
+  specialty?: string
 }
 
 export default function PhysioPage() {
@@ -128,11 +128,6 @@ export default function PhysioPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    
-    console.log("≡ƒô¥ Form submission started")
-    console.log("Form data:", form)
-    console.log("User ID:", userId)
-    console.log("User Name:", userName)
     
     if (!form.physioId) {
       console.error("Γ¥î No physiotherapist selected")
@@ -256,7 +251,7 @@ export default function PhysioPage() {
                       <option value="">{t("selectPhysiotherapist")}</option>
                       {physiotherapists.map(p => (
                         <option key={p.id} value={p.id} className="bg-[#0E151B] text-white">
-                          {p.name} {p.specialization ? `- ${p.specialization}` : ''}
+                          {p.name} {p.specialty ? `- ${p.specialty}` : ''}
                         </option>
                       ))}
                     </>

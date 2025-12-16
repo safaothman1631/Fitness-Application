@@ -16,11 +16,11 @@ export default function TestLayoutsPage() {
     classic: SidebarClassic,
     minimal: SidebarMinimal,
     top: TopNavbar,
-    glass: SidebarGlass,
-    mobile: MobileBottomNav,
+    glass: SidebarGlass || (() => <div>Loading...</div>),
+    mobile: MobileBottomNav || (() => <div>Loading...</div>),
   }
 
-  const CurrentLayout = layouts[currentLayout]
+  const CurrentLayout = layouts[currentLayout] || (() => <div>Loading...</div>)
 
   return (
     <CurrentLayout key={currentLayout} role="superadmin">

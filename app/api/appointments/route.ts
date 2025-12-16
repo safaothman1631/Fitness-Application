@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
+import { requireAuth } from '@/lib/api-auth'
+import { CreateAppointmentSchema, validateRequestSafe, sanitizeObject } from '@/lib/validation'
+import { readRateLimit, writeRateLimit, checkRateLimit, getUserIdentifier, formatRateLimitError } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
 export async function GET(request: NextRequest) {
-	try {
+  try {
+    const user = await requireAuth(request)
+    await checkRateLimit(getUserIdentifier(request, user.uid), readRateLimit)
+    
 		const searchParams = request.nextUrl.searchParams
 		const physiotherapistId = searchParams.get("physiotherapistId")
 
@@ -32,6 +38,15 @@ export async function GET(request: NextRequest) {
 
 		return NextResponse.json(appointments)
 	} catch (error: any) {
+		if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+			return NextResponse.json(formatRateLimitError(error), { status: 429 })
+		}
+		if (error === 'UNAUTHORIZED') {
+			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+		}
+		if (error === 'FORBIDDEN') {
+			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+		}
 		console.error("Error fetching appointments:", error)
 		return NextResponse.json({ error: "Failed to fetch appointments", details: error.message }, { status: 500 })
 	}
@@ -39,40 +54,32 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
 	try {
-		const body = await request.json()
-		const { 
-			physiotherapistId,
-			patientName, 
-			patientId,
-			date, 
-			time, 
-			duration, 
-			type, 
-			reason, 
-			location, 
-			notes, 
-			fee 
-		} = body
-
-		if (!physiotherapistId || !patientName || !date || !time || !reason) {
-			return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
+		const user = await requireAuth(request)
+		await checkRateLimit(getUserIdentifier(request, user.uid), writeRateLimit)
+		
+		const rawBody = await request.json()
+		const validation = validateRequestSafe(CreateAppointmentSchema, rawBody)
+		
+		if (!validation.success) {
+			return NextResponse.json({ 
+				error: 'Validation failed', 
+				details: validation.errors 
+			}, { status: 400 })
 		}
-
-		const appointmentFee = fee || 50
+		
+		const body = sanitizeObject(validation.data)
+		
+		const appointmentFee = body.fee || 50
 		const platformCommission = Math.round(appointmentFee * 0.15) // 15% commission
 
 		const appointmentData = {
-			physiotherapistId,
-			patientName,
-			patientId: patientId || "",
-			date,
-			time,
-			duration: duration || 60,
-			type: type || "in-person",
+			...body,
+			patientId: body.patientId || "",
+			duration: body.duration || 60,
+			type: body.type || "in-person",
 			status: "scheduled",
-			reason,
-			location: location || "",
-			notes: notes || "",
+			location: body.location || "",
+			notes: body.notes || "",
 			fee: appointmentFee,
 			platformCommission,
 			createdAt: new Date().toISOString(),
@@ -83,6 +90,15 @@ export async function POST(request: NextRequest) {
 
 		return NextResponse.json({ id: docRef.id, ...appointmentData }, { status: 201 })
 	} catch (error: any) {
+		if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+			return NextResponse.json(formatRateLimitError(error), { status: 429 })
+		}
+		if (error === 'UNAUTHORIZED') {
+			return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+		}
+		if (error === 'FORBIDDEN') {
+			return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+		}
 		console.error("Error creating appointment:", error)
 		return NextResponse.json({ error: "Failed to create appointment", details: error.message }, { status: 500 })
 	}

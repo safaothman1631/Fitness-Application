@@ -86,9 +86,9 @@ export default function AdminPhysioRequestsPage() {
       
       setPhysiotherapists(physioList)
       console.log("📋 Found physiotherapists:", physioList.length)
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Error fetching requests:", error)
-      alert("Error: " + error.message)
+      alert("Error: " + (error?.message || 'Unknown error'))
     } finally {
       setLoading(false)
     }

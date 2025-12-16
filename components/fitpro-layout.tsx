@@ -126,52 +126,139 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
         </div>
       </div>
 
-      {/* Mobile Full Menu */}
+      {/* Mobile Full Menu - Ultra Modern Design */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur-xl">
-          <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
-              <span className="text-white font-bold text-lg">{t("menu")}</span>
+        <div className="lg:hidden fixed inset-0 z-50 bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 backdrop-blur-xl">
+          <div className="h-full flex flex-col relative overflow-hidden">
+            {/* Animated Background Elements */}
+            <div className="absolute inset-0 overflow-hidden pointer-events-none">
+              <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-cyan-500/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
+              <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-rose-500/10 to-transparent rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }}></div>
+            </div>
+
+            {/* Header */}
+            <div className="relative flex items-center justify-between px-6 py-5 border-b border-white/5 backdrop-blur-xl bg-white/5">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-cyan-400 to-rose-500 flex items-center justify-center shadow-lg shadow-cyan-500/20">
+                  <Menu className="w-5 h-5 text-white" />
+                </div>
+                <span className="text-white font-bold text-xl bg-gradient-to-r from-cyan-400 to-white bg-clip-text text-transparent">{t("menu")}</span>
+              </div>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
-                className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white"
+                className="w-11 h-11 rounded-2xl bg-gradient-to-br from-white/10 to-white/5 hover:from-white/20 hover:to-white/10 border border-white/10 flex items-center justify-center text-white transition-all duration-300 hover:scale-110 active:scale-95"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-4">
-              <div className="space-y-2">
-                {navigationItems.map((item) => {
+
+            {/* Menu Content */}
+            <div className="relative flex-1 overflow-y-auto px-6 py-6">
+              {/* Main Navigation */}
+              <div className="space-y-3 mb-8">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 px-2 mb-4">{t("navigation")}</h3>
+                {navigationItems.map((item, index) => {
                   const Icon = item.icon
                   return (
                     <Link key={item.href} href={item.href} onClick={() => setIsMobileMenuOpen(false)}>
-                      <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-white/5 hover:text-cyan-400 transition-all">
-                        <Icon className="w-5 h-5" />
-                        <span className="font-medium">{item.name}</span>
+                      <div 
+                        className="group relative flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-300 hover:text-white transition-all duration-300 overflow-hidden"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        {/* Hover Background Effect */}
+                        <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 to-cyan-500/0 group-hover:from-cyan-500/10 group-hover:to-rose-500/10 transition-all duration-500 rounded-2xl"></div>
+                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-2xl"></div>
+                        
+                        {/* Icon Container */}
+                        <div className="relative z-10 w-11 h-11 rounded-xl bg-gradient-to-br from-white/10 to-white/5 group-hover:from-cyan-500/20 group-hover:to-rose-500/20 border border-white/5 group-hover:border-cyan-400/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-3">
+                          <Icon className="w-5 h-5 group-hover:text-cyan-400 transition-colors duration-300" />
+                        </div>
+                        
+                        {/* Text */}
+                        <span className="relative z-10 font-semibold text-base">{item.name}</span>
+                        
+                        {/* Arrow Indicator */}
+                        <div className="relative z-10 ml-auto opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-cyan-400/20 to-rose-400/20 flex items-center justify-center">
+                            <svg className="w-3 h-3 text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                     </Link>
                   )
                 })}
               </div>
-              <div className="mt-6 pt-6 border-t border-white/10 space-y-2">
-                {menuItems.map((item) => {
+
+              {/* Divider */}
+              <div className="relative h-px bg-gradient-to-r from-transparent via-white/10 to-transparent my-8"></div>
+
+              {/* Settings Menu */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-500 px-2 mb-4">{t("settings")}</h3>
+                {menuItems.map((item, index) => {
                   const Icon = item.icon
                   return (
                     <Link key={item.href} href={item.href} onClick={() => setIsMobileMenuOpen(false)}>
-                      <div className="flex items-center gap-3 px-4 py-3 rounded-xl text-slate-300 hover:bg-white/5 hover:text-cyan-400 transition-all">
-                        <Icon className="w-5 h-5" />
-                        <span className="font-medium">{item.name}</span>
+                      <div 
+                        className="group relative flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-300 hover:text-white transition-all duration-300 overflow-hidden"
+                        style={{ animationDelay: `${(navigationItems.length + index) * 50}ms` }}
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-slate-500/0 to-slate-500/0 group-hover:from-slate-500/10 group-hover:to-slate-600/10 transition-all duration-500 rounded-2xl"></div>
+                        <div className="absolute inset-0 bg-white/0 group-hover:bg-white/5 transition-all duration-300 rounded-2xl"></div>
+                        
+                        <div className="relative z-10 w-11 h-11 rounded-xl bg-gradient-to-br from-white/10 to-white/5 group-hover:from-slate-500/20 group-hover:to-slate-600/20 border border-white/5 group-hover:border-slate-400/30 flex items-center justify-center transition-all duration-300 group-hover:scale-110">
+                          <Icon className="w-5 h-5 group-hover:text-slate-300 transition-colors duration-300" />
+                        </div>
+                        
+                        <span className="relative z-10 font-semibold text-base">{item.name}</span>
+                        
+                        <div className="relative z-10 ml-auto opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                          <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-slate-400/20 to-slate-500/20 flex items-center justify-center">
+                            <svg className="w-3 h-3 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                            </svg>
+                          </div>
+                        </div>
                       </div>
                     </Link>
                   )
                 })}
+
+                {/* Logout Button */}
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-all"
+                  className="group relative w-full flex items-center gap-4 px-5 py-4 rounded-2xl text-slate-300 hover:text-white transition-all duration-300 overflow-hidden mt-4"
                 >
-                  <LogOut className="w-5 h-5" />
-                  <span className="font-medium">{t("logout")}</span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-500/0 to-red-500/0 group-hover:from-red-500/20 group-hover:to-rose-500/20 transition-all duration-500 rounded-2xl"></div>
+                  <div className="absolute inset-0 bg-white/0 group-hover:bg-red-500/10 transition-all duration-300 rounded-2xl"></div>
+                  <div className="absolute inset-0 border border-transparent group-hover:border-red-500/30 transition-all duration-300 rounded-2xl"></div>
+                  
+                  <div className="relative z-10 w-11 h-11 rounded-xl bg-gradient-to-br from-red-500/20 to-rose-500/20 group-hover:from-red-500/30 group-hover:to-rose-500/30 border border-red-500/20 group-hover:border-red-400/40 flex items-center justify-center transition-all duration-300 group-hover:scale-110 group-hover:-rotate-6">
+                    <LogOut className="w-5 h-5 text-red-400 group-hover:text-red-300 transition-colors duration-300" />
+                  </div>
+                  
+                  <span className="relative z-10 font-semibold text-base text-red-400 group-hover:text-red-300">{t("logout")}</span>
+                  
+                  <div className="relative z-10 ml-auto opacity-0 group-hover:opacity-100 transform translate-x-2 group-hover:translate-x-0 transition-all duration-300">
+                    <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-red-400/20 to-rose-400/20 flex items-center justify-center">
+                      <svg className="w-3 h-3 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7" />
+                      </svg>
+                    </div>
+                  </div>
                 </button>
+              </div>
+
+              {/* Bottom Decoration */}
+              <div className="mt-12 pt-8 border-t border-white/5">
+                <div className="text-center">
+                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-500/10 to-rose-500/10 border border-white/10">
+                    <div className="w-2 h-2 rounded-full bg-gradient-to-r from-cyan-400 to-rose-400 animate-pulse"></div>
+                    <span className="text-xs font-medium text-slate-400">FitPro © 2025</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

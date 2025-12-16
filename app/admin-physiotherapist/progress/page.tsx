@@ -45,12 +45,31 @@ export default function AdminPhysioProgressPage() {
     try {
       setLoading(true)
       
-      // Fetch all physiotherapists
+      const allPhysios: PhysioProgress[] = []
+      
+      // Fetch from physiotherapists collection
+      const physioSnapshot = await getDocs(collection(db, "physiotherapists"))
+      physioSnapshot.forEach((doc) => {
+        const data = doc.data()
+        allPhysios.push({
+          id: doc.id,
+          name: data.name || "Unknown",
+          email: data.email || "",
+          totalPatients: 0,
+          activeSessions: 0,
+          completedSessions: 0,
+          avgRating: data.rating || 0,
+          totalReviews: data.reviewCount || 0,
+          joinDate: data.createdAt,
+          specialization: data.specialty || data.specialization,
+          workingHours: data.workingHours
+        })
+      })
+      
+      // Also fetch from users collection with physiotherapist role
       const usersSnapshot = await getDocs(
         query(collection(db, "users"), where("role", "==", "physiotherapist"))
       )
-      
-      const allPhysios: PhysioProgress[] = []
       usersSnapshot.forEach((doc) => {
         const data = doc.data()
         allPhysios.push({
@@ -67,7 +86,7 @@ export default function AdminPhysioProgressPage() {
           workingHours: data.workingHours
         })
       })
-
+      
       // Fetch all sessions/appointments
       const appointmentsSnapshot = await getDocs(collection(db, "appointments"))
       const allSessions: SessionData[] = []

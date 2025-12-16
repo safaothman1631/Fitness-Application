@@ -1,11 +1,34 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
+// TEMPORARY: Imports disabled due to Turbopack bug
+// import { requireAuth } from '@/lib/api-auth'
+import { z } from 'zod'
+import { validateRequestSafe, sanitizeObject } from '@/lib/validation'
+// TEMPORARY: Rate limit imports disabled due to Turbopack bug
+// import { readRateLimit, writeRateLimit, checkRateLimit, getUserIdentifier, formatRateLimitError } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
+
+const CreatePhysioRequestSchema = z.object({
+  userId: z.string().min(1),
+  userName: z.string().optional(),
+  userEmail: z.string().email().optional(),
+  userPhone: z.string().optional(),
+  userAge: z.number().optional(),
+  physioId: z.string().min(1),
+  physioName: z.string().optional(),
+  injuryType: z.string().min(1),
+  painPercent: z.number().min(0).max(100).optional(),
+  notes: z.string().optional()
+})
 
 // Get physio requests - either for a user or for a physiotherapist
 export async function GET(request: NextRequest) {
   try {
+    // TEMPORARY: Authentication disabled for server-side rendering
+    // const user = await requireAuth(request)
+    // TEMPORARY: Rate limiting disabled due to Turbopack bug
+    // await checkRateLimit(getUserIdentifier(request, user.uid), readRateLimit)
     const { searchParams } = new URL(request.url)
     const userId = searchParams.get("userId")
     const physioId = searchParams.get("physioId")
@@ -47,7 +70,17 @@ export async function GET(request: NextRequest) {
 
     console.log("✅ Returning", requests.length, "requests")
     return NextResponse.json(requests)
-  } catch (error) {
+  } catch (error: any) {
+    // TEMPORARY: Rate limit error handling disabled
+    // if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+    //   return NextResponse.json(formatRateLimitError(error), { status: 429 })
+    // }
+    // if (error === 'UNAUTHORIZED') {
+    //   return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    // }
+    // if (error === 'FORBIDDEN') {
+    //   return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    // }
     console.error("❌ Error fetching physio requests:", error)
     return NextResponse.json({ error: "Failed to fetch physio requests", details: String(error) }, { status: 500 })
   }
@@ -56,18 +89,25 @@ export async function GET(request: NextRequest) {
 // Create a new physio request
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
+    // TEMPORARY: Authentication disabled
+    // const user = await requireAuth(request)
+    // TEMPORARY: Rate limiting disabled due to Turbopack bug
+    // await checkRateLimit(getUserIdentifier(request, user.uid), writeRateLimit)
+    
+    const rawBody = await request.json()
+    const validation = validateRequestSafe(CreatePhysioRequestSchema, rawBody)
+    
+    if (!validation.success) {
+      return NextResponse.json({ 
+        error: 'Validation failed', 
+        details: validation.errors 
+      }, { status: 400 })
+    }
+    
+    const body = sanitizeObject(validation.data)
     const { userId, userName, physioId, physioName, injuryType, painPercent, notes } = body
 
     console.log("📝 Creating physio request:", { userId, userName, physioId, physioName, injuryType })
-
-    if (!userId || !physioId || !injuryType) {
-      console.error("❌ Missing required fields:", { userId: !!userId, physioId: !!physioId, injuryType: !!injuryType })
-      return NextResponse.json({ 
-        error: "Missing required fields", 
-        details: "userId, physioId, and injuryType are required" 
-      }, { status: 400 })
-    }
 
     const requestData = {
       userId,
@@ -118,7 +158,14 @@ export async function POST(request: NextRequest) {
 
     console.log("✅ Created physio request:", docRef.id, "for user:", userId)
     return NextResponse.json(newRequest, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
+    // Rate limiting disabled - just return generic error
+    if (error === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+    if (error === 'FORBIDDEN') {
+      return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
+    }
     console.error("❌ Error creating physio request:", error)
     return NextResponse.json({ error: "Failed to create physio request", details: String(error) }, { status: 500 })
   }

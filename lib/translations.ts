@@ -1309,6 +1309,29 @@ export type TranslationKey =
   | "appointmentTomorrow"
   | "hasNotRecordedProgress"
   | "markAsRead"
+  | "approvedRequests"
+  | "saving"
+  | "bioPlaceholder"
+  | "noBioYet"
+  | "welcome"
+  | "welcomeMessage"
+  | "minutesAgo"
+  | "hoursAgo"
+  | "daysAgo"
+  | "settingsSaved"
+  | "notifyNewRequests"
+  | "doctorApprovals"
+  | "notifyDoctorApprovals"
+  | "systemUpdates"
+  | "notifySystemUpdates"
+  | "receiveEmailNotifications"
+  | "public"
+  | "private"
+  | "showEmail"
+  | "showEmailDesc"
+  | "showPhone"
+  | "showPhoneDesc"
+  | "navigation"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -2292,6 +2315,29 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   deleteNotification: "Delete",
   noNotifications: "No notifications",
   allCaughtUp: "You're all caught up!",
+  approvedRequests: "Approved Requests",
+  saving: "Saving...",
+  bioPlaceholder: "Tell us about yourself...",
+  noBioYet: "No bio yet",
+  welcome: "Welcome",
+  welcomeMessage: "Welcome to your notification center. You'll receive updates here.",
+  minutesAgo: "minutes ago",
+  hoursAgo: "hours ago",
+  daysAgo: "days ago",
+  settingsSaved: "Settings saved successfully",
+  notifyNewRequests: "Get notified when new patient requests arrive",
+  doctorApprovals: "Doctor Approvals",
+  notifyDoctorApprovals: "Get notified about doctor approval actions",
+  systemUpdates: "System Updates",
+  notifySystemUpdates: "Get notified about system updates",
+  receiveEmailNotifications: "Receive notifications via email",
+  public: "Public",
+  private: "Private",
+  showEmail: "Show Email",
+  showEmailDesc: "Display email on profile",
+  showPhone: "Show Phone",
+  showPhoneDesc: "Display phone number on profile",
+  navigation: "Navigation",
   // Physiotherapist English
   physioWelcome: "Welcome to Physiotherapy Dashboard",
   totalPatients: "Total Patients",
@@ -3675,6 +3721,29 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,appointmentTomorrow: "موعد غداً في الساعة"
   ,hasNotRecordedProgress: "لم يسجل تقدماً منذ 5 أيام"
   ,markAsRead: "وضع علامة كمقروء"
+  ,approvedRequests: "الطلبات الموافق عليها"
+  ,saving: "جاري الحفظ..."
+  ,bioPlaceholder: "أخبرنا عن نفسك..."
+  ,noBioYet: "لا يوجد سيرة ذاتية بعد"
+  ,welcome: "مرحباً"
+  ,welcomeMessage: "مرحباً بك في مركز الإشعارات. ستتلقى التحديثات هنا."
+  ,minutesAgo: "منذ دقائق"
+  ,hoursAgo: "منذ ساعات"
+  ,daysAgo: "منذ أيام"
+  ,settingsSaved: "تم حفظ الإعدادات بنجاح"
+  ,notifyNewRequests: "احصل على إشعار عند وصول طلبات مرضى جديدة"
+  ,doctorApprovals: "موافقات الأطباء"
+  ,notifyDoctorApprovals: "احصل على إشعار حول إجراءات موافقة الأطباء"
+  ,systemUpdates: "تحديثات النظام"
+  ,notifySystemUpdates: "احصل على إشعار حول تحديثات النظام"
+  ,receiveEmailNotifications: "استلام الإشعارات عبر البريد الإلكتروني"
+  ,public: "عام"
+  ,private: "خاص"
+  ,showEmail: "إظهار البريد الإلكتروني"
+  ,showEmailDesc: "عرض البريد الإلكتروني في الملف الشخصي"
+  ,showPhone: "إظهار الهاتف"
+  ,showPhoneDesc: "عرض رقم الهاتف في الملف الشخصي"
+  ,navigation: "التنقل"
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -4914,6 +4983,29 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,appointmentTomorrow: "چاوپێکەوتنی بەیانی لە کاتژمێر"
     ,hasNotRecordedProgress: "لە ماوەی 5 ڕۆژدا هیچ پێشکەوتنێکی تۆمار نەکردووە"
     ,markAsRead: "وەک خوێندراوە نیشانی بکە"
+    ,approvedRequests: "داواکارییە پەسەندکراوەکان"
+    ,saving: "پاشەکەوت دەکرێت..."
+    ,bioPlaceholder: "باسی خۆت بکە..."
+    ,noBioYet: "هێشتا bio نییە"
+    ,welcome: "بەخێربێیت"
+    ,welcomeMessage: "بەخێربێیت بۆ ناوەندی ئاگادارکردنەوە. لێرە نوێکردنەوەکان وەردەگریت."
+    ,minutesAgo: "خولەک پێش ئێستا"
+    ,hoursAgo: "کاتژمێر پێش ئێستا"
+    ,daysAgo: "ڕۆژ پێش ئێستا"
+    ,settingsSaved: "ڕێکخستنەکان بە سەرکەوتوویی پاشەکەوت کران"
+    ,notifyNewRequests: "ئاگاداربە کە داواکاری نەخۆشی نوێ دێت"
+    ,doctorApprovals: "پەسەندکردنی دکتۆر"
+    ,notifyDoctorApprovals: "ئاگاداربە دەربارەی پەسەندکردنی دکتۆر"
+    ,systemUpdates: "نوێکردنەوەکانی سیستەم"
+    ,notifySystemUpdates: "ئاگاداربە دەربارەی نوێکردنەوەکانی سیستەم"
+    ,receiveEmailNotifications: "وەرگرتنی ئاگادارکردنەوەکان لە ڕێگەی ئیمەیڵەوە"
+    ,public: "گشتی"
+    ,private: "تایبەت"
+    ,showEmail: "پیشاندانی ئیمەیڵ"
+    ,showEmailDesc: "نیشاندانی ئیمەیڵ لە پرۆفایل"
+    ,showPhone: "پیشاندانی تەلەفۆن"
+    ,showPhoneDesc: "نیشاندانی ژمارەی تەلەفۆن لە پرۆفایل"
+    ,navigation: "گەشتکردن"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -5974,5 +6066,28 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   appointmentTomorrow: "randevusu yarın saat",
   hasNotRecordedProgress: "5 gündür ilerleme kaydetmedi",
   markAsRead: "Okundu Olarak İşaretle",
+  approvedRequests: "Onaylanan İstekler",
+  saving: "Kaydediliyor...",
+  bioPlaceholder: "Kendiniz hakkında bilgi verin...",
+  noBioYet: "Henüz biyografi yok",
+  welcome: "Hoş Geldiniz",
+  welcomeMessage: "Bildirim merkezinize hoş geldiniz. Güncellemeleri burada alacaksınız.",
+  minutesAgo: "dakika önce",
+  hoursAgo: "saat önce",
+  daysAgo: "gün önce",
+  settingsSaved: "Ayarlar başarıyla kaydedildi",
+  notifyNewRequests: "Yeni hasta istekleri geldiğinde bildirim al",
+  doctorApprovals: "Doktor Onayları",
+  notifyDoctorApprovals: "Doktor onay işlemleri hakkında bildirim al",
+  systemUpdates: "Sistem Güncellemeleri",
+  notifySystemUpdates: "Sistem güncellemeleri hakkında bildirim al",
+  receiveEmailNotifications: "E-posta ile bildirim al",
+  public: "Genel",
+  private: "Özel",
+  showEmail: "E-postayı Göster",
+  showEmailDesc: "Profilde e-posta adresini göster",
+  showPhone: "Telefonu Göster",
+  showPhoneDesc: "Profilde telefon numarasını göster",
+  navigation: "Navigasyon",
   },
 }

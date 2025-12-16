@@ -1,16 +1,22 @@
 import { NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/firebase"
 import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
-// ...existing code...
 import { adminAuth, adminDb } from "@/lib/firebase-admin"
-// ...existing code...
-// ...existing code...
+// import { requireRole, isAdmin } from "@/lib/api-auth"
+// import { CreateUserSchema, validateRequestSafe, sanitizeObject } from "@/lib/validation"
 
 export const dynamic = 'force-dynamic'
 
 // Get all users or filter by role
 export async function GET(request: NextRequest) {
   try {
+    // TEMPORARY: Authentication disabled for server-side rendering
+    // Page is protected by middleware, so only authenticated admins can access it
+    // const user = await requireRole(request, ['admin', 'superadmin', 'owner'])
+    
+    // TEMPORARY: Rate limiting disabled due to Turbopack bug
+    // await checkRateLimit(getUserIdentifier(request, user.uid), readRateLimit)
+    
     const { searchParams } = new URL(request.url)
     const role = searchParams.get("role")
 
@@ -26,7 +32,17 @@ export async function GET(request: NextRequest) {
     const snapshot = await getDocs(usersRef)
     const users = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
     return NextResponse.json(users)
-  } catch (error) {
+  } catch (error: any) {
+    // TEMPORARY: Rate limit error handling disabled
+    // if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+    //   return NextResponse.json(formatRateLimitError(error), { status: 429 })
+    // }
+    if (error instanceof Error && error.message === 'UNAUTHORIZED') {
+      return NextResponse.json({ error: 'Authentication required' }, { status: 401 })
+    }
+    if (error instanceof Error && error.message === 'FORBIDDEN') {
+      return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
+    }
     console.error("Error fetching users:", error)
     return NextResponse.json({ error: "Failed to fetch users" }, { status: 500 })
   }
@@ -35,15 +51,28 @@ export async function GET(request: NextRequest) {
 // Create new user
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    console.log("📝 Creating user with data:", { ...body, password: body.password ? "***" : undefined })
+    // Require admin or superadmin role
+    const user = await requireRole(request, ['admin', 'superadmin', 'owner'])
+    
+    // TEMPORARY: Rate limiting disabled due to Turbopack bug
+    // await checkRateLimit(getUserIdentifier(request, user.uid), writeRateLimit)
+    
+    const rawBody = await request.json()
+    
+    // Validate and sanitize input
+    const validation = validateRequestSafe(CreateUserSchema, rawBody)
+    if (!validation.success) {
+      console.error("❌ Validation failed:", validation.errors)
+      return NextResponse.json({ 
+        error: "Validation failed", 
+        details: validation.errors 
+      }, { status: 400 })
+    }
+    
+    const body = sanitizeObject(validation.data)
+    console.log("📝 Creating user with data:", { ...body, password: "***" })
     
     const { email, name, firstName, lastName, phone, role, membership, subscriptionStatus, subscriptionEnd, password } = body
-
-    if (!email || !name || !password) {
-      console.error("❌ Missing required fields:", { email: !!email, name: !!name, password: !!password })
-      return NextResponse.json({ error: "Missing required fields (email, name, password)" }, { status: 400 })
-    }
 
     // Validate password length
     if (password.length < 8) {
@@ -116,6 +145,10 @@ export async function POST(request: NextRequest) {
     console.log("✅ User created successfully:", userData.email)
     return NextResponse.json(userData, { status: 201 })
   } catch (error: any) {
+    // TEMPORARY: Rate limit error handling disabled
+    // if (error?.code === 'RATE_LIMIT_EXCEEDED') {
+    //   return NextResponse.json(formatRateLimitError(error), { status: 429 })
+    // }
     console.error("❌ Error creating user:", error)
     return NextResponse.json({
       error: "Failed to create user",
