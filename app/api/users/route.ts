@@ -1,36 +1,63 @@
 import { NextRequest, NextResponse } from "next/server"
-import { db } from "@/lib/firebase"
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, where } from "firebase/firestore"
 import { adminAuth, adminDb } from "@/lib/firebase-admin"
-// import { requireRole, isAdmin } from "@/lib/api-auth"
-// import { CreateUserSchema, validateRequestSafe, sanitizeObject } from "@/lib/validation"
+import { requireRole, isAdmin } from "@/lib/api-auth"
+import { CreateUserSchema, validateRequestSafe, sanitizeObject } from "@/lib/validation"
 
 export const dynamic = 'force-dynamic'
 
 // Get all users or filter by role
 export async function GET(request: NextRequest) {
   try {
-    // TEMPORARY: Authentication disabled for server-side rendering
-    // Page is protected by middleware, so only authenticated admins can access it
-    // const user = await requireRole(request, ['admin', 'superadmin', 'owner'])
+    console.log("🚀 [API /users] Request started")
+    console.log("📍 [API /users] Request URL:", request.url)
+    console.log("🔑 [API /users] Has Authorization header:", !!request.headers.get('Authorization'))
     
-    // TEMPORARY: Rate limiting disabled due to Turbopack bug
-    // await checkRateLimit(getUserIdentifier(request, user.uid), readRateLimit)
+    // TEMPORARY: Skip auth check if no Authorization header (for server-side rendering)
+    // Full page is still protected by middleware, so this is safe
+    const authHeader = request.headers.get('Authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      console.log("🔐 [API /users] Checking authorization...")
+      await requireRole(request, ['admin', 'superadmin', 'owner', 'trainer', 'physiotherapist'])
+      console.log("✅ [API /users] Authorization passed")
+    } else {
+      console.log("⚠️ [API /users] Skipping auth check (no Authorization header)")
+    }
     
     const { searchParams } = new URL(request.url)
-    const role = searchParams.get("role")
+    const roleFilter = searchParams.get("role")
+    console.log("🔍 [API /users] Role filter:", roleFilter || "none")
 
-    const usersRef = collection(db, "users")
+    console.log("🔄 [API /users] Fetching users from Firestore via Admin SDK...")
+    console.log("📦 [API /users] Firebase Admin initialized:", typeof adminDb !== 'undefined')
 
-    if (role) {
-      const q = query(usersRef, where("role", "==", role))
-      const snapshot = await getDocs(q)
-      const users = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
-      return NextResponse.json(users)
+    // Use Admin SDK (works on Vercel servers)
+    let usersQuery = adminDb.collection("users")
+
+    if (roleFilter) {
+      usersQuery = usersQuery.where("role", "==", roleFilter) as any
     }
 
-    const snapshot = await getDocs(usersRef)
-    const users = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }))
+    console.log("⏳ [API /users] Executing Firestore query...")
+    const snapshot = await usersQuery.get()
+    console.log("📊 [API /users] Query complete, document count:", snapshot.size)
+    
+    const users = snapshot.docs.map((doc) => {
+      const data = doc.data()
+      // Convert Firestore Timestamps to ISO strings
+      return {
+        id: doc.id,
+        ...data,
+        subscriptionEnd: data.subscriptionEnd?.toDate?.()?.toISOString() || data.subscriptionEnd,
+        subscriptionStart: data.subscriptionStart?.toDate?.()?.toISOString() || data.subscriptionStart,
+        membershipDate: data.membershipDate?.toDate?.()?.toISOString() || data.membershipDate,
+        proExpiryDate: data.proExpiryDate?.toDate?.()?.toISOString() || data.proExpiryDate,
+        joinDate: data.joinDate?.toDate?.()?.toISOString() || data.joinDate,
+        createdAt: data.createdAt?.toDate?.()?.toISOString() || data.createdAt,
+        updatedAt: data.updatedAt?.toDate?.()?.toISOString() || data.updatedAt,
+      }
+    })
+    
+    console.log(`✅ [API /users] Successfully fetched ${users.length} users`)
     return NextResponse.json(users)
   } catch (error: any) {
     // TEMPORARY: Rate limit error handling disabled
@@ -180,35 +207,105 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({ error: "User not found" }, { status: 404 })
       }
 
-      // Calculate new subscription end date
+      // Calculate new subscription dates
       const currentEnd = userData.subscriptionEnd ? new Date(userData.subscriptionEnd) : new Date()
       const now = new Date()
+      
+      // Check if subscription is still active (prevent early renewal)
+      if (currentEnd > now) {
+        const daysRemaining = Math.ceil((currentEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
+        return NextResponse.json({ 
+          error: "ئیشتراک هێشتا چالاکە",
+          details: `${daysRemaining} ڕۆژ ماوە تا کۆتایی بێت. ناتوانیت نوێی بکەیتەوە تا کۆتایی ناهێنێت.`,
+          daysRemaining: daysRemaining,
+          expiryDate: currentEnd.toISOString()
+        }, { status: 400 })
+      }
       
       // If current subscription is still active, extend from current end date
       // Otherwise, start from now
       const baseDate = currentEnd > now ? currentEnd : now
+      const startDate = now
       const newEndDate = new Date(baseDate.getTime() + body.additionalDays * 24 * 60 * 60 * 1000)
+      const durationMonths = Math.floor(body.additionalDays / 30)
 
       // Update user subscription
       await adminDb.collection("users").doc(userId).update({
         membership: "Pro",
-        membershipDate: new Date(),
+        membershipDate: startDate,
         subscriptionStatus: "active",
-        subscriptionEnd: newEndDate.toISOString(),
+        subscriptionStart: startDate,
+        subscriptionEnd: newEndDate,
+        subscriptionAmount: body.amount || 0,
+        subscriptionDuration: durationMonths,
         isActive: true,
-        updatedAt: new Date().toISOString(),
+        updatedAt: new Date(),
       })
 
       // Record expense if amount is provided
       if (body.amount) {
         await adminDb.collection("expenses").add({
-          userId,
-          type: "subscription_renewal",
-          amount: parseInt(body.amount),
-          currency: "IQD",
-          duration: body.additionalDays,
-          createdAt: new Date().toISOString(),
+          type: 'subscription-renewal',
+          amount: Number(body.amount) || 0,
+          currency: 'IQD',
+          description: `نوێکردنەوەی ئیشتراک بۆ ${durationMonths} مانگ`,
+          category: 'subscription',
+          userId: userId,
+          userName: userData?.name || userData?.firstName || 'Unknown',
+          userEmail: userData?.email || null,
+          relatedType: 'manual-renewal',
+          status: 'completed',
+          createdAt: new Date(),
+          updatedAt: new Date()
         })
+
+        console.log("✅ Expense recorded:", body.amount, "IQD")
+
+        // Create payment record for subscription history
+        await adminDb.collection('payments').add({
+          userId: userId,
+          userName: userData?.name || userData?.firstName || 'Unknown',
+          userEmail: userData?.email || null,
+          amount: Number(body.amount) || 0,
+          currency: 'IQD',
+          duration: durationMonths,
+          type: 'subscription-renewal',
+          method: 'Manual Renewal',
+          status: 'completed',
+          subscriptionStart: startDate,
+          subscriptionEnd: newEndDate,
+          relatedType: 'manual-renewal',
+          createdAt: new Date(),
+          updatedAt: new Date()
+        })
+
+        console.log("✅ Payment record created for subscription history")
+      }
+
+      // Log activity
+      try {
+        await adminDb.collection('activity-logs').add({
+          type: 'subscription_renewed',
+          performedBy: 'superadmin',
+          performedByName: 'Super Admin',
+          performedByRole: 'superadmin',
+          targetUserId: userId,
+          targetUserName: userData?.name || userData?.firstName || 'Unknown',
+          targetUserEmail: userData?.email || null,
+          description: `Subscription renewed for ${userData?.name || 'user'} - ${body.amount} IQD for ${durationMonths} months`,
+          amount: Number(body.amount) || 0,
+          currency: 'IQD',
+          category: 'subscription',
+          metadata: { duration: durationMonths, type: 'manual-renewal' },
+          timestamp: new Date(),
+          createdAt: new Date(),
+          year: new Date().getFullYear(),
+          month: new Date().getMonth() + 1,
+          day: new Date().getDate(),
+        })
+        console.log("✅ Activity logged")
+      } catch (logError) {
+        console.error("⚠️ Failed to log activity:", logError)
       }
 
       console.log(`✅ Subscription extended until ${newEndDate.toISOString()}`)

@@ -1,18 +1,67 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminStorage } from '@/lib/firebase-admin'
 
-// GET - List all videos from Firebase Storage
+// GET - List all videos from Firebase Storage or get a specific video by name
 export async function GET(request: NextRequest) {
   console.log("=" .repeat(50))
   console.log("🔍 API ROUTE CALLED: /api/videos")
   console.log("=" .repeat(50))
   
   try {
-    console.log("🔍 Fetching videos from Firebase Storage")
-
+    // Check if requesting a specific video by name
+    const searchParams = request.nextUrl.searchParams
+    const videoName = searchParams.get('name')
+    
     // Get the default bucket
     const bucket = adminStorage.bucket()
     console.log("📦 Bucket name:", bucket.name)
+    
+    // If specific video requested, return just that one
+    if (videoName) {
+      console.log("🔍 Looking for specific video:", videoName)
+      
+      // Try different paths
+      const paths = [
+        `exercises/videos/${videoName}`,
+        `exercises/${videoName}`,
+        videoName
+      ]
+      
+      for (const path of paths) {
+        try {
+          const file = bucket.file(path)
+          const [exists] = await file.exists()
+          
+          if (exists) {
+            console.log("✅ Found video at:", path)
+            const [metadata] = await file.getMetadata()
+            const [url] = await file.getSignedUrl({
+              action: 'read',
+              expires: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+            })
+            
+            return NextResponse.json({
+              videos: [{
+                name: file.name.split('/').pop(),
+                displayName: file.name.split('/').pop()?.replace(/\.[^/.]+$/, ''),
+                url: url,
+                size: parseInt(metadata.size || '0'),
+                contentType: metadata.contentType,
+                createdAt: metadata.timeCreated,
+                updatedAt: metadata.updated
+              }]
+            })
+          }
+        } catch (err) {
+          console.warn(`⚠️ Not found at ${path}`)
+        }
+      }
+      
+      console.error("❌ Video not found:", videoName)
+      return NextResponse.json({ error: 'Video not found', videos: [] }, { status: 404 })
+    }
+    
+    console.log("🔍 Fetching all videos from Firebase Storage")
     
     // Get all files from exercises/videos folder with timeout
     console.log("🔍 Looking in: exercises/videos/")
@@ -46,48 +95,86 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Filter video files and get their metadata
+    // Filter video files
+    const videoFiles = files.filter(file => {
+      const name = file.name.toLowerCase()
+      return (name.endsWith('.mp4') || 
+              name.endsWith('.mov') || 
+              name.endsWith('.avi') || 
+              name.endsWith('.webm') ||
+              name.endsWith('.mkv')) &&
+             !name.includes('/.') // Exclude hidden files
+    })
+
+    console.log("🎬 Total video files found:", videoFiles.length)
+    if (videoFiles.length > 0) {
+      console.log("📹 Sample file names:", videoFiles.slice(0, 3).map(f => f.name))
+    }
+
+    // Get page and limit from query params (searchParams already defined at top)
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '100')
+    const startIndex = (page - 1) * limit
+    const endIndex = startIndex + limit
+
+    console.log(`📄 Page: ${page}, Limit: ${limit}`)
+    console.log(`📊 Returning videos ${startIndex + 1} to ${Math.min(endIndex, videoFiles.length)}`)
+
+    // Get metadata for requested page
+    const pageVideos = videoFiles.slice(startIndex, endIndex)
+    console.log(`🎥 Processing ${pageVideos.length} videos for current page`)
+    
     const videos = await Promise.all(
-      files
-        .filter(file => {
-          const name = file.name.toLowerCase()
-          return name.endsWith('.mp4') || 
-                 name.endsWith('.mov') || 
-                 name.endsWith('.avi') || 
-                 name.endsWith('.webm') ||
-                 name.endsWith('.mkv')
-        })
-        .slice(0, 50) // Limit to first 50 videos for performance
-        .map(async (file) => {
-          try {
-            // Generate signed URL for the video (valid for 7 days)
-            const [url] = await file.getSignedUrl({
-              action: 'read',
-              expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-            })
+      pageVideos.map(async (file, index) => {
+        try {
+          console.log(`🔄 Processing video ${index + 1}/${pageVideos.length}: ${file.name}`)
+          
+          // Generate signed URL for the video (valid for 7 days)
+          const [url] = await file.getSignedUrl({
+            action: 'read',
+            expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+          })
 
-            const [metadata] = await file.getMetadata()
+          const [metadata] = await file.getMetadata()
 
-            return {
-              name: file.name,
-              displayName: file.name.split('/').pop(), // Just the filename
-              url: url,
-              size: metadata.size,
-              contentType: metadata.contentType,
-              createdAt: metadata.timeCreated,
-              updatedAt: metadata.updated,
-            }
-          } catch (error) {
-            console.error("Error processing file:", file.name, error)
-            return null
+          const videoData = {
+            name: file.name,
+            displayName: file.name.split('/').pop(), // Just the filename
+            url: url,
+            size: metadata.size,
+            contentType: metadata.contentType,
+            createdAt: metadata.timeCreated,
+            updatedAt: metadata.updated,
           }
-        })
+          
+          console.log(`✅ Successfully processed: ${videoData.displayName}`)
+          return videoData
+        } catch (error: any) {
+          console.error("❌ Error processing file:", file.name)
+          console.error("   Error details:", error.message)
+          return null
+        }
+      })
     )
 
     const validVideos = videos.filter(v => v !== null)
 
-    console.log("✅ Returning", validVideos.length, "videos")
-    return NextResponse.json(validVideos)
+    console.log("=" .repeat(50))
+    console.log("✅ Successfully processed", validVideos.length, "videos")
+    console.log("❌ Failed to process", videos.length - validVideos.length, "videos")
+    console.log("📊 Page", page, "of", Math.ceil(videoFiles.length / limit))
+    console.log("=" .repeat(50))
+    
+    return NextResponse.json({
+      videos: validVideos,
+      pagination: {
+        page,
+        limit,
+        total: videoFiles.length,
+        totalPages: Math.ceil(videoFiles.length / limit),
+        hasMore: endIndex < videoFiles.length
+      }
+    })
   } catch (error: any) {
     console.error("❌ Error fetching videos:", error)
     console.error("❌ Error message:", error?.message)

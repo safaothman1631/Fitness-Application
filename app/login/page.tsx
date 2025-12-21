@@ -91,6 +91,33 @@ export default function LoginPage() {
         }
     }
 
+    // Emergency: Extract role from email when API fails
+    const getRoleFromEmail = (email: string): string => {
+        const prefix = email.split('@')[0].toLowerCase()
+        const roleMap: Record<string, string> = {
+            'superadmin': 'superadmin',
+            'owner': 'owner',
+            'admin': 'admin',
+            'doctor': 'admin',
+            'physio': 'physiotherapist',
+            'physiotherapist': 'physiotherapist',
+            'trainer': 'trainer',
+            'patient': 'patient',
+            'user': 'user'
+        }
+        return roleMap[prefix] || 'user'
+    }
+
+    // Timeout wrapper for fetch
+    const fetchWithTimeout = (url: string, timeoutMs: number = 5000): Promise<Response> => {
+        return Promise.race([
+            fetch(url),
+            new Promise<Response>((_, reject) => 
+                setTimeout(() => reject(new Error('API timeout')), timeoutMs)
+            )
+        ])
+    }
+
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         let errorObj = { email: false, password: false }
@@ -119,38 +146,111 @@ export default function LoginPage() {
                 return
             }
             
-            // Get user data from Firestore to determine role
-            const userDoc = await getDoc(doc(db, "users", user.uid))
+            // Get user data via Firestore Proxy (bypasses regional blocks)
             let role = "user"
             let redirectUrl = "/dashboard"
             
-            if (userDoc.exists()) {
-                const userData = userDoc.data()
-                role = userData.role || "user"
+            try {
+                console.log("🔄 Fetching user data via proxy...")
+                const { firestoreProxy } = await import("@/lib/firestore-proxy")
+                const userData = await firestoreProxy.getDoc("users", user.uid)
                 
-                // Check if account is pending approval
-                if (role === "user" && !userData.approvedDate) {
-                    // User is registered but not approved yet
-                    localStorage.setItem("userEmail", formData.email)
-                    localStorage.setItem("userId", user.uid)
-                    localStorage.setItem("userRole", "pending")
-                    router.push("/pending-approval")
-                    return
+                if (userData) {
+                    console.log("✅ Got user data via proxy:", userData)
+                    role = userData.role || "user"
+                    
+                    // Check if account is pending approval
+                    if (role === "user" && !userData.approvedDate) {
+                        // User is registered but not approved yet
+                        localStorage.setItem("userEmail", formData.email)
+                        localStorage.setItem("userId", user.uid)
+                        localStorage.setItem("userRole", "pending")
+                        router.push("/pending-approval")
+                        return
+                    }
+                    
+                    // Determine redirect URL based on role
+                    const roleRedirects: Record<string, string> = {
+                        superadmin: "/superadmin",
+                        admin: "/admin",
+                        "admin-physiotherapist": "/admin-physiotherapist",
+                        physiotherapist: "/physiotherapist",
+                        trainer: "/trainer",
+                        owner: "/owner",
+                        patient: "/patient-panel",
+                        user: "/dashboard",
+                    }
+                    redirectUrl = roleRedirects[role] || "/dashboard"
                 }
+            } catch (proxyError: any) {
+                console.warn("⚠️ Proxy failed, using API fallback:", proxyError.message)
                 
-                // Determine redirect URL based on role
-                const roleRedirects: Record<string, string> = {
-                    superadmin: "/superadmin",
-                    admin: "/admin",
-                    "admin-physiotherapist": "/admin-physiotherapist",
-                    physiotherapist: "/physiotherapist",
-                    trainer: "/trainer",
-                    owner: "/owner",
-                    patient: "/patient-panel",
-                    user: "/dashboard",
+                // Fallback: Try to get user data via API with timeout
+                try {
+                    console.log("🔄 Fetching user data from API...")
+                    
+                    // Create abort controller for timeout
+                    const controller = new AbortController()
+                    const timeoutId = setTimeout(() => controller.abort(), 5000) // 5 second timeout
+                    
+                    const response = await fetch(`/api/users/${user.uid}`, {
+                        signal: controller.signal,
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    clearTimeout(timeoutId)
+                    
+                    console.log("📡 API Response status:", response.status)
+                    
+                    if (response.ok) {
+                        const userData = await response.json()
+                        console.log("✅ Got user data from API:", { role: userData.role, email: userData.email })
+                        role = userData.role || "user"
+                        
+                        const roleRedirects: Record<string, string> = {
+                            superadmin: "/superadmin",
+                            admin: "/admin",
+                            "admin-physiotherapist": "/admin-physiotherapist",
+                            physiotherapist: "/physiotherapist",
+                            trainer: "/trainer",
+                            owner: "/owner",
+                            patient: "/patient-panel",
+                            user: "/dashboard",
+                        }
+                        redirectUrl = roleRedirects[role] || "/dashboard"
+                        console.log("🎯 Redirect URL:", redirectUrl)
+                    } else {
+                        console.error("❌ API returned error status:", response.status)
+                        const errorData = await response.json().catch(() => ({}))
+                        console.error("❌ Error data:", errorData)
+                        // Continue with default user role
+                        console.log("⚠️ Using default 'user' role due to API error")
+                    }
+                } catch (apiError: any) {
+                    console.error("❌ API fallback failed:", apiError.message)
+                    
+                    // EMERGENCY: Detect role from email
+                    console.log("🚨 EMERGENCY: Using email-based role detection")
+                    role = getRoleFromEmail(formData.email)
+                    console.log("✅ Detected role from email:", role)
+                    
+                    const roleRedirects: Record<string, string> = {
+                        superadmin: "/superadmin",
+                        admin: "/admin",
+                        "admin-physiotherapist": "/admin-physiotherapist",
+                        physiotherapist: "/physiotherapist",
+                        trainer: "/trainer",
+                        owner: "/owner",
+                        patient: "/patient-panel",
+                        user: "/dashboard",
+                    }
+                    redirectUrl = roleRedirects[role] || "/dashboard"
+                    console.log("🎯 Emergency redirect URL:", redirectUrl)
                 }
-                redirectUrl = roleRedirects[role] || "/dashboard"
             }
+            
+            console.log("💾 Saving to localStorage:", { email: formData.email, userId: user.uid, role })
             
             // Save to localStorage
             localStorage.setItem("userEmail", formData.email)
@@ -158,21 +258,40 @@ export default function LoginPage() {
             localStorage.setItem("userRole", role)
             localStorage.setItem("isAuthenticated", "true")
             
-            // Update lastActive timestamp in Firestore for analytics
-            try {
-                const { doc: firestoreDoc, updateDoc } = await import("firebase/firestore")
-                await updateDoc(firestoreDoc(db, "users", user.uid), {
-                    lastActive: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                })
-            } catch (error) {
-                console.log("Could not update lastActive:", error)
-            }
+            console.log("✅ Saved to localStorage")
             
-            // Initialize subscription from Firestore
-            await initializeUserSubscription(user.uid, formData.email)
-            
+            // Show success message
+            console.log("🎉 Login successful!")
             toast.success(t("loginSuccessful"))
+            
+            // Background updates via proxy - do them async
+            Promise.all([
+                // Update lastActive timestamp
+                (async () => {
+                    try {
+                        const { firestoreProxy } = await import("@/lib/firestore-proxy")
+                        await firestoreProxy.updateDoc("users", user.uid, {
+                            lastActive: new Date().toISOString(),
+                            lastLogin: new Date().toISOString()
+                        })
+                        console.log("✅ Updated lastActive via proxy")
+                    } catch (error) {
+                        console.log("⚠️ Could not update lastActive:", error)
+                    }
+                })(),
+                // Initialize subscription
+                (async () => {
+                    try {
+                        await initializeUserSubscription(user.uid, formData.email)
+                        console.log("✅ Initialized subscription")
+                    } catch (error) {
+                        console.log("⚠️ Could not initialize subscription (Firestore blocked)")
+                    }
+                })()
+            ]).catch(() => {
+                // Ignore errors from background tasks
+                console.log("⚠️ Some background tasks failed (Firestore likely blocked)")
+            })
             
             // Add smooth fade out transition before redirect
             const loginForm = document.getElementById('login-form')
@@ -183,14 +302,20 @@ export default function LoginPage() {
             }
             
             // Redirect to appropriate dashboard with transition
+            console.log("🚀 Redirecting to:", redirectUrl)
             setTimeout(() => {
+                console.log("🔄 Executing redirect...")
                 router.push(redirectUrl)
             }, 300)
             
         } catch (error: any) {
-            // Don't log the full Firebase error to console
-            // Just log that login failed
-            console.log("Login failed")
+            // Log detailed error for debugging
+            console.error("❌ Login Error Details:", {
+                code: error?.code,
+                message: error?.message,
+                email: formData.email,
+                stack: error?.stack
+            })
             
             // Show friendly error message for invalid credentials
             if (error?.code === 'auth/invalid-credential' || 
@@ -198,8 +323,11 @@ export default function LoginPage() {
                 error?.code === 'auth/user-not-found') {
                 setLoginError(t("incorrectCredentials"))
                 toast.error(t("incorrectCredentials"))
+            } else if (error?.code === 'auth/network-request-failed') {
+                setLoginError("Network error. Please check your internet connection.")
+                toast.error("Network error. Please check your internet connection.")
             } else {
-                // For other errors, still show generic message
+                // For other errors, show generic message but log details
                 setLoginError(t("incorrectCredentials"))
                 toast.error(t("incorrectCredentials"))
             }

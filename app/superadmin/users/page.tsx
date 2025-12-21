@@ -37,6 +37,9 @@ export default function UsersPage() {
   const [proErrorMessage, setProErrorMessage] = useState('')
   const [showProSuccessDialog, setShowProSuccessDialog] = useState(false)
   const [proSuccessData, setProSuccessData] = useState<any>(null)
+  const [showSubscriptionDialog, setShowSubscriptionDialog] = useState(false)
+  const [subscriptionData, setSubscriptionData] = useState<any>(null)
+  const [isLoadingSubscription, setIsLoadingSubscription] = useState(false)
   const [stats, setStats] = useState({
     total: 0,
     active: 0,
@@ -57,9 +60,13 @@ export default function UsersPage() {
   const fetchUsers = async () => {
     setIsLoading(true)
     try {
+      console.log("🔄 Fetching users from /api/users...")
       const response = await fetch("/api/users")
+      console.log("📡 Response status:", response.status, response.statusText)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log("✅ Fetched users:", data.length)
         setUsers(data)
         
         // Filter to count users, trainers, and physiotherapists
@@ -82,9 +89,12 @@ export default function UsersPage() {
         }).length
         
         setStats({ total, active, inactive, admins: trainers })
+      } else {
+        const errorText = await response.text()
+        console.error("❌ Failed to fetch users:", response.status, errorText)
       }
     } catch (error) {
-      console.error("Error fetching users:", error)
+      console.error("❌ Error fetching users:", error)
     } finally {
       setIsLoading(false)
     }
@@ -118,6 +128,25 @@ export default function UsersPage() {
       console.error("Error fetching Pro requests:", error)
     } finally {
       setIsLoading(false)
+    }
+  }
+
+  // Fetch subscription history for a user
+  const fetchSubscriptionHistory = async (userId: string) => {
+    setIsLoadingSubscription(true)
+    try {
+      const response = await fetch(`/api/user-subscription-history?userId=${userId}`)
+      if (response.ok) {
+        const data = await response.json()
+        setSubscriptionData(data)
+        setShowSubscriptionDialog(true)
+      } else {
+        console.error("Failed to fetch subscription history")
+      }
+    } catch (error) {
+      console.error("Error fetching subscription history:", error)
+    } finally {
+      setIsLoadingSubscription(false)
     }
   }
 
@@ -726,7 +755,11 @@ export default function UsersPage() {
                                  user.email?.toLowerCase().includes(searchQuery.toLowerCase())
                         })
                         .map((user) => (
-                        <tr key={user.id || user.uid} className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 hover:scale-[1.01] transition-all duration-300">
+                        <tr 
+                          key={user.id || user.uid} 
+                          className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 hover:scale-[1.01] transition-all duration-300 cursor-pointer group"
+                          onClick={() => fetchSubscriptionHistory(user.id || user.uid)}
+                        >
                           <td className="p-4">
                             <div className="flex items-center gap-3">
                               <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 via-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-blue-500/30 ring-2 ring-blue-400/20">
@@ -771,11 +804,16 @@ export default function UsersPage() {
                               }
                               
                               const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
-                              if (!expiryDate) {
+                              if (!expiryDate || isNaN(expiryDate.getTime())) {
                                 return <span className="text-gray-500 text-sm">∞</span>
                               }
                               
                               const daysLeft = Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
+                              
+                              if (isNaN(daysLeft)) {
+                                return <span className="text-gray-500 text-sm">∞</span>
+                              }
+                              
                               const isExpired = daysLeft <= 0
                               const isExpiringSoon = daysLeft <= 7 && daysLeft > 0
                               
@@ -802,7 +840,8 @@ export default function UsersPage() {
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation()
                                   setUserToEdit(user)
                                   setEditDialogOpen(true)
                                 }}
@@ -813,7 +852,8 @@ export default function UsersPage() {
                               <Button 
                                 variant="outline" 
                                 size="sm" 
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation()
                                   setUserToDelete(user)
                                   setDeleteDialogOpen(true)
                                 }}
@@ -1879,6 +1919,365 @@ export default function UsersPage() {
                 زۆر باشە! 🎉
               </Button>
             </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Subscription History Dialog */}
+        <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
+          <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-4xl max-h-[90vh] overflow-y-auto">
+            {isLoadingSubscription ? (
+              <div className="text-center py-12">
+                <div className="inline-block w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-gray-400">{t("loadingSubscriptionHistory")}</p>
+              </div>
+            ) : subscriptionData ? (
+              <div className="space-y-6">
+                <DialogHeader className="pb-2">
+                  <DialogTitle className="flex items-center gap-4 pb-4 border-b border-slate-700/50">
+                    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-cyan-500/50">
+                      <Crown className="w-8 h-8 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <div className="text-3xl font-black bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-400 bg-clip-text text-transparent mb-1">
+                        {t("subscriptionHistory")}
+                      </div>
+                      <p className="text-sm text-gray-400">Complete subscription timeline and payment records</p>
+                    </div>
+                  </DialogTitle>
+                </DialogHeader>
+
+                {/* User Info Card */}
+                <Card className="bg-gradient-to-br from-slate-800/80 to-slate-900/60 border-slate-700/50">
+                  <CardContent className="p-6">
+                    <div className="flex items-center gap-6">
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 flex items-center justify-center text-white font-bold text-3xl shadow-xl shadow-cyan-500/30">
+                        {subscriptionData.user.name?.charAt(0) || subscriptionData.user.email?.charAt(0) || "U"}
+                      </div>
+                      <div className="flex-1">
+                        <h3 className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                          {subscriptionData.user.name || "No Name"}
+                        </h3>
+                        <p className="text-gray-400 text-sm mt-1">{subscriptionData.user.email}</p>
+                        <div className="flex items-center gap-3 mt-3">
+                          <span className={`px-4 py-1.5 rounded-full text-xs font-bold ${
+                            subscriptionData.stats.currentMembership === "Pro"
+                              ? "bg-gradient-to-r from-yellow-500/40 via-amber-500/30 to-orange-500/20 text-yellow-300 border border-yellow-400/50"
+                              : "bg-gradient-to-r from-slate-700/50 to-slate-800/30 text-gray-400 border border-slate-600/50"
+                          }`}>
+                            {subscriptionData.stats.currentMembership}
+                          </span>
+                          <span className={`px-4 py-1.5 rounded-full text-xs font-bold ${
+                            subscriptionData.stats.isActive
+                              ? "bg-gradient-to-r from-green-500/30 to-green-600/20 text-green-300 border border-green-400/40"
+                              : "bg-gradient-to-r from-red-500/30 to-red-600/20 text-red-300 border border-red-400/40"
+                          }`}>
+                            {subscriptionData.stats.isActive ? "Active" : "Inactive"}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+
+
+                {/* Payment History */}
+                <Card className="bg-gradient-to-br from-slate-800/60 to-slate-900/40 border-slate-700/50">
+                  <CardContent className="p-6">
+                    <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-700/30">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 via-pink-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                          <Activity className="w-6 h-6 text-white" />
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-white">{t("paymentHistory")}</h3>
+                          <p className="text-sm text-gray-400">
+                            {subscriptionData.payments.length} {subscriptionData.payments.length === 1 ? 'transaction' : 'transactions'} recorded
+                          </p>
+                        </div>
+                      </div>
+                      {subscriptionData.payments.length > 0 && (
+                        <div className="text-right">
+                          <p className="text-xs text-gray-500 mb-0.5">Total Revenue</p>
+                          <p className="text-lg font-bold text-green-400">
+                            {subscriptionData.payments.reduce((sum: number, p: any) => sum + (parseFloat(p.amount) || 0), 0).toLocaleString()} IQD
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    {subscriptionData.payments.length === 0 ? (
+                      <div className="text-center py-12">
+                        {subscriptionData.stats.currentMembership === "Pro" ? (
+                          // User is Pro but no payment history - Manual upgrade
+                          <>
+                            <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 flex items-center justify-center mx-auto mb-6 border-2 border-purple-400/30">
+                              <Crown className="w-12 h-12 text-purple-400" />
+                            </div>
+                            <h3 className="text-2xl font-bold text-white mb-3">{t("manuallyUpgradedToPro")}</h3>
+                            <p className="text-purple-400 text-lg mb-2">✨ {t("manualProAccessDesc")}</p>
+                            <p className="text-gray-500 text-sm mb-6">{t("adminDirectlyUpgraded")}</p>
+                            
+                            {/* Show subscription details if available */}
+                            {(subscriptionData.stats.subscriptionStart || subscriptionData.stats.subscriptionEnd) && (
+                              <div className="max-w-2xl mx-auto mb-6">
+                                {/* Subscription Summary */}
+                                {(() => {
+                                  // Get amount
+                                  let amount = subscriptionData.user.subscriptionAmount
+                                  let duration = subscriptionData.user.subscriptionDuration
+                                  
+                                  // Get amount from latest payment if not stored
+                                  if (!amount && subscriptionData.payments && subscriptionData.payments.length > 0) {
+                                    amount = subscriptionData.payments[0].amount
+                                  }
+                                  
+                                  // Calculate days left
+                                  const daysLeft = subscriptionData.stats.subscriptionEnd 
+                                    ? Math.max(0, Math.ceil((new Date(subscriptionData.stats.subscriptionEnd).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)))
+                                    : 0
+                                  
+                                  // Show summary if we have info
+                                  if (amount || duration || daysLeft > 0) {
+                                    return (
+                                      <>
+                                        <div className="p-5 rounded-xl bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10 border border-cyan-400/30 mb-4">
+                                          <div className="flex items-center gap-4">
+                                            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
+                                              <Activity className="w-7 h-7 text-white" />
+                                            </div>
+                                            <div className="flex-1">
+                                              <p className="text-sm text-gray-400 mb-2">{t("subscriptionInfo")}</p>
+                                              <div className="flex items-center gap-4 flex-wrap">
+                                                {amount && (
+                                                  <div className="flex items-center gap-2">
+                                                    <span className="text-gray-500">💰</span>
+                                                    <span className="text-xl font-black text-white">
+                                                      {parseInt(amount).toLocaleString()}
+                                                    </span>
+                                                    <span className="text-sm text-green-400">{t("dinar")}</span>
+                                                  </div>
+                                                )}
+                                                {duration && (
+                                                  <div className="flex items-center gap-2">
+                                                    <span className="text-gray-500">⏱️</span>
+                                                    <span className="text-lg font-bold text-cyan-400">
+                                                      {duration} {t("monthDuration")}
+                                                    </span>
+                                                  </div>
+                                                )}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        </div>
+                                        
+                                        {/* Days Left - Small Card */}
+                                        {daysLeft > 0 && (
+                                          <div className="p-4 rounded-lg bg-gradient-to-r from-cyan-500/10 to-blue-500/5 border border-cyan-400/20 mb-4">
+                                            <div className="flex items-center justify-between">
+                                              <div className="flex items-center gap-2">
+                                                <Activity className="w-5 h-5 text-cyan-400" />
+                                                <div>
+                                                  <p className="text-xs text-gray-400">{t("daysLeft")}</p>
+                                                  <p className="text-white font-bold text-lg">{daysLeft} {t("day")}</p>
+                                                </div>
+                                              </div>
+                                              <div className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                                daysLeft > 7
+                                                  ? "bg-green-500/20 text-green-300 border border-green-400/40"
+                                                  : daysLeft > 0
+                                                  ? "bg-orange-500/20 text-orange-300 border border-orange-400/40"
+                                                  : "bg-red-500/20 text-red-300 border border-red-400/40"
+                                              }`}>
+                                                {daysLeft > 0 ? "Active" : "Expired"}
+                                              </div>
+                                            </div>
+                                          </div>
+                                        )}
+                                      </>
+                                    )
+                                  }
+                                  return null
+                                })()}
+                                
+                                <div className="grid grid-cols-2 gap-4">
+                                  {/* Start Date - Calculate if not available */}
+                                  {(() => {
+                                    let startDate = subscriptionData.stats.subscriptionStart
+                                    
+                                    // Calculate start from end and duration if not stored
+                                    if (!startDate && subscriptionData.stats.subscriptionEnd && subscriptionData.user.subscriptionDuration) {
+                                      const end = new Date(subscriptionData.stats.subscriptionEnd)
+                                      const duration = subscriptionData.user.subscriptionDuration
+                                      const calculatedStart = new Date(end)
+                                      calculatedStart.setMonth(calculatedStart.getMonth() - duration)
+                                      startDate = calculatedStart.toISOString()
+                                    }
+                                    
+                                    if (startDate) {
+                                      return (
+                                        <div className="p-4 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/10 border border-cyan-400/30">
+                                          <div className="flex items-center gap-3 mb-3">
+                                            <div className="w-10 h-10 rounded-lg bg-cyan-500/30 flex items-center justify-center">
+                                              <span className="text-lg">📅</span>
+                                            </div>
+                                            <div className="text-right">
+                                              <p className="text-xs text-cyan-400">{t("subscriptionStartDate")}</p>
+                                              <p className="text-white font-bold text-sm">
+                                                {new Date(startDate).toLocaleDateString("en-US", {
+                                                  year: 'numeric',
+                                                  month: 'short',
+                                                  day: 'numeric'
+                                                })}
+                                              </p>
+                                              {!subscriptionData.stats.subscriptionStart && (
+                                                <p className="text-xs text-gray-500 mt-1">{t("calculated")}</p>
+                                              )}
+                                            </div>
+                                          </div>
+                                        </div>
+                                      )
+                                    }
+                                    return null
+                                  })()}
+
+                                  {/* End Date or Duration */}
+                                  {subscriptionData.stats.subscriptionEnd && (
+                                  <div className="p-4 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 border border-purple-400/30">
+                                    <div className="flex items-center gap-3 mb-3">
+                                      <div className="w-10 h-10 rounded-lg bg-purple-500/30 flex items-center justify-center">
+                                        <span className="text-lg">⏳</span>
+                                      </div>
+                                      <div className="text-right">
+                                        <p className="text-xs text-purple-400">{t("subscriptionEndDate")}</p>
+                                        <p className="text-white font-bold text-sm">
+                                          {new Date(subscriptionData.stats.subscriptionEnd).toLocaleDateString("en-US", {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric'
+                                              })}
+                                        </p>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        ) : (
+                          // User is Free - Never had subscription
+                          <div className="text-center py-8">
+                            <div className="w-16 h-16 rounded-xl bg-slate-800/50 flex items-center justify-center mx-auto mb-3">
+                              <Crown className="w-8 h-8 text-gray-600" />
+                            </div>
+                            <p className="text-gray-400 text-base mb-1">No Payment History</p>
+                            <p className="text-gray-500 text-sm">This user hasn't subscribed to PRO yet</p>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {subscriptionData.payments.map((payment: any, index: number) => {
+                          // Check if this payment is still active
+                          const paymentDate = new Date(payment.createdAt)
+                          const duration = payment.duration || 1
+                          const expiryDate = new Date(paymentDate)
+                          expiryDate.setMonth(expiryDate.getMonth() + duration)
+                          const isStillActive = expiryDate > new Date()
+                          const daysUntilExpiry = Math.ceil((expiryDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+                          
+                          return (
+                            <div 
+                              key={payment.id}
+                              className="group p-4 rounded-xl bg-gradient-to-r from-slate-800/60 via-slate-800/40 to-slate-900/20 border border-slate-700/50 hover:border-cyan-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-cyan-500/10"
+                            >
+                              <div className="flex items-start justify-between gap-4">
+                                <div className="flex items-start gap-3 flex-1">
+                                  <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-cyan-500 via-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 group-hover:shadow-cyan-500/40 transition-shadow">
+                                    <span className="text-white font-bold text-base">#{subscriptionData.payments.length - index}</span>
+                                  </div>
+                                  <div className="flex-1">
+                                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                                      <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-cyan-500/30 to-blue-500/20 text-cyan-300 border border-cyan-400/40">
+                                        Pro Upgrade
+                                      </span>
+                                      {isStillActive ? (
+                                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-green-500/30 to-green-600/20 text-green-300 border border-green-400/40">
+                                          ✓ Active
+                                        </span>
+                                      ) : (
+                                        <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-gradient-to-r from-gray-500/30 to-gray-600/20 text-gray-400 border border-gray-500/40">
+                                          Expired
+                                        </span>
+                                      )}
+                                      <span className="text-gray-400 text-xs">
+                                        {new Date(payment.createdAt).toLocaleDateString("en-US", { 
+                                          year: 'numeric', 
+                                          month: 'short', 
+                                          day: 'numeric' 
+                                        })}
+                                      </span>
+                                    </div>
+                                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-gray-500 text-xs">💰</span>
+                                        <span className="text-white font-bold text-sm">
+                                          {parseInt(payment.amount).toLocaleString()}
+                                        </span>
+                                        <span className="text-green-400 text-xs">IQD</span>
+                                      </div>
+                                      <div className="flex items-center gap-1.5">
+                                        <span className="text-gray-500 text-xs">⏱</span>
+                                        <span className="text-cyan-400 font-semibold text-sm">
+                                          {payment.duration || 1} {payment.duration === 1 ? 'month' : 'months'}
+                                        </span>
+                                      </div>
+                                      {payment.method && (
+                                        <div className="flex items-center gap-1.5">
+                                          <span className="text-gray-500 text-xs">💳</span>
+                                          <span className="text-purple-400 font-semibold text-sm">
+                                            {payment.method}
+                                          </span>
+                                        </div>
+                                      )}
+                                    </div>
+                                    {isStillActive && daysUntilExpiry > 0 && (
+                                      <div className="mt-2 text-xs text-gray-400">
+                                        <span className="text-green-400">●</span> {daysUntilExpiry} days remaining
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-gray-500 text-xs mb-0.5">Time</div>
+                                  <div className="text-gray-400 text-xs font-mono">
+                                    {new Date(payment.createdAt).toLocaleTimeString("en-US", {
+                                      hour: '2-digit',
+                                      minute: '2-digit'
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          )
+                        })}
+                      </div>
+                    )}
+                  </CardContent>
+                </Card>
+
+                {/* Close Button */}
+                <Button
+                  onClick={() => {
+                    setShowSubscriptionDialog(false)
+                    setSubscriptionData(null)
+                  }}
+                  className="w-full h-12 bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 hover:from-cyan-600 hover:via-blue-700 hover:to-purple-700 text-lg font-bold shadow-xl shadow-cyan-500/30"
+                >
+                  داخستن
+                </Button>
+              </div>
+            ) : null}
           </DialogContent>
         </Dialog>
       </SidebarSleek>

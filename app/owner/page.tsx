@@ -1,5 +1,7 @@
 ﻿"use client"
 
+export const dynamic = 'force-dynamic'
+
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { collection, getDocs, doc, updateDoc, deleteDoc, query, where, orderBy, Timestamp, serverTimestamp } from "firebase/firestore"

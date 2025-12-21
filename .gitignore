@@ -37,9 +37,11 @@ next-env.d.ts
 .vercel
 .env*.local
 
-# Service Account Keys
+# Service Account Keys - NEVER COMMIT THESE!
 final-database-*.json
 project-*.json
+*-firebase-adminsdk-*.json
+*firebase-adminsdk*.json
 
 # Environment files
 .env.local

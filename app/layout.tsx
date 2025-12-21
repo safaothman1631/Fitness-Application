@@ -20,7 +20,19 @@ export const metadata: Metadata = {
   title: "FitPro - Your Personal Fitness App",
   description: "Professional exercise programs, workout tracking, and fitness management",
   generator: "v0.app",
-  manifest: "/manifest.json",
+  // manifest is served from public/ folder, not via metadata API
+  // to avoid middleware authentication issues
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.svg', type: 'image/svg+xml' },
+      { url: '/icon-192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icon-512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/apple-icon.png' },
+    ],
+  },
   themeColor: "#06b6d4",
   appleWebApp: {
     capable: true,
@@ -43,6 +55,13 @@ export default function RootLayout({
 }>) {
   return (
     <html suppressHydrationWarning>
+      <head>
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+        <meta name="apple-mobile-web-app-title" content="FitPro" />
+      </head>
       <body className={`${poppins.variable} ${inter.variable} font-sans antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <LanguageProvider>
@@ -53,6 +72,17 @@ export default function RootLayout({
           <GlobalToaster />
           <Analytics />
         </ThemeProvider>
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                  .then(reg => console.log('✅ SW registered:', reg.scope))
+                  .catch(err => console.error('❌ SW registration failed:', err));
+              });
+            }
+          `
+        }} />
       </body>
     </html>
   )

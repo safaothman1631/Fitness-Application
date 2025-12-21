@@ -1332,6 +1332,44 @@ export type TranslationKey =
   | "showPhone"
   | "showPhoneDesc"
   | "navigation"
+  // Subscription History Dialog
+  | "subscriptionHistory"
+  | "loadingSubscriptionHistory"
+  | "memberSince"
+  | "totalPaid"
+  | "freeAccess"
+  | "iqd"
+  | "daysLeft"
+  | "day"
+  | "paymentHistory"
+  | "manuallyUpgradedToPro"
+  | "manualProAccessDesc"
+  | "adminDirectlyUpgraded"
+  | "activeProStatus"
+  | "subscriptionInfo"
+  | "dinar"
+  | "monthDuration"
+  | "subscriptionStartDate"
+  | "subscriptionEndDate"
+  | "calculated"
+  | "unlimited"
+  | "manualProAccess"
+  | "noPaymentHistory"
+  | "userHasNoPaymentRecords"
+  | "currentSubscriptionDetails"
+  | "proStatusInformation"
+  | "currentSubscription"
+  | "status"
+  | "proUpgrade"
+  | "amount"
+  | "method"
+  | "time"
+  | "subscriptionCount"
+  | "timesSubscribed"
+  | "manualUpgrade"
+  | "installApp"
+  | "installAppDescription"
+  | "install"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -2338,6 +2376,43 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   showPhone: "Show Phone",
   showPhoneDesc: "Display phone number on profile",
   navigation: "Navigation",
+  installApp: "Install FitPro App",
+  installAppDescription: "Install our app for a better experience with offline access and quick launch.",
+  install: "Install",
+  // Subscription History Dialog - English
+  subscriptionHistory: "Subscription History",
+  loadingSubscriptionHistory: "Loading subscription history...",
+  memberSince: "Member Since",
+  totalPaid: "Total Paid",
+  freeAccess: "Free Access",
+  iqd: "IQD",
+  daysLeft: "Days Left",
+  paymentHistory: "Payment History",
+  manuallyUpgradedToPro: "Manually Upgraded to PRO",
+  manualProAccessDesc: "This user was manually upgraded to PRO by Super Admin. No payment records were created.",
+  adminDirectlyUpgraded: "Admin directly upgraded this user",
+  activeProStatus: "Active PRO Status",
+  subscriptionInfo: "Subscription Info",
+  dinar: "Dinar",
+  monthDuration: "Month",
+  subscriptionStartDate: "Subscription Start",
+  subscriptionEndDate: "Subscription End",
+  calculated: "Calculated",
+  unlimited: "Unlimited",
+  manualProAccess: "Manual PRO Access",
+  noPaymentHistory: "No Payment History",
+  userHasNoPaymentRecords: "This user has no payment records",
+  currentSubscriptionDetails: "Current Subscription Details",
+  proStatusInformation: "PRO Status Information",
+  currentSubscription: "Current Subscription",
+  status: "Status",
+  proUpgrade: "Pro Upgrade",
+  amount: "Amount",
+  method: "Method",
+  time: "Time",
+  subscriptionCount: "Subscription Count",
+  timesSubscribed: "Times Subscribed",
+  manualUpgrade: "Manual Upgrade",
   // Physiotherapist English
   physioWelcome: "Welcome to Physiotherapy Dashboard",
   totalPatients: "Total Patients",
@@ -3742,7 +3817,44 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,showEmail: "إظهار البريد الإلكتروني"
   ,showEmailDesc: "عرض البريد الإلكتروني في الملف الشخصي"
   ,showPhone: "إظهار الهاتف"
+  ,installApp: "تثبيت تطبيق FitPro"
+  ,installAppDescription: "قم بتثبيت تطبيقنا للحصول على تجربة أفضل مع الوصول دون اتصال والإطلاق السريع."
+  ,install: "تثبيت"
   ,showPhoneDesc: "عرض رقم الهاتف في الملف الشخصي"
+  // Subscription History Dialog - Arabic
+  ,subscriptionHistory: "سجل الاشتراك"
+  ,loadingSubscriptionHistory: "جارٍ تحميل سجل الاشتراك..."
+  ,memberSince: "عضو منذ"
+  ,totalPaid: "إجمالي المدفوع"
+  ,freeAccess: "وصول مجاني"
+  ,iqd: "دينار عراقي"
+  ,daysLeft: "الأيام المتبقية"
+  ,paymentHistory: "سجل الدفعات"
+  ,manuallyUpgradedToPro: "تمت الترقية يدويًا إلى PRO"
+  ,manualProAccessDesc: "تمت ترقية هذا المستخدم يدويًا إلى PRO من قبل المشرف الأعلى. لم يتم إنشاء سجلات دفع."
+  ,adminDirectlyUpgraded: "قام المشرف بترقية هذا المستخدم مباشرة"
+  ,activeProStatus: "حالة PRO نشطة"
+  ,subscriptionInfo: "معلومات الاشتراك"
+  ,dinar: "دينار"
+  ,monthDuration: "شهر"
+  ,subscriptionStartDate: "بداية الاشتراك"
+  ,subscriptionEndDate: "نهاية الاشتراك"
+  ,calculated: "محسوب"
+  ,unlimited: "غير محدود"
+  ,manualProAccess: "وصول PRO يدوي"
+  ,noPaymentHistory: "لا يوجد سجل دفعات"
+  ,userHasNoPaymentRecords: "هذا المستخدم ليس لديه سجلات دفع"
+  ,currentSubscriptionDetails: "تفاصيل الاشتراك الحالي"
+  ,proStatusInformation: "معلومات حالة PRO"
+  ,currentSubscription: "الاشتراك الحالي"
+  ,status: "الحالة"
+  ,proUpgrade: "ترقية Pro"
+  ,amount: "المبلغ"
+  ,method: "الطريقة"
+  ,time: "الوقت"
+  ,subscriptionCount: "عدد الاشتراكات"
+  ,timesSubscribed: "مرات الاشتراك"
+  ,manualUpgrade: "ترقية يدوية"
   ,navigation: "التنقل"
   },
   // Minimal Kurdish (Sorani) placeholders
@@ -5004,7 +5116,44 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,showEmail: "پیشاندانی ئیمەیڵ"
     ,showEmailDesc: "نیشاندانی ئیمەیڵ لە پرۆفایل"
     ,showPhone: "پیشاندانی تەلەفۆن"
+    ,installApp: "دابەزاندنی ئەپی FitPro"
+    ,installAppDescription: "ئەپەکەمان دابەزێنە بۆ ئەزموونێکی باشتر لەگەڵ دەستگەیشتنی ئۆفلاین و کردنەوەی خێرا."
+    ,install: "دابەزاندن"
     ,showPhoneDesc: "نیشاندانی ژمارەی تەلەفۆن لە پرۆفایل"
+    // Subscription History Dialog - Kurdish
+    ,subscriptionHistory: "مێژووی ئیشتراک"
+    ,loadingSubscriptionHistory: "باری مێژووی ئیشتراک..."
+    ,memberSince: "ئەندام لە"
+    ,totalPaid: "کۆی گشتی پارەی دراو"
+    ,freeAccess: "بە خۆڕایی"
+    ,iqd: "دینار"
+    ,daysLeft: "رۆژی ماوە"
+    ,paymentHistory: "مێژووی وەرگرتنی پارە"
+    ,manuallyUpgradedToPro: "بە دەستی کرابووە بە PRO"
+    ,manualProAccessDesc: "ئەم یوزەرە بە دەستی کرابووە بە PRO لەلایەن سوپەر ئەدمین. هیچ زانیاریەکی پارەدانی تۆمار نەکراوە."
+    ,adminDirectlyUpgraded: "ئەدمین بە ڕاستەوخۆ ئەم یوزەرەی باڵا برد"
+    ,activeProStatus: "دۆخی PRO چالاک"
+    ,subscriptionInfo: "زانیاریەکانی ئیشتراک"
+    ,dinar: "دینار"
+    ,monthDuration: "مانگ"
+    ,subscriptionStartDate: "دەستپێکردنی ئیشتراک"
+    ,subscriptionEndDate: "کۆتایی هاتنی ئیشتراک"
+    ,calculated: "حیساب کراوە"
+    ,unlimited: "بێ سنوور"
+    ,manualProAccess: "دەستگەیشتنی PRO بە دەستی"
+    ,noPaymentHistory: "هیچ مێژوویەکی پارەدان نییە"
+    ,userHasNoPaymentRecords: "ئەم یوزەرە هیچ زانیاریەکی پارەدانی تۆمار نەکراوە"
+    ,currentSubscriptionDetails: "وردەکارییەکانی ئیشتراکی ئێستا"
+    ,proStatusInformation: "زانیاری دۆخی PRO"
+    ,currentSubscription: "ئیشتراکی ئێستا"
+    ,status: "دۆخ"
+    ,proUpgrade: "باڵابردنی Pro"
+    ,amount: "بڕ"
+    ,method: "شێواز"
+    ,time: "کات"
+    ,subscriptionCount: "ژمارەی ئیشتراک کردن"
+    ,timesSubscribed: "جار بووە بە PRO"
+    ,manualUpgrade: "باڵابردنی بە دەستی"
     ,navigation: "گەشتکردن"
   },
   // Minimal Turkish placeholders
@@ -6087,7 +6236,44 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   showEmail: "E-postayı Göster",
   showEmailDesc: "Profilde e-posta adresini göster",
   showPhone: "Telefonu Göster",
+  installApp: "FitPro Uygulamasını Yükle",
+  installAppDescription: "Çevrimdışı erişim ve hızlı başlatma ile daha iyi bir deneyim için uygulamamızı yükleyin.",
+  install: "Yükle",
   showPhoneDesc: "Profilde telefon numarasını göster",
+  // Subscription History Dialog - Turkish
+  subscriptionHistory: "Abonelik Geçmişi",
+  loadingSubscriptionHistory: "Abonelik geçmişi yükleniyor...",
+  memberSince: "Üyelik Başlangıcı",
+  totalPaid: "Toplam Ödenen",
+  freeAccess: "Ücretsiz Erişim",
+  iqd: "IQD",
+  daysLeft: "Kalan Gün",
+  paymentHistory: "Ödeme Geçmişi",
+  manuallyUpgradedToPro: "Manuel Olarak PRO'ya Yükseltildi",
+  manualProAccessDesc: "Bu kullanıcı Süper Yönetici tarafından manuel olarak PRO'ya yükseltildi. Ödeme kaydı oluşturulmadı.",
+  adminDirectlyUpgraded: "Yönetici bu kullanıcıyı doğrudan yükseltti",
+  activeProStatus: "Aktif PRO Durumu",
+  subscriptionInfo: "Abonelik Bilgisi",
+  dinar: "Dinar",
+  monthDuration: "Ay",
+  subscriptionStartDate: "Abonelik Başlangıcı",
+  subscriptionEndDate: "Abonelik Bitişi",
+  calculated: "Hesaplanmış",
+  unlimited: "Sınırsız",
+  manualProAccess: "Manuel PRO Erişimi",
+  noPaymentHistory: "Ödeme Geçmişi Yok",
+  userHasNoPaymentRecords: "Bu kullanıcının ödeme kaydı bulunmuyor",
+  currentSubscriptionDetails: "Mevcut Abonelik Detayları",
+  proStatusInformation: "PRO Durum Bilgisi",
+  currentSubscription: "Mevcut Abonelik",
+  status: "Durum",
+  proUpgrade: "Pro Yükseltme",
+  amount: "Tutar",
+  method: "Yöntem",
+  time: "Zaman",
+  subscriptionCount: "Abonelik Sayısı",
+  timesSubscribed: "Abone Olunan Kere",
+  manualUpgrade: "Manuel Yükseltme",
   navigation: "Navigasyon",
   },
 }

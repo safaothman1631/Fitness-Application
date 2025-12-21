@@ -1,14 +1,52 @@
+/**
+ * Activity Logger - Client Side
+ * Logs all database changes for reporting and auditing
+ */
+
+export type ActivityType = 
+  | 'user_created'
+  | 'user_updated'
+  | 'user_deleted'
+  | 'user_approved'
+  | 'user_rejected'
+  | 'pro_approved'
+  | 'pro_rejected'
+  | 'subscription_renewed'
+  | 'subscription_expired'
+  | 'payment_recorded'
+  | 'expense_added'
+  | 'expense_updated'
+  | 'expense_deleted'
+  | 'workout_created'
+  | 'workout_updated'
+  | 'workout_deleted'
+  | 'patient_added'
+  | 'patient_updated'
+  | 'patient_deleted'
+  | 'settings_updated'
+  | 'program_created'
+  | 'program_updated'
+  | 'program_deleted'
+  | 'access_key_created'
+  | 'access_key_deleted'
+
+export interface ActivityLogParams {
+  type: ActivityType
+  performedBy: string
+  performedByName?: string
+  performedByRole?: string
+  targetUserId?: string
+  targetUserName?: string
+  targetUserEmail?: string
+  description: string
+  metadata?: Record<string, any>
+  amount?: number
+  currency?: string
+  category?: string
+}
+
 // Utility function to log activities
-export async function logActivity(params: {
-  userId: string
-  userName: string
-  userRole: string
-  action: string
-  details: string
-  targetType?: string
-  targetId?: string
-  targetName?: string
-}) {
+export async function logActivity(params: ActivityLogParams) {
   try {
     const response = await fetch('/api/activity-logs', {
       method: 'POST',
@@ -26,45 +64,44 @@ export async function logActivity(params: {
   }
 }
 
-// Common activity types
+// Common activity types (for backward compatibility)
 export const ACTIVITY_TYPES = {
   // Programs
-  CREATE_PROGRAM: 'create_program',
-  UPDATE_PROGRAM: 'update_program',
-  DELETE_PROGRAM: 'delete_program',
-  ASSIGN_PROGRAM: 'assign_program',
+  CREATE_PROGRAM: 'program_created' as ActivityType,
+  UPDATE_PROGRAM: 'program_updated' as ActivityType,
+  DELETE_PROGRAM: 'program_deleted' as ActivityType,
   
   // Users
-  CREATE_USER: 'create_user',
-  UPDATE_USER: 'update_user',
-  DELETE_USER: 'delete_user',
-  RESET_PASSWORD: 'reset_password',
+  CREATE_USER: 'user_created' as ActivityType,
+  UPDATE_USER: 'user_updated' as ActivityType,
+  DELETE_USER: 'user_deleted' as ActivityType,
   
   // Access Keys
-  CREATE_ACCESS_KEY: 'create_access_key',
-  DELETE_ACCESS_KEY: 'delete_access_key',
-  EXTEND_ACCESS_KEY: 'extend_access_key',
+  CREATE_ACCESS_KEY: 'access_key_created' as ActivityType,
+  DELETE_ACCESS_KEY: 'access_key_deleted' as ActivityType,
   
-  // Exercises
-  CREATE_EXERCISE: 'create_exercise',
-  UPDATE_EXERCISE: 'update_exercise',
-  DELETE_EXERCISE: 'delete_exercise',
+  // Workouts
+  CREATE_WORKOUT: 'workout_created' as ActivityType,
+  UPDATE_WORKOUT: 'workout_updated' as ActivityType,
+  DELETE_WORKOUT: 'workout_deleted' as ActivityType,
   
-  // System
-  BACKUP_DATABASE: 'backup_database',
-  RESTORE_DATABASE: 'restore_database',
-  UPDATE_SETTINGS: 'update_settings',
+  // Patients
+  CREATE_PATIENT: 'patient_added' as ActivityType,
+  UPDATE_PATIENT: 'patient_updated' as ActivityType,
+  DELETE_PATIENT: 'patient_deleted' as ActivityType,
   
-  // Authentication
-  LOGIN: 'login',
-  LOGOUT: 'logout',
-}
-
-// Target types
-export const TARGET_TYPES = {
-  PROGRAM: 'program',
-  USER: 'user',
-  ACCESS_KEY: 'access_key',
-  EXERCISE: 'exercise',
-  SYSTEM: 'system',
+  // PRO
+  APPROVE_PRO: 'pro_approved' as ActivityType,
+  REJECT_PRO: 'pro_rejected' as ActivityType,
+  
+  // Subscription
+  RENEW_SUBSCRIPTION: 'subscription_renewed' as ActivityType,
+  
+  // Payment
+  RECORD_PAYMENT: 'payment_recorded' as ActivityType,
+  
+  // Expense
+  ADD_EXPENSE: 'expense_added' as ActivityType,
+  UPDATE_EXPENSE: 'expense_updated' as ActivityType,
+  DELETE_EXPENSE: 'expense_deleted' as ActivityType,
 }

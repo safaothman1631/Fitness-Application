@@ -187,21 +187,17 @@ export async function initializeUserSubscription(userId?: string, email?: string
     localStorage.setItem('lastUserEmail', email)
   }
 
-  // If we have userId, fetch subscription data from Firestore
+  // If we have userId, fetch subscription data via proxy
   if (userId) {
     try {
-      const { doc, getDoc } = await import('firebase/firestore')
-      const { db } = await import('@/lib/firebase')
+      const { firestoreProxy } = await import('@/lib/firestore-proxy')
+      const userData = await firestoreProxy.getDoc('users', userId)
       
-      const userDoc = await getDoc(doc(db, 'users', userId))
-      
-      if (userDoc.exists()) {
-        const userData = userDoc.data()
-        
+      if (userData) {
         // Set subscription expiry from Firestore
         if (userData.subscriptionEnd) {
           setSubscriptionExpiry(userData.subscriptionEnd)
-          console.log('✅ Subscription loaded from Firestore:', userData.subscriptionEnd)
+          console.log('✅ Subscription loaded via proxy:', userData.subscriptionEnd)
         }
         
         // Set join date from Firestore
@@ -215,7 +211,7 @@ export async function initializeUserSubscription(userId?: string, email?: string
         return
       }
     } catch (error) {
-      console.error('❌ Error fetching subscription from Firestore:', error)
+      console.error('⚠️ Error fetching subscription via proxy, using fallback:', error)
     }
   }
 

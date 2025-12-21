@@ -14,10 +14,10 @@ import { PageTransition } from "@/components/page-transition"
 import { BottomNav } from "@/components/bottom-nav"
 import AuthGuard from "@/components/auth-guard"
 import { toast } from "sonner"
-import { db } from "@/lib/firebase"
-import { doc, getDoc } from "firebase/firestore"
+import { firestoreProxy } from "@/lib/firestore-proxy"
+import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
 
-export default function UserDashboard() {
+function UserDashboard() {
   const router = useRouter()
   const { t, language } = useLanguage()
   const [activeTab, setActiveTab] = useState("dashboard")
@@ -134,9 +134,9 @@ export default function UserDashboard() {
       try {
         const userId = localStorage.getItem("userId")
         if (userId) {
-          const userDoc = await getDoc(doc(db, "users", userId))
-          if (userDoc.exists()) {
-            setUserData(userDoc.data())
+          const userData = await firestoreProxy.getDoc("users", userId)
+          if (userData) {
+            setUserData(userData)
             
             // Check for active Pro request
             const proRequestsResponse = await fetch(`/api/pro-requests`)
@@ -213,6 +213,9 @@ export default function UserDashboard() {
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
+        {/* PWA Install Prompt */}
+        <PWAInstallPrompt />
+        
         {/* Header */}
         <div className="mb-2 flex items-center justify-between">
           <div>
@@ -370,3 +373,5 @@ function StatsCard({ icon: Icon, label, value, color }: any) {
     </Card>
   )
 }
+
+export default UserDashboard

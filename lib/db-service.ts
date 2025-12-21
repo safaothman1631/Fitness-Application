@@ -71,19 +71,33 @@ function waitForAuth(): Promise<any> {
  * Get authorization headers with Firebase token
  */
 async function getAuthHeaders(): Promise<HeadersInit> {
-  let user = auth.currentUser
-  
-  // If no current user, wait for auth to initialize
-  if (!user) {
-    console.log('⏳ Waiting for Firebase auth to initialize...')
-    user = await waitForAuth()
-  }
-  
-  const token = await user.getIdToken()
-  
-  return {
-    'Content-Type': 'application/json',
-    'Authorization': `Bearer ${token}`
+  try {
+    let user = auth.currentUser
+    
+    // If no current user, try to wait for auth to initialize
+    if (!user) {
+      console.log('⏳ Waiting for Firebase auth to initialize...')
+      try {
+        user = await waitForAuth()
+      } catch (authError) {
+        console.warn('⚠️ Auth not available, continuing without token')
+        return {
+          'Content-Type': 'application/json'
+        }
+      }
+    }
+    
+    const token = await user.getIdToken()
+    
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  } catch (error) {
+    console.warn('⚠️ Failed to get auth token:', error)
+    return {
+      'Content-Type': 'application/json'
+    }
   }
 }
 
@@ -102,11 +116,15 @@ async function authenticatedFetch(url: string, options: RequestInit = {}) {
   })
   
   if (response.status === 401) {
-    // Not authenticated - clear storage and redirect
-    localStorage.clear()
-    sessionStorage.clear()
-    window.location.href = '/giris'
-    throw new Error('Authentication required')
+    // Only redirect on POST/PUT/DELETE - GET requests are allowed without auth
+    const method = options.method?.toUpperCase() || 'GET'
+    if (method !== 'GET') {
+      localStorage.clear()
+      sessionStorage.clear()
+      window.location.href = '/giris'
+      throw new Error('Authentication required')
+    }
+    console.warn('⚠️ Request without authentication, continuing...')
   }
   
   if (response.status === 403) {

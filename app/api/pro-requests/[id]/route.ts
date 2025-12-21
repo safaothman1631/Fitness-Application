@@ -25,28 +25,35 @@ export async function PUT(
 
     // If approved, update user to Pro
     if (status === 'approved' && userId) {
+      // Get user details first
+      const userDoc = await adminDb.collection('users').doc(userId).get()
+      const userData = userDoc.data()
+
+      if (!userData) {
+        return NextResponse.json({ error: "User not found" }, { status: 404 })
+      }
+
+      const startDate = new Date()
       const expiryDate = new Date()
       expiryDate.setDate(expiryDate.getDate() + (proDuration || 30))
+      const durationMonths = Math.floor((proDuration || 30) / 30)
 
       await adminDb.collection('users').doc(userId).update({
         membership: 'Pro',
-        membershipDate: new Date(),
+        membershipDate: startDate,
         subscriptionStatus: 'active',
         proExpiryDate: expiryDate,
+        subscriptionStart: startDate,
         subscriptionEnd: expiryDate,
         subscriptionAmount: amount || 0,
-        subscriptionDuration: Math.floor((proDuration || 30) / 30),
+        subscriptionDuration: durationMonths,
+        isActive: true,
         updatedAt: new Date()
       })
 
       console.log("✅ User upgraded to Pro until:", expiryDate)
 
-      // Get user details for expense record
-      const userDoc = await adminDb.collection('users').doc(userId).get()
-      const userData = userDoc.data()
-
       // Create expense record
-      const durationMonths = Math.floor((proDuration || 30) / 30)
       await adminDb.collection('expenses').add({
         type: 'pro-subscription',
         amount: Number(amount) || 0,
@@ -64,6 +71,53 @@ export async function PUT(
       })
 
       console.log("✅ Expense recorded:", amount, "IQD")
+
+      // Create payment record for subscription history
+      await adminDb.collection('payments').add({
+        userId: userId,
+        userName: userData?.name || userData?.firstName || 'Unknown',
+        userEmail: userData?.email || null,
+        amount: Number(amount) || 0,
+        currency: 'IQD',
+        duration: durationMonths,
+        type: 'pro-subscription',
+        method: 'Admin Approved',
+        status: 'completed',
+        subscriptionStart: startDate,
+        subscriptionEnd: expiryDate,
+        relatedId: id,
+        relatedType: 'pro-request',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      })
+
+      console.log("✅ Payment record created for subscription history")
+
+      // Log activity
+      try {
+        await adminDb.collection('activity-logs').add({
+          type: 'pro_approved',
+          performedBy: 'superadmin',
+          performedByName: 'Super Admin',
+          performedByRole: 'superadmin',
+          targetUserId: userId,
+          targetUserName: userData?.name || userData?.firstName || 'Unknown',
+          targetUserEmail: userData?.email || null,
+          description: `PRO approved for ${userData?.name || 'user'} - ${amount} IQD for ${durationMonths} months`,
+          amount: Number(amount) || 0,
+          currency: 'IQD',
+          category: 'subscription',
+          metadata: { duration: durationMonths, requestId: id },
+          timestamp: new Date(),
+          createdAt: new Date(),
+          year: new Date().getFullYear(),
+          month: new Date().getMonth() + 1,
+          day: new Date().getDate(),
+        })
+        console.log("✅ Activity logged")
+      } catch (logError) {
+        console.error("⚠️ Failed to log activity:", logError)
+      }
     }
 
     const updatedDoc = await adminDb.collection('pro-requests').doc(id).get()

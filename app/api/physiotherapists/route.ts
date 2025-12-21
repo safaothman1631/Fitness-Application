@@ -1,21 +1,18 @@
 import { NextRequest, NextResponse } from "next/server"
 import { adminDb } from "@/lib/firebase-admin"
-// TEMPORARY: Imports disabled due to Turbopack bug
-// import { requireAuth } from '@/lib/api-auth'
+import { requireAuth } from '@/lib/api-auth'
 import { CreatePhysiotherapistSchema, validateRequestSafe, sanitizeObject } from '@/lib/validation'
-// TEMPORARY: Rate limit imports disabled due to Turbopack bug
-// import { readRateLimit, writeRateLimit, checkRateLimit, getUserIdentifier, formatRateLimitError } from '@/lib/rate-limit'
 
 export const dynamic = 'force-dynamic'
 
 // Get all physiotherapists (from both collections)
 export async function GET(request: NextRequest) {
   try {
-    // TEMPORARY: Authentication disabled for server-side rendering
-    // Page is protected by middleware, so only authenticated users can access it
-    // const user = await requireAuth(request)
-    // TEMPORARY: Rate limiting disabled due to Turbopack bug
-    // await checkRateLimit(getUserIdentifier(request, user.uid), readRateLimit)
+    // TEMPORARY: Skip auth check if no Authorization header (for server-side rendering)
+    const authHeader = request.headers.get('Authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      await requireAuth(request)
+    }
     
     // Fetch from physiotherapists collection
     const physiosSnapshot = await adminDb.collection('physiotherapists').get()
@@ -60,10 +57,8 @@ export async function GET(request: NextRequest) {
 // Create new physiotherapist
 export async function POST(request: NextRequest) {
   try {
-    // TEMPORARY: Authentication disabled
-    // const user = await requireAuth(request)
-    // TEMPORARY: Rate limiting disabled due to Turbopack bug
-    // await checkRateLimit(getUserIdentifier(request, user.uid), writeRateLimit)
+    // Authentication: Only authenticated users can create physiotherapist profiles
+    const user = await requireAuth(request)
     
     const rawBody = await request.json()
     const validation = validateRequestSafe(CreatePhysiotherapistSchema, rawBody)

@@ -1,5 +1,4 @@
 node_modules
-.next
 .env.local
 .git
 *.log
@@ -13,3 +12,69 @@ dist
 .turbo
 pnpm-lock.yaml
 yarn.lock
+
+# Ignore source maps (large files)
+**/*.map
+
+# Ignore large installers and archives
+*.exe
+*.msi
+*.dmg
+*.pkg
+*.deb
+*.rpm
+*.tar.gz
+*.tar.xz
+*.zip
+*.rar
+*.7z
+
+# Ignore large media files
+*.glb
+*.gltf
+*.fbx
+*.obj
+*.mp4
+*.mov
+*.avi
+*.mkv
+*.webm
+
+# Ignore backup/test files
+*.bak
+*.tmp
+*backup*.json
+*-backup-*
+check-*.js
+create-*.js
+fix-*.js
+migrate-*.js
+reset-*.js
+switch-*.js
+setup-*.js
+deploy-*.bat
+deploy-*.ps1
+deploy-*.sh
+*.html
+*.bat
+*.ps1
+*.sh
+
+# Ignore service account JSONs and configs
+*firebase-adminsdk*.json
+project-*.json
+final-database-*.json
+
+# Ignore large docs
+SEMINAR_SCRIPT.md
+PRESENTATION_SPEECH.md
+PRESENTATION_NOTES.txt
+AGENTS.md
+*.md
+!README.md
+
+# Ignore IDE and editor files
+.vscode
+.idea
+*.swp
+*.swo

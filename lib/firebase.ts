@@ -4,12 +4,12 @@ import { getAuth, connectAuthEmulator, setPersistence, browserLocalPersistence }
 import { getStorage } from "firebase/storage"
 
 const firebaseConfig = {
-  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyBUXCaDOwPuO5GGwHlGJiwpnrFaFL22Nfg",
+  apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyAl-J43H10d6ZnaZYKX9GHv8quN80XjqB8",
   authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN || "final-database-51935.firebaseapp.com",
   projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "final-database-51935",
   storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "final-database-51935.firebasestorage.app",
-  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "683176019395",
-  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:683176019395:web:2b95be616ef73fe9406976",
+  messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID || "434316366627",
+  appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID || "1:434316366627:web:9ce4eb674a0878a0507296",
 }
 
 console.log("🔑 Firebase Config Check:", {

@@ -14,6 +14,22 @@ import { OrbitControls, useGLTF, Center } from "@react-three/drei"
 import { useEffect, useRef } from "react"
 import * as THREE from "three"
 
+// Suppress GLTF texture loading warnings
+if (typeof window !== 'undefined') {
+  const originalConsoleError = console.error
+  console.error = (...args: any[]) => {
+    if (
+      typeof args[0] === 'string' && 
+      args[0].includes('GLTFLoader') && 
+      args[0].includes('Couldn\'t load texture')
+    ) {
+      // Suppress the error - textures aren't critical for our skeleton model
+      return
+    }
+    originalConsoleError(...args)
+  }
+}
+
 // 3D Model Component with Click Detection
 function SkeletonModel({ 
   rotation, 
@@ -56,8 +72,29 @@ function SkeletonModel({
       
       scene.traverse((child) => {
         if (child instanceof THREE.Mesh) {
-          // Store original material
-          child.userData.originalMaterial = child.material.clone()
+          // Handle material with potential missing textures
+          if (child.material) {
+            // Clone the material to avoid modifying the shared original
+            const material = child.material.clone()
+            
+            // If it's a MeshStandardMaterial with textures, handle potential blob URL errors
+            if (material instanceof THREE.MeshStandardMaterial) {
+              // Remove any problematic textures and use colors instead
+              if (material.map) {
+                try {
+                  // Keep the texture if it loads, otherwise it will fail silently
+                  material.map.needsUpdate = true
+                } catch (e) {
+                  // If texture fails, remove it and use color instead
+                  material.map = null
+                  material.color = new THREE.Color(0xcccccc)
+                }
+              }
+            }
+            
+            child.material = material
+            child.userData.originalMaterial = material.clone()
+          }
           
           // Give each part a unique name if it doesn't have one
           if (!child.name || child.name === '') {
@@ -191,8 +228,12 @@ function SkeletonModel({
   )
 }
 
-// Preload the model
-useGLTF.preload('/skeleton_pre-cut.glb')
+// Preload the model with error handling
+try {
+  useGLTF.preload('/skeleton_pre-cut.glb')
+} catch (error) {
+  console.warn('Failed to preload GLTF model:', error)
+}
 
 // Comprehensive body part translation dictionary
 function translatePartName(partName: string, language: string): string {

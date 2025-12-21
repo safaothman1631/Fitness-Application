@@ -100,9 +100,10 @@ export const config = {
      * Match all request paths except:
      * - _next/static (static files)
      * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
+     * - favicon.ico, icon files (PWA icons)
+     * - manifest.json (PWA manifest)
+     * - public folder assets (images, icons, etc.)
      */
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!_next/static|_next/image|favicon\\.ico|manifest\\.json|icon.*\\.(?:svg|png)|apple-icon\\.png|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico)$).*)',
   ],
 }

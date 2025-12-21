@@ -64,7 +64,43 @@ export async function requireAuth(request: NextRequest): Promise<DecodedIdToken>
   
   return user
 }
-// Log forbidden access attempt
+
+/**
+ * Middleware to require specific role(s) on API routes
+ * Returns 403 if user doesn't have required role
+ */
+export async function requireRole(
+  request: NextRequest, 
+  allowedRoles: string[]
+): Promise<DecodedIdToken> {
+  const user = await requireAuth(request)
+  
+  // Get user role from custom claims, token, or database
+  let userRole = user.role || (user as any).customClaims?.role
+  
+  // If role not in token, fetch from Firestore
+  if (!userRole) {
+    try {
+      const { adminDb } = await import('@/lib/firebase-admin')
+      const userDoc = await adminDb.collection('users').doc(user.uid).get()
+      if (userDoc.exists) {
+        userRole = userDoc.data()?.role
+      }
+    } catch (error) {
+      console.error('Error fetching user role from Firestore:', error)
+    }
+  }
+  
+  // Debug logging
+  console.log('🔍 Role check:', {
+    userRole,
+    allowedRoles,
+    hasRole: userRole ? allowedRoles.includes(userRole) : false,
+    userEmail: user.email
+  })
+  
+  if (!userRole || !allowedRoles.includes(userRole)) {
+    // Log forbidden access attempt
     const clientInfo = extractClientInfo(request)
     await logAuditEvent({
       eventType: 'api.forbidden',
@@ -77,26 +113,11 @@ export async function requireAuth(request: NextRequest): Promise<DecodedIdToken>
       actorUserAgent: clientInfo.userAgent,
       action: `Access denied to ${request.nextUrl.pathname}`,
       success: false,
-      errorMessage: `Required roles: ${allowedRoles.join(', ')}. User role: ${userRole}`,
+      errorMessage: `Required roles: ${allowedRoles.join(', ')}. User role: ${userRole || 'none'}`,
       details: { requiredRoles: allowedRoles, userRole },
       ipAddress: clientInfo.ipAddress
     })
     
-    
-/**
- * Middleware to require specific role(s) on API routes
- * Returns 403 if user doesn't have required role
- */
-export async function requireRole(
-  request: NextRequest, 
-  allowedRoles: string[]
-): Promise<DecodedIdToken> {
-  const user = await requireAuth(request)
-  
-  // Get user role from custom claims or from database
-  const userRole = user.role || (user as any).customClaims?.role
-  
-  if (!userRole || !allowedRoles.includes(userRole)) {
     throw new Error('FORBIDDEN')
   }
   

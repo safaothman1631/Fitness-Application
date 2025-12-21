@@ -137,31 +137,82 @@ export default function ProgramsPage() {
       const cacheTime = sessionStorage.getItem('exerciseVideosTime')
       const now = Date.now()
       
-      // Use cache if less than 5 minutes old
-      if (cached && cacheTime && (now - parseInt(cacheTime)) < 5 * 60 * 1000) {
-        setAvailableVideos(JSON.parse(cached))
-        console.log('✅ Loaded videos from cache')
-        setIsLoadingVideos(false)
-        return
+      // Use cache if less than 6 hours old (URLs expire after 7 days)
+      if (cached && cacheTime && (now - parseInt(cacheTime)) < 6 * 60 * 60 * 1000) {
+        try {
+          const cachedData = JSON.parse(cached)
+          // Ensure cached data is an array
+          if (Array.isArray(cachedData)) {
+            setAvailableVideos(cachedData)
+            console.log('✅ Loaded', cachedData.length, 'videos from cache')
+            setIsLoadingVideos(false)
+            return
+          } else {
+            console.warn('⚠️ Cached data is not an array, clearing cache')
+            sessionStorage.removeItem('exerciseVideos')
+            sessionStorage.removeItem('exerciseVideosTime')
+          }
+        } catch (error) {
+          console.error('❌ Error parsing cached videos:', error)
+          sessionStorage.removeItem('exerciseVideos')
+          sessionStorage.removeItem('exerciseVideosTime')
+        }
       }
 
-      const response = await fetch('/api/videos')
+      console.log('🔄 Fetching videos from API...')
+      const response = await fetch('/api/videos?limit=500') // Get first 500 videos
+      console.log('📡 Response status:', response.status, response.statusText)
+      
       if (response.ok) {
         const contentType = response.headers.get('content-type')
+        console.log('📦 Content-Type:', contentType)
+        
         if (!contentType?.includes('application/json')) {
-          console.error('videos API returned non-JSON')
+          console.error('❌ Videos API returned non-JSON')
+          setAvailableVideos([])
           setIsLoadingVideos(false)
           return
         }
+        
         const data = await response.json()
-        setAvailableVideos(data)
+        console.log('📊 Raw API response:', data)
+        
+        // Handle new format with pagination
+        let videos: any[] = []
+        if (Array.isArray(data)) {
+          // Old format - direct array
+          console.log('✅ Using old format (direct array)')
+          videos = data
+        } else if (data.videos && Array.isArray(data.videos)) {
+          // New format - object with videos array
+          console.log('✅ Using new format (object with videos array)')
+          videos = data.videos
+          console.log('📈 Pagination info:', data.pagination)
+        } else {
+          console.error('❌ Unexpected data format:', data)
+          videos = []
+        }
+        
+        const total = data.pagination?.total || videos.length
+        
+        console.log('🎬 Total videos to display:', videos.length)
+        if (videos.length > 0) {
+          console.log('📹 First video sample:', videos[0])
+        }
+        
+        setAvailableVideos(videos)
         // Cache the results
-        sessionStorage.setItem('exerciseVideos', JSON.stringify(data))
+        sessionStorage.setItem('exerciseVideos', JSON.stringify(videos))
         sessionStorage.setItem('exerciseVideosTime', now.toString())
-        console.log('✅ Loaded', data.length, 'videos from storage')
+        console.log('✅ Loaded', videos.length, 'videos from storage (total:', total, ')')
+      } else {
+        console.error('❌ Failed to fetch videos:', response.status, response.statusText)
+        const errorData = await response.text()
+        console.error('❌ Error details:', errorData)
+        setAvailableVideos([])
       }
     } catch (error) {
-      console.error('Error loading videos:', error)
+      console.error('❌ Error loading videos:', error)
     } finally {
       setIsLoadingVideos(false)
     }
@@ -240,12 +291,16 @@ export default function ProgramsPage() {
         const contentType = usersRes.headers.get('content-type')
         if (contentType?.includes('application/json')) {
           const users = await usersRes.json()
-          // Filter to only user and trainer roles (same logic as superadmin/users page)
-          const filtered = users.filter((u: any) => {
+          // Count only PRO users (paid subscriptions)
+          const proUsers = users.filter((u: any) => {
             const role = (u.role || 'user').toLowerCase()
-            return role === 'user' || role === 'trainer'
+            const membership = (u.membership || 'Free').toLowerCase()
+            const subStatus = (u.subscriptionStatus || 'inactive').toLowerCase()
+            const isAdminRole = role === 'superadmin' || role === 'physiotherapist' || role === 'trainer'
+            const isPro = membership === 'pro' || membership === 'premium' || subStatus === 'active'
+            return !isAdminRole && isPro
           })
-          setStats(prev => ({ ...prev, activeUsers: filtered.length }))
+          setStats(prev => ({ ...prev, activeUsers: proUsers.length }))
         } else {
           console.error('users API returned non-JSON:', await usersRes.text())
         }
@@ -279,20 +334,20 @@ export default function ProgramsPage() {
         console.log('🔍 All users from API:', data)
         console.log('📊 Total users:', data.length)
         
-        // Show only PRO users (not free, not admin roles)
+        // Show only PRO users with 'user' role (exclude all admin/staff roles)
         const filteredUsers = data.filter((user: any) => {
-          const role = user.role || 'user'
+          const role = (user.role || 'user').toLowerCase()
           const membership = (user.membership || 'Free').toLowerCase()
           const subStatus = (user.subscriptionStatus || 'inactive').toLowerCase()
           
-          // Exclude admin roles
-          const isAdminRole = role === 'superadmin' || role === 'physiotherapist' || role === 'trainer'
+          // Only show regular 'user' role - exclude ALL admin/staff roles
+          const isRegularUser = role === 'user'
           
           // Check if PRO (membership is Pro/Premium OR subscriptionStatus is active)
           const isPro = membership === 'pro' || membership === 'premium' || subStatus === 'active'
           
-          console.log(`👤 ${user.email || user.name}: role="${role}" membership="${user.membership}" status="${user.subscriptionStatus}" -> ${!isAdminRole && isPro ? '✅ SHOW' : '❌ HIDE'}`)
-          return !isAdminRole && isPro
+          console.log(`👤 ${user.email || user.name}: role="${role}" membership="${user.membership}" status="${user.subscriptionStatus}" -> ${isRegularUser && isPro ? '✅ SHOW (PRO USER)' : '❌ HIDE'}`)
+          return isRegularUser && isPro
         })
         
         console.log('✅ Filtered PRO users:', filteredUsers.length)
@@ -770,6 +825,8 @@ export default function ProgramsPage() {
             ...newProgram.weeklySchedule[currentEditingDay].exercises,
             {
               name: exerciseFormData.name,
+              sets: exerciseFormData.sets,
+              reps: exerciseFormData.reps,
               notes: exerciseFormData.notes,
               videoUrls: exerciseFormData.videoUrls,
               videos: exerciseFormData.videos
@@ -2643,28 +2700,57 @@ export default function ProgramsPage() {
         <Dialog open={showVideoBrowser} onOpenChange={setShowVideoBrowser}>
           <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-3 text-2xl">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg">
-                  <Video className="w-6 h-6 text-white" />
-                </div>
-                <div>
-                  <div className="text-white">{t("selectVideo")}</div>
-                  <div className="text-sm text-gray-400 font-normal mt-1">
-                    {availableVideos.length} {t("videosInStorage")}
+              <DialogTitle className="flex items-center justify-between gap-3 text-2xl">
+                <div className="flex items-center gap-3">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg">
+                    <Video className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <div className="text-white">{t("selectVideo")}</div>
+                    <div className="text-sm text-gray-400 font-normal mt-1">
+                      {availableVideos.length} {t("videosInStorage")}
+                    </div>
                   </div>
                 </div>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    sessionStorage.removeItem('exerciseVideos')
+                    sessionStorage.removeItem('exerciseVideosTime')
+                    fetchVideos()
+                  }}
+                  className="border-pink-500/50 text-pink-400 hover:bg-pink-500/10"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Refresh
+                </Button>
               </DialogTitle>
             </DialogHeader>
 
             {isLoadingVideos ? (
-              <div className="flex items-center justify-center py-20">
-                <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="flex flex-col items-center justify-center py-20">
+                <div className="w-16 h-16 border-4 border-pink-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-white font-bold text-lg">Loading videos...</p>
+                <p className="text-gray-400 text-sm mt-2">Fetching exercise videos from storage</p>
               </div>
             ) : availableVideos.length === 0 ? (
               <div className="text-center py-20">
                 <Video className="w-20 h-20 text-gray-600 mx-auto mb-4" />
                 <p className="text-xl font-bold text-white mb-2">{t("noVideosAvailable")}</p>
-                <p className="text-gray-400">{t("uploadVideosToFirebase")}</p>
+                <p className="text-gray-400 mb-4">{t("uploadVideosToFirebase")}</p>
+                <Button
+                  onClick={() => fetchVideos()}
+                  className="bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700"
+                >
+                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Try Again
+                </Button>
               </div>
             ) : (
               <>
@@ -2735,7 +2821,7 @@ export default function ProgramsPage() {
                   </div>
 
                   <p className="text-sm text-gray-400">
-                    {availableVideos
+                    {(Array.isArray(availableVideos) ? availableVideos : [])
                       .filter(v => {
                         const name = v.displayName.toLowerCase()
                         const matchesSearch = name.includes(videoSearchQuery.toLowerCase())
@@ -2749,7 +2835,7 @@ export default function ProgramsPage() {
 
                 {/* Videos Grid */}
                 <div className="flex-1 overflow-y-auto pr-2 space-y-3">
-                  {availableVideos
+                  {(Array.isArray(availableVideos) ? availableVideos : [])
                     .filter(video => {
                       const name = video.displayName.toLowerCase()
                       const matchesSearch = name.includes(videoSearchQuery.toLowerCase())
@@ -2792,7 +2878,21 @@ export default function ProgramsPage() {
                                       target.currentTime = 0
                                     }}
                                     onError={(e) => {
-                                      console.error('Video load error:', video.displayName)
+                                      // Silently handle video load errors (some videos may have expired URLs)
+                                      const target = e.currentTarget
+                                      target.style.display = 'none'
+                                      const parent = target.parentElement
+                                      if (parent) {
+                                        const errorDiv = document.createElement('div')
+                                        errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
+                                        errorDiv.innerHTML = `
+                                          <svg class="w-12 h-12 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                          </svg>
+                                          <p class="text-sm text-red-300">Video unavailable</p>
+                                        `
+                                        parent.appendChild(errorDiv)
+                                      }
                                     }}
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60 group-hover/video:opacity-30 transition-opacity" />
@@ -2880,7 +2980,7 @@ export default function ProgramsPage() {
 
                 {/* Pagination */}
                 {(() => {
-                  const filteredVideos = availableVideos.filter(v => {
+                  const filteredVideos = (Array.isArray(availableVideos) ? availableVideos : []).filter(v => {
                     const name = v.displayName.toLowerCase()
                     const matchesSearch = name.includes(videoSearchQuery.toLowerCase())
                     const matchesGender = videoFilters.gender === 'all' || name.includes(videoFilters.gender)

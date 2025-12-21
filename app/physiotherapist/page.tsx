@@ -55,10 +55,15 @@ export default function PhysiotherapistDashboard() {
 	const loadData = async () => {
 		try {
 			setLoading(true)
-			// Load patients with role 'user'
+			const userId = localStorage.getItem('userId')
+			
+			// Load patients assigned to this physiotherapist
 			const usersData = await dbService.getUsers()
 			const patientsList = usersData
-				.filter((u: any) => u.role === 'user')
+				.filter((u: any) => {
+					// Only show patients assigned to this physiotherapist
+					return u.role === 'user' && u.physiotherapistId === userId
+				})
 				.map((u: any) => ({
 					id: u.id,
 					name: u.name || u.fullName || u.email?.split('@')[0] || 'Unknown',

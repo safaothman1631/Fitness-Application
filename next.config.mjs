@@ -1,12 +1,41 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // output: 'export', // Disabled - breaks API routes needed for Firebase integration
+  
+  // Disable source maps in production to reduce bundle size
+  productionBrowserSourceMaps: false,
+  
   typescript: {
     ignoreBuildErrors: true,
   },
   images: {
     unoptimized: true,
   },
+  
+  // Turbopack configuration (Next.js 16+)
+  turbopack: {
+    rules: {
+      // Handle GLTF/GLB files
+      '*.glb': {
+        loaders: ['file-loader'],
+        as: '*.js',
+      },
+      '*.gltf': {
+        loaders: ['file-loader'],
+        as: '*.js',
+      },
+    },
+  },
+  
+  // Webpack configuration for GLTF/GLB files (fallback for webpack mode)
+  webpack: (config) => {
+    config.module.rules.push({
+      test: /\.(glb|gltf)$/,
+      type: 'asset/resource',
+    })
+    return config
+  },
+  
   // Allow accessing dev server resources from LAN IPs if you open the site on another device
   // Silence Next.js warning: configure "allowedDevOrigins"
   allowedDevOrigins: [
@@ -51,12 +80,13 @@ const nextConfig = {
             key: 'Content-Security-Policy',
             value: [
               "default-src 'self'",
-              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com",
+              "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://va.vercel-scripts.com",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.upstash.io",
+              "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.upstash.io https://storage.googleapis.com https://*.firebasestorage.app https://vitals.vercel-insights.com",
               "frame-src 'self' https://*.firebaseapp.com",
+              "media-src * blob: data:",
               "object-src 'none'",
               "base-uri 'self'",
               "form-action 'self'",

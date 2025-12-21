@@ -6,7 +6,8 @@ echo.
 echo Starting backup process...
 echo.
 
-cd /d "%~dp0.."
+REM Change to the script's directory (C:\A)
+cd /d "%~dp0"
 
 node scripts\daily-backup.js
 

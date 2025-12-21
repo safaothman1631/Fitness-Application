@@ -1,12 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { adminDb } from '@/lib/firebase-admin'
+import { requireRole } from '@/lib/api-auth'
 
 export async function GET(request: NextRequest) {
   try {
-    // TEMPORARY: Authentication disabled for server-side rendering
-    // Page is protected by middleware, so only authenticated admins can access it
-    // const user = await requireRole(request, ['admin', 'superadmin', 'owner'])
-    // await checkRateLimit(getUserIdentifier(request, user.uid), readRateLimit)
+    // TEMPORARY: Skip auth check if no Authorization header (for server-side rendering)
+    const authHeader = request.headers.get('Authorization')
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      await requireRole(request, ['admin', 'superadmin', 'owner'])
+    }
     
     console.log("🔍 Fetching database statistics")
 

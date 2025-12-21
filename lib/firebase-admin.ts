@@ -11,6 +11,11 @@ if (typeof window === "undefined" && !process.env.NEXT_RUNTIME) {
 import * as admin from "firebase-admin"
 import { getApps } from "firebase-admin/app"
 
+console.log("🔍 [Firebase Admin] Checking environment variables...")
+console.log("📌 FIREBASE_PROJECT_ID:", process.env.FIREBASE_PROJECT_ID ? "✅ Found" : "❌ Missing")
+console.log("📌 FIREBASE_CLIENT_EMAIL:", process.env.FIREBASE_CLIENT_EMAIL ? "✅ Found" : "❌ Missing")
+console.log("📌 FIREBASE_PRIVATE_KEY:", process.env.FIREBASE_PRIVATE_KEY ? `✅ Found (${process.env.FIREBASE_PRIVATE_KEY.substring(0, 30)}...)` : "❌ Missing")
+
 // Service account configuration from environment variables
 const serviceAccountKey: admin.ServiceAccount = {
   projectId: process.env.FIREBASE_PROJECT_ID || "",
@@ -22,6 +27,7 @@ const serviceAccountKey: admin.ServiceAccount = {
 if (!serviceAccountKey.projectId || !serviceAccountKey.privateKey || !serviceAccountKey.clientEmail) {
   console.error("❌ Missing Firebase Admin SDK credentials in environment variables")
   console.error("Required env vars: FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL")
+  console.error("Available env vars:", Object.keys(process.env).filter(k => k.startsWith('FIREBASE')))
   throw new Error("Firebase Admin SDK configuration error")
 }
 

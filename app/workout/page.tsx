@@ -123,57 +123,116 @@ export default function WorkoutPage() {
       const programs = await response.json()
       console.log('Γ£à Fetched programs:', programs)
 
+      // Helper: Check if URL is expired
+      const isUrlExpired = (url: string): boolean => {
+        try {
+          const match = url.match(/Expires=(\d+)/)
+          if (match) {
+            const expiryTimestamp = parseInt(match[1]) * 1000
+            return Date.now() >= expiryTimestamp
+          }
+        } catch {}
+        return false
+      }
+
+      // Helper: Refresh expired video URL
+      const refreshVideoUrl = async (videoName: string): Promise<string | null> => {
+        try {
+          console.log('🔄 Refreshing expired URL for:', videoName)
+          const res = await fetch(`/api/videos?name=${encodeURIComponent(videoName)}`)
+          if (res.ok) {
+            const data = await res.json()
+            if (data.videos && data.videos.length > 0) {
+              console.log('✅ Got fresh URL for:', videoName)
+              return data.videos[0].url
+            }
+          }
+        } catch (err) {
+          console.warn('⚠️ Could not refresh URL for:', videoName)
+        }
+        return null
+      }
+
       // Convert programs to workout schedule format
       if (programs.length > 0) {
         const schedule: DayWorkout[] = []
         
         // Combine all programs' weekly schedules
-        programs.forEach((program: any) => {
+        for (const program of programs) {
           if (program.weeklySchedule) {
             const days = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-            days.forEach(day => {
+            for (const day of days) {
               const dayData = program.weeklySchedule[day]
               if (dayData && dayData.exercises && dayData.exercises.length > 0 && !dayData.rest) {
                 const dayName = day.charAt(0).toUpperCase() + day.slice(1)
                 const existingDay = schedule.find(d => d.day === dayName)
                 
-                if (existingDay) {
-                  // Add exercises to existing day
-                  existingDay.exercises.push(...dayData.exercises.map((ex: any, idx: number) => ({
-                    id: `${program.id}-${day}-${idx}`,
-                    name: ex.name,
-                    sets: parseInt(ex.sets) || 0,
-                    reps: ex.reps || '',
-                    notes: ex.notes || '',
-                    videoUrl: ex.videos?.[0]?.url || ex.videoUrls?.[0] || '',
-                    videoUrls: ex.videoUrls || [],
-                    videos: ex.videos || [],
-                    muscleGroup: program.targetMuscles || 'General'
-                  })))
-                } else {
-                  // Create new day
-                  schedule.push({
-                    day: dayName,
-                    exercises: dayData.exercises.map((ex: any, idx: number) => ({
+                // Process exercises and check for expired videos
+                const processedExercises = await Promise.all(
+                  dayData.exercises.map(async (ex: any, idx: number) => {
+                    let videos = ex.videos || []
+                    
+                    // Check and refresh expired video URLs
+                    if (videos.length > 0) {
+                      videos = await Promise.all(
+                        videos.map(async (video: any) => {
+                          if (video.url && video.name && isUrlExpired(video.url)) {
+                            const freshUrl = await refreshVideoUrl(video.name)
+                            if (freshUrl) {
+                              return { ...video, url: freshUrl }
+                            }
+                          }
+                          return video
+                        })
+                      )
+                    }
+                    
+                    return {
                       id: `${program.id}-${day}-${idx}`,
                       name: ex.name,
                       sets: parseInt(ex.sets) || 0,
                       reps: ex.reps || '',
                       notes: ex.notes || '',
-                      videoUrl: ex.videos?.[0]?.url || ex.videoUrls?.[0] || '',
+                      videoUrl: videos[0]?.url || ex.videoUrls?.[0] || '',
                       videoUrls: ex.videoUrls || [],
-                      videos: ex.videos || [],
+                      videos: videos,
                       muscleGroup: program.targetMuscles || 'General'
-                    }))
+                    }
+                  })
+                )
+                
+                if (existingDay) {
+                  existingDay.exercises.push(...processedExercises)
+                } else {
+                  schedule.push({
+                    day: dayName,
+                    exercises: processedExercises
                   })
                 }
               }
-            })
+            }
           }
-        })
+        }
 
         setWorkoutSchedule(schedule)
-        console.log('Γ£à Workout schedule set:', schedule)
+        console.log('='.repeat(60))
+        console.log('🏋️ Workout schedule set:')
+        console.log('📊 Total days:', schedule.length)
+        if (schedule.length > 0) {
+          console.log('📅 First day:', schedule[0].day)
+          console.log('💪 Exercises in first day:', schedule[0].exercises.length)
+          if (schedule[0].exercises.length > 0) {
+            const firstEx = schedule[0].exercises[0]
+            console.log('🎯 First exercise:', firstEx.name)
+            console.log('🎥 Videos array:', firstEx.videos)
+            console.log('📹 VideoUrls array:', firstEx.videoUrls)
+            console.log('🔗 Single videoUrl:', firstEx.videoUrl)
+            if (firstEx.videos && firstEx.videos.length > 0) {
+              console.log('✅ First video details:', firstEx.videos[0])
+            }
+          }
+        }
+        console.log('='.repeat(60))
       } else {
         console.log('Γä╣∩╕Å No programs assigned to user')
         setWorkoutSchedule([])
@@ -616,12 +675,38 @@ export default function WorkoutPage() {
                               {video.notes && (
                                 <p className="text-amber-300 text-sm mb-2 italic">≡ƒÆí {video.notes}</p>
                               )}
-                              <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30">
+                              <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30 relative">
                                 <video 
                                   src={video.url} 
                                   controls 
+                                  loop
+                                  autoPlay
+                                  muted
+                                  playsInline
                                   className="w-full h-full object-contain"
                                   preload="metadata"
+                                  onError={(e) => {
+                                    console.error('❌ Video load failed:', video.name || 'Unknown')
+                                    console.error('   URL:', video.url)
+                                    console.error('   Video object:', video)
+                                    const target = e.currentTarget
+                                    target.style.display = 'none'
+                                    const parent = target.parentElement
+                                    if (parent) {
+                                      const errorDiv = document.createElement('div')
+                                      errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
+                                      errorDiv.innerHTML = `
+                                        <svg class="w-16 h-16 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <p class="text-red-300 text-lg font-bold">Video Unavailable</p>
+                                        <p class="text-gray-400 text-sm mt-2">Video may have expired or been removed</p>
+                                      `
+                                      parent.appendChild(errorDiv)
+                                    }
+                                  }}
+                                  onLoadStart={() => console.log('📹 Loading video:', video.name || video.url)}
+                                  onCanPlay={() => console.log('✅ Video ready:', video.name || video.url)}
                                 >
                                   <source src={video.url} type="video/mp4" />
                                   Your browser does not support the video tag.
@@ -639,15 +724,40 @@ export default function WorkoutPage() {
                                   {index + 1}
                                 </div>
                                 <p className="text-slate-400 text-sm font-semibold">
-                                  Video {index + 1} of {selectedExercise.videoUrls.length}
+                                  Video {index + 1} of {selectedExercise.videoUrls?.length || 1}
                                 </p>
                               </div>
-                              <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30">
+                              <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30 relative">
                                 <video 
                                   src={videoUrl} 
                                   controls 
+                                  loop
+                                  autoPlay
+                                  muted
+                                  playsInline
                                   className="w-full h-full object-contain"
                                   preload="metadata"
+                                  crossOrigin="anonymous"
+                                  onError={(e) => {
+                                    console.error('❌ Video load failed:', videoUrl)
+                                    const target = e.currentTarget
+                                    target.style.display = 'none'
+                                    const parent = target.parentElement
+                                    if (parent && !parent.querySelector('.error-message')) {
+                                      const errorDiv = document.createElement('div')
+                                      errorDiv.className = 'error-message absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
+                                      errorDiv.innerHTML = `
+                                        <svg class="w-16 h-16 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                        <p class="text-red-300 text-lg font-bold">Video Unavailable</p>
+                                        <p class="text-gray-400 text-sm mt-2 text-center px-4">Video may have expired or been removed</p>
+                                      `
+                                      parent.appendChild(errorDiv)
+                                    }
+                                  }}
+                                  onLoadStart={() => console.log('📹 Loading video from:', videoUrl.substring(0, 100))}
+                                  onCanPlay={() => console.log('✅ Video ready to play')}
                                 >
                                   <source src={videoUrl} type="video/mp4" />
                                   Your browser does not support the video tag.
@@ -657,12 +767,37 @@ export default function WorkoutPage() {
                           ))}
                         </div>
                       ) : selectedExercise.videoUrl ? (
-                        <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30">
+                        <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30 relative">
                           <video 
                             src={selectedExercise.videoUrl} 
                             controls 
+                            loop
+                            autoPlay
+                            muted
+                            playsInline
                             className="w-full h-full object-contain"
                             preload="metadata"
+                            crossOrigin="anonymous"
+                            onError={(e) => {
+                              console.error('❌ Single video load failed:', selectedExercise.videoUrl)
+                              const target = e.currentTarget
+                              target.style.display = 'none'
+                              const parent = target.parentElement
+                              if (parent && !parent.querySelector('.error-message')) {
+                                const errorDiv = document.createElement('div')
+                                errorDiv.className = 'error-message absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
+                                errorDiv.innerHTML = `
+                                  <svg class="w-16 h-16 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                  </svg>
+                                  <p class="text-red-300 text-lg font-bold">Video Unavailable</p>
+                                  <p class="text-gray-400 text-sm mt-2">Video link may have expired</p>
+                                `
+                                parent.appendChild(errorDiv)
+                              }
+                            }}
+                            onLoadStart={() => console.log('📹 Loading single video')}
+                            onCanPlay={() => console.log('✅ Single video ready')}
                           >
                             <source src={selectedExercise.videoUrl} type="video/mp4" />
                             Your browser does not support the video tag.

@@ -47,9 +47,9 @@ service cloud.firestore {
       return isAuthenticated() && getUserRole() == 'physiotherapist';
     }
     
-    // Users collection - Allow public registration
+    // Users collection - Authenticated access only
     match /users/{userId} {
-      allow read: if true; // Allow reading user data (needed for app functionality)
+      allow read: if isAuthenticated() && (isOwner(userId) || isAdmin()); // Only owner or admin can read user data
       allow create: if true; // Allow anyone to register (create user document)
       allow update: if isOwner(userId) || isAdmin();
       allow delete: if isAdmin();
@@ -57,7 +57,7 @@ service cloud.firestore {
     
     // Trainers collection
     match /trainers/{trainerId} {
-      allow read: if true; // Public read for listing trainers
+      allow read: if isAuthenticated(); // Only authenticated users can list trainers
       allow create: if isAdmin();
       allow update: if isOwner(resource.data.userId) || isAdmin();
       allow delete: if isAdmin();
@@ -65,7 +65,7 @@ service cloud.firestore {
     
     // Physiotherapists collection
     match /physiotherapists/{physioId} {
-      allow read: if true; // Public read for listing physiotherapists
+      allow read: if isAuthenticated(); // Only authenticated users can list physiotherapists
       allow create: if isAdmin();
       allow update: if isOwner(resource.data.userId) || isAdmin();
       allow delete: if isAdmin();
@@ -143,7 +143,7 @@ service cloud.firestore {
     
     // Workouts collection
     match /workouts/{workoutId} {
-      allow read: if true; // Public read for workout library
+      allow read: if isAuthenticated(); // Only authenticated users can access workout library
       allow create: if isTrainer() || isAdmin();
       allow update: if isTrainer() || isAdmin();
       allow delete: if isAdmin();
@@ -151,7 +151,7 @@ service cloud.firestore {
     
     // Exercises collection
     match /exercises/{exerciseId} {
-      allow read: if true; // Public read for exercise library
+      allow read: if isAuthenticated(); // Only authenticated users can access exercise library
       allow create: if isTrainer() || isAdmin();
       allow update: if isTrainer() || isAdmin();
       allow delete: if isAdmin();
