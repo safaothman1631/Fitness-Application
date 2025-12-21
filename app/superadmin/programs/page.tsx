@@ -2858,7 +2858,22 @@ export default function ProgramsPage() {
                         >
                           <CardContent className="p-0">
                             {/* Video Preview on Hover */}
-                            <div className="relative aspect-video bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden group/video">
+                            <div 
+                              className="relative aspect-video bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden group/video"
+                              onMouseEnter={(e) => {
+                                const video = e.currentTarget.querySelector('video')
+                                if (video) {
+                                  video.play().catch(() => {})
+                                }
+                              }}
+                              onMouseLeave={(e) => {
+                                const video = e.currentTarget.querySelector('video')
+                                if (video) {
+                                  video.pause()
+                                  video.currentTime = 0
+                                }
+                              }}
+                            >
                               {video.url ? (
                                 <>
                                   <video 
@@ -2868,15 +2883,6 @@ export default function ProgramsPage() {
                                     loop
                                     preload="metadata"
                                     playsInline
-                                    onMouseEnter={(e) => {
-                                      const target = e.currentTarget
-                                      target.play().catch(() => {})
-                                    }}
-                                    onMouseLeave={(e) => {
-                                      const target = e.currentTarget
-                                      target.pause()
-                                      target.currentTime = 0
-                                    }}
                                     onError={(e) => {
                                       // Silently handle video load errors (some videos may have expired URLs)
                                       const target = e.currentTarget
@@ -2896,8 +2902,21 @@ export default function ProgramsPage() {
                                     }}
                                   />
                                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60 group-hover/video:opacity-30 transition-opacity" />
-                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none group-hover/video:opacity-0 transition-opacity">
-                                    <div className="w-16 h-16 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center">
+                                  <div 
+                                    className="absolute inset-0 flex items-center justify-center cursor-pointer group-hover/video:opacity-0 transition-opacity"
+                                    onClick={(e) => {
+                                      e.stopPropagation()
+                                      const videoEl = e.currentTarget.previousElementSibling as HTMLVideoElement
+                                      if (videoEl && videoEl.tagName === 'VIDEO') {
+                                        if (videoEl.paused) {
+                                          videoEl.play()
+                                        } else {
+                                          videoEl.pause()
+                                        }
+                                      }
+                                    }}
+                                  >
+                                    <div className="w-16 h-16 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center hover:bg-pink-500/80 hover:scale-110 transition-all">
                                       <Play className="w-8 h-8 text-white ml-1" />
                                     </div>
                                   </div>

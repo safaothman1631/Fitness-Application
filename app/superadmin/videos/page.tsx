@@ -4,7 +4,8 @@ import { useEffect, useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { useLanguage } from "@/hooks/useLanguage"
 import { Button } from "@/components/ui/button"
-import { Video, RefreshCw, Download } from "lucide-react"
+import { Video, RefreshCw, Download, X } from "lucide-react"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 
 interface VideoData {
   name: string
@@ -21,7 +22,8 @@ export default function VideosTestPage() {
   const [videos, setVideos] = useState<VideoData[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
+  const [selectedVideo, setSelectedVideo] = useState<VideoData | null>(null)
+  const [showVideoDialog, setShowVideoDialog] = useState(false)
   const fetchVideos = async () => {
     setIsLoading(true)
     setError(null)
@@ -177,7 +179,10 @@ export default function VideosTestPage() {
                       </div>
                       <div className="flex gap-2 flex-shrink-0">
                         <Button
-                          onClick={() => window.open(video.url, '_blank')}
+                          onClick={() => {
+                            setSelectedVideo(video)
+                            setShowVideoDialog(true)
+                          }}
                           className="bg-blue-500 hover:bg-blue-600"
                         >
                           <Video className="w-4 h-4 mr-2" />
@@ -204,6 +209,73 @@ export default function VideosTestPage() {
           </>
         )}
       </div>
+
+      {/* Video Player Dialog */}
+      <Dialog open={showVideoDialog} onOpenChange={setShowVideoDialog}>
+        <DialogContent className="max-w-4xl bg-slate-900 border-2 border-blue-500/30">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between text-white">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center">
+                  <Video className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <div className="text-lg">{selectedVideo?.displayName}</div>
+                  <div className="text-sm text-gray-400 font-normal mt-1">
+                    {selectedVideo && `${formatFileSize(selectedVideo.size)} • ${selectedVideo.contentType}`}
+                  </div>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowVideoDialog(false)}
+                className="text-gray-400 hover:text-white"
+              >
+                <X className="w-5 h-5" />
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
+          
+          <div className="aspect-video bg-black rounded-lg overflow-hidden">
+            {selectedVideo && (
+              <video
+                key={selectedVideo.url}
+                src={selectedVideo.url}
+                controls
+                autoPlay
+                className="w-full h-full"
+              >
+                Your browser does not support the video tag.
+              </video>
+            )}
+          </div>
+
+          <div className="flex gap-2 pt-4">
+            <Button
+              onClick={() => {
+                if (selectedVideo) {
+                  const a = document.createElement('a')
+                  a.href = selectedVideo.url
+                  a.download = selectedVideo.displayName || 'video.mp4'
+                  a.click()
+                }
+              }}
+              className="flex-1 bg-green-600 hover:bg-green-700"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              {t("download")}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowVideoDialog(false)}
+              className="flex-1"
+            >
+              {t("close")}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
