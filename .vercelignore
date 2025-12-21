@@ -29,8 +29,8 @@ yarn.lock
 *.rar
 *.7z
 
-# Ignore large media files
-*.glb
+# Ignore large media files (exclude skeleton model)
+# *.glb - COMMENTED: skeleton model needed for anatomy page
 *.gltf
 *.fbx
 *.obj
