@@ -70,3 +70,10 @@ fix-*.js
 # Temp files
 temp-*
 temp_*
+
+# Large files and archives
+*.tar.xz
+*.tar.gz
+*.zip
+ffmpeg*
+model_3d_*.glb
