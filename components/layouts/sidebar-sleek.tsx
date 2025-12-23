@@ -14,23 +14,32 @@ import { AppRole } from "@/lib/roles"
 // Page Transition Wrapper Component
 function PageTransitionWrapper({ children }: { children: ReactNode }) {
   const pathname = usePathname()
+  const [displayPath, setDisplayPath] = useState(pathname)
   const [isTransitioning, setIsTransitioning] = useState(false)
 
   useEffect(() => {
-    setIsTransitioning(true)
-    const timer = setTimeout(() => setIsTransitioning(false), 50)
-    return () => clearTimeout(timer)
-  }, [pathname])
+    if (pathname !== displayPath) {
+      setIsTransitioning(true)
+      
+      const timer = setTimeout(() => {
+        setDisplayPath(pathname)
+        setIsTransitioning(false)
+      }, 200)
+      
+      return () => clearTimeout(timer)
+    }
+  }, [pathname, displayPath])
 
   return (
-    <div
-      className="pb-20 lg:pb-0 min-h-full transition-all duration-500 ease-out"
-      style={{
-        opacity: isTransitioning ? 0 : 1,
-        transform: isTransitioning ? 'translateY(20px) scale(0.98)' : 'translateY(0) scale(1)',
-      }}
-    >
-      <div className="container mx-auto px-4 py-6 max-w-7xl">
+    <div className="pb-20 lg:pb-0 min-h-full">
+      <div 
+        className="container mx-auto px-4 py-6 max-w-7xl transition-all duration-300 ease-in-out"
+        style={{
+          opacity: isTransitioning ? 0.3 : 1,
+          transform: isTransitioning ? 'translateY(10px)' : 'translateY(0)',
+          willChange: 'opacity, transform',
+        }}
+      >
         {children}
       </div>
     </div>
@@ -183,10 +192,12 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
           </p>
           {/* Smooth sliding indicator */}
           <div 
-            className="absolute left-0 w-1 h-12 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full transition-all duration-500 ease-out shadow-lg shadow-cyan-500/50"
+            className="absolute left-0 w-1 h-12 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full shadow-lg shadow-cyan-500/50"
             style={{
-              top: `${activeIndex * 52 + 28}px`,
-              opacity: activeIndex >= 0 ? 1 : 0
+              top: `${activeIndex * 52 + 32}px`,
+              opacity: activeIndex >= 0 ? 1 : 0,
+              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
+              willChange: 'top, opacity'
             }}
           />
           {mainNavItems.map((item, idx) => {
@@ -197,27 +208,30 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
                 key={`main-${idx}`}
                 onClick={() => {
                   setActiveIndex(idx)
-                  router.push(item.path)
-                  setMobileOpen(false)
+                  setTimeout(() => {
+                    router.push(item.path)
+                    setMobileOpen(false)
+                  }, 100)
                 }}
-                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out group overflow-hidden ${
+                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl group overflow-hidden transition-all duration-200 ease-out ${
                   active
                     ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-white border border-cyan-500/30 shadow-lg shadow-cyan-500/20"
                     : "text-gray-400 hover:text-white hover:bg-white/5 hover:-translate-x-0.5 hover:shadow-lg hover:shadow-cyan-500/5 hover:border hover:border-cyan-500/10"
                 }`}
+                style={{ willChange: 'transform, background-color, border-color' }}
               >
                 <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/0 via-white/8 to-white/0 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 ease-out" aria-hidden="true" />
-                <div className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-500 ease-out ${
+                <div className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ease-out ${
                   active ? "bg-cyan-500/30 scale-110" : "bg-white/5 group-hover:bg-cyan-500/10 group-hover:scale-110 group-hover:rotate-3"
-                }`}>
-                  <Icon className={`w-5 h-5 transition-all duration-500 ease-out ${active ? "text-cyan-300 scale-110" : "group-hover:text-cyan-400"}`} />
+                }`} style={{ willChange: 'transform, background-color' }}>
+                  <Icon className={`w-5 h-5 transition-all duration-300 ease-out ${active ? "text-cyan-300 scale-110" : "group-hover:text-cyan-400"}`} style={{ willChange: 'transform, color' }} />
                 </div>
-                <span className="font-medium flex-1 text-left relative z-10 transition-all duration-300 group-hover:translate-x-0.5">{item.label}</span>
+                <span className="font-medium flex-1 text-left relative z-10 transition-all duration-200 group-hover:translate-x-0.5">{item.label}</span>
                 {active && (
                   <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse relative z-10" />
                 )}
                 {!active && (
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 relative z-10" />
+                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-200 group-hover:translate-x-1 relative z-10" />
                 )}
               </button>
             )
