@@ -60,6 +60,7 @@ export type TranslationKey =
   | "accessKey"
   | "expired"
   | "active"
+  | "enabled"
   | "keyExpiredMessage"
   | "editProfile"
   | "firstName"
@@ -341,6 +342,19 @@ export type TranslationKey =
   | "renewSubscription"
   | "backToDashboard"
   | "redirectingToDashboard"
+  // 2FA Verification
+  | "twoFactorAuthentication"
+  | "enter6DigitCode"
+  | "enterBackupCode"
+  | "pleaseEnterComplete6DigitCode"
+  | "pleaseEnterBackupCode"
+  | "twoFactorVerificationSuccessful"
+  | "verificationFailed"
+  | "useAuthenticatorCode"
+  | "useBackupCode"
+  | "backupCode"
+  | "verify"
+  | "passwordCorrect"
   // Signup / Registration
   | "backToLogin"
   | "createAccountTitle"
@@ -1370,6 +1384,13 @@ export type TranslationKey =
   | "installApp"
   | "installAppDescription"
   | "install"
+  | "awaitingReview"
+  | "firestoreConnection"
+  | "nextjsRuntime"
+  | "firebaseStorage"
+  | "manageUsers"
+  | "reviewRequests"
+  | "totalPrograms"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -1440,6 +1461,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     accessKey: "Access Key",
     expired: "Expired",
     active: "Active",
+    enabled: "Enabled",
     keyExpiredMessage: "Your access key has expired. Please renew your subscription.",
     editProfile: "Edit Profile",
     firstName: "First Name",
@@ -1477,7 +1499,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     passwordManagement: "Password Management",
     systemSettings: "System Settings",
     allPhysiotherapists: "All Physiotherapists",
-    registrationRequests: "Registration Requests",
+    registrationRequests: "Requests",
     adminPhysiotherapist: "Admin Physiotherapist",
     notifications: "Notifications",
     add: "Add",
@@ -1718,6 +1740,20 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   featureRequiresSubscription: "This feature requires an active subscription. Please renew your subscription to continue accessing premium content.",
   renewSubscription: "Renewals",
   backToDashboard: "Back to Dashboard",
+  redirectingToDashboard: "Redirecting to Dashboard",
+  // 2FA Verification
+  twoFactorAuthentication: "Two-Factor Authentication",
+  enter6DigitCode: "Enter the 6-digit code from your authenticator app",
+  enterBackupCode: "Enter your backup code",
+  pleaseEnterComplete6DigitCode: "Please enter the complete 6-digit code",
+  pleaseEnterBackupCode: "Please enter a backup code",
+  twoFactorVerificationSuccessful: "2FA verification successful",
+  verificationFailed: "Verification failed",
+  useAuthenticatorCode: "Use authenticator code",
+  useBackupCode: "Use backup code",
+  backupCode: "Backup code",
+  verify: "Verify",
+  passwordCorrect: "Password correct - please verify 2FA",
   redirectingToDashboard: "Redirecting to dashboard in 3 seconds...",
   // Signup
   backToLogin: "Back to Login",
@@ -2379,6 +2415,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   installApp: "Install FitPro App",
   installAppDescription: "Install our app for a better experience with offline access and quick launch.",
   install: "Install",
+  awaitingReview: "Awaiting Review",
+  firestoreConnection: "Firestore Connection",
+  nextjsRuntime: "Next.js Runtime",
+  firebaseStorage: "Firebase Storage",
+  manageUsers: "Manage Users",
+  reviewRequests: "Review Requests",
+  totalPrograms: "Total Programs",
   // Subscription History Dialog - English
   subscriptionHistory: "Subscription History",
   loadingSubscriptionHistory: "Loading subscription history...",
@@ -2750,7 +2793,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     notifications: "الإشعارات",
     systemSettings: "الإعدادات",
     allPhysiotherapists: "جميع المعالجين الفيزيائيين",
-    registrationRequests: "طلبات التسجيل",
+    registrationRequests: "الطلبات",
     adminPhysiotherapist: "مشرف المعالجين الفيزيائيين",
     superadminPanel: "لوحة الإدارة العليا",
   loading: "جارٍ التحميل",
@@ -3013,6 +3056,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,renewSubscription: "التجديدات"
       ,backToDashboard: "العودة إلى لوحة التحكم"
       ,redirectingToDashboard: "إعادة التوجيه إلى لوحة التحكم خلال ٣ ثوانٍ..."
+      // 2FA Verification (Arabic)
+      ,twoFactorAuthentication: "المصادقة الثنائية"
+      ,enter6DigitCode: "أدخل الرمز المكون من 6 أرقام من تطبيق المصادقة"
+      ,enterBackupCode: "أدخل رمز النسخ الاحتياطي"
+      ,pleaseEnterComplete6DigitCode: "يرجى إدخال الرمز الكامل المكون من 6 أرقام"
+      ,pleaseEnterBackupCode: "يرجى إدخال رمز النسخ الاحتياطي"
+      ,twoFactorVerificationSuccessful: "نجحت المصادقة الثنائية"
+      ,verificationFailed: "فشل التحقق"
+      ,useAuthenticatorCode: "استخدم رمز المصادقة"
+      ,useBackupCode: "استخدم رمز النسخ الاحتياطي"
+      ,backupCode: "رمز النسخ الاحتياطي"
+      ,verify: "تحقق"
+      ,passwordCorrect: "كلمة المرور صحيحة - يرجى التحقق من المصادقة الثنائية"
       ,backToLogin: "العودة لتسجيل الدخول"
       ,createAccountTitle: "إنشاء حساب"
       ,signupSubtitle: "ابدأ رحلتك الرياضية مع FitPro"
@@ -3315,6 +3371,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,generating: "جارٍ الإنشاء..."
   ,totalKeys: "إجمالي المفاتيح"
   ,expired: "منتهية"
+  ,enabled: "مفعل"
   ,quickKeyGenerator: "مولد المفاتيح السريع"
   ,generateKeysInstantly: "إنشاء مفاتيح الوصول للأعضاء الجدد فوراً"
   ,trialOneUse: "تجريبي (استخدام واحد)"
@@ -3872,7 +3929,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     notifications: "ئاگانامەکان",
     systemSettings: "ڕێکخستنەکانی سیستەم",
     allPhysiotherapists: "هەموو فیزیۆتێراپیستەکان",
-    registrationRequests: "داواکاری تۆمارکردن",
+    registrationRequests: "داواکاری",
     adminPhysiotherapist: "سەرپەرشتیاری فیزیۆتێراپیستەکان",
     superadminPanel: "پەنێڵی سوپرئادمین",
   loading: "بارکردن",
@@ -4135,6 +4192,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
       ,renewSubscription: "نوێکردنەوە"
       ,backToDashboard: "گەڕانەوە بۆ داشبۆرد"
       ,redirectingToDashboard: "گواستنەوە بۆ داشبۆرد لە ماوەی ٣ چرکەدا..."
+      // 2FA Verification (Kurdish)
+      ,twoFactorAuthentication: "ڕاستکردنەوەی دوو هێڵکی"
+      ,enter6DigitCode: "کۆدی 6 ژمارەیی داخڵ بکە لە ئەپی ڕاستکردنەوەکەت"
+      ,enterBackupCode: "کۆدی یەدەگی خۆت داخڵ بکە"
+      ,pleaseEnterComplete6DigitCode: "تکایە هەموو کۆدی 6 ژمارەیی داخڵ بکە"
+      ,pleaseEnterBackupCode: "تکایە کۆدی یەدەگی داخڵ بکە"
+      ,twoFactorVerificationSuccessful: "ڕاستکردنەوەی دوو هێڵکی سەرکەوتوو بوو"
+      ,verificationFailed: "ڕاستکردنەوە شکستی هێنا"
+      ,useAuthenticatorCode: "کۆدی ڕاستکردنەوە بەکاربهێنە"
+      ,useBackupCode: "کۆدی یەدەگی بەکاربهێنە"
+      ,backupCode: "کۆدی یەدەگی"
+      ,verify: "ڕاستکردنەوە"
+      ,passwordCorrect: "پاسوۆرد ڕاستە - تکایە ڕاستکردنەوەی دوو هێڵکی بکە"
       ,backToLogin: "گەڕانەوە بۆ چوونەژوورەوە"
       ,createAccountTitle: "دروستکردنی هەژمار"
       ,signupSubtitle: "دەست بکە بە گەشتێکی تەندروستی لەگەڵ FitPro"
@@ -4391,7 +4461,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,userManagementTitle: "بەڕێوەبردنی بەکارهێنەران"
     ,manageYourUsers: "بەڕێوەبردن و چاودێریکردنی هەموو بەکارهێنەران"
     ,statistics: "ئامارەکان"
-    ,allUsers: "هەموو بەکارهێنەران"
+    ,allUsers: "بەکارهێنەران"
     ,searchUsers: "گەڕان بۆ بەکارهێنەران..."
     ,addNewUser: "زیادکردنی بەکارهێنەری نوێ"
     ,viewProfile: "بینینی پڕۆفایل"
@@ -4416,7 +4486,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,areYouSure: "دڵنیایت؟"
     ,actionCannotBeUndone: "ئەم کردارە ناگەڕێتەوە"
     ,confirmDelete: "پشتڕاستکردنەوەی سڕینەوە"
-    ,proRequests: "داواکارییەکانی پڕۆ"
+    ,proRequests: "پڕۆ"
     ,proRequestsDescription: "پێداچوونەوە و پەسەندکردنی داواکارییەکانی بەرزکردنەوە بۆ پڕۆ"
     ,upgradeRequests: "داواکارییەکانی بەرزکردنەوە"
     ,noPendingRequests: "هیچ داواکارییەکی چاوەڕوانکراو نییە"
@@ -4441,6 +4511,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,generating: "دروستدەکرێت..."
     ,totalKeys: "کۆی کلیلەکان"
     ,expired: "بەسەرچووە"
+    ,enabled: "چالاک"
     ,quickKeyGenerator: "دروستکەری خێرای کلیل"
     ,generateKeysInstantly: "دروستکردنی کلیلەکانی دەستگەیشتن بۆ ئەندامانی نوێ بە خێرایی"
     ,trialOneUse: "تاقیکردنەوە (1 بەکارهێنان)"
@@ -5155,6 +5226,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,timesSubscribed: "جار بووە بە PRO"
     ,manualUpgrade: "باڵابردنی بە دەستی"
     ,navigation: "گەشتکردن"
+    ,awaitingReview: "چاوەڕوانی پێداچوونەوە"
+    ,firestoreConnection: "پەیوەندی Firestore"
+    ,nextjsRuntime: "Next.js Runtime"
+    ,firebaseStorage: "کۆگای Firebase"
+    ,manageUsers: "بەڕێوەبردنی بەکارهێنەران"
+    ,reviewRequests: "پێداچوونەوە بە داواکاری"
+    ,totalPrograms: "کۆی پرۆگرامەکان"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -5170,7 +5248,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     notifications: "Bildirimler",
     systemSettings: "Sistem Ayarları",
     allPhysiotherapists: "Tüm Fizyoterapistler",
-    registrationRequests: "Kayıt İstekleri",
+    registrationRequests: "İstekler",
     adminPhysiotherapist: "Yönetici Fizyoterapist",
     superadminPanel: "Süper Admin Paneli",
     loading: "Yükleniyor",
@@ -5433,6 +5511,19 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   renewSubscription: "Yenilemeler",
   backToDashboard: "Panele Dön",
   redirectingToDashboard: "3 saniye içinde panele yönlendiriliyorsunuz...",
+  // 2FA Verification (Turkish)
+  twoFactorAuthentication: "İki Faktörlü Kimlik Doğrulama",
+  enter6DigitCode: "Kimlik doğrulama uygulamanızdan 6 haneli kodu girin",
+  enterBackupCode: "Yedek kodunuzu girin",
+  pleaseEnterComplete6DigitCode: "Lütfen 6 haneli kodu tam olarak girin",
+  pleaseEnterBackupCode: "Lütfen bir yedek kod girin",
+  twoFactorVerificationSuccessful: "2FA doğrulama başarılı",
+  verificationFailed: "Doğrulama başarısız",
+  useAuthenticatorCode: "Kimlik doğrulama kodunu kullan",
+  useBackupCode: "Yedek kod kullan",
+  backupCode: "Yedek kod",
+  verify: "Doğrula",
+  passwordCorrect: "Şifre doğru - lütfen 2FA'yı doğrulayın",
   backToLogin: "Girişe Dön",
   createAccountTitle: "Hesap Oluştur",
   signupSubtitle: "FitPro ile fitness yolculuğuna başla",
@@ -5734,6 +5825,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   generating: "Oluşturuluyor...",
   totalKeys: "Toplam Anahtarlar",
   expired: "Süresi Doldu",
+  enabled: "Etkin",
   quickKeyGenerator: "Hızlı Anahtar Oluşturucu",
   generateKeysInstantly: "Yeni üyeler için anında erişim anahtarları oluştur",
   trialOneUse: "Deneme (1 kullanım)",
