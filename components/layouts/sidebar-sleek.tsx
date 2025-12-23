@@ -24,7 +24,7 @@ function PageTransitionWrapper({ children }: { children: ReactNode }) {
       const timer = setTimeout(() => {
         setDisplayPath(pathname)
         setIsTransitioning(false)
-      }, 200)
+      }, 150)
       
       return () => clearTimeout(timer)
     }
@@ -33,10 +33,12 @@ function PageTransitionWrapper({ children }: { children: ReactNode }) {
   return (
     <div className="pb-20 lg:pb-0 min-h-full">
       <div 
-        className="container mx-auto px-4 py-6 max-w-7xl transition-all duration-300 ease-in-out"
+        className="container mx-auto px-4 py-6 max-w-7xl"
         style={{
-          opacity: isTransitioning ? 0.3 : 1,
-          transform: isTransitioning ? 'translateY(10px)' : 'translateY(0)',
+          opacity: isTransitioning ? 0 : 1,
+          transform: isTransitioning ? 'scale(0.92)' : 'scale(1)',
+          transition: 'opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
+          transformOrigin: 'center center',
           willChange: 'opacity, transform',
         }}
       >
@@ -190,16 +192,6 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
           <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 px-3">
             {t("mainMenu")}
           </p>
-          {/* Smooth sliding indicator */}
-          <div 
-            className="absolute left-0 w-1 h-12 bg-gradient-to-b from-cyan-400 to-blue-500 rounded-r-full shadow-lg shadow-cyan-500/50"
-            style={{
-              top: `${activeIndex * 52 + 32}px`,
-              opacity: activeIndex >= 0 ? 1 : 0,
-              transition: 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)',
-              willChange: 'top, opacity'
-            }}
-          />
           {mainNavItems.map((item, idx) => {
             const Icon = iconMap[item.icon] || Home
             const active = isActive(item.path)
@@ -211,27 +203,39 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
                   setTimeout(() => {
                     router.push(item.path)
                     setMobileOpen(false)
-                  }, 100)
+                  }, 150)
                 }}
-                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl group overflow-hidden transition-all duration-200 ease-out ${
+                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl group overflow-hidden transition-all duration-500 ease-out active:scale-95 ${
                   active
-                    ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-white border border-cyan-500/30 shadow-lg shadow-cyan-500/20"
-                    : "text-gray-400 hover:text-white hover:bg-white/5 hover:-translate-x-0.5 hover:shadow-lg hover:shadow-cyan-500/5 hover:border hover:border-cyan-500/10"
+                    ? "bg-gradient-to-r from-cyan-500/30 to-blue-500/30 text-white border border-cyan-400/50 shadow-2xl shadow-cyan-500/50 scale-[1.03]"
+                    : "text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-cyan-500/5 hover:to-blue-500/5 hover:-translate-x-1 hover:scale-[1.02] hover:shadow-2xl hover:shadow-cyan-500/20 hover:border hover:border-cyan-500/30"
                 }`}
                 style={{ willChange: 'transform, background-color, border-color' }}
               >
-                <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/0 via-white/8 to-white/0 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 ease-out" aria-hidden="true" />
-                <div className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ease-out ${
-                  active ? "bg-cyan-500/30 scale-110" : "bg-white/5 group-hover:bg-cyan-500/10 group-hover:scale-110 group-hover:rotate-3"
-                }`} style={{ willChange: 'transform, background-color' }}>
-                  <Icon className={`w-5 h-5 transition-all duration-300 ease-out ${active ? "text-cyan-300 scale-110" : "group-hover:text-cyan-400"}`} style={{ willChange: 'transform, color' }} />
-                </div>
-                <span className="font-medium flex-1 text-left relative z-10 transition-all duration-200 group-hover:translate-x-0.5">{item.label}</span>
+                {/* Enhanced shimmer effect */}
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" aria-hidden="true" />
+                
+                {/* Magical pulse ring on active */}
                 {active && (
-                  <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse relative z-10" />
+                  <span className="absolute inset-0 rounded-xl border-2 border-cyan-400/50 animate-pulse" aria-hidden="true" />
+                )}
+                
+                <div className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-500 ease-out overflow-hidden ${
+                  active ? "bg-gradient-to-br from-cyan-500/40 to-blue-500/40 scale-110 shadow-lg shadow-cyan-500/50" : "bg-white/5 group-hover:bg-gradient-to-br group-hover:from-cyan-500/20 group-hover:to-blue-500/20 group-hover:scale-125 group-hover:rotate-12 group-hover:shadow-md group-hover:shadow-cyan-500/30"
+                }`} style={{ willChange: 'transform, background-color' }}>
+                  {/* Icon container shimmer */}
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/0 via-white/20 to-white/0 -translate-y-full group-hover:translate-y-full transition-transform duration-700 ease-out" aria-hidden="true" />
+                  <Icon className={`relative z-10 w-5 h-5 transition-all duration-500 ease-out ${active ? "text-cyan-300 scale-110" : "group-hover:text-cyan-300 group-hover:scale-110 group-hover:rotate-6"}`} style={{ willChange: 'transform, color' }} />
+                </div>
+                <span className="font-medium flex-1 text-left relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:font-semibold">{item.label}</span>
+                {active && (
+                  <div className="relative z-10">
+                    <div className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                    <div className="absolute inset-0 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+                  </div>
                 )}
                 {!active && (
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-200 group-hover:translate-x-1 relative z-10" />
+                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-2 group-hover:scale-125 relative z-10" />
                 )}
               </button>
             )
@@ -252,21 +256,36 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
                   router.push(item.path)
                   setMobileOpen(false)
                 }}
-                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-out group overflow-hidden ${
+                className={`relative w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-500 ease-out group overflow-hidden active:scale-95 ${
                   active
-                    ? "bg-gradient-to-r from-cyan-500/20 to-blue-500/20 text-white border border-cyan-500/30 shadow-lg shadow-cyan-500/20"
-                    : "text-gray-400 hover:text-white hover:bg-white/5 hover:-translate-x-0.5 hover:shadow-md hover:shadow-slate-500/5 hover:border hover:border-slate-500/10"
+                    ? "bg-gradient-to-r from-purple-500/20 to-pink-500/20 text-white border border-purple-500/40 shadow-xl shadow-purple-500/30 scale-[1.02]"
+                    : "text-gray-400 hover:text-white hover:bg-gradient-to-r hover:from-purple-500/5 hover:to-pink-500/5 hover:-translate-x-1 hover:scale-[1.02] hover:shadow-xl hover:shadow-purple-500/20 hover:border hover:border-purple-500/20"
                 }`}
               >
-                <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/0 via-white/8 to-white/0 translate-x-[-120%] group-hover:translate-x-[120%] transition-transform duration-700 ease-out" aria-hidden="true" />
-                <div className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-300 ${
-                  active ? "bg-cyan-500/20" : "bg-white/5 group-hover:bg-slate-500/10 group-hover:scale-110 group-hover:rotate-3"
+                {/* Enhanced shimmer effect */}
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" aria-hidden="true" />
+                
+                {/* Magical pulse ring on active */}
+                {active && (
+                  <span className="absolute inset-0 rounded-xl border-2 border-purple-400/40 animate-pulse" aria-hidden="true" />
+                )}
+                
+                <div className={`relative w-9 h-9 rounded-lg flex items-center justify-center transition-all duration-500 ease-out overflow-hidden ${
+                  active ? "bg-gradient-to-br from-purple-500/30 to-pink-500/30 scale-110 shadow-lg shadow-purple-500/40" : "bg-white/5 group-hover:bg-gradient-to-br group-hover:from-purple-500/15 group-hover:to-pink-500/15 group-hover:scale-125 group-hover:rotate-12 group-hover:shadow-md group-hover:shadow-purple-500/20"
                 }`}>
-                  <Icon className={`w-5 h-5 transition-all duration-300 ${active ? "text-cyan-400" : "group-hover:text-slate-300"}`} />
+                  {/* Icon container shimmer */}
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/0 via-white/20 to-white/0 -translate-y-full group-hover:translate-y-full transition-transform duration-700 ease-out" aria-hidden="true" />
+                  <Icon className={`relative z-10 w-5 h-5 transition-all duration-500 ease-out ${active ? "text-purple-300 scale-110" : "group-hover:text-purple-300 group-hover:scale-110 group-hover:rotate-6"}`} />
                 </div>
-                <span className="font-medium flex-1 text-left relative z-10 transition-all duration-300 group-hover:translate-x-0.5">{item.label}</span>
+                <span className="font-medium flex-1 text-left relative z-10 transition-all duration-300 group-hover:translate-x-1 group-hover:font-semibold">{item.label}</span>
+                {active && (
+                  <div className="relative z-10">
+                    <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                    <div className="absolute inset-0 w-2 h-2 rounded-full bg-purple-400 animate-ping" />
+                  </div>
+                )}
                 {!active && (
-                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 relative z-10" />
+                  <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-2 group-hover:scale-125 relative z-10" />
                 )}
               </button>
             )
@@ -332,15 +351,39 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
               <button
                 key={`mobile-${idx}`}
                 onClick={() => router.push(item.path)}
-                className="flex flex-col items-center justify-center gap-1 px-1 py-1.5"
+                className="relative flex flex-col items-center justify-center gap-1 px-1 py-1.5 group active:scale-90 transition-transform duration-200"
               >
-                <div className={`p-2 rounded-xl transition-colors ${
-                  active ? "bg-cyan-500/20 text-cyan-400" : "text-gray-400"
+                <div className={`relative p-2 rounded-xl transition-all duration-500 ease-out overflow-hidden ${
+                  active 
+                    ? "bg-gradient-to-br from-cyan-500/30 to-blue-500/30 text-cyan-400 shadow-lg shadow-cyan-500/50 scale-110" 
+                    : "text-gray-400 group-hover:bg-gradient-to-br group-hover:from-cyan-500/10 group-hover:to-blue-500/10 group-hover:text-cyan-400 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-cyan-500/30"
                 }`}>
-                  <Icon className="w-5 h-5" />
+                  {/* Shimmer effect */}
+                  <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" aria-hidden="true" />
+                  
+                  {/* Pulse ring on active */}
+                  {active && (
+                    <span className="absolute inset-0 rounded-xl border-2 border-cyan-400/50 animate-pulse" aria-hidden="true" />
+                  )}
+                  
+                  <Icon className={`relative z-10 w-5 h-5 transition-all duration-500 ease-out ${
+                    active 
+                      ? "scale-110" 
+                      : "group-hover:scale-125 group-hover:rotate-12"
+                  }`} />
+                  
+                  {/* Active ping dot */}
+                  {active && (
+                    <div className="absolute -top-0.5 -right-0.5 z-20">
+                      <div className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
+                      <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping" />
+                    </div>
+                  )}
                 </div>
-                <span className={`text-[9px] font-medium text-center leading-tight line-clamp-1 max-w-[56px] ${
-                  active ? "text-cyan-400" : "text-gray-400"
+                <span className={`text-[9px] font-medium text-center leading-tight line-clamp-1 max-w-[56px] transition-all duration-300 ${
+                  active 
+                    ? "text-cyan-400 font-semibold" 
+                    : "text-gray-400 group-hover:text-cyan-400 group-hover:font-semibold"
                 }`}>
                   {item.label}
                 </span>
@@ -349,27 +392,60 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
           })}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
-            className="flex flex-col items-center justify-center gap-1 px-1 py-1.5"
+            className="relative flex flex-col items-center justify-center gap-1 px-1 py-1.5 group"
           >
-            <div className="p-2 rounded-xl text-gray-400">
-              <Menu className="w-5 h-5" />
+            <div className={`relative p-2 rounded-xl transition-all duration-500 ease-out overflow-hidden ${
+              mobileOpen 
+                ? "bg-gradient-to-br from-cyan-500/30 to-blue-500/30 text-cyan-400 shadow-lg shadow-cyan-500/50 scale-110 rotate-90" 
+                : "text-gray-400 group-hover:bg-gradient-to-br group-hover:from-cyan-500/10 group-hover:to-blue-500/10 group-hover:text-cyan-400 group-hover:scale-105 group-hover:shadow-md group-hover:shadow-cyan-500/20"
+            }`}>
+              {/* Magical shimmer effect */}
+              <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+              
+              {/* Menu icon with morphing animation */}
+              <div className="relative w-5 h-5 flex flex-col justify-center gap-[3px]">
+                <span className={`block h-[2px] rounded-full bg-current transition-all duration-500 ease-out ${
+                  mobileOpen 
+                    ? "rotate-45 translate-y-[5px] w-5" 
+                    : "w-5 group-hover:w-4"
+                }`} />
+                <span className={`block h-[2px] rounded-full bg-current transition-all duration-500 ease-out ${
+                  mobileOpen 
+                    ? "opacity-0 scale-0" 
+                    : "w-5 group-hover:w-3 group-hover:translate-x-1"
+                }`} />
+                <span className={`block h-[2px] rounded-full bg-current transition-all duration-500 ease-out ${
+                  mobileOpen 
+                    ? "-rotate-45 -translate-y-[5px] w-5" 
+                    : "w-5 group-hover:w-4"
+                }`} />
+              </div>
             </div>
-            <span className="text-[9px] font-medium text-center text-gray-400 leading-tight line-clamp-1 max-w-[56px]">{t("more")}</span>
+            <span className={`text-[9px] font-medium text-center leading-tight line-clamp-1 max-w-[56px] transition-all duration-300 ${
+              mobileOpen ? "text-cyan-400" : "text-gray-400 group-hover:text-cyan-400"
+            }`}>{mobileOpen ? t("close") : t("more")}</span>
           </button>
         </div>
       </div>
 
       {/* Mobile Full Menu */}
       {mobileOpen && (
-        <div className="lg:hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur-xl">
+        <div className="lg:hidden fixed inset-0 z-50 bg-slate-950/98 backdrop-blur-xl animate-in fade-in duration-300">
           <div className="h-full flex flex-col">
-            <div className="flex items-center justify-between px-4 py-4 border-b border-white/10">
-              <span className="text-white font-bold text-lg">{t("menu")}</span>
+            <div className="flex items-center justify-between px-4 py-4 border-b border-white/10 bg-gradient-to-r from-slate-900/50 to-slate-800/50">
+              <span className="text-white font-bold text-lg bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">{t("menu")}</span>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white"
+                className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/10 to-orange-500/10 flex items-center justify-center text-red-400 transition-all duration-500 ease-out group overflow-hidden hover:scale-110 hover:rotate-90 hover:shadow-lg hover:shadow-red-500/50 hover:bg-gradient-to-br hover:from-red-500/20 hover:to-orange-500/20"
               >
-                <X className="w-5 h-5" />
+                {/* Magical shimmer */}
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" />
+                
+                {/* Animated X icon */}
+                <div className="relative w-5 h-5">
+                  <span className="absolute top-1/2 left-0 w-full h-[2px] bg-current rounded-full rotate-45 -translate-y-1/2 transition-all duration-300 group-hover:scale-110" />
+                  <span className="absolute top-1/2 left-0 w-full h-[2px] bg-current rounded-full -rotate-45 -translate-y-1/2 transition-all duration-300 group-hover:scale-110" />
+                </div>
               </button>
             </div>
             <div className="flex-1 overflow-y-auto p-4">
