@@ -20,6 +20,7 @@ export default function AuthTopbar() {
         <button
           className="w-full group relative text-sm font-semibold transition-all duration-500 hover:scale-110 active:scale-90 flex items-center justify-center gap-2 bg-gradient-to-r from-[#0E151B]/60 via-[#10B2E3]/30 to-[#0E151B]/60 hover:from-[#0E151B]/80 hover:via-[#10B2E3]/40 hover:to-[#0E151B]/80 backdrop-blur-md border-2 border-[#10B2E3]/50 hover:border-[#73E8FF]/70 px-5 py-3 rounded-full shadow-lg shadow-[#10B2E3]/20 hover:shadow-xl hover:shadow-[#73E8FF]/30"
           onClick={() => setShowHelp(true)}
+          suppressHydrationWarning
         >
         <HelpCircle className="w-5 h-5 text-[#73E8FF] group-hover:text-[#47D8FF] transition-colors duration-300 drop-shadow-[0_0_4px_rgba(115,232,255,0.3)]" strokeWidth={2.5} />
         <span className="relative z-10 bg-gradient-to-r from-[#73E8FF] via-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent group-hover:from-[#47D8FF] group-hover:via-[#73E8FF] group-hover:to-[#47D8FF] transition-all duration-300 font-bold tracking-wide">

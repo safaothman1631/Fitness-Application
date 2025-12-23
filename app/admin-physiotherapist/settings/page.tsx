@@ -10,11 +10,16 @@ import { Settings as SettingsIcon, Bell, Lock, Globe, Moon, Sun, Shield, Save, K
 import { doc, getDoc, updateDoc, setDoc } from "firebase/firestore"
 import { db, auth } from "@/lib/firebase"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { onAuthStateChanged } from "firebase/auth"
 
 export default function AdminPhysiotherapistSettingsPage() {
   const { t, language, setLanguage } = useLanguage()
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
   const [settings, setSettings] = useState({
     notifications: {
       newRequests: true,
@@ -40,7 +45,24 @@ export default function AdminPhysiotherapistSettingsPage() {
   })
 
   useEffect(() => {
-    fetchSettings()
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid)
+        
+        // Fetch user data including 2FA status
+        const token = await user.getIdToken()
+        const userDataResponse = await fetch(`/api/users/${user.uid}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        if (userDataResponse.ok) {
+          const userData = await userDataResponse.json()
+          setTwoFactorEnabled(userData.twoFactorEnabled ?? false)
+        }
+        
+        await fetchSettings()
+      }
+    })
+    return () => unsubscribe()
   }, [])
 
   const fetchSettings = async () => {
@@ -62,6 +84,36 @@ export default function AdminPhysiotherapistSettingsPage() {
       console.error("Error fetching settings:", error)
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleToggle2FA = async (enabled: boolean) => {
+    if (enabled) {
+      router.push('/admin-physiotherapist/settings/two-factor')
+    } else {
+      if (confirm('Are you sure you want to disable Two-Factor Authentication?')) {
+        try {
+          const token = await auth.currentUser?.getIdToken()
+          const response = await fetch(`/api/users/${userId}`, {
+            method: 'PATCH',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ twoFactorEnabled: false })
+          })
+          if (response.ok) {
+            setTwoFactorEnabled(false)
+            toast.success('Two-Factor Authentication disabled!')
+          } else {
+            const errorData = await response.json()
+            toast.error(`Failed to disable 2FA: ${errorData.error || 'Unknown error'}`)
+          }
+        } catch (error) {
+          console.error('Error disabling 2FA:', error)
+          toast.error('Error disabling 2FA')
+        }
+      }
     }
   }
 
@@ -376,6 +428,32 @@ export default function AdminPhysiotherapistSettingsPage() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                {/* 2FA Toggle */}
+                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center">
+                      <Shield className="w-6 h-6 text-orange-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-semibold">{t("twoFactorAuth")}</p>
+                      <p className="text-gray-400 text-sm">{t("addExtraLayer")}</p>
+                      {twoFactorEnabled && (
+                        <p className="text-green-400 text-xs mt-1">✓ {t("enabled")}</p>
+                      )}
+                    </div>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input 
+                      type="checkbox" 
+                      checked={twoFactorEnabled}
+                      onChange={(e) => handleToggle2FA(e.target.checked)}
+                      className="sr-only peer" 
+                    />
+                    <div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-emerald-600"></div>
+                  </label>
+                </div>
+
+                {/* Password Change */}
                 <div>
                   <label className="text-sm text-slate-400 mb-2 block">{t("currentPassword")}</label>
                   <input

@@ -65,34 +65,57 @@ export async function POST(request: NextRequest) {
     await checkRateLimit(getUserIdentifier(request, user.uid), writeRateLimit)
     
     const rawBody = await request.json()
+    const targetUserId = rawBody.userId || rawBody.physiotherapistId
     
-    // Validate and sanitize input
-    const validation = validateRequestSafe(UpdateSettingsSchema, rawBody)
-    if (!validation.success) {
+    if (!targetUserId) {
       return NextResponse.json({ 
         error: "Validation failed", 
-        details: validation.errors 
+        details: { userId: "User ID is required" }
       }, { status: 400 })
     }
     
-    const body = sanitizeObject(validation.data)
-    const { physiotherapistId, preferences } = body
-    
     // User can only update their own settings, unless admin
-    if (user.uid !== physiotherapistId && !isAdmin(user)) {
+    if (user.uid !== targetUserId && !isAdmin(user)) {
       return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
     }
 
-    const settingsData = {
-      physiotherapistId,
-      preferences,
-      updatedAt: new Date().toISOString()
-    }
+    // If it's a physiotherapist with preferences format
+    if (rawBody.preferences) {
+      const validation = validateRequestSafe(UpdateSettingsSchema, rawBody)
+      if (!validation.success) {
+        return NextResponse.json({ 
+          error: "Validation failed", 
+          details: validation.errors 
+        }, { status: 400 })
+      }
+      
+      const body = sanitizeObject(validation.data)
+      const settingsData = {
+        physiotherapistId: targetUserId,
+        preferences: body.preferences,
+        updatedAt: new Date().toISOString()
+      }
 
-    await adminDb
-      .collection('settings')
-      .doc(physiotherapistId)
-      .set(settingsData, { merge: true })
+      await adminDb
+        .collection('settings')
+        .doc(targetUserId)
+        .set(settingsData, { merge: true })
+    } else {
+      // General user settings - update user document directly
+      const updateData: any = {
+        updatedAt: new Date().toISOString()
+      }
+      
+      if (rawBody.notificationsEnabled !== undefined) updateData.notificationsEnabled = rawBody.notificationsEnabled
+      if (rawBody.darkMode !== undefined) updateData.darkMode = rawBody.darkMode
+      if (rawBody.emailNotifications !== undefined) updateData.emailNotifications = rawBody.emailNotifications
+      if (rawBody.language !== undefined) updateData.language = rawBody.language
+      
+      await adminDb
+        .collection('users')
+        .doc(targetUserId)
+        .update(updateData)
+    }
 
     return NextResponse.json({
       success: true,

@@ -31,6 +31,9 @@ export const UpdateUserSchema = z.object({
   subscriptionStatus: z.enum(['active', 'inactive', 'cancelled']).optional(),
   subscriptionEnd: z.string().datetime().optional().nullable(),
   isActive: z.boolean().optional(),
+  twoFactorEnabled: z.boolean().optional(),
+  twoFactorSecret: z.string().optional(),
+  backupCodes: z.array(z.string()).optional(),
 })
 
 // ===== SETTINGS SCHEMAS =====

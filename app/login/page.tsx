@@ -250,9 +250,39 @@ export default function LoginPage() {
                 }
             }
             
+            console.log("💾 Checking 2FA status...")
+            
+            // Check if user has 2FA enabled
+            let twoFactorEnabled = false
+            try {
+                const { firestoreProxy } = await import("@/lib/firestore-proxy")
+                const userData = await firestoreProxy.getDoc("users", user.uid)
+                twoFactorEnabled = userData?.twoFactorEnabled || false
+                console.log("🔐 2FA enabled:", twoFactorEnabled)
+            } catch (error) {
+                console.warn("⚠️ Could not check 2FA status, assuming disabled")
+            }
+            
+            if (twoFactorEnabled) {
+                // Store pending verification data
+                localStorage.setItem("pending2FA", "true")
+                localStorage.setItem("pending2FAUserId", user.uid)
+                localStorage.setItem("pending2FAEmail", formData.email)
+                localStorage.setItem("pending2FARole", role)
+                localStorage.setItem("pending2FARedirect", redirectUrl)
+                
+                console.log("🔐 Redirecting to 2FA verification...")
+                toast.success(t("passwordCorrect") || "Password correct - please verify 2FA")
+                
+                setTimeout(() => {
+                    router.push("/verify-2fa")
+                }, 300)
+                return
+            }
+            
             console.log("💾 Saving to localStorage:", { email: formData.email, userId: user.uid, role })
             
-            // Save to localStorage
+            // Save to localStorage (no 2FA)
             localStorage.setItem("userEmail", formData.email)
             localStorage.setItem("userId", user.uid)
             localStorage.setItem("userRole", role)
@@ -418,6 +448,7 @@ export default function LoginPage() {
                                             <button 
                                                 type="button"
                                                 className="group relative text-sm font-semibold transition-all duration-300 hover:scale-105 active:scale-95"
+                                                suppressHydrationWarning
                                             >
                                                 <span className="relative z-10 bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent group-hover:from-[#73E8FF] group-hover:to-[#47D8FF] transition-all duration-300">
                                                     {t("forgotPassword")}

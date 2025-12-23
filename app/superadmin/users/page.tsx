@@ -69,17 +69,17 @@ export default function UsersPage() {
         console.log("✅ Fetched users:", data.length)
         setUsers(data)
         
-        // Filter to count users, trainers, and physiotherapists
+        // Filter to count users and trainers
         const filteredUsers = data.filter((u: any) => {
           const role = u.role?.toLowerCase()
-          return role === "user" || role === "trainer" || role === "physiotherapist"
+          return role === "user" || role === "trainer"
         })
         
         const total = filteredUsers.length
         const active = filteredUsers.filter((u: any) => {
           const role = u.role?.toLowerCase()
-          // Trainers and physiotherapists are always considered active
-          if (role === "trainer" || role === "physiotherapist") return true
+          // Trainers are always considered active
+          if (role === "trainer") return true
           return u.isActive
         }).length
         const inactive = total - active
@@ -234,26 +234,61 @@ export default function UsersPage() {
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
         <div className="space-y-6">
-          {/* Header */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                  <Users className="w-6 h-6 text-white" />
+          {/* Enhanced Header with Gradient Background */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20 border border-blue-500/30 backdrop-blur-xl">
+            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+            <div className="relative p-8">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center shadow-2xl shadow-blue-500/40 ring-4 ring-blue-400/20">
+                    <Users className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent">
+                      {t("userManagementTitle")}
+                    </h1>
+                    <p className="text-blue-200 text-sm mt-1">{t("manageYourUsers")}</p>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-3xl font-bold text-white">{t("userManagementTitle")}</h1>
-                  <p className="text-gray-400 text-sm">{t("manageYourUsers")}</p>
+
+                {/* Mini Stats in Header */}
+                <div className="grid grid-cols-4 gap-3">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white">{stats.total}</div>
+                      <div className="text-[10px] text-blue-200 mt-1">{t("totalUsers")}</div>
+                    </div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-300">{stats.active}</div>
+                      <div className="text-[10px] text-green-200 mt-1">{t("active")}</div>
+                    </div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-red-300">{stats.inactive}</div>
+                      <div className="text-[10px] text-red-200 mt-1">Inactive</div>
+                    </div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-300">{stats.admins}</div>
+                      <div className="text-[10px] text-purple-200 mt-1">Trainers</div>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
-                <Button className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white shadow-lg shadow-cyan-500/30">
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("addNewUser")}
-                </Button>
-              </DialogTrigger>
+
+              {/* Action Button in Header */}
+              <div className="mt-6">
+                <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button className="bg-gradient-to-r from-cyan-500 via-blue-500 to-purple-600 hover:from-cyan-600 hover:via-blue-600 hover:to-purple-700 text-white shadow-xl shadow-cyan-500/40 hover:shadow-2xl hover:shadow-cyan-500/50 transition-all duration-300 hover:scale-105">
+                      <Plus className="w-5 h-5 mr-2" />
+                      <span className="font-semibold">{t("addNewUser")}</span>
+                    </Button>
+                  </DialogTrigger>
               <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-bold flex items-center gap-3">
@@ -566,36 +601,38 @@ export default function UsersPage() {
                 </div>
               </DialogContent>
             </Dialog>
+              </div>
+            </div>
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-2 border-b border-slate-800">
+          <div className="flex gap-2 bg-gradient-to-r from-slate-900/50 to-slate-800/30 rounded-2xl p-1 border border-slate-700/50 backdrop-blur-sm">
             <button
               onClick={() => setActiveTab('users')}
-              className={`px-6 py-3 font-semibold transition-all duration-300 ${
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeTab === 'users'
-                  ? 'text-cyan-400 border-b-2 border-cyan-400 bg-gradient-to-t from-cyan-500/10 to-transparent'
-                  : 'text-gray-400 hover:text-gray-300'
+                  ? 'bg-gradient-to-r from-cyan-500 to-blue-600 text-white shadow-lg shadow-cyan-500/30'
+                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                {t("allUsers")}
+              <div className="flex items-center justify-center gap-2">
+                <Users className="w-5 h-5" />
+                <span>{t("allUsers")}</span>
               </div>
             </button>
             <button
               onClick={() => setActiveTab('requests')}
-              className={`px-6 py-3 font-semibold transition-all duration-300 relative ${
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 relative ${
                 activeTab === 'requests'
-                  ? 'text-cyan-400 border-b-2 border-cyan-400 bg-gradient-to-t from-cyan-500/10 to-transparent'
-                  : 'text-gray-400 hover:text-gray-300'
+                  ? 'bg-gradient-to-r from-purple-500 to-pink-600 text-white shadow-lg shadow-purple-500/30'
+                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <Crown className="w-4 h-4" />
-                {t("proRequests")}
+              <div className="flex items-center justify-center gap-2">
+                <Crown className="w-5 h-5" />
+                <span>{t("proRequests")}</span>
                 {(proRequests.filter(r => r.status === 'pending').length + pendingUsers.length) > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full text-xs text-white flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-lg shadow-red-500/50 ring-2 ring-slate-900">
                     {proRequests.filter(r => r.status === 'pending').length + pendingUsers.length}
                   </span>
                 )}
@@ -603,17 +640,17 @@ export default function UsersPage() {
             </button>
             <button
               onClick={() => setActiveTab('renewals')}
-              className={`relative px-6 py-3 font-semibold transition-all duration-300 ${
+              className={`relative flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeTab === 'renewals'
-                  ? 'text-cyan-400 border-b-2 border-cyan-400 bg-gradient-to-t from-cyan-500/10 to-transparent'
-                  : 'text-gray-400 hover:text-gray-300'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30'
+                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
               }`}
             >
-              <div className="flex items-center gap-2">
-                <Activity className="w-4 h-4" />
-                {t("renewSubscription")}
+              <div className="flex items-center justify-center gap-2">
+                <Activity className="w-5 h-5" />
+                <span>{t("renewSubscription")}</span>
                 {users.filter(u => u.role === 'user' && (u.membership === 'Free' || !u.membership)).length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gray-500 rounded-full text-xs text-white flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-lg shadow-gray-500/50 ring-2 ring-slate-900">
                     {users.filter(u => u.role === 'user' && (u.membership === 'Free' || !u.membership)).length}
                   </span>
                 )}
@@ -621,83 +658,22 @@ export default function UsersPage() {
             </button>
           </div>
 
-          {/* Stats Grid - Only show for users tab */}
-          {activeTab === 'users' && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card className="bg-gradient-to-br from-blue-500/20 via-blue-600/10 to-blue-500/5 border-blue-500/40 hover:border-blue-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-105">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/30">
-                    <Users className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-white bg-gradient-to-r from-blue-400 to-blue-300 bg-clip-text text-transparent">{stats.total}</p>
-                    <p className="text-xs text-blue-300 font-medium">{t("totalUsers")}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-green-500/20 via-green-600/10 to-green-500/5 border-green-500/40 hover:border-green-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:scale-105">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                    <UserCheck className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-white bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">{stats.active}</p>
-                    <p className="text-xs text-green-300 font-medium">{t("active")}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-red-500/20 via-red-600/10 to-red-500/5 border-red-500/40 hover:border-red-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 hover:scale-105">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-red-500 to-red-600 flex items-center justify-center shadow-lg shadow-red-500/30">
-                    <UserX className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-white bg-gradient-to-r from-red-400 to-red-300 bg-clip-text text-transparent">{stats.inactive}</p>
-                    <p className="text-xs text-red-300 font-medium">Inactive</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-purple-500/5 border-purple-500/40 hover:border-purple-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105">
-              <CardContent className="p-5">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                    <Crown className="w-7 h-7 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-3xl font-bold text-white bg-gradient-to-r from-purple-400 to-purple-300 bg-clip-text text-transparent">{stats.admins}</p>
-                    <p className="text-xs text-purple-300 font-medium">Trainers</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-          )}
-
           {/* Search & Filter - Only for users tab */}
           {activeTab === 'users' && (
-          <Card className="bg-gradient-to-br from-slate-900/80 via-slate-900/60 to-slate-800/40 border-slate-700/50 backdrop-blur-sm">
-            <CardContent className="p-5">
+          <Card className="bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-800/50 border-slate-700/60 backdrop-blur-xl shadow-2xl">
+            <CardContent className="p-6">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="relative flex-1">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-cyan-400 animate-pulse" />
                   <Input
                     placeholder={t("searchUsers")}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-12 h-12 bg-slate-800/80 border-slate-600 text-white placeholder:text-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+                    className="pl-12 h-14 bg-slate-800/90 border-slate-600/60 text-white placeholder:text-gray-400 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/30 transition-all rounded-xl font-medium shadow-inner"
                   />
                 </div>
-                <Button variant="outline" className="h-12 border-slate-600 text-gray-300 hover:bg-gradient-to-r hover:from-cyan-500/10 hover:to-blue-500/10 hover:border-cyan-500/50 transition-all">
-                  <Filter className="w-4 h-4 mr-2" />
+                <Button variant="outline" className="h-14 px-6 border-slate-600/60 bg-slate-800/50 text-gray-300 hover:bg-gradient-to-r hover:from-cyan-500/20 hover:to-blue-500/20 hover:border-cyan-500/70 hover:text-cyan-300 transition-all duration-300 rounded-xl font-semibold shadow-lg">
+                  <Filter className="w-5 h-5 mr-2" />
                   Filter
                 </Button>
               </div>
@@ -729,17 +705,16 @@ export default function UsersPage() {
                   <p className="text-gray-500 text-sm">Create your first user to get started</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
+                <div className="overflow-x-auto -mx-4 md:mx-0">
+                  <div className="inline-block min-w-full align-middle">
+                    <table className="min-w-full">
                     <thead>
                       <tr className="border-b border-slate-800">
-                        <th className="text-left text-gray-400 text-sm font-semibold p-3">User</th>
-                        <th className="text-left text-gray-400 text-sm font-semibold p-3">Role</th>
-                        <th className="text-left text-gray-400 text-sm font-semibold p-3">Membership</th>
-                        <th className="text-left text-gray-400 text-sm font-semibold p-3">Status</th>
-                        <th className="text-left text-gray-400 text-sm font-semibold p-3">Days Left</th>
-                        <th className="text-left text-gray-400 text-sm font-semibold p-3">Joined</th>
-                        <th className="text-right text-gray-400 text-sm font-semibold p-3">Actions</th>
+                        <th className="text-left text-gray-400 text-xs md:text-sm font-semibold p-2 md:p-3 whitespace-nowrap">User</th>
+                        <th className="text-left text-gray-400 text-xs md:text-sm font-semibold p-2 md:p-3 whitespace-nowrap hidden md:table-cell">Role</th>
+                        <th className="text-left text-gray-400 text-xs md:text-sm font-semibold p-2 md:p-3 whitespace-nowrap">Membership</th>
+                        <th className="text-left text-gray-400 text-xs md:text-sm font-semibold p-2 md:p-3 whitespace-nowrap hidden lg:table-cell">Days</th>
+                        <th className="text-right text-gray-400 text-xs md:text-sm font-semibold p-2 md:p-3 whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -757,30 +732,30 @@ export default function UsersPage() {
                         .map((user) => (
                         <tr 
                           key={user.id || user.uid} 
-                          className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 hover:scale-[1.01] transition-all duration-300 cursor-pointer group"
+                          className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 transition-all duration-300 cursor-pointer group"
                           onClick={() => fetchSubscriptionHistory(user.id || user.uid)}
                         >
-                          <td className="p-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-500 via-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-blue-500/30 ring-2 ring-blue-400/20">
+                          <td className="p-2 md:p-4">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-cyan-500 via-blue-500 to-blue-600 flex items-center justify-center text-white font-bold text-xs md:text-base shadow-lg shadow-blue-500/30 ring-1 md:ring-2 ring-blue-400/20">
                                 {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
                               </div>
-                              <div>
-                                <p className="text-white font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{user.name || "No Name"}</p>
-                                <p className="text-gray-400 text-sm">{user.email}</p>
+                              <div className="min-w-0">
+                                <p className="text-white font-semibold text-xs md:text-base truncate">{user.name || "No Name"}</p>
+                                <p className="text-gray-400 text-[10px] md:text-sm truncate">{user.email}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="p-4">
-                            <span className={`px-4 py-1.5 rounded-full text-xs font-bold capitalize shadow-lg ${
+                          <td className="p-2 md:p-4 hidden md:table-cell">
+                            <span className={`px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold capitalize shadow-lg ${
                               user.role === "trainer" ? "bg-gradient-to-r from-blue-500/30 via-blue-600/20 to-blue-500/10 text-blue-300 border border-blue-400/40 shadow-blue-500/20" :
                               "bg-gradient-to-r from-purple-500/30 via-purple-600/20 to-purple-500/10 text-purple-300 border border-purple-400/40 shadow-purple-500/20"
                             }`}>
                               {user.role || "user"}
                             </span>
                           </td>
-                          <td className="p-4">
-                            <span className={`px-4 py-1.5 rounded-full text-xs font-bold shadow-lg ${
+                          <td className="p-2 md:p-4">
+                            <span className={`px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg whitespace-nowrap ${
                               (user.role === "trainer" || user.role === "superadmin" || user.membership === "Pro")
                                 ? "bg-gradient-to-r from-yellow-500/40 via-amber-500/30 to-orange-500/20 text-yellow-300 border border-yellow-400/50 shadow-yellow-500/30"
                                 : "bg-gradient-to-r from-slate-700/50 to-slate-800/30 text-gray-400 border border-slate-600/50"
@@ -788,30 +763,21 @@ export default function UsersPage() {
                               {(user.role === "trainer" || user.role === "superadmin") ? "Pro" : (user.membership || "Free")}
                             </span>
                           </td>
-                          <td className="p-4">
-                            <span className={`px-4 py-1.5 rounded-full text-xs font-bold shadow-lg ${
-                              (user.role === "trainer" || user.role === "superadmin" || user.isActive)
-                                ? "bg-gradient-to-r from-green-500/30 via-green-600/20 to-green-500/10 text-green-300 border border-green-400/40 shadow-green-500/20"
-                                : "bg-gradient-to-r from-red-500/30 via-red-600/20 to-red-500/10 text-red-300 border border-red-400/40 shadow-red-500/20"
-                            }`}>
-                              {(user.role === "trainer" || user.role === "superadmin" || user.isActive) ? "Active" : "Inactive"}
-                            </span>
-                          </td>
-                          <td className="p-4">
+                          <td className="p-2 md:p-4 hidden lg:table-cell">
                             {(() => {
                               if (user.membership !== "Pro" && user.role !== "trainer" && user.role !== "superadmin") {
-                                return <span className="text-gray-500 text-sm">-</span>
+                                return <span className="text-gray-500 text-xs md:text-sm">-</span>
                               }
                               
                               const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
                               if (!expiryDate || isNaN(expiryDate.getTime())) {
-                                return <span className="text-gray-500 text-sm">∞</span>
+                                return <span className="text-gray-500 text-xs md:text-sm">∞</span>
                               }
                               
                               const daysLeft = Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24))
                               
                               if (isNaN(daysLeft)) {
-                                return <span className="text-gray-500 text-sm">∞</span>
+                                return <span className="text-gray-500 text-xs md:text-sm">∞</span>
                               }
                               
                               const isExpired = daysLeft <= 0
@@ -819,7 +785,7 @@ export default function UsersPage() {
                               
                               return (
                                 <div className="flex items-center gap-2">
-                                  <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                  <span className={`px-2 md:px-3 py-1 rounded-full text-[10px] md:text-xs font-bold ${
                                     isExpired 
                                       ? 'bg-red-500/20 text-red-300 border border-red-500/40'
                                       : isExpiringSoon
@@ -832,11 +798,8 @@ export default function UsersPage() {
                               )
                             })()}
                           </td>
-                          <td className="p-4 text-gray-400 text-sm font-medium">
-                            {user.joinDate ? new Date(user.joinDate).toLocaleDateString() : "-"}
-                          </td>
-                          <td className="p-4 text-right">
-                            <div className="flex items-center justify-end gap-2">
+                          <td className="p-2 md:p-4 text-right">
+                            <div className="flex items-center justify-end gap-1 md:gap-2">
                               <Button 
                                 variant="outline" 
                                 size="sm" 
@@ -845,7 +808,7 @@ export default function UsersPage() {
                                   setUserToEdit(user)
                                   setEditDialogOpen(true)
                                 }}
-                                className="border-slate-700 text-gray-300 hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-cyan-600/10 hover:border-blue-500/50 hover:text-blue-300 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300"
+                                className="border-slate-700 text-gray-300 hover:bg-gradient-to-r hover:from-blue-600/20 hover:to-cyan-600/10 hover:border-blue-500/50 hover:text-blue-300 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 text-[10px] md:text-sm px-2 md:px-4"
                               >
                                 Edit
                               </Button>
@@ -857,7 +820,7 @@ export default function UsersPage() {
                                   setUserToDelete(user)
                                   setDeleteDialogOpen(true)
                                 }}
-                                className="border-red-700/50 text-red-400 hover:bg-gradient-to-r hover:from-red-600/30 hover:to-red-700/20 hover:border-red-500/60 hover:text-red-300 hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+                                className="border-red-700/50 text-red-400 hover:bg-gradient-to-r hover:from-red-600/30 hover:to-red-700/20 hover:border-red-500/60 hover:text-red-300 hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300 text-[10px] md:text-sm px-2 md:px-4"
                               >
                                 Delete
                               </Button>
@@ -867,6 +830,7 @@ export default function UsersPage() {
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -891,15 +855,15 @@ export default function UsersPage() {
                   <p className="text-gray-400">{t("loading")}...</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
+                <div className="overflow-x-auto -mx-4 md:mx-0">
+                  <div className="inline-block min-w-full align-middle">
+                    <table className="min-w-full">
                     <thead>
                       <tr className="border-b border-slate-800/50">
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">User</th>
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Current Plan</th>
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Expires On</th>
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Status</th>
-                        <th className="text-right p-4 text-gray-400 font-semibold text-sm">Actions</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">User</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap hidden md:table-cell">Plan</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Status</th>
+                        <th className="text-right p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -913,52 +877,34 @@ export default function UsersPage() {
 
                           return (
                             <tr key={user.id || user.uid} className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 transition-all duration-300">
-                              <td className="p-4">
-                                <div className="flex items-center gap-3">
-                                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-green-500 via-emerald-500 to-green-600 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-green-500/30 ring-2 ring-green-400/20">
+                              <td className="p-2 md:p-4">
+                                <div className="flex items-center gap-2 md:gap-3">
+                                  <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-green-500 via-emerald-500 to-green-600 flex items-center justify-center text-white font-bold text-xs md:text-base shadow-lg shadow-green-500/30 ring-1 md:ring-2 ring-green-400/20">
                                     {user.name?.charAt(0) || user.email?.charAt(0) || "U"}
                                   </div>
-                                  <div>
-                                    <p className="text-white font-semibold">{user.name || "No Name"}</p>
-                                    <p className="text-gray-400 text-sm">{user.email}</p>
+                                  <div className="min-w-0">
+                                    <p className="text-white font-semibold text-xs md:text-base truncate">{user.name || "No Name"}</p>
+                                    <p className="text-gray-400 text-[10px] md:text-sm truncate">{user.email}</p>
                                   </div>
                                 </div>
                               </td>
-                              <td className="p-4">
-                                <span className="px-4 py-1.5 rounded-full text-xs font-bold shadow-lg bg-gradient-to-r from-gray-500/40 via-slate-500/30 to-gray-500/20 text-gray-300 border border-gray-400/50 shadow-gray-500/30">
+                              <td className="p-2 md:p-4 hidden md:table-cell">
+                                <span className="px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg bg-gradient-to-r from-gray-500/40 via-slate-500/30 to-gray-500/20 text-gray-300 border border-gray-400/50 shadow-gray-500/30 whitespace-nowrap">
                                   FREE
                                 </span>
                               </td>
-                              <td className="p-4">
-                                {expiryDate ? (
-                                  <div>
-                                    <p className="text-white font-semibold text-sm">
-                                      {expiryDate.toLocaleDateString()}
-                                    </p>
-                                    <p className={`text-xs mt-1 ${
-                                      isExpired ? 'text-red-400' : 
-                                      isExpiringSoon ? 'text-orange-400' : 
-                                      'text-gray-400'
-                                    }`}>
-                                      {isExpired ? 'Expired' : isExpiringSoon ? `${daysLeft} days left` : `${daysLeft} days left`}
-                                    </p>
-                                  </div>
-                                ) : (
-                                  <span className="text-gray-500">-</span>
-                                )}
-                              </td>
-                              <td className="p-4">
-                                <span className={`px-4 py-1.5 rounded-full text-xs font-bold shadow-lg ${
+                              <td className="p-2 md:p-2 md:p-4">
+                                <span className={`px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg whitespace-nowrap ${
                                   isExpired
                                     ? "bg-gradient-to-r from-red-500/30 via-red-600/20 to-red-500/10 text-red-300 border border-red-400/40 shadow-red-500/20"
                                     : isExpiringSoon
                                     ? "bg-gradient-to-r from-orange-500/30 via-orange-600/20 to-orange-500/10 text-orange-300 border border-orange-400/40 shadow-orange-500/20"
                                     : "bg-gradient-to-r from-green-500/30 via-green-600/20 to-green-500/10 text-green-300 border border-green-400/40 shadow-green-500/20"
                                 }`}>
-                                  {isExpired ? 'Expired' : isExpiringSoon ? 'Expiring Soon' : 'Active'}
+                                  {isExpired ? 'Expired' : isExpiringSoon ? 'Soon' : 'Active'}
                                 </span>
                               </td>
-                              <td className="p-4 text-right">
+                              <td className="p-2 md:p-4 text-right">
                                 <Button
                                   variant="outline"
                                   size="sm"
@@ -967,9 +913,9 @@ export default function UsersPage() {
                                     setProFormData({ amount: '', duration: '1' })
                                     setShowProDialog(true)
                                   }}
-                                  className="border-green-700/50 text-green-400 hover:bg-gradient-to-r hover:from-green-600/30 hover:to-green-700/20 hover:border-green-500/60 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300"
+                                  className="border-green-700/50 text-green-400 hover:bg-gradient-to-r hover:from-green-600/30 hover:to-green-700/20 hover:border-green-500/60 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 text-[10px] md:text-sm px-2 md:px-4"
                                 >
-                                  <Activity className="w-4 h-4 mr-1" />
+                                  <Activity className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                                   نوێکردنەوە
                                 </Button>
                               </td>
@@ -978,6 +924,7 @@ export default function UsersPage() {
                         })}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               )}
             </CardContent>
@@ -1146,38 +1093,38 @@ export default function UsersPage() {
                   <p className="text-gray-500 text-sm">{t("proRequestsDescription")}</p>
                 </div>
               ) : (
-                <div className="overflow-x-auto">
-                  <table className="w-full">
+                <div className="overflow-x-auto -mx-4 md:mx-0">
+                  <div className="inline-block min-w-full align-middle">
+                    <table className="min-w-full">
                     <thead>
                       <tr className="border-b border-slate-800/50">
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">User</th>
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Requested Duration</th>
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Status</th>
-                        <th className="text-left p-4 text-gray-400 font-semibold text-sm">Date</th>
-                        <th className="text-right p-4 text-gray-400 font-semibold text-sm">Actions</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">User</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap hidden lg:table-cell">Duration</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Status</th>
+                        <th className="text-right p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {proRequests.map((request) => (
-                        <tr key={request.id} className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 hover:scale-[1.01] transition-all duration-300">
-                          <td className="p-4">
-                            <div className="flex items-center gap-3">
-                              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-base shadow-lg shadow-yellow-500/30 ring-2 ring-yellow-400/20">
+                        <tr key={request.id} className="border-b border-slate-800/50 hover:bg-gradient-to-r hover:from-slate-800/40 hover:via-slate-800/30 hover:to-slate-800/20 transition-all duration-300">
+                          <td className="p-2 md:p-4">
+                            <div className="flex items-center gap-2 md:gap-3">
+                              <div className="w-8 h-8 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-yellow-500 via-amber-500 to-orange-600 flex items-center justify-center text-white font-bold text-xs md:text-base shadow-lg shadow-yellow-500/30 ring-1 md:ring-2 ring-yellow-400/20">
                                 {request.userName?.charAt(0) || request.userEmail?.charAt(0) || "U"}
                               </div>
-                              <div>
-                                <p className="text-white font-semibold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">{request.userName || "No Name"}</p>
-                                <p className="text-gray-400 text-sm">{request.userEmail}</p>
+                              <div className="min-w-0">
+                                <p className="text-white font-semibold text-xs md:text-base truncate">{request.userName || "No Name"}</p>
+                                <p className="text-gray-400 text-[10px] md:text-sm truncate">{request.userEmail}</p>
                               </div>
                             </div>
                           </td>
-                          <td className="p-4">
-                            <span className="px-4 py-1.5 rounded-full text-xs font-bold shadow-lg bg-gradient-to-r from-cyan-500/30 via-cyan-600/20 to-cyan-500/10 text-cyan-300 border border-cyan-400/40 shadow-cyan-500/20">
+                          <td className="p-2 md:p-4 hidden lg:table-cell">
+                            <span className="px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg bg-gradient-to-r from-cyan-500/30 via-cyan-600/20 to-cyan-500/10 text-cyan-300 border border-cyan-400/40 shadow-cyan-500/20 whitespace-nowrap">
                               {request.duration ? `${Math.floor(request.duration / 30)} ${Math.floor(request.duration / 30) === 1 ? 'Month' : 'Months'}` : `${request.requestedDuration || 30} Days`}
                             </span>
                           </td>
-                          <td className="p-4">
-                            <span className={`px-4 py-1.5 rounded-full text-xs font-bold shadow-lg ${
+                          <td className="p-2 md:p-4">
+                            <span className={`px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg whitespace-nowrap ${
                               request.status === 'pending' 
                                 ? "bg-gradient-to-r from-yellow-500/30 via-yellow-600/20 to-yellow-500/10 text-yellow-300 border border-yellow-400/40 shadow-yellow-500/20"
                                 : request.status === 'approved'
@@ -1187,12 +1134,9 @@ export default function UsersPage() {
                               {request.status || 'pending'}
                             </span>
                           </td>
-                          <td className="p-4 text-gray-400 text-sm font-medium">
-                            {request.createdAt ? new Date(request.createdAt).toLocaleDateString() : "-"}
-                          </td>
-                          <td className="p-4 text-right">
+                          <td className="p-2 md:p-4 text-right">
                             {request.status === 'pending' && (
-                              <div className="flex items-center justify-end gap-2">
+                              <div className="flex items-center justify-end gap-1 md:gap-2">
                                 <Button 
                                   variant="outline" 
                                   size="sm"
@@ -1201,7 +1145,7 @@ export default function UsersPage() {
                                     setProFormData({ amount: '', duration: '1' })
                                     setShowProDialog(true)
                                   }}
-                                  className="border-green-700/50 text-green-400 hover:bg-gradient-to-r hover:from-green-600/30 hover:to-green-700/20 hover:border-green-500/60 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300"
+                                  className="border-green-700/50 text-green-400 hover:bg-gradient-to-r hover:from-green-600/30 hover:to-green-700/20 hover:border-green-500/60 hover:text-green-300 hover:shadow-lg hover:shadow-green-500/30 transition-all duration-300 text-[10px] md:text-sm px-2 md:px-4"
                                 >
                                   پەسەندکردن
                                 </Button>
@@ -1226,20 +1170,21 @@ export default function UsersPage() {
                                       console.error('Error rejecting request:', error)
                                     }
                                   }}
-                                  className="border-red-700/50 text-red-400 hover:bg-gradient-to-r hover:from-red-600/30 hover:to-red-700/20 hover:border-red-500/60 hover:text-red-300 hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300"
+                                  className="border-red-700/50 text-red-400 hover:bg-gradient-to-r hover:from-red-600/30 hover:to-red-700/20 hover:border-red-500/60 hover:text-red-300 hover:shadow-lg hover:shadow-red-500/30 transition-all duration-300 text-[10px] md:text-sm px-2 md:px-4"
                                 >
                                   Reject
                                 </Button>
                               </div>
                             )}
                             {request.status !== 'pending' && (
-                              <span className="text-gray-500 text-sm">Processed</span>
+                              <span className="text-gray-500 text-xs md:text-sm">Processed</span>
                             )}
                           </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                  </div>
                 </div>
               )}
             </CardContent>

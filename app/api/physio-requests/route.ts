@@ -34,10 +34,6 @@ export async function GET(request: NextRequest) {
 
     console.log("🔍 Fetching physio requests - userId:", userId, "physioId:", physioId)
 
-    if (!userId && !physioId) {
-      return NextResponse.json({ error: "Missing userId or physioId parameter" }, { status: 400 })
-    }
-
     let snapshot
     if (physioId) {
       // Get all requests for this physiotherapist
@@ -46,13 +42,19 @@ export async function GET(request: NextRequest) {
         .where('physioId', '==', physioId)
         .get()
       console.log("📊 Found", snapshot.size, "requests for physio:", physioId)
-    } else {
+    } else if (userId) {
       // Get all requests from this user
       snapshot = await adminDb
         .collection('physio-requests')
         .where('userId', '==', userId)
         .get()
       console.log("📊 Found", snapshot.size, "requests for user:", userId)
+    } else {
+      // Get all requests (for admin dashboard)
+      snapshot = await adminDb
+        .collection('physio-requests')
+        .get()
+      console.log("📊 Found", snapshot.size, "total requests")
     }
 
     const requests = snapshot.docs.map(doc => ({ 

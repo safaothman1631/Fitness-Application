@@ -22,6 +22,9 @@ import {
   Eye,
   Bone,
   Utensils,
+  ClipboardList,
+  UserPlus,
+  FileText,
 } from "lucide-react"
 import Logo from "./logo"
 import { Button } from "./ui/button"
@@ -38,7 +41,7 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
   const router = useRouter()
   const { t } = useLanguage()
   const cfg = getRoleConfig((role as AppRole) || "user")
-  const iconMap = { Home, Dumbbell, TrendingUp, Users, User, Settings, Bell, HelpCircle, Wrench, Zap, Eye, Bone, Utensils } as const
+  const iconMap = { Home, Dumbbell, TrendingUp, Users, User, Settings, Bell, HelpCircle, Wrench, Zap, Eye, Bone, Utensils, ClipboardList, UserPlus, FileText } as const
   const navigationItems = cfg.main.map((i) => ({ name: t(i.key as any), href: i.path, icon: iconMap[i.icon as keyof typeof iconMap] }))
   const menuItems = cfg.menu.map((i) => ({ name: t(i.key as any), href: i.path, icon: iconMap[i.icon as keyof typeof iconMap] }))
 
@@ -100,27 +103,27 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
       </aside>
 
       {/* Mobile Bottom Navigation */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-white/10">
-        <div className="flex items-center justify-evenly px-2 py-3">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 safe-area-bottom">
+        <div className="grid grid-cols-5 gap-0.5 px-1 py-2.5">
           {navigationItems.slice(0, 4).map((item) => {
             const Icon = item.icon
             return (
               <Link key={item.href} href={item.href}>
-                <div className="flex flex-col items-center gap-1 px-2 min-w-[64px]">
+                <div className="flex flex-col items-center justify-center gap-1 px-1 py-1.5">
                   <div className="p-2 rounded-xl transition-colors text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/20">
                     <Icon className="w-5 h-5" />
                   </div>
-                  <span className="text-[10px] font-medium text-center text-slate-400 leading-tight truncate w-full">{item.name}</span>
+                  <span className="text-[9px] font-medium text-center text-slate-400 leading-tight line-clamp-1 max-w-[56px]">{item.name}</span>
                 </div>
               </Link>
             )
           })}
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <div className="flex flex-col items-center gap-1 px-2 min-w-[64px]">
+            <div className="flex flex-col items-center justify-center gap-1 px-1 py-1.5">
               <div className="p-2 rounded-xl text-gray-400 transition-colors hover:text-cyan-400 hover:bg-cyan-500/20">
                 <Menu className="w-5 h-5" />
               </div>
-              <span className="text-[10px] font-medium text-center text-gray-400 leading-tight">{t("more")}</span>
+              <span className="text-[9px] font-medium text-center text-gray-400 leading-tight line-clamp-1 max-w-[56px]">{t("more")}</span>
             </div>
           </button>
         </div>

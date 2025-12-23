@@ -77,12 +77,12 @@ export default function ActivityLogsPage() {
 
 	const getRoleColor = (role: string) => {
 		switch (role) {
-			case "physiotherapist":
-				return "bg-cyan-500/20 text-cyan-400"
 			case "admin":
 				return "bg-orange-500/20 text-orange-400"
 			case "superadmin":
 				return "bg-red-500/20 text-red-400"
+			case "trainer":
+				return "bg-purple-500/20 text-purple-400"
 			default:
 				return "bg-gray-500/20 text-gray-400"
 		}

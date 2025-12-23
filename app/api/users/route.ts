@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { adminAuth, adminDb } from "@/lib/firebase-admin"
 import { requireRole, isAdmin } from "@/lib/api-auth"
 import { CreateUserSchema, validateRequestSafe, sanitizeObject } from "@/lib/validation"
+import { logError, logSuccess, logWarning } from "@/lib/error-logger"
 
 export const dynamic = 'force-dynamic'
 
@@ -240,6 +241,7 @@ export async function PUT(request: NextRequest) {
         subscriptionDuration: durationMonths,
         isActive: true,
         updatedAt: new Date(),
+        subscriptionUpdatedAt: new Date(), // Track subscription renewals specifically
       })
 
       // Record expense if amount is provided
@@ -356,6 +358,15 @@ export async function DELETE(request: NextRequest) {
 
     console.log("🗑️ Deleting user:", userId)
 
+    // Get user data before deletion to log the activity
+    let userData: any = null
+    try {
+      const userDoc = await adminDb.collection("users").doc(userId).get()
+      userData = userDoc.data()
+    } catch (err) {
+      console.error("Error fetching user data:", err)
+    }
+
     try {
       // Delete from Firebase Authentication
       await adminAuth.deleteUser(userId)
@@ -371,6 +382,25 @@ export async function DELETE(request: NextRequest) {
       // Delete from Firestore
       await adminDb.collection("users").doc(userId).delete()
       console.log("✅ User deleted from Firestore")
+      
+      // Log the deletion activity if we have user data
+      if (userData) {
+        await adminDb.collection("activityLog").add({
+          action: 'User deleted',
+          user: userData.name || userData.email || 'Unknown',
+          userId: userId,
+          deletedAt: new Date(),
+          timestamp: new Date().getTime(),
+          type: 'delete',
+          icon: 'Trash2',
+          metadata: {
+            role: userData.role,
+            membership: userData.membership,
+            email: userData.email
+          }
+        })
+        console.log("✅ Activity logged")
+      }
     } catch (firestoreError) {
       console.error("❌ Firestore deletion error:", firestoreError)
       throw firestoreError

@@ -10,11 +10,14 @@ import { Save, Lock, Bell, Eye, Shield } from "lucide-react"
 import { auth } from "@/lib/firebase"
 import { onAuthStateChanged } from "firebase/auth"
 import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export default function TrainerSettings() {
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
   
   const [notificationSettings, setNotificationSettings] = useState({
     traineeMessages: true,
@@ -45,6 +48,16 @@ export default function TrainerSettings() {
             const uid = currentUser?.id || currentUser?.uid || user.uid
             setUserId(uid)
 
+            // Fetch user data including 2FA status
+            const token = await user.getIdToken()
+            const userDataResponse = await fetch(`/api/users/${uid}`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            })
+            if (userDataResponse.ok) {
+              const userData = await userDataResponse.json()
+              setTwoFactorEnabled(userData.twoFactorEnabled ?? false)
+            }
+
             const settingsResponse = await fetch(`/api/settings?userId=${uid}`)
             if (settingsResponse.ok) {
               const settings = await settingsResponse.json()
@@ -72,6 +85,36 @@ export default function TrainerSettings() {
     })
     return () => unsubscribe()
   }, [])
+
+  const handleToggle2FA = async (enabled: boolean) => {
+    if (enabled) {
+      router.push('/trainer/settings/two-factor')
+    } else {
+      if (confirm('Are you sure you want to disable Two-Factor Authentication?')) {
+        try {
+          const token = await auth.currentUser?.getIdToken()
+          const response = await fetch(`/api/users/${userId}`, {
+            method: 'PATCH',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ twoFactorEnabled: false })
+          })
+          if (response.ok) {
+            setTwoFactorEnabled(false)
+            toast.success('Two-Factor Authentication disabled!')
+          } else {
+            const errorData = await response.json()
+            toast.error(`Failed to disable 2FA: ${errorData.error || 'Unknown error'}`)
+          }
+        } catch (error) {
+          console.error('Error disabling 2FA:', error)
+          toast.error('Error disabling 2FA')
+        }
+      }
+    }
+  }
 
   const handleSaveNotifications = async () => {
     if (!userId) return
@@ -186,6 +229,32 @@ export default function TrainerSettings() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
+            {/* 2FA Toggle */}
+            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-rose-500/20 flex items-center justify-center">
+                  <Lock className="w-6 h-6 text-rose-400" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Two-Factor Authentication</p>
+                  <p className="text-gray-400 text-sm">Add an extra layer of security</p>
+                  {twoFactorEnabled && (
+                    <p className="text-green-400 text-xs mt-1">✓ Enabled</p>
+                  )}
+                </div>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={twoFactorEnabled}
+                  onChange={(e) => handleToggle2FA(e.target.checked)}
+                  className="sr-only peer" 
+                />
+                <div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-emerald-600"></div>
+              </label>
+            </div>
+
+            {/* Password Change */}
             <div>
               <Label className="text-gray-300 mb-2 block">Current Password</Label>
               <Input 

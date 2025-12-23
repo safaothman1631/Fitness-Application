@@ -341,6 +341,8 @@ export default function DatabasePage() {
               </CardContent>
             </Card>
 
+            {/* Maintenance Card - Hidden */}
+            {false && (
             <Card className="bg-slate-900/50 border-slate-800">
               <CardHeader>
                 <CardTitle className="text-white flex items-center gap-2">
@@ -384,6 +386,7 @@ export default function DatabasePage() {
                 </div>
               </CardContent>
             </Card>
+            )}
           </div>
         </div>
       </SidebarSleek>

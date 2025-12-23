@@ -11,9 +11,11 @@ import { Settings, Lock, Shield, Bell, Monitor, Palette, Globe, Zap, Save, Downl
 import { useState, useEffect } from "react"
 import { auth } from "@/lib/firebase"
 import { onAuthStateChanged } from "firebase/auth"
+import { useRouter } from "next/navigation"
 
 export default function SuperAdminSettings() {
   const { t } = useLanguage()
+  const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [userId, setUserId] = useState<string | null>(null)
@@ -33,12 +35,41 @@ export default function SuperAdminSettings() {
     return () => unsubscribe()
   }, [])
 
+  // Refresh settings when page becomes visible (e.g., returning from 2FA setup)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && userId) {
+        fetchSettings(userId)
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    window.addEventListener('focus', () => {
+      if (userId) fetchSettings(userId)
+    })
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+      window.removeEventListener('focus', () => {})
+    }
+  }, [userId])
+
   const fetchSettings = async (uid: string) => {
     setLoading(true)
     try {
-      const response = await fetch(`/api/settings?userId=${uid}`)
+      const token = await auth.currentUser?.getIdToken()
+      console.log('🔑 Fetching settings for UID:', uid)
+      console.log('👤 Current user email:', auth.currentUser?.email)
+      
+      const response = await fetch(`/api/users/${uid}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
       if (response.ok) {
         const data = await response.json()
+        console.log('📊 Settings data fetched:', data)
+        console.log('🔐 twoFactorEnabled:', data.twoFactorEnabled)
         if (data) {
           setNotificationsEnabled(data.notificationsEnabled ?? true)
           setDarkMode(data.darkMode ?? true)
@@ -46,6 +77,8 @@ export default function SuperAdminSettings() {
           setEmailNotifications(data.emailNotifications ?? true)
           setLanguage(data.language || 'en')
         }
+      } else {
+        console.error('Failed to fetch settings:', response.status, response.statusText)
       }
     } catch (error) {
       console.error('Error fetching settings:', error)
@@ -54,14 +87,61 @@ export default function SuperAdminSettings() {
     }
   }
 
+  const handleToggle2FA = async (enabled: boolean) => {
+    if (enabled) {
+      // Navigate to 2FA setup page
+      router.push('/superadmin/settings/two-factor')
+    } else {
+      // Disable 2FA
+      if (confirm('Are you sure you want to disable Two-Factor Authentication?')) {
+        try {
+          console.log('🔴 Disabling 2FA for user:', userId)
+          const token = await auth.currentUser?.getIdToken()
+          console.log('🔑 Token obtained')
+          
+          const response = await fetch(`/api/users/${userId}`, {
+            method: 'PATCH',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({
+              twoFactorEnabled: false
+            })
+          })
+
+          console.log('📡 Response status:', response.status)
+          
+          if (response.ok) {
+            const data = await response.json()
+            console.log('✅ 2FA disabled successfully:', data)
+            setTwoFactorEnabled(false)
+            alert('✅ Two-Factor Authentication disabled!')
+          } else {
+            const errorData = await response.json()
+            console.error('❌ Failed to disable 2FA:', response.status, errorData)
+            alert(`❌ Failed to disable 2FA: ${errorData.error || 'Unknown error'}`)
+          }
+        } catch (error) {
+          console.error('❌ Error disabling 2FA:', error)
+          alert('❌ Error disabling 2FA')
+        }
+      }
+    }
+  }
+
   const handleSaveSettings = async () => {
     if (!userId) return
     
     setSaving(true)
     try {
+      const token = await auth.currentUser?.getIdToken()
       const response = await fetch('/api/settings', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
         body: JSON.stringify({
           userId,
           notificationsEnabled,
@@ -132,13 +212,16 @@ export default function SuperAdminSettings() {
                   <div>
                     <p className="text-white font-semibold">{t("twoFactorAuth")}</p>
                     <p className="text-gray-400 text-sm">{t("addExtraLayer")}</p>
+                    {twoFactorEnabled && (
+                      <p className="text-green-400 text-xs mt-1">✓ Enabled</p>
+                    )}
                   </div>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input 
                     type="checkbox" 
                     checked={twoFactorEnabled}
-                    onChange={(e) => setTwoFactorEnabled(e.target.checked)}
+                    onChange={(e) => handleToggle2FA(e.target.checked)}
                     className="sr-only peer" 
                   />
                   <div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-emerald-600"></div>

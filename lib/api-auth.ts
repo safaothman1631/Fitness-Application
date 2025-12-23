@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { adminAuth } from '@/lib/firebase-admin'
+import { adminAuth, adminDb } from '@/lib/firebase-admin'
 import type { DecodedIdToken } from 'firebase-admin/auth'
 import { logAuditEvent, extractClientInfo } from '@/lib/audit-logger'
 
@@ -218,6 +218,31 @@ export async function getUserRole(userId: string): Promise<string | null> {
 export function isOwner(user: DecodedIdToken): boolean {
   const role = user.role || (user as any).customClaims?.role
   return role === 'owner'
+}
+
+/**
+ * Check if user is admin (async version that checks Firestore)
+ */
+export async function isAdminAsync(user: DecodedIdToken): Promise<boolean> {
+  // First check custom claims
+  const claimsRole = user.role || (user as any).customClaims?.role
+  if (claimsRole === 'admin' || claimsRole === 'superadmin' || claimsRole === 'owner') {
+    return true
+  }
+  
+  // Fallback: check Firestore
+  try {
+    const userDoc = await adminDb.collection('users').doc(user.uid).get()
+    if (userDoc.exists) {
+      const userData = userDoc.data()
+      const role = userData?.role
+      return role === 'admin' || role === 'superadmin' || role === 'owner'
+    }
+  } catch (error) {
+    console.error('Error checking user role from Firestore:', error)
+  }
+  
+  return false
 }
 
 /**

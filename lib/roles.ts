@@ -72,7 +72,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
   superadmin: {
     main: [
       { key: "dashboard", path: "/superadmin", icon: "Home" },
-      { key: "registrationRequests", path: "/superadmin/registration-requests", icon: "UserPlus" },
+      { key: "registrationRequests", path: "/superadmin/registration-requests", icon: "FileText" },
       { key: "systemSettings", path: "/superadmin", icon: "Settings" },
       { key: "analytics", path: "/analytics", icon: "TrendingUp" },
     ],

@@ -56,6 +56,10 @@ export async function GET(request: NextRequest) {
       doc => doc.data().status === 'pending'
     ).length
 
+    // Get activity logs (deletions and other tracked activities)
+    const activityLogSnapshot = await adminDb.collection('activityLog').get()
+    const activityLogs = activityLogSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+
     // Calculate user growth by month (last 6 months)
     const now = new Date()
     const sixMonthsAgo = new Date()
@@ -84,19 +88,113 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    // Recent activity (last 10 users)
-    const recentUsers = users
-      .sort((a: any, b: any) => {
-        const aDate = a.createdAt?.toDate?.() || new Date(0)
-        const bDate = b.createdAt?.toDate?.() || new Date(0)
-        return bDate.getTime() - aDate.getTime()
-      })
-      .slice(0, 10)
-      .map((user: any) => ({
-        action: 'New user registered',
-        user: user.name || user.email || 'Unknown',
-        time: user.createdAt?.toDate?.() || new Date(),
-        type: 'success'
+    // Recent activity - Collect all activities from different sources
+    const allActivities: any[] = []
+
+    // 1. New user registrations
+    users.forEach((user: any) => {
+      if (user.createdAt?.toDate) {
+        allActivities.push({
+          action: 'New user registered',
+          user: user.name || user.email || 'Unknown',
+          time: user.createdAt.toDate(),
+          timestamp: user.createdAt.toDate().getTime(),
+          type: 'create',
+          icon: 'UserPlus'
+        })
+      }
+    })
+
+    // 2. Pro requests
+    const proRequests = proRequestsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    proRequests.forEach((req: any) => {
+      if (req.createdAt?.toDate) {
+        allActivities.push({
+          action: `Pro membership request - ${req.status || 'pending'}`,
+          user: req.userName || req.userEmail || 'Unknown',
+          time: req.createdAt.toDate(),
+          timestamp: req.createdAt.toDate().getTime(),
+          type: req.status === 'approved' ? 'success' : req.status === 'rejected' ? 'error' : 'pending',
+          icon: 'Crown'
+        })
+      }
+    })
+
+    // 3. User updates (check for updatedAt field)
+    users.forEach((user: any) => {
+      if (user.updatedAt?.toDate) {
+        const updatedDate = user.updatedAt.toDate()
+        const createdDate = user.createdAt?.toDate?.() || new Date(0)
+        // Only include if updated after creation (actual edit)
+        if (updatedDate.getTime() > createdDate.getTime() + 60000) { // 1 minute buffer
+          allActivities.push({
+            action: 'User profile updated',
+            user: user.name || user.email || 'Unknown',
+            time: updatedDate,
+            timestamp: updatedDate.getTime(),
+            type: 'edit',
+            icon: 'Edit'
+          })
+        }
+      }
+    })
+
+    // 4. Membership renewals (users with recent subscription updates)
+    users.forEach((user: any) => {
+      if (user.subscriptionUpdatedAt?.toDate) {
+        allActivities.push({
+          action: `Membership renewed - ${user.membership || 'Free'}`,
+          user: user.name || user.email || 'Unknown',
+          time: user.subscriptionUpdatedAt.toDate(),
+          timestamp: user.subscriptionUpdatedAt.toDate().getTime(),
+          type: 'success',
+          icon: 'RefreshCw'
+        })
+      }
+    })
+
+    // 5. Workout creations
+    const workouts = workoutsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+    workouts.forEach((workout: any) => {
+      if (workout.createdAt?.toDate) {
+        allActivities.push({
+          action: `New workout created: ${workout.name || 'Untitled'}`,
+          user: workout.createdBy || 'System',
+          time: workout.createdAt.toDate(),
+          timestamp: workout.createdAt.toDate().getTime(),
+          type: 'create',
+          icon: 'Dumbbell'
+        })
+      }
+    })
+
+    // 6. Activity logs (deletions, etc.)
+    activityLogs.forEach((log: any) => {
+      if (log.deletedAt?.toDate || log.timestamp) {
+        const logTime = log.deletedAt?.toDate ? log.deletedAt.toDate() : new Date(log.timestamp)
+        allActivities.push({
+          action: log.action || 'Activity',
+          user: log.user || 'Unknown',
+          time: logTime,
+          timestamp: logTime.getTime(),
+          type: log.type || 'info',
+          icon: log.icon || 'Activity'
+        })
+      }
+    })
+
+    // Sort by timestamp (most recent first) and take last 20
+    const recentActivity = allActivities
+      .sort((a, b) => b.timestamp - a.timestamp)
+      .slice(0, 20)
+      .map(({ timestamp, ...activity }) => ({
+        ...activity,
+        time: new Date(timestamp).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
       }))
 
     console.log("✅ Analytics data fetched successfully")
@@ -113,7 +211,7 @@ export async function GET(request: NextRequest) {
       },
       usersByRole,
       monthlyGrowth,
-      recentActivity: recentUsers
+      recentActivity
     })
   } catch (error) {
     console.error("❌ Error fetching analytics:", error)

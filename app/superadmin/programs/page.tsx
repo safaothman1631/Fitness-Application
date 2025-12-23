@@ -296,7 +296,7 @@ export default function ProgramsPage() {
             const role = (u.role || 'user').toLowerCase()
             const membership = (u.membership || 'Free').toLowerCase()
             const subStatus = (u.subscriptionStatus || 'inactive').toLowerCase()
-            const isAdminRole = role === 'superadmin' || role === 'physiotherapist' || role === 'trainer'
+            const isAdminRole = role === 'superadmin' || role === 'trainer'
             const isPro = membership === 'pro' || membership === 'premium' || subStatus === 'active'
             return !isAdminRole && isPro
           })
@@ -887,121 +887,149 @@ export default function ProgramsPage() {
   return (
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
-        <div className="space-y-8">
-          {/* Tab Switcher */}
-          <div className="flex gap-4 items-center justify-center">
+        <div className="space-y-6">
+          {/* Enhanced Header with Gradient Background */}
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600/20 via-blue-600/20 to-cyan-600/20 border border-purple-500/30 backdrop-blur-xl">
+            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
+            <div className="relative p-8">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-purple-500/40 ring-4 ring-purple-400/20">
+                    <Target className="w-8 h-8 text-white" />
+                  </div>
+                  <div>
+                    <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-100 to-blue-200 bg-clip-text text-transparent">
+                      {t("programsManagement")}
+                    </h1>
+                    <p className="text-purple-200 text-sm mt-1">{t("createAndManagePrograms")}</p>
+                  </div>
+                </div>
+
+                {/* Mini Stats in Header */}
+                <div className="grid grid-cols-3 gap-3">
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-white">{programs.filter(p => p.type === 'nutrition').length}</div>
+                      <div className="text-[10px] text-green-200 mt-1">Nutrition</div>
+                    </div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-300">{programs.filter(p => p.type === 'workout').length}</div>
+                      <div className="text-[10px] text-blue-200 mt-1">Workout</div>
+                    </div>
+                  </div>
+                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-300">{stats.activeUsers}</div>
+                      <div className="text-[10px] text-purple-200 mt-1">Active</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Modern Tab Switcher */}
+          <div className="flex gap-2 bg-gradient-to-r from-slate-900/50 to-slate-800/30 rounded-2xl p-1 border border-slate-700/50 backdrop-blur-sm">
             <button
               onClick={() => setActiveTab('nutrition')}
-              className={`relative px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-500 ${
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeTab === 'nutrition'
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-2xl shadow-green-500/50 scale-110'
-                  : 'bg-slate-800/50 text-gray-400 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30'
+                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
               }`}
             >
-              <Utensils className="w-6 h-6 inline mr-2" />
-              {t("nutritionPrograms")}
+              <div className="flex items-center justify-center gap-2">
+                <Utensils className="w-5 h-5" />
+                <span>{t("nutritionPrograms")}</span>
+              </div>
             </button>
             <button
               onClick={() => setActiveTab('workout')}
-              className={`relative px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-500 ${
+              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                 activeTab === 'workout'
-                  ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-2xl shadow-blue-500/50 scale-110'
-                  : 'bg-slate-800/50 text-gray-400 hover:bg-slate-800 hover:text-white'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
+                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
               }`}
             >
-              <Dumbbell className="w-6 h-6 inline mr-2" />
-              {t("workoutPrograms")}
+              <div className="flex items-center justify-center gap-2">
+                <Dumbbell className="w-5 h-5" />
+                <span>{t("workoutPrograms")}</span>
+              </div>
             </button>
           </div>
 
           {/* ==================== NUTRITION SECTION ==================== */}
           {activeTab === 'nutrition' && (
             <div className="space-y-6 animate-in fade-in duration-500">
-              {/* Nutrition Header */}
-              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500/20 via-emerald-500/10 to-green-600/5 border-2 border-green-500/50 p-8">
-                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/40 to-emerald-600/20 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-emerald-500/30 to-green-600/10 rounded-full blur-2xl"></div>
-                
-                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
-                  <div className="flex items-center gap-6">
-                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-2xl shadow-green-500/50 rotate-3 hover:rotate-0 transition-transform">
-                      <Utensils className="w-12 h-12 text-white" />
-                    </div>
-                    <div>
-                      <h1 className="text-4xl font-bold text-white mb-2">
-                        <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-green-500 bg-clip-text text-transparent">
-                          {t("nutritionPrograms")}
-                        </span>
-                      </h1>
-                      <p className="text-gray-400 text-lg">{t("createAndManagePrograms")}</p>
-                    </div>
-                  </div>
-                  <Button 
-                    onClick={() => {
-                      resetForm()
-                      setIsDialogOpen(true)
-                    }}
-                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-xl shadow-green-500/30 px-8 py-6 text-lg rounded-2xl"
-                  >
-                    <Plus className="w-6 h-6 mr-2" />
-                    {t("createNewProgram")}
-                  </Button>
-                </div>
+              {/* Create Program Button */}
+              <div className="flex justify-end">
+                <Button 
+                  onClick={() => {
+                    resetForm()
+                    setIsDialogOpen(true)
+                  }}
+                  className="bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 hover:from-green-600 hover:via-emerald-600 hover:to-green-700 text-white shadow-xl shadow-green-500/40 hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 px-6 py-3 rounded-xl"
+                >
+                  <Plus className="w-5 h-5 mr-2" />
+                  <span className="font-semibold">{t("createNewProgram")}</span>
+                </Button>
               </div>
 
               {/* Nutrition Stats */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <Card className="bg-gradient-to-br from-green-500/20 to-emerald-600/10 border-green-500/40 hover:scale-105 transition-transform">
-                  <CardContent className="p-6">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <Card className="bg-gradient-to-br from-green-500/20 via-green-600/10 to-green-500/5 border-green-500/40 hover:border-green-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:scale-105">
+                  <CardContent className="p-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-green-500/30 flex items-center justify-center">
-                        <Apple className="w-8 h-8 text-green-400" />
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+                        <Apple className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">{programs.length}</p>
-                        <p className="text-sm text-gray-400">Total Plans</p>
+                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">{programs.filter(p => p.type === 'nutrition').length}</p>
+                        <p className="text-xs text-green-300 font-medium">Plans</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-orange-500/20 to-amber-600/10 border-orange-500/40 hover:scale-105 transition-transform">
-                  <CardContent className="p-6">
+                <Card className="bg-gradient-to-br from-orange-500/20 via-orange-600/10 to-orange-500/5 border-orange-500/40 hover:border-orange-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20 hover:scale-105">
+                  <CardContent className="p-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-orange-500/30 flex items-center justify-center">
-                        <Pizza className="w-8 h-8 text-orange-400" />
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+                        <Pizza className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">{stats.meals}</p>
-                        <p className="text-sm text-gray-400">{t("meals")}</p>
+                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">{stats.meals}</p>
+                        <p className="text-xs text-orange-300 font-medium">{t("meals")}</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-purple-500/20 to-pink-600/10 border-purple-500/40 hover:scale-105 transition-transform">
-                  <CardContent className="p-6">
+                <Card className="bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-purple-500/5 border-purple-500/40 hover:border-purple-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105">
+                  <CardContent className="p-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-purple-500/30 flex items-center justify-center">
-                        <Coffee className="w-8 h-8 text-purple-400" />
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+                        <Coffee className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">{stats.recipes}</p>
-                        <p className="text-sm text-gray-400">Recipes</p>
+                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-purple-400 to-purple-300 bg-clip-text text-transparent">{stats.recipes}</p>
+                        <p className="text-xs text-purple-300 font-medium">Recipes</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-600/10 border-yellow-500/40 hover:scale-105 transition-transform">
-                  <CardContent className="p-6">
+                <Card className="bg-gradient-to-br from-yellow-500/20 via-yellow-600/10 to-yellow-500/5 border-yellow-500/40 hover:border-yellow-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20 hover:scale-105">
+                  <CardContent className="p-5">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-yellow-500/30 flex items-center justify-center">
-                        <Flame className="w-8 h-8 text-yellow-400" />
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/30">
+                        <Flame className="w-7 h-7 text-white" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white">{stats.avgCalories > 0 ? (stats.avgCalories >= 1000 ? (stats.avgCalories / 1000).toFixed(1) + 'K' : stats.avgCalories) : 0}</p>
-                        <p className="text-sm text-gray-400">Avg Calories</p>
+                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">{stats.avgCalories > 0 ? (stats.avgCalories >= 1000 ? (stats.avgCalories / 1000).toFixed(1) + 'K' : stats.avgCalories) : 0}</p>
+                        <p className="text-xs text-yellow-300 font-medium">Avg Cal</p>
                       </div>
                     </div>
                   </CardContent>
@@ -1009,7 +1037,7 @@ export default function ProgramsPage() {
               </div>
 
               {/* Search Bar - Nutrition */}
-              <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/5 border-green-500/30">
+              <Card className="bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-800/50 border-slate-700/60 backdrop-blur-xl shadow-2xl">
                 <CardContent className="p-4">
                   <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />
