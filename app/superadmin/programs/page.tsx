@@ -17,7 +17,8 @@ import { useState, useEffect } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
 
 export default function ProgramsPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
+  const isRTL = language === 'ar' || language === 'ku'
   const [activeTab, setActiveTab] = useState<'nutrition' | 'workout'>('nutrition')
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -1446,7 +1447,7 @@ export default function ProgramsPage() {
 
         {/* Delete Success Dialog */}
         <Dialog open={showDeleteSuccessDialog} onOpenChange={setShowDeleteSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە سڕایەوە</DialogTitle>
             </DialogHeader>
@@ -1541,7 +1542,7 @@ export default function ProgramsPage() {
 
         {/* Delete Confirmation Dialog */}
         <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-xl" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader className="sr-only">
               <DialogTitle>سڕینەوەی بەرنامە</DialogTitle>
             </DialogHeader>
@@ -1631,11 +1632,14 @@ export default function ProgramsPage() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className={`border-2 text-white max-w-4xl max-h-[90vh] overflow-y-auto transition-all ${
-            activeTab === 'nutrition'
-              ? 'bg-gradient-to-br from-slate-900 via-green-950/20 to-slate-900 border-green-500/40'
-              : 'bg-gradient-to-br from-slate-900 via-blue-950/20 to-slate-900 border-blue-500/40'
-          }`}>
+          <DialogContent 
+            className={`border-2 text-white max-w-4xl max-h-[90vh] overflow-y-auto transition-all ${
+              activeTab === 'nutrition'
+                ? 'bg-gradient-to-br from-slate-900 via-green-950/20 to-slate-900 border-green-500/40'
+                : 'bg-gradient-to-br from-slate-900 via-blue-950/20 to-slate-900 border-blue-500/40'
+            }`}
+            dir={isRTL ? 'rtl' : 'ltr'}
+          >
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold flex items-center gap-3">
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
@@ -2436,7 +2440,7 @@ export default function ProgramsPage() {
 
         {/* Success Dialog */}
         <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە پاشەکەوت کرا</DialogTitle>
             </DialogHeader>
@@ -2541,7 +2545,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Dialog */}
         <Dialog open={isExerciseDialogOpen} onOpenChange={setIsExerciseDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -2726,7 +2730,7 @@ export default function ProgramsPage() {
 
         {/* Video Browser Dialog */}
         <Dialog open={showVideoBrowser} onOpenChange={setShowVideoBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center justify-between gap-3 text-2xl">
                 <div className="flex items-center gap-3">
@@ -3089,7 +3093,7 @@ export default function ProgramsPage() {
 
         {/* Video Detail Dialog */}
         <Dialog open={showVideoDetailDialog} onOpenChange={setShowVideoDetailDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-xl" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-xl">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -3198,7 +3202,7 @@ export default function ProgramsPage() {
 
         {/* Meal Dialog */}
         <Dialog open={isMealDialogOpen} onOpenChange={setIsMealDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
@@ -3537,7 +3541,7 @@ export default function ProgramsPage() {
 
         {/* Meal Library Dialog */}
         <Dialog open={showMealLibrary} onOpenChange={setShowMealLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -3670,7 +3674,7 @@ export default function ProgramsPage() {
 
         {/* Copy Meals Dialog */}
         <Dialog open={showCopyMealsDialog} onOpenChange={setShowCopyMealsDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -3765,7 +3769,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Library Dialog */}
         <Dialog open={showExerciseLibrary} onOpenChange={setShowExerciseLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -3879,7 +3883,7 @@ export default function ProgramsPage() {
 
         {/* Copy Exercises Dialog */}
         <Dialog open={showCopyExercisesDialog} onOpenChange={setShowCopyExercisesDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -3971,7 +3975,7 @@ export default function ProgramsPage() {
 
         {/* Meal Image Browser Dialog */}
         <Dialog open={showMealImageBrowser} onOpenChange={setShowMealImageBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">
