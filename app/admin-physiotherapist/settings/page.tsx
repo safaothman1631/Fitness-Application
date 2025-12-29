@@ -357,6 +357,7 @@ export default function AdminPhysiotherapistSettingsPage() {
                 </div>
               </div>
             </div>
+          </div>
 
           {/* Privacy Settings */}
           <div className="relative overflow-hidden rounded-3xl bg-white/[0.02] backdrop-blur-3xl border border-white/10 mt-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(100,116,139,0.3)] hover:border-slate-500/30 group"
