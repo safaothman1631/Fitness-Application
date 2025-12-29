@@ -297,7 +297,7 @@ export default function ProgramsPage() {
             const role = (u.role || 'user').toLowerCase()
             const membership = (u.membership || 'Free').toLowerCase()
             const subStatus = (u.subscriptionStatus || 'inactive').toLowerCase()
-            const isAdminRole = role === 'superadmin' || role === 'trainer'
+            const isAdminRole = role === 'superadmin' || role === 'physiotherapist' || role === 'trainer'
             const isPro = membership === 'pro' || membership === 'premium' || subStatus === 'active'
             return !isAdminRole && isPro
           })
@@ -888,149 +888,121 @@ export default function ProgramsPage() {
   return (
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
-        <div className="space-y-12 p-4 md:p-6">
-          {/* Enhanced Header with Gradient Background */}
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600/20 via-blue-600/20 to-cyan-600/20 border border-purple-500/30 backdrop-blur-xl">
-            <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>
-            <div className="relative p-8">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-blue-600 flex items-center justify-center shadow-2xl shadow-purple-500/40 ring-4 ring-purple-400/20">
-                    <Target className="w-8 h-8 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-4xl font-bold bg-gradient-to-r from-white via-purple-100 to-blue-200 bg-clip-text text-transparent">
-                      {t("programsManagement")}
-                    </h1>
-                    <p className="text-purple-200 text-sm mt-1">{t("createAndManagePrograms")}</p>
-                  </div>
-                </div>
-
-                {/* Mini Stats in Header */}
-                <div className="grid grid-cols-3 gap-3">
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-white">{programs.filter(p => p.type === 'nutrition').length}</div>
-                      <div className="text-[10px] text-green-200 mt-1">Nutrition</div>
-                    </div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-blue-300">{programs.filter(p => p.type === 'workout').length}</div>
-                      <div className="text-[10px] text-blue-200 mt-1">Workout</div>
-                    </div>
-                  </div>
-                  <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-3 border border-white/20">
-                    <div className="text-center">
-                      <div className="text-2xl font-bold text-purple-300">{stats.activeUsers}</div>
-                      <div className="text-[10px] text-purple-200 mt-1">Active</div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Modern Tab Switcher */}
-          <div className="flex gap-2 bg-gradient-to-r from-slate-900/50 to-slate-800/30 rounded-2xl p-1 border border-slate-700/50 backdrop-blur-sm">
+        <div className="space-y-8">
+          {/* Tab Switcher */}
+          <div className="flex gap-4 items-center justify-center">
             <button
               onClick={() => setActiveTab('nutrition')}
-              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              className={`relative px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-500 ${
                 activeTab === 'nutrition'
-                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/30'
-                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
+                  ? 'bg-gradient-to-r from-green-500 to-emerald-600 text-white shadow-2xl shadow-green-500/50 scale-110'
+                  : 'bg-slate-800/50 text-gray-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
-              <div className="flex items-center justify-center gap-2">
-                <Utensils className="w-5 h-5" />
-                <span>{t("nutritionPrograms")}</span>
-              </div>
+              <Utensils className="w-6 h-6 inline mr-2" />
+              {t("nutritionPrograms")}
             </button>
             <button
               onClick={() => setActiveTab('workout')}
-              className={`flex-1 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              className={`relative px-8 py-4 rounded-2xl font-bold text-lg transition-all duration-500 ${
                 activeTab === 'workout'
-                  ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg shadow-blue-500/30'
-                  : 'text-gray-400 hover:text-gray-300 hover:bg-slate-800/50'
+                  ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-2xl shadow-blue-500/50 scale-110'
+                  : 'bg-slate-800/50 text-gray-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
-              <div className="flex items-center justify-center gap-2">
-                <Dumbbell className="w-5 h-5" />
-                <span>{t("workoutPrograms")}</span>
-              </div>
+              <Dumbbell className="w-6 h-6 inline mr-2" />
+              {t("workoutPrograms")}
             </button>
           </div>
 
           {/* ==================== NUTRITION SECTION ==================== */}
           {activeTab === 'nutrition' && (
             <div className="space-y-6 animate-in fade-in duration-500">
-              {/* Create Program Button */}
-              <div className="flex justify-end">
-                <Button 
-                  onClick={() => {
-                    resetForm()
-                    setIsDialogOpen(true)
-                  }}
-                  className="bg-gradient-to-r from-green-500 via-emerald-500 to-green-600 hover:from-green-600 hover:via-emerald-600 hover:to-green-700 text-white shadow-xl shadow-green-500/40 hover:shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-105 px-6 py-3 rounded-xl"
-                >
-                  <Plus className="w-5 h-5 mr-2" />
-                  <span className="font-semibold">{t("createNewProgram")}</span>
-                </Button>
+              {/* Nutrition Header */}
+              <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-green-500/20 via-emerald-500/10 to-green-600/5 border-2 border-green-500/50 p-8">
+                <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-green-500/40 to-emerald-600/20 rounded-full blur-3xl"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-emerald-500/30 to-green-600/10 rounded-full blur-2xl"></div>
+                
+                <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-6">
+                  <div className="flex items-center gap-6">
+                    <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-2xl shadow-green-500/50 rotate-3 hover:rotate-0 transition-transform">
+                      <Utensils className="w-12 h-12 text-white" />
+                    </div>
+                    <div>
+                      <h1 className="text-4xl font-bold text-white mb-2">
+                        <span className="bg-gradient-to-r from-green-400 via-emerald-400 to-green-500 bg-clip-text text-transparent">
+                          {t("nutritionPrograms")}
+                        </span>
+                      </h1>
+                      <p className="text-gray-400 text-lg">{t("createAndManagePrograms")}</p>
+                    </div>
+                  </div>
+                  <Button 
+                    onClick={() => {
+                      resetForm()
+                      setIsDialogOpen(true)
+                    }}
+                    className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white shadow-xl shadow-green-500/30 px-8 py-6 text-lg rounded-2xl"
+                  >
+                    <Plus className="w-6 h-6 mr-2" />
+                    {t("createNewProgram")}
+                  </Button>
+                </div>
               </div>
 
               {/* Nutrition Stats */}
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <Card className="bg-gradient-to-br from-green-500/20 via-green-600/10 to-green-500/5 border-green-500/40 hover:border-green-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-green-500/20 hover:scale-105">
-                  <CardContent className="p-5">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <Card className="bg-gradient-to-br from-green-500/20 to-emerald-600/10 border-green-500/40 hover:scale-105 transition-transform">
+                  <CardContent className="p-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-green-500 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/30">
-                        <Apple className="w-7 h-7 text-white" />
+                      <div className="w-14 h-14 rounded-2xl bg-green-500/30 flex items-center justify-center">
+                        <Apple className="w-8 h-8 text-green-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-green-400 to-green-300 bg-clip-text text-transparent">{programs.filter(p => p.type === 'nutrition').length}</p>
-                        <p className="text-xs text-green-300 font-medium">Plans</p>
+                        <p className="text-3xl font-bold text-white">{programs.length}</p>
+                        <p className="text-sm text-gray-400">Total Plans</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-orange-500/20 via-orange-600/10 to-orange-500/5 border-orange-500/40 hover:border-orange-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20 hover:scale-105">
-                  <CardContent className="p-5">
+                <Card className="bg-gradient-to-br from-orange-500/20 to-amber-600/10 border-orange-500/40 hover:scale-105 transition-transform">
+                  <CardContent className="p-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
-                        <Pizza className="w-7 h-7 text-white" />
+                      <div className="w-14 h-14 rounded-2xl bg-orange-500/30 flex items-center justify-center">
+                        <Pizza className="w-8 h-8 text-orange-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">{stats.meals}</p>
-                        <p className="text-xs text-orange-300 font-medium">{t("meals")}</p>
+                        <p className="text-3xl font-bold text-white">{stats.meals}</p>
+                        <p className="text-sm text-gray-400">{t("meals")}</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-purple-500/20 via-purple-600/10 to-purple-500/5 border-purple-500/40 hover:border-purple-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 hover:scale-105">
-                  <CardContent className="p-5">
+                <Card className="bg-gradient-to-br from-purple-500/20 to-pink-600/10 border-purple-500/40 hover:scale-105 transition-transform">
+                  <CardContent className="p-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
-                        <Coffee className="w-7 h-7 text-white" />
+                      <div className="w-14 h-14 rounded-2xl bg-purple-500/30 flex items-center justify-center">
+                        <Coffee className="w-8 h-8 text-purple-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-purple-400 to-purple-300 bg-clip-text text-transparent">{stats.recipes}</p>
-                        <p className="text-xs text-purple-300 font-medium">Recipes</p>
+                        <p className="text-3xl font-bold text-white">{stats.recipes}</p>
+                        <p className="text-sm text-gray-400">Recipes</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                <Card className="bg-gradient-to-br from-yellow-500/20 via-yellow-600/10 to-yellow-500/5 border-yellow-500/40 hover:border-yellow-400/60 transition-all duration-300 hover:shadow-lg hover:shadow-yellow-500/20 hover:scale-105">
-                  <CardContent className="p-5">
+                <Card className="bg-gradient-to-br from-yellow-500/20 to-orange-600/10 border-yellow-500/40 hover:scale-105 transition-transform">
+                  <CardContent className="p-6">
                     <div className="flex items-center gap-4">
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-yellow-500 to-yellow-600 flex items-center justify-center shadow-lg shadow-yellow-500/30">
-                        <Flame className="w-7 h-7 text-white" />
+                      <div className="w-14 h-14 rounded-2xl bg-yellow-500/30 flex items-center justify-center">
+                        <Flame className="w-8 h-8 text-yellow-400" />
                       </div>
                       <div>
-                        <p className="text-3xl font-bold text-white bg-gradient-to-r from-yellow-400 to-yellow-300 bg-clip-text text-transparent">{stats.avgCalories > 0 ? (stats.avgCalories >= 1000 ? (stats.avgCalories / 1000).toFixed(1) + 'K' : stats.avgCalories) : 0}</p>
-                        <p className="text-xs text-yellow-300 font-medium">Avg Cal</p>
+                        <p className="text-3xl font-bold text-white">{stats.avgCalories > 0 ? (stats.avgCalories >= 1000 ? (stats.avgCalories / 1000).toFixed(1) + 'K' : stats.avgCalories) : 0}</p>
+                        <p className="text-sm text-gray-400">Avg Calories</p>
                       </div>
                     </div>
                   </CardContent>
@@ -1038,7 +1010,7 @@ export default function ProgramsPage() {
               </div>
 
               {/* Search Bar - Nutrition */}
-              <Card className="bg-gradient-to-br from-slate-900/90 via-slate-900/70 to-slate-800/50 border-slate-700/60 backdrop-blur-xl shadow-2xl">
+              <Card className="bg-gradient-to-r from-green-500/10 to-emerald-500/5 border-green-500/30">
                 <CardContent className="p-4">
                   <div className="relative">
                     <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-green-400" />
@@ -1447,7 +1419,7 @@ export default function ProgramsPage() {
 
         {/* Delete Success Dialog */}
         <Dialog open={showDeleteSuccessDialog} onOpenChange={setShowDeleteSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-2xl">
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە سڕایەوە</DialogTitle>
             </DialogHeader>
@@ -1542,7 +1514,7 @@ export default function ProgramsPage() {
 
         {/* Delete Confirmation Dialog */}
         <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-xl" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-xl">
             <DialogHeader className="sr-only">
               <DialogTitle>سڕینەوەی بەرنامە</DialogTitle>
             </DialogHeader>
@@ -1632,96 +1604,72 @@ export default function ProgramsPage() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent 
-            className={`border-2 text-white max-w-4xl max-h-[90vh] overflow-y-auto transition-all ${
-              activeTab === 'nutrition'
-                ? 'bg-gradient-to-br from-slate-900 via-green-950/20 to-slate-900 border-green-500/40'
-                : 'bg-gradient-to-br from-slate-900 via-blue-950/20 to-slate-900 border-blue-500/40'
-            }`}
-            dir={isRTL ? 'rtl' : 'ltr'}
-          >
-            <DialogHeader>
-              <DialogTitle className="text-2xl font-bold flex items-center gap-3">
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
+          <DialogContent className={`text-white max-w-5xl max-h-[90vh] overflow-y-auto border transition-all scrollbar-thin scrollbar-thumb-purple-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-purple-500/60 ${
+            activeTab === 'nutrition'
+              ? 'bg-slate-900 border-emerald-500/50'
+              : 'bg-slate-900 border-blue-500/50'
+          }`}>
+            <DialogHeader className="border-b pb-5 mb-6" style={{ borderColor: activeTab === 'nutrition' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(59, 130, 246, 0.2)' }}>
+              <DialogTitle className="text-3xl font-semibold flex items-center gap-4">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
                   activeTab === 'nutrition'
-                    ? 'bg-gradient-to-br from-green-500 to-emerald-600'
-                    : 'bg-gradient-to-br from-blue-500 to-cyan-600'
+                    ? 'bg-emerald-500/20 border border-emerald-500/40'
+                    : 'bg-blue-500/20 border border-blue-500/40'
                 }`}>
-                  {activeTab === 'nutrition' ? <Utensils className="w-5 h-5 text-white" /> : <Dumbbell className="w-5 h-5 text-white" />}
+                  {activeTab === 'nutrition' ? <Utensils className="w-7 h-7 text-emerald-400" /> : <Dumbbell className="w-7 h-7 text-blue-400" />}
                 </div>
-                <span className={`bg-gradient-to-r bg-clip-text text-transparent ${
-                  activeTab === 'nutrition'
-                    ? 'from-green-400 to-emerald-400'
-                    : 'from-blue-400 to-cyan-400'
-                }`}>
+                <span className="text-white">
                   {newProgram.id ? t("update") : activeTab === 'nutrition' ? t("createNutritionProgram") : t("createNewProgram")}
                 </span>
               </DialogTitle>
             </DialogHeader>
             
-            <div className="space-y-6 py-4">
-              {/* Instructions Card */}
-              <Card className="bg-blue-500/10 border-blue-500/30">
-                <CardContent className="p-4">
-                  <div className="flex items-start gap-3">
-                    <Lightbulb className="w-5 h-5 text-blue-400 mt-0.5 flex-shrink-0" />
-                    <div className="space-y-1">
-                      <p className="text-sm text-blue-300 font-semibold">{t("instructions")}</p>
-                      <ul className="text-xs text-gray-400 space-y-1 list-disc list-inside">
-                        <li>{t("fillBasicInfo")}</li>
-                        {activeTab === 'workout' && (
-                          <>
-                            <li>{t("selectDayFrom7Days")}</li>
-                            <li>{t("clickAddExercise")}</li>
-                            <li>{t("canAddMultipleExercises")}</li>
-                            <li>{t("ifRestDayTurnOn")}</li>
-                          </>
-                        )}
-                        <li>{t("whenComplete")}</li>
-                      </ul>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="space-y-4">
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">📝 {t("programName")} *</Label>
+            <div className="space-y-6">
+              {/* Basic Information Section */}
+              <div className="space-y-5">
+                <div className="space-y-3">
+                  <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>
+                    📝 {t("programName")} <span className="text-red-400">*</span>
+                  </Label>
                   <Input
                     value={newProgram.title}
                     onChange={(e) => setNewProgram({ ...newProgram, title: e.target.value })}
                     placeholder={activeTab === 'nutrition' ? t("exampleKetoDiet") : t("exampleFullBodyWorkout")}
-                    className="bg-slate-800/50 border-slate-700 text-white h-12"
+                    className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-blue-500 transition-colors"
+                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
 
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">📋 {t("description")}</Label>
+                <div className="space-y-3">
+                  <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>📋 {t("description")}</Label>
                   <textarea
                     value={newProgram.description}
                     onChange={(e) => setNewProgram({ ...newProgram, description: e.target.value })}
                     placeholder={t("enterProgramDescription")}
                     rows={3}
-                    className="w-full bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500"
+                    className="w-full bg-slate-800 border border-slate-600 rounded-xl px-4 py-3 text-white text-base placeholder:text-gray-500 focus:border-blue-500 transition-colors resize-none"
+                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⏱️ {t("duration")}</Label>
+                <div className="grid grid-cols-2 gap-5">
+                  <div className="space-y-3">
+                    <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>⏱️ {t("duration")}</Label>
                     <Input
                       value={newProgram.duration}
                       onChange={(e) => setNewProgram({ ...newProgram, duration: e.target.value })}
                       placeholder={t("example30mins")}
-                      className="bg-slate-800/50 border-slate-700 text-white h-12"
+                      className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-blue-500 transition-colors"
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
                   </div>
-                  <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">⭐ {t("level")}</Label>
+                  <div className="space-y-3">
+                    <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>⭐ {t("level")}</Label>
                     <select
                       value={newProgram.difficulty}
                       onChange={(e) => setNewProgram({ ...newProgram, difficulty: e.target.value })}
-                      className="w-full h-12 bg-slate-800/50 border border-slate-700 text-white rounded-lg px-4 py-2"
+                      className="w-full h-14 bg-slate-800 border border-slate-600 text-white text-base rounded-xl px-4 focus:border-blue-500 transition-colors"
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     >
                       <option value="beginner">🟢 {t("beginner")}</option>
                       <option value="intermediate">🟡 {t("intermediate")}</option>
@@ -1731,220 +1679,193 @@ export default function ProgramsPage() {
                 </div>
 
                 {activeTab === 'nutrition' ? (
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🔥 {t("calories")}</Label>
+                  <div className="grid grid-cols-2 gap-5">
+                    <div className="space-y-3">
+                      <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>🔥 {t("calories")}</Label>
                       <Input
                         value={newProgram.calories}
                         onChange={(e) => setNewProgram({ ...newProgram, calories: e.target.value })}
                         placeholder={t("example2000")}
-                        className="bg-slate-800/50 border-slate-700 text-white h-12"
+                        className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-emerald-500 transition-colors"
+                        dir={isRTL ? 'rtl' : 'ltr'}
                       />
                     </div>
-                    <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🥩 {t("protein")} (g)</Label>
+                    <div className="space-y-3">
+                      <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>🥩 {t("protein")} (g)</Label>
                       <Input
                         value={newProgram.protein}
                         onChange={(e) => setNewProgram({ ...newProgram, protein: e.target.value })}
                         placeholder={t("example150")}
-                        className="bg-slate-800/50 border-slate-700 text-white h-12"
+                        className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-emerald-500 transition-colors"
+                        dir={isRTL ? 'rtl' : 'ltr'}
                       />
                     </div>
-                    <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🍚 {t("carbs")} (g)</Label>
+                    <div className="space-y-3">
+                      <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>🍚 {t("carbs")} (g)</Label>
                       <Input
                         value={newProgram.carbs}
                         onChange={(e) => setNewProgram({ ...newProgram, carbs: e.target.value })}
                         placeholder={t("example200")}
-                        className="bg-slate-800/50 border-slate-700 text-white h-12"
+                        className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-emerald-500 transition-colors"
+                        dir={isRTL ? 'rtl' : 'ltr'}
                       />
                     </div>
-                    <div>
-                      <Label className="text-gray-300 text-sm mb-2 block font-semibold">🧈 {t("fats")} (g)</Label>
+                    <div className="space-y-3">
+                      <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>🧈 {t("fats")} (g)</Label>
                       <Input
                         value={newProgram.fats}
                         onChange={(e) => setNewProgram({ ...newProgram, fats: e.target.value })}
                         placeholder={t("example60")}
-                        className="bg-slate-800/50 border-slate-700 text-white h-12"
+                        className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-emerald-500 transition-colors"
+                        dir={isRTL ? 'rtl' : 'ltr'}
                       />
                     </div>
                   </div>
                 ) : (
-                  <div>
-                    <Label className="text-gray-300 text-sm mb-2 block font-semibold">💪 {t("targetMuscles")}</Label>
+                  <div className="space-y-3">
+                    <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>💪 {t("targetMuscles")}</Label>
                     <Input
                       value={newProgram.targetMuscles}
                       onChange={(e) => setNewProgram({ ...newProgram, targetMuscles: e.target.value })}
                       placeholder={t("exampleChestShouldersTriceps")}
-                      className="bg-slate-800/50 border-slate-700 text-white h-12"
+                      className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-blue-500 transition-colors"
+                      dir={isRTL ? 'rtl' : 'ltr'}
                     />
                   </div>
                 )}
 
-                <div>
-                  <Label className="text-gray-300 text-sm mb-2 block font-semibold">🖼️ {t("imageUrl")}</Label>
+                <div className="space-y-3">
+                  <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>🖼️ {t("imageUrl")}</Label>
                   <Input
                     value={newProgram.imageUrl}
                     onChange={(e) => setNewProgram({ ...newProgram, imageUrl: e.target.value })}
                     placeholder={t("exampleImageUrl")}
-                    className="bg-slate-800/50 border-slate-700 text-white h-12"
+                    className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-blue-500 transition-colors"
+                    dir={isRTL ? 'rtl' : 'ltr'}
+                  />
+                </div>
+              </div>
+
+              {/* User Selection Section */}
+              <div className="space-y-5 pt-6 border-t border-slate-700">
+                <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <span className="px-4 py-2 rounded-lg bg-purple-500/20 text-purple-300 text-base font-semibold border border-purple-500/40">
+                    {selectedUsers.length} {t("selected")}
+                  </span>
+                  <div className={`flex-1 ${isRTL ? 'text-right' : 'text-left'}`}>
+                    <h3 className="text-xl font-semibold text-white">{t("userSelection")}</h3>
+                    <p className="text-sm text-gray-400">{t("onlyProUsers")}</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/20 border border-purple-500/40 flex items-center justify-center">
+                    <Users className="w-6 h-6 text-purple-400" />
+                  </div>
+                </div>
+
+                {/* Search Users */}
+                <div className="relative">
+                  <Search className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400 ${isRTL ? 'right-4' : 'left-4'}`} />
+                  <Input
+                    placeholder={t("searchByNameOrEmail")}
+                    value={userSearchQuery}
+                    onChange={(e) => setUserSearchQuery(e.target.value)}
+                    className={`h-14 bg-slate-800 border-slate-600 text-white text-base focus:border-purple-500 transition-colors ${isRTL ? 'pr-12' : 'pl-12'}`}
+                    dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
 
-                {/* User Selection Section */}
-                <div className="space-y-3 pt-4 border-t-2 border-purple-500/30">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <Users className="w-6 h-6 text-purple-400" />
-                      <div>
-                        <h3 className="text-lg font-bold text-white">{t("userSelection")}</h3>
-                        <p className="text-xs text-gray-400">{t("onlyProUsers")}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="px-2 py-1 rounded-lg bg-blue-500/20 text-blue-300 text-xs font-bold border border-blue-500/30">
-                        👤 user
-                      </span>
-                      <span className="px-2 py-1 rounded-lg bg-yellow-500/20 text-yellow-300 text-xs font-bold border border-yellow-500/30">
-                        ⭐ PRO
-                      </span>
-                      <span className="px-3 py-1.5 rounded-lg bg-purple-500/20 text-purple-300 text-sm font-bold border border-purple-500/30">
-                        {selectedUsers.length} {t("selected")}
-                      </span>
-                    </div>
-                  </div>
+                {/* Select All / Clear */}
+                <div className="grid grid-cols-2 gap-4">
+                  <Button
+                    type="button"
+                    onClick={selectAllUsers}
+                    variant="outline"
+                    className="h-12 border-purple-500/40 text-purple-300 hover:bg-purple-500/10 font-medium"
+                  >
+                    <UserPlus className="w-5 h-5 mr-2" />
+                    {t("selectAllUsers")} ({filteredUsers.length})
+                  </Button>
+                  <Button
+                    type="button"
+                    onClick={clearUserSelection}
+                    variant="outline"
+                    className="h-12 border-slate-600 text-gray-300 hover:bg-slate-800 font-medium"
+                  >
+                    <X className="w-5 h-5 mr-2" />
+                    {t("clearAll")}
+                  </Button>
+                </div>
 
-                  {/* Search Users */}
-                  <div className="relative">
-                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
-                    <Input
-                      placeholder={t("searchByNameOrEmail")}
-                      value={userSearchQuery}
-                      onChange={(e) => setUserSearchQuery(e.target.value)}
-                      className="pl-10 h-10 bg-slate-800/50 border-slate-700 text-white"
-                    />
-                  </div>
-
-                  {/* Select All / Clear */}
-                  <div className="flex gap-2">
-                    <Button
-                      type="button"
-                      onClick={selectAllUsers}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
-                    >
-                      <UserPlus className="w-4 h-4 mr-2" />
-                      {t("selectAllUsers")} ({filteredUsers.length})
-                    </Button>
-                    <Button
-                      type="button"
-                      onClick={clearUserSelection}
-                      variant="outline"
-                      size="sm"
-                      className="flex-1 border-slate-700 text-gray-400 hover:bg-slate-800"
-                    >
-                      <X className="w-4 h-4 mr-2" />
-                      {t("clearAll")}
-                    </Button>
-                  </div>
-
-                  {/* Users List */}
-                  <Card className="bg-slate-800/30 border-slate-700 max-h-64 overflow-y-auto">
-                    <CardContent className="p-3">
-                      {filteredUsers.length === 0 ? (
-                        <div className="text-center py-8">
-                          <Users className="w-12 h-12 text-gray-600 mx-auto mb-2" />
-                          <p className="text-gray-400 text-sm">
-                            {users.length === 0 ? t("noPROusers") : t("noUsersFound")}
-                          </p>
-                          {users.length === 0 && (
-                            <p className="text-gray-500 text-xs mt-1">{t("freeUsersNotShown")}</p>
-                          )}
+                {/* Users List */}
+                <div className="rounded-2xl bg-gradient-to-br from-slate-800/80 via-slate-800/60 to-slate-900/80 border border-slate-700/50 backdrop-blur-sm max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-purple-500/50 scrollbar-track-slate-900/50 hover:scrollbar-thumb-purple-500/70">
+                  <div className="p-5">
+                    {filteredUsers.length === 0 ? (
+                      <div className="text-center py-16">
+                        <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500/20 to-blue-500/20 flex items-center justify-center mx-auto mb-4">
+                          <Users className="w-10 h-10 text-gray-500" />
                         </div>
-                      ) : (
-                        <div className="space-y-2">
-                          {filteredUsers.map((user) => (
-                            <button
-                              key={user.id}
-                              type="button"
-                              onClick={() => toggleUserSelection(user.id)}
-                              className={`w-full flex items-center justify-between p-3 rounded-lg border transition-all ${
+                        <p className="text-gray-300 text-lg font-semibold mb-2">
+                          {users.length === 0 ? t("noPROusers") : t("noUsersFound")}
+                        </p>
+                        {users.length === 0 && (
+                          <p className="text-gray-500 text-sm">{t("freeUsersNotShown")}</p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="space-y-3">
+                        {filteredUsers.map((user) => (
+                          <button
+                            key={user.id}
+                            type="button"
+                            onClick={() => toggleUserSelection(user.id)}
+                            className={`group w-full flex items-center justify-between p-5 rounded-2xl border transition-all duration-300 ${
+                              selectedUsers.includes(user.id)
+                                ? 'bg-gradient-to-r from-purple-500/15 via-purple-500/10 to-blue-500/10 border-purple-400/50 shadow-lg shadow-purple-500/10'
+                                : 'bg-slate-900/50 border-slate-700/50 hover:bg-slate-900/80 hover:border-slate-600'
+                            }`}
+                          >
+                            <div className={`flex items-center gap-5 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className={`relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-300 ${
                                 selectedUsers.includes(user.id)
-                                  ? 'bg-purple-500/20 border-purple-500/40 hover:bg-purple-500/30'
-                                  : 'bg-slate-900/50 border-slate-700 hover:bg-slate-900'
-                              }`}
-                            >
-                              <div className="flex items-center gap-3">
-                                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                                  selectedUsers.includes(user.id)
-                                    ? 'bg-purple-500'
-                                    : 'bg-slate-700'
-                                }`}>
-                                  {selectedUsers.includes(user.id) ? (
-                                    <Check className="w-5 h-5 text-white" />
-                                  ) : (
-                                    <Users className="w-4 h-4 text-gray-400" />
-                                  )}
-                                </div>
-                                <div className="text-left">
-                                  <p className="text-white font-semibold text-sm">{user.name || 'No Name'}</p>
-                                  <p className="text-gray-400 text-xs">{user.email}</p>
-                                </div>
+                                  ? 'bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg shadow-purple-500/30 scale-105'
+                                  : 'bg-gradient-to-br from-slate-700 to-slate-800 group-hover:from-slate-600 group-hover:to-slate-700'
+                              }`}>
+                                {selectedUsers.includes(user.id) ? (
+                                  <Check className="w-7 h-7 text-white" />
+                                ) : (
+                                  <Users className="w-6 h-6 text-gray-400 group-hover:text-gray-300" />
+                                )}
+                                {selectedUsers.includes(user.id) && (
+                                  <div className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 rounded-full border-2 border-slate-900 animate-pulse"></div>
+                                )}
                               </div>
-                              <div className="flex items-center gap-2">
-                                <span className="px-2 py-1 rounded text-xs font-bold bg-blue-500/20 text-blue-400 border border-blue-500/30">
-                                  👤 {user.role || 'user'}
-                                </span>
-                                <span className="px-2 py-1 rounded text-xs font-bold bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                              <div className={isRTL ? 'text-right' : 'text-left'}>
+                                <p className="text-white font-bold text-lg mb-1">{user.name || 'No Name'}</p>
+                                <p className="text-gray-400 text-sm font-medium">{user.email}</p>
+                              </div>
+                            </div>
+                            <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              <div className="relative px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500/20 via-yellow-500/20 to-amber-500/20 border border-amber-400/40 overflow-hidden">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+                                <span className="relative text-sm font-bold bg-gradient-to-r from-amber-300 to-yellow-400 bg-clip-text text-transparent flex items-center gap-1.5">
                                   ⭐ PRO
                                 </span>
                               </div>
-                            </button>
-                          ))}
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-
-                  {selectedUsers.length > 0 && (
-                    <Card className="bg-green-500/10 border-green-500/30">
-                      <CardContent className="p-3">
-                        <div className="flex items-center gap-2">
-                          <Check className="w-4 h-4 text-green-400" />
-                          <p className="text-sm text-green-300">
-                            {t("programWillBeSentTo").replace("{count}", selectedUsers.length.toString())} {t("PROusers")}
-                          </p>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {/* Info about filtering */}
-                  <Card className="bg-blue-500/10 border-blue-500/30">
-                    <CardContent className="p-3">
-                      <div className="flex items-start gap-2">
-                        <Lightbulb className="w-4 h-4 text-blue-400 mt-0.5 flex-shrink-0" />
-                        <div className="text-xs text-blue-300">
-                          <p className="font-semibold mb-1">⚠️ {t("noteLabel")}</p>
-                          <ul className="space-y-0.5 text-gray-400">
-                            <li>✅ {t("onlyProUsersShown")}</li>
-                            <li>❌ {t("freeUsersHidden")}</li>
-                            <li>❌ {t("adminsHidden")}</li>
-                          </ul>
-                        </div>
+                            </div>
+                          </button>
+                        ))}
                       </div>
-                    </CardContent>
-                  </Card>
+                    )}
+                  </div>
                 </div>
+              </div>
 
-                {/* Weekly Schedule for Workout */}
-                {activeTab === 'workout' && (
+              {/* Weekly Schedule for Workout */}
+              {activeTab === 'workout' && (
                   <div className="space-y-4 pt-4 border-t-2 border-blue-500/30">
                     {/* Header */}
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className={`flex items-center gap-3 mb-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
                       <Calendar className="w-6 h-6 text-blue-400" />
-                      <div>
+                      <div className={isRTL ? 'text-right' : 'text-left'}>
                         <h3 className="text-lg font-bold text-white">{t("weeklySchedule")}</h3>
                         <p className="text-xs text-gray-400">{t("setExercisesForEachDay")}</p>
                       </div>
@@ -1992,10 +1913,7 @@ export default function ProgramsPage() {
                     {/* Current Day Content */}
                     <Card className="bg-slate-800/50 border-slate-700">
                       <CardHeader className="border-b border-slate-700/50 pb-3">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-white font-bold text-lg">
-                            📅 {dayNames[currentDay as keyof typeof dayNames]}
-                          </h4>
+                        <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <div className="flex items-center gap-2 bg-slate-900/50 rounded-lg px-3 py-1.5">
                             <span className="text-xs text-gray-400">{t("restDay")}</span>
                             <label className="relative inline-flex items-center cursor-pointer">
@@ -2008,6 +1926,9 @@ export default function ProgramsPage() {
                               <div className="w-10 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
                             </label>
                           </div>
+                          <h4 className="text-white font-bold text-lg">
+                            📅 {dayNames[currentDay as keyof typeof dayNames]}
+                          </h4>
                         </div>
                       </CardHeader>
                       
@@ -2142,13 +2063,13 @@ export default function ProgramsPage() {
                   </div>
                 )}
 
-                {/* Weekly Schedule for Nutrition */}
-                {activeTab === 'nutrition' && (
+              {/* Weekly Schedule for Nutrition */}
+              {activeTab === 'nutrition' && (
                   <div className="space-y-4 pt-4 border-t-2 border-green-500/30">
                     {/* Header */}
-                    <div className="flex items-center gap-3 mb-2">
+                    <div className={`flex items-center gap-3 mb-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
                       <Calendar className="w-6 h-6 text-green-400" />
-                      <div>
+                      <div className={isRTL ? 'text-right' : 'text-left'}>
                         <h3 className="text-lg font-bold text-white">{t("weeklySchedule")}</h3>
                         <p className="text-xs text-gray-400">{t("setMealsForEachDay")}</p>
                       </div>
@@ -2196,10 +2117,7 @@ export default function ProgramsPage() {
                     {/* Current Day Content */}
                     <Card className="bg-slate-800/50 border-slate-700">
                       <CardHeader className="border-b border-slate-700/50 pb-3">
-                        <div className="flex items-center justify-between">
-                          <h4 className="text-white font-bold text-lg">
-                            📅 {dayNames[currentDay as keyof typeof dayNames]}
-                          </h4>
+                        <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
                           <div className="flex items-center gap-2 bg-slate-900/50 rounded-lg px-3 py-1.5">
                             <span className="text-xs text-gray-400">رۆژی پشوو؟</span>
                             <label className="relative inline-flex items-center cursor-pointer">
@@ -2212,6 +2130,9 @@ export default function ProgramsPage() {
                               <div className="w-10 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
                             </label>
                           </div>
+                          <h4 className="text-white font-bold text-lg">
+                            📅 {dayNames[currentDay as keyof typeof dayNames]}
+                          </h4>
                         </div>
                       </CardHeader>
                       
@@ -2400,25 +2321,26 @@ export default function ProgramsPage() {
                 )}
               </div>
 
-              <div className="flex gap-3 pt-2">
+              {/* Action Buttons */}
+              <div className="flex gap-4 pt-6 border-t border-slate-700">
                 <Button
                   onClick={() => {
                     setIsDialogOpen(false)
                     resetForm()
                   }}
                   variant="outline"
-                  className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
+                  className="flex-1 border-slate-600 text-gray-300 hover:bg-slate-800 h-14 text-base font-medium"
                 >
-                  <X className="w-4 h-4 mr-2" />
+                  <X className="w-5 h-5 mr-2" />
                   {t("cancelAction")}
                 </Button>
                 <Button
                   onClick={handleCreateProgram}
                   disabled={!newProgram.title || isSaving}
-                  className={`flex-1 h-12 text-lg font-bold shadow-lg ${
+                  className={`flex-1 h-14 text-base font-semibold ${
                     activeTab === 'nutrition'
-                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
-                      : 'bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700'
+                      ? 'bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700'
+                      : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700'
                   } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {isSaving ? (
@@ -2434,13 +2356,12 @@ export default function ProgramsPage() {
                   )}
                 </Button>
               </div>
-            </div>
           </DialogContent>
         </Dialog>
 
         {/* Success Dialog */}
         <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-2xl">
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە پاشەکەوت کرا</DialogTitle>
             </DialogHeader>
@@ -2545,109 +2466,119 @@ export default function ProgramsPage() {
 
         {/* Exercise Dialog */}
         <Dialog open={isExerciseDialogOpen} onOpenChange={setIsExerciseDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
-            <DialogHeader>
-              <DialogTitle className="flex items-center gap-3 text-2xl">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
-                  <Dumbbell className="w-6 h-6 text-white" />
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-cyan-500/60">
+            <DialogHeader className="border-b border-cyan-500/20 pb-6 mb-6">
+              <DialogTitle className="flex items-center gap-4 text-3xl">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 transition-all duration-300 hover:scale-105">
+                  <Dumbbell className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <div className="text-white">{t("addExerciseTitle")}</div>
-                  <div className="text-sm text-gray-400 font-normal mt-1">
+                  <div className="text-white font-semibold">{t("addExerciseTitle")}</div>
+                  <div className="text-base text-cyan-400 font-normal mt-1">
                     {currentEditingDay && `📅 ${dayNames[currentEditingDay as keyof typeof dayNames]}`}
                   </div>
                 </div>
               </DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-6 py-4">
+            <div className="space-y-8 py-2">
               {/* Quick Actions */}
-              <div className="flex gap-2">
+              <div className="flex gap-3">
                 <Button
                   onClick={() => setShowExerciseLibrary(true)}
                   variant="outline"
-                  className="flex-1 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 h-10"
+                  className="flex-1 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 h-14 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/10"
                 >
-                  <Dumbbell className="w-4 h-4 mr-2" />
+                  <Dumbbell className="w-5 h-5 mr-2" />
                   {t("exerciseLibraryButton")}
                 </Button>
                 <Button
                   onClick={handleSaveExerciseToLibrary}
                   variant="outline"
-                  className="flex-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 h-10"
+                  className="flex-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 h-14 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10"
                 >
-                  <Save className="w-4 h-4 mr-2" />
+                  <Save className="w-5 h-5 mr-2" />
                   {t("saveToLibrary")}
                 </Button>
               </div>
 
               {/* Exercise Name */}
-              <div className="space-y-2">
-                <Label className="text-white font-bold flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-blue-500/20 flex items-center justify-center">
-                    <Activity className="w-4 h-4 text-blue-400" />
+              <div className="space-y-3">
+                <Label className={`text-white text-lg font-bold flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 flex items-center justify-center">
+                    <Activity className="w-5 h-5 text-blue-400" />
                   </div>
                   🏋️ {t("exerciseName")}
                 </Label>
                 <Input
+                  dir={isRTL ? 'rtl' : 'ltr'}
                   value={exerciseFormData.name}
                   onChange={(e) => setExerciseFormData({ ...exerciseFormData, name: e.target.value })}
                   placeholder="Example: Push-ups, Squats, Bench Press..."
-                  className="bg-slate-800/50 border-slate-700 text-white h-12 text-lg"
+                  className={`bg-slate-800/50 border-slate-700 text-white h-16 text-lg rounded-xl transition-all duration-300 focus:border-cyan-500/50 focus:shadow-lg focus:shadow-cyan-500/10 ${isRTL ? 'text-right' : ''}`}
                 />
               </div>
 
               {/* Video Selection */}
-              <div className="space-y-2">
-                <Label className="text-white font-bold flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-pink-500/20 flex items-center justify-center">
-                    <Heart className="w-4 h-4 text-pink-400" />
+              <div className="space-y-3">
+                <Label className={`text-white text-lg font-bold flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-pink-500/20 to-rose-500/20 flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-pink-400" />
                   </div>
                   🎥 {t("exerciseVideos")} ({t("optional")})
                 </Label>
                 
                 {exerciseFormData.videos.length > 0 && (
-                  <div className="space-y-2 mb-2">
+                  <div className="grid grid-cols-2 gap-2 mb-3 max-h-64 overflow-y-auto scrollbar-thin scrollbar-thumb-green-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-green-500/60 rounded-xl p-2">
                     {exerciseFormData.videos.map((video, index) => (
-                      <Card key={index} className="bg-gradient-to-br from-green-500/10 to-emerald-500/10 border-green-500/30">
-                        <CardContent className="p-3">
-                          <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center flex-shrink-0">
-                              <Video className="w-5 h-5 text-white" />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-green-300 text-sm font-bold truncate">{video.name}</p>
-                              <div className="flex gap-2 mt-1 flex-wrap">
-                                {video.sets && (
-                                  <span className="px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300 text-xs font-bold">
-                                    {video.sets} sets
-                                  </span>
-                                )}
-                                {video.reps && (
-                                  <span className="px-2 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-xs font-bold">
-                                    {video.reps} reps
-                                  </span>
-                                )}
-                              </div>
-                              {video.notes && (
-                                <p className="text-xs text-gray-400 mt-1 italic truncate">💡 {video.notes}</p>
-                              )}
-                            </div>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                const newVideos = exerciseFormData.videos.filter((_, i) => i !== index)
-                                const newUrls = exerciseFormData.videoUrls.filter((_, i) => i !== index)
-                                setExerciseFormData({ ...exerciseFormData, videos: newVideos, videoUrls: newUrls })
-                              }}
-                              className="border-red-700/50 text-red-400 hover:bg-red-500/20 h-8 w-8 p-0"
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
+                      <div 
+                        key={index} 
+                        className={`group relative flex flex-col gap-2 p-2 rounded-lg border transition-all duration-300 bg-green-500/10 border-green-500/30 hover:border-green-500/50 hover:bg-green-500/15 hover:shadow-sm ${isRTL ? 'text-right' : ''}`}
+                      >
+                        {/* Video Icon & Name */}
+                        <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center flex-shrink-0">
+                            <Video className="w-4 h-4 text-white" />
                           </div>
-                        </CardContent>
-                      </Card>
+                          <p className="text-green-300 text-sm font-medium truncate flex-1">{video.name}</p>
+                        </div>
+
+                        {/* Sets & Reps */}
+                        {(video.sets || video.reps) && (
+                          <div className={`flex gap-1.5 items-center text-xs ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                            {video.sets && (
+                              <span className="px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 font-medium">
+                                {video.sets} sets
+                              </span>
+                            )}
+                            {video.reps && (
+                              <span className="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-medium">
+                                {video.reps} reps
+                              </span>
+                            )}
+                          </div>
+                        )}
+
+                        {/* Notes */}
+                        {video.notes && (
+                          <p className="text-xs text-gray-400 italic truncate">💡 {video.notes}</p>
+                        )}
+
+                        {/* Remove Button */}
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => {
+                            const newVideos = exerciseFormData.videos.filter((_, i) => i !== index)
+                            const newUrls = exerciseFormData.videoUrls.filter((_, i) => i !== index)
+                            setExerciseFormData({ ...exerciseFormData, videos: newVideos, videoUrls: newUrls })
+                          }}
+                          className="w-full h-7 border-red-700/50 text-red-400 hover:bg-red-500/20 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105"
+                        >
+                          <X className="w-3 h-3 mr-1" />
+                          {t("cancel")}
+                        </Button>
+                      </div>
                     ))}
                   </div>
                 )}
@@ -2655,50 +2586,51 @@ export default function ProgramsPage() {
                 <Button
                   type="button"
                   onClick={() => setShowVideoBrowser(true)}
-                  className="w-full h-12 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700"
+                  className="w-full h-16 bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700 rounded-xl text-base font-semibold shadow-lg hover:shadow-pink-500/20 transition-all duration-300 hover:scale-[1.02]"
                 >
-                  <Video className="w-5 h-5 mr-2" />
+                  <Video className="w-6 h-6 mr-2" />
                   {exerciseFormData.videos.length > 0 ? `${t("addAnotherVideo")} (${exerciseFormData.videos.length})` : t("selectVideoFromStorage")}
                 </Button>
               </div>
 
               {/* Notes */}
-              <div className="space-y-2">
-                <Label className="text-white font-bold flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-lg bg-purple-500/20 flex items-center justify-center">
-                    <Lightbulb className="w-4 h-4 text-purple-400" />
+              <div className="space-y-3">
+                <Label className={`text-white text-lg font-bold flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>
+                  <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-purple-500/20 to-indigo-500/20 flex items-center justify-center">
+                    <Lightbulb className="w-5 h-5 text-purple-400" />
                   </div>
                   📝 {t("notesOptional")}
                 </Label>
                 <Input
+                  dir={isRTL ? 'rtl' : 'ltr'}
                   value={exerciseFormData.notes}
                   onChange={(e) => setExerciseFormData({ ...exerciseFormData, notes: e.target.value })}
                   placeholder={t("additionalNotesPlaceholder")}
-                  className="bg-slate-800/50 border-slate-700 text-white h-12"
+                  className={`bg-slate-800/50 border-slate-700 text-white h-16 text-base rounded-xl transition-all duration-300 focus:border-purple-500/50 focus:shadow-lg focus:shadow-purple-500/10 ${isRTL ? 'text-right' : ''}`}
                 />
               </div>
 
               {/* Preview Card */}
               {exerciseFormData.name && (
-                <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-2 border-blue-500/30">
-                  <CardContent className="p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Zap className="w-4 h-4 text-yellow-400" />
-                      <span className="text-xs font-bold text-gray-400">{t("preview")}</span>
+                <Card className="bg-gradient-to-br from-blue-500/10 via-cyan-500/10 to-blue-500/10 border-2 border-blue-500/30 shadow-xl hover:shadow-blue-500/20 transition-all duration-300 animate-in fade-in-50 slide-in-from-bottom-5">
+                  <CardContent className="p-5">
+                    <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'justify-end' : ''}`}>
+                      <Zap className="w-5 h-5 text-yellow-400 animate-pulse" />
+                      <span className="text-sm font-bold text-cyan-400">{t("preview")}</span>
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
-                        <Dumbbell className="w-5 h-5 text-white" />
+                    <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
+                        <Dumbbell className="w-7 h-7 text-white" />
                       </div>
-                      <div className="flex-1">
-                        <p className="text-white font-bold text-lg">{exerciseFormData.name}</p>
+                      <div className={`flex-1 ${isRTL ? 'text-right' : ''}`}>
+                        <p className="text-white font-bold text-xl">{exerciseFormData.name}</p>
                         {exerciseFormData.videos.length > 0 && (
-                          <p className="text-purple-400 text-sm mt-1">
+                          <p className="text-purple-400 text-base mt-1 font-semibold">
                             🎬 {exerciseFormData.videos.length} {t("videosSelected")}
                           </p>
                         )}
                         {exerciseFormData.notes && (
-                          <p className="text-gray-400 text-sm mt-2 italic">"{exerciseFormData.notes}"</p>
+                          <p className="text-gray-400 text-base mt-2 italic">"{exerciseFormData.notes}"</p>
                         )}
                       </div>
                     </div>
@@ -2708,20 +2640,20 @@ export default function ProgramsPage() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex gap-3 pt-2">
+            <div className={`flex gap-4 pt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
               <Button
                 onClick={() => setIsExerciseDialogOpen(false)}
                 variant="outline"
-                className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
+                className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-16 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105"
               >
-                <X className="w-4 h-4 mr-2" />
+                <X className="w-5 h-5 mr-2" />
                 {t("cancel")}
               </Button>
               <Button
                 onClick={handleSaveExercise}
-                className="flex-1 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-lg font-bold shadow-lg"
+                className="flex-1 h-16 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-xl font-bold shadow-lg hover:shadow-cyan-500/30 rounded-xl transition-all duration-300 hover:scale-105"
               >
-                <Check className="w-5 h-5 mr-2" />
+                <Check className="w-6 h-6 mr-2" />
                 {t("addButton")}
               </Button>
             </div>
@@ -2730,16 +2662,16 @@ export default function ProgramsPage() {
 
         {/* Video Browser Dialog */}
         <Dialog open={showVideoBrowser} onOpenChange={setShowVideoBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
-            <DialogHeader>
-              <DialogTitle className="flex items-center justify-between gap-3 text-2xl">
-                <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg">
-                    <Video className="w-6 h-6 text-white" />
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-7xl max-h-[90vh] overflow-hidden flex flex-col scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-pink-500/60">
+            <DialogHeader className="border-b border-pink-500/20 pb-6 mb-6">
+              <DialogTitle className={`flex items-center justify-between gap-4 text-3xl ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/20 transition-all duration-300 hover:scale-105">
+                    <Video className="w-8 h-8 text-white" />
                   </div>
-                  <div>
-                    <div className="text-white">{t("selectVideo")}</div>
-                    <div className="text-sm text-gray-400 font-normal mt-1">
+                  <div className={isRTL ? 'text-right' : ''}>
+                    <div className="text-white font-semibold">{t("selectVideo")}</div>
+                    <div className="text-base text-pink-400 font-normal mt-1">
                       {availableVideos.length} {t("videosInStorage")}
                     </div>
                   </div>
@@ -2753,9 +2685,9 @@ export default function ProgramsPage() {
                     sessionStorage.removeItem('exerciseVideosTime')
                     fetchVideos()
                   }}
-                  className="border-pink-500/50 text-pink-400 hover:bg-pink-500/10"
+                  className="border-pink-500/50 text-pink-400 hover:bg-pink-500/10 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
                 >
-                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   Refresh
@@ -2787,31 +2719,33 @@ export default function ProgramsPage() {
             ) : (
               <>
                 {/* Search & Filters */}
-                <div className="mb-4 space-y-3">
+                <div className="mb-6 space-y-4">
                   {/* Search Bar */}
                   <div className="relative">
-                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-pink-400" />
+                    <Search className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 w-6 h-6 text-pink-400`} />
                     <Input
+                      dir={isRTL ? 'rtl' : 'ltr'}
                       placeholder={t("searchByVideoName")}
                       value={videoSearchQuery}
                       onChange={(e) => {
                         setVideoSearchQuery(e.target.value)
                         setVideoPage(1)
                       }}
-                      className="pl-12 h-12 bg-slate-800/50 border-slate-700 text-white"
+                      className={`${isRTL ? 'pr-14' : 'pl-14'} h-16 bg-slate-800/50 border-slate-700 text-white rounded-xl text-base transition-all duration-300 focus:border-pink-500/50 focus:shadow-lg focus:shadow-pink-500/10 ${isRTL ? 'text-right' : ''}`}
                     />
                   </div>
 
                   {/* Filters */}
-                  <div className="grid grid-cols-3 gap-2">
+                  <div className="grid grid-cols-3 gap-3">
                     {/* Gender Filter */}
                     <select
+                      dir={isRTL ? 'rtl' : 'ltr'}
                       value={videoFilters.gender}
                       onChange={(e) => {
                         setVideoFilters({ ...videoFilters, gender: e.target.value })
                         setVideoPage(1)
                       }}
-                      className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
+                      className="h-14 px-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-base transition-all duration-300 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20"
                     >
                       <option value="all">{t("allGenders")}</option>
                       <option value="male">Male</option>
@@ -2820,12 +2754,13 @@ export default function ProgramsPage() {
 
                     {/* Level Filter */}
                     <select
+                      dir={isRTL ? 'rtl' : 'ltr'}
                       value={videoFilters.level}
                       onChange={(e) => {
                         setVideoFilters({ ...videoFilters, level: e.target.value })
                         setVideoPage(1)
                       }}
-                      className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
+                      className="h-14 px-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-base transition-all duration-300 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20"
                     >
                       <option value="all">{t("allLevels")}</option>
                       <option value="beginner">{t("beginner")}</option>
@@ -2835,12 +2770,13 @@ export default function ProgramsPage() {
 
                     {/* Body Part Filter */}
                     <select
+                      dir={isRTL ? 'rtl' : 'ltr'}
                       value={videoFilters.bodyPart}
                       onChange={(e) => {
                         setVideoFilters({ ...videoFilters, bodyPart: e.target.value })
                         setVideoPage(1)
                       }}
-                      className="h-10 px-3 rounded-lg bg-slate-800/50 border border-slate-700 text-white text-sm"
+                      className="h-14 px-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-base transition-all duration-300 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20"
                     >
                       <option value="all">{t("allBodyParts")}</option>
                       <option value="chest">{t("chest")}</option>
@@ -2852,7 +2788,7 @@ export default function ProgramsPage() {
                     </select>
                   </div>
 
-                  <p className="text-sm text-gray-400">
+                  <p className={`text-base text-pink-400 font-semibold ${isRTL ? 'text-right' : ''}`}>
                     {(Array.isArray(availableVideos) ? availableVideos : [])
                       .filter(v => {
                         const name = v.displayName.toLowerCase()
@@ -2866,7 +2802,8 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Videos Grid */}
-                <div className="flex-1 overflow-y-auto pr-2 space-y-3">
+                <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-pink-500/60">
+                  <div className="space-y-1.5">
                   {(Array.isArray(availableVideos) ? availableVideos : [])
                     .filter(video => {
                       const name = video.displayName.toLowerCase()
@@ -2880,153 +2817,123 @@ export default function ProgramsPage() {
                     .map((video, index) => {
                       const isSelected = exerciseFormData.videoUrls.includes(video.url)
                       return (
-                        <Card 
+                        <div 
                           key={index} 
-                          className={`border transition-all overflow-hidden group ${
+                          className={`group relative flex items-center gap-3 p-2 rounded-lg border transition-all duration-300 cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} ${
                             isSelected 
-                              ? 'bg-green-500/20 border-green-500/50' 
-                              : 'bg-slate-800/50 border-slate-700 hover:border-pink-500/50'
+                              ? 'bg-green-500/10 border-green-500/50 shadow-sm shadow-green-500/10' 
+                              : 'bg-slate-800/40 border-slate-700/50 hover:border-pink-500/50 hover:bg-slate-800/60 hover:shadow-sm'
                           }`}
+                          onClick={() => {
+                            setCurrentVideoForDetail({ name: video.displayName, url: video.url })
+                            setShowVideoDetailDialog(true)
+                          }}
                         >
-                          <CardContent className="p-0">
-                            {/* Video Preview on Hover */}
-                            <div 
-                              className="relative aspect-video bg-gradient-to-br from-slate-800 to-slate-900 overflow-hidden group/video"
-                              onMouseEnter={(e) => {
-                                const video = e.currentTarget.querySelector('video')
-                                if (video) {
-                                  video.play().catch(() => {})
-                                }
-                              }}
-                              onMouseLeave={(e) => {
-                                const video = e.currentTarget.querySelector('video')
-                                if (video) {
-                                  video.pause()
-                                  video.currentTime = 0
-                                }
-                              }}
-                            >
-                              {video.url ? (
-                                <>
-                                  <video 
-                                    src={video.url}
-                                    className="w-full h-full object-cover"
-                                    muted
-                                    loop
-                                    preload="metadata"
-                                    playsInline
-                                    onError={(e) => {
-                                      // Silently handle video load errors (some videos may have expired URLs)
-                                      const target = e.currentTarget
-                                      target.style.display = 'none'
-                                      const parent = target.parentElement
-                                      if (parent) {
-                                        const errorDiv = document.createElement('div')
-                                        errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
-                                        errorDiv.innerHTML = `
-                                          <svg class="w-12 h-12 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                          </svg>
-                                          <p class="text-sm text-red-300">Video unavailable</p>
-                                        `
-                                        parent.appendChild(errorDiv)
-                                      }
-                                    }}
-                                  />
-                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent opacity-60 group-hover/video:opacity-30 transition-opacity" />
-                                  <div 
-                                    className="absolute inset-0 flex items-center justify-center cursor-pointer group-hover/video:opacity-0 transition-opacity"
-                                    onClick={(e) => {
-                                      e.stopPropagation()
-                                      const videoEl = e.currentTarget.previousElementSibling as HTMLVideoElement
-                                      if (videoEl && videoEl.tagName === 'VIDEO') {
-                                        if (videoEl.paused) {
-                                          videoEl.play()
-                                        } else {
-                                          videoEl.pause()
-                                        }
-                                      }
-                                    }}
-                                  >
-                                    <div className="w-16 h-16 rounded-full bg-slate-800/80 backdrop-blur-sm flex items-center justify-center hover:bg-pink-500/80 hover:scale-110 transition-all">
-                                      <Play className="w-8 h-8 text-white ml-1" />
-                                    </div>
+                          {/* Video Thumbnail */}
+                          <div 
+                            className="relative w-20 h-14 flex-shrink-0 rounded-md overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900"
+                            onMouseEnter={(e) => {
+                              const vid = e.currentTarget.querySelector('video')
+                              if (vid && vid.paused) vid.play().catch(() => {})
+                            }}
+                            onMouseLeave={(e) => {
+                              const vid = e.currentTarget.querySelector('video')
+                              if (vid) {
+                                vid.pause()
+                                vid.currentTime = 0
+                              }
+                            }}
+                          >
+                            {video.url ? (
+                              <>
+                                <video 
+                                  src={video.url}
+                                  className="w-full h-full object-cover"
+                                  muted
+                                  loop
+                                  preload="metadata"
+                                  playsInline
+                                  onError={(e) => {
+                                    const target = e.currentTarget
+                                    target.style.display = 'none'
+                                  }}
+                                />
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
+                                <div className="absolute inset-0 flex items-center justify-center opacity-100 group-hover:opacity-0 transition-opacity">
+                                  <div className="w-7 h-7 rounded-full bg-pink-500/80 backdrop-blur-sm flex items-center justify-center">
+                                    <Play className="w-3.5 h-3.5 text-white ml-0.5" />
                                   </div>
-                                </>
-                              ) : (
-                                <div className="absolute inset-0 flex items-center justify-center">
-                                  <Video className="w-12 h-12 text-slate-600" />
                                 </div>
-                              )}
-                              <div className="absolute top-2 right-2">
-                                <div className={`w-10 h-10 rounded-lg flex items-center justify-center backdrop-blur-sm ${
-                                  isSelected 
-                                    ? 'bg-green-500/80' 
-                                    : 'bg-pink-500/80'
-                                }`}>
-                                  <Video className="w-5 h-5 text-white" />
+                              </>
+                            ) : (
+                              <div className="absolute inset-0 flex items-center justify-center">
+                                <Video className="w-6 h-6 text-slate-600" />
+                              </div>
+                            )}
+                            {isSelected && (
+                              <div className={`absolute top-0.5 ${isRTL ? 'left-0.5' : 'right-0.5'}`}>
+                                <div className="w-4 h-4 rounded bg-green-500 flex items-center justify-center shadow-md">
+                                  <Check className="w-3 h-3 text-white" />
                                 </div>
                               </div>
-                            </div>
+                            )}
+                          </div>
 
-                            {/* Video Info */}
-                            <div 
-                              className="p-4 cursor-pointer hover:bg-slate-700/30 transition-colors"
-                              onClick={() => {
-                                if (isSelected) {
-                                  // Remove video
-                                  setExerciseFormData({ 
-                                    ...exerciseFormData, 
-                                    videoUrls: exerciseFormData.videoUrls.filter(u => u !== video.url),
-                                    videos: exerciseFormData.videos.filter(v => v.url !== video.url)
-                                  })
-                                } else {
-                                  // Open detail dialog for this video
-                                  setCurrentVideoForDetail({ name: video.displayName, url: video.url })
-                                  setShowVideoDetailDialog(true)
-                                }
-                              }}
-                            >
-                            <div className="flex items-center gap-4">
-                              <div className="flex-1 min-w-0">
-                                <p className="text-white font-bold text-lg truncate">{video.displayName}</p>
-                                <div className="flex gap-4 mt-2 text-sm">
-                                  <span className="text-gray-400">
-                                    📦 {(video.size / (1024 * 1024)).toFixed(2)} MB
-                                  </span>
-                                  <span className="text-gray-400">
-                                    🎬 {video.contentType.split('/')[1].toUpperCase()}
-                                  </span>
-                                </div>
-                              </div>
-                              <div className="flex-shrink-0">
-                                <Button
-                                  type="button"
-                                  className={`${
-                                    isSelected
-                                      ? 'bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700'
-                                      : 'bg-gradient-to-r from-pink-500 to-rose-600 hover:from-pink-600 hover:to-rose-700'
-                                  }`}
-                                >
-                                  {isSelected ? (
-                                    <>
-                                      <Check className="w-4 h-4 mr-2" />
-                                      {t("selected")}
-                                    </>
-                                  ) : (
-                                    <>
-                                      <Plus className="w-4 h-4 mr-2" />
-                                      {t("select")}
-                                    </>
-                                  )}
-                                </Button>
-                              </div>
+                          {/* Video Info */}
+                          <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
+                            <h4 className="text-white font-medium text-sm truncate mb-0.5">{video.displayName}</h4>
+                            <div className={`flex gap-1.5 items-center text-xs ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                              <span className="text-gray-500">
+                                {(video.size / (1024 * 1024)).toFixed(1)} MB
+                              </span>
+                              {isSelected && (
+                                <>
+                                  <span className="text-gray-600">•</span>
+                                  <span className="text-green-400 font-medium">✓</span>
+                                </>
+                              )}
                             </div>
-                            </div>
-                          </CardContent>
-                        </Card>
+                          </div>
+
+                          {/* Select Button */}
+                          <Button
+                            type="button"
+                            size="sm"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              if (isSelected) {
+                                setExerciseFormData({ 
+                                  ...exerciseFormData, 
+                                  videoUrls: exerciseFormData.videoUrls.filter(u => u !== video.url),
+                                  videos: exerciseFormData.videos.filter(v => v.url !== video.url)
+                                })
+                              } else {
+                                setCurrentVideoForDetail({ name: video.displayName, url: video.url })
+                                setShowVideoDetailDialog(true)
+                              }
+                            }}
+                            className={`h-7 px-3 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105 flex-shrink-0 ${
+                              isSelected
+                                ? 'bg-red-500/90 hover:bg-red-600'
+                                : 'bg-pink-500/90 hover:bg-pink-600'
+                            }`}
+                          >
+                            {isSelected ? (
+                              <>
+                                <X className="w-3 h-3 mr-1" />
+                                {t("cancel")}
+                              </>
+                            ) : (
+                              <>
+                                <Plus className="w-3 h-3 mr-1" />
+                                {t("select")}
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       )
                     })}
+                  </div>
                 </div>
 
                 {/* Pagination */}
@@ -3042,17 +2949,17 @@ export default function ProgramsPage() {
                   const totalPages = Math.ceil(filteredVideos.length / videosPerPage)
                   
                   return filteredVideos.length > videosPerPage && (
-                    <div className="flex items-center justify-center gap-2 pt-3">
+                    <div className={`flex items-center justify-center gap-3 pt-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setVideoPage(prev => Math.max(1, prev - 1))}
                         disabled={videoPage === 1}
-                        className="border-slate-700 text-gray-300 hover:bg-slate-800"
+                        className="border-slate-700 text-gray-300 hover:bg-slate-800 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
                       >
                         ← {t("previous")}
                       </Button>
-                      <div className="px-4 py-2 rounded-lg bg-slate-800/50 text-white text-sm font-bold">
+                      <div className="px-6 py-3 rounded-xl bg-slate-800/50 text-white text-base font-bold border border-pink-500/30">
                         {videoPage} / {totalPages}
                       </div>
                       <Button
@@ -3060,7 +2967,7 @@ export default function ProgramsPage() {
                         variant="outline"
                         onClick={() => setVideoPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={videoPage >= totalPages}
-                        className="border-slate-700 text-gray-300 hover:bg-slate-800"
+                        className="border-slate-700 text-gray-300 hover:bg-slate-800 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
                       >
                         {t("next")} →
                       </Button>
@@ -3069,20 +2976,20 @@ export default function ProgramsPage() {
                 })()}
 
                 {/* Action Buttons */}
-                <div className="flex gap-3 pt-4 border-t border-slate-700 mt-4">
+                <div className={`flex gap-4 pt-6 border-t border-pink-500/20 mt-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <Button
                     onClick={() => setShowVideoBrowser(false)}
                     variant="outline"
-                    className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-12"
+                    className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-16 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105"
                   >
-                    <X className="w-4 h-4 mr-2" />
+                    <X className="w-5 h-5 mr-2" />
                     {t("cancel")}
                   </Button>
                   <Button
                     onClick={() => setShowVideoBrowser(false)}
-                    className="flex-1 h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-lg font-bold shadow-lg"
+                    className="flex-1 h-16 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-xl font-bold shadow-lg hover:shadow-green-500/30 rounded-xl transition-all duration-300 hover:scale-105"
                   >
-                    <Check className="w-5 h-5 mr-2" />
+                    <Check className="w-6 h-6 mr-2" />
                     {t("saveWithCount")} ({exerciseFormData.videos.length})
                   </Button>
                 </div>
@@ -3093,7 +3000,7 @@ export default function ProgramsPage() {
 
         {/* Video Detail Dialog */}
         <Dialog open={showVideoDetailDialog} onOpenChange={setShowVideoDetailDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-xl" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-xl">
                 <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -3202,7 +3109,7 @@ export default function ProgramsPage() {
 
         {/* Meal Dialog */}
         <Dialog open={isMealDialogOpen} onOpenChange={setIsMealDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
@@ -3541,7 +3448,7 @@ export default function ProgramsPage() {
 
         {/* Meal Library Dialog */}
         <Dialog open={showMealLibrary} onOpenChange={setShowMealLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -3674,7 +3581,7 @@ export default function ProgramsPage() {
 
         {/* Copy Meals Dialog */}
         <Dialog open={showCopyMealsDialog} onOpenChange={setShowCopyMealsDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -3769,7 +3676,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Library Dialog */}
         <Dialog open={showExerciseLibrary} onOpenChange={setShowExerciseLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -3883,7 +3790,7 @@ export default function ProgramsPage() {
 
         {/* Copy Exercises Dialog */}
         <Dialog open={showCopyExercisesDialog} onOpenChange={setShowCopyExercisesDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -3975,7 +3882,7 @@ export default function ProgramsPage() {
 
         {/* Meal Image Browser Dialog */}
         <Dialog open={showMealImageBrowser} onOpenChange={setShowMealImageBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">
