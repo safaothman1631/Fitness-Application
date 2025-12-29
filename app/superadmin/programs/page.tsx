@@ -11,7 +11,7 @@ import {
   Utensils, Dumbbell, Plus, Search, Clock, Flame, 
   Star, Edit, Trash2, X, Save, Apple, Pizza, Coffee,
   Award, Zap, Heart, TrendingUp, Target, Activity,
-  Calendar, Lightbulb, Users, UserPlus, Check, Video, Play
+  Calendar, Lightbulb, Users, UserPlus, Check, Video, Play, Info
 } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
@@ -20,6 +20,63 @@ export default function ProgramsPage() {
   const { t, language } = useLanguage()
   const isRTL = language === 'ar' || language === 'ku'
   const [activeTab, setActiveTab] = useState<'nutrition' | 'workout'>('nutrition')
+  
+  // Video name to image name mapping for common mismatches
+  const videoToImageNameMap: Record<string, string> = {
+    'Basic Crunch': 'Abdominal Crunches',
+    'Bicycle Crunch': 'Abdominal Crunches',
+    'Box Jump': 'box jump  ',
+    'Assault AirBike Normal Speed': 'Assault AirBike Fast Speed',
+    'Assault AirBike Sprint Speed': 'Assault AirBike Fast Speed',
+    'Burpee(1)': 'Burpee  ',
+    'Butt Kicks (2)': 'Butt kicks  ',
+    'Butt kicks slow': 'Butt kicks slow  ',
+    'Fast feet': 'Fast feet  ',
+    'Half burpees': 'Half burpees  ',
+    'Shadow Boxing': 'Shadow Boxing  ',
+    'arm pulses': 'arm pulses  ',
+    'arm pulses cross': 'arm pulses cross  ',
+    'arm pulses palms downwards': 'arm pulses palms downwards  ',
+    'arm pulses palms upwards': 'arm pulses palms upwards  ',
+    'jumping jack': 'jumping jack  ',
+    'plank lunges': 'plank lunges  ',
+    'plank shoulder taps': 'plank shoulder taps  ',
+    'side to side punch': 'side to side punch  ',
+    'skipping': 'skipping  ',
+    'standing toe touch': 'standing toe touch  ',
+    '45 degree side bend': 'Arm Tuck Side Bend_female',
+    'Alternate Leg Raise from Reverse Plank Position': 'Alternate Single Leg Raise Plank_female',
+    'Alternate Arm Leg Plank': 'Alternate Single Leg Raise Plank_female',
+    'Alternate Lying Floor Leg Raise': 'Alternate Single Leg Raise Plank_female',
+    'Alternate Leg Raise': 'Alternate Single Leg Raise Plank_female',
+    'Alternate leg raise': 'Alternate Single Leg Raise Plank_female',
+    'Alternate lying floor leg raise': 'Alternate Single Leg Raise Plank_female',
+    'Alternate leg raise with head up': 'Alternate Single Leg Raise Plank_female',
+    'Alternate leg raise from reverse plank position': 'Alternate Single Leg Raise Plank_female',
+    'Alternating Plank Lunge': 'Dumbbell Side Lunge Alternating  ',
+    'Ball Sit-up': 'Ball Slams',
+    'Band side bend': 'Arm Tuck Side Bend_female',
+    'Band Decline Sit up': 'Band Pull Up',
+    'Barbell Landmine Side Bend': 'Arm Tuck Side Bend_female',
+    'Barbell seated twist': 'Barbell seated good morning',
+    'Barbell rollout': 'Barbell Deadlift (front POV)_female',
+    'Barbell standing twist': 'Barbell Standing Military Press',
+    'Barbell side bends': 'Barbell side split squat',
+    'Bent knee Lying Twist': 'Bent Over Twist',
+    'Cable Twist': 'Cable Twisting Biceps Curl',
+    'Crab Twist Toe Touch': 'Basic Toe Touch',
+    'Criss Cross Leg Raises': 'Criss Cross Arms Lift',
+    'Crunch Frog on Floor': 'Dumbbell Pullover on floor',
+    'Dumbbell Decline Overhead Sit-up': 'dumbbell chest press decline',
+    'Dumbbell Decline Sit-up': 'Dumbbell Decline Fly',
+    'Dumbbell Overhead Sit-up': 'Dumbbell Overhead Lunge',
+    'Dumbbell Side Bend': 'Dumbbell Overhead Side Bend',
+    'Dumbbell Side Plank with Rear Fly': 'bent over rear delt fly dumbbell',
+    'Dumbbell Single Arm Starfish Crunch': 'Dumbbell Single Arm Floor Press 2',
+    'Dumbbell Starfish Crunch Alternating': 'Dumbbell Alternating Arnold Press',
+    'Dumbbell Straight Arm Crunch': 'Cable Straight Arm Pulldown',
+  };
+  
   const [searchQuery, setSearchQuery] = useState("")
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [programs, setPrograms] = useState<any[]>([])
@@ -39,6 +96,8 @@ export default function ProgramsPage() {
   const [showVideoDetailDialog, setShowVideoDetailDialog] = useState(false)
   const [currentVideoForDetail, setCurrentVideoForDetail] = useState<{ name: string; url: string } | null>(null)
   const [currentEditingDay, setCurrentEditingDay] = useState('')
+  const [showExerciseInfoDialog, setShowExerciseInfoDialog] = useState(false)
+  const [currentExerciseInfo, setCurrentExerciseInfo] = useState<any>(null)
   
   // Meal Dialog States
   const [isMealDialogOpen, setIsMealDialogOpen] = useState(false)
@@ -68,11 +127,10 @@ export default function ProgramsPage() {
   const [sourceDayForExerciseCopy, setSourceDayForExerciseCopy] = useState('')
   
   const [videoPage, setVideoPage] = useState(1)
-  const videosPerPage = 15
+  const videosPerPage = 20 // 20 videos per page for better performance
   const [videoFilters, setVideoFilters] = useState({
     gender: 'all', // all, male, female
-    level: 'all',  // all, beginner, intermediate, advanced
-    bodyPart: 'all' // all, chest, back, legs, shoulders, arms, core
+    category: 'all' // all, abs, back, balance, biceps, cardio, chest, flexibility, forearms, functional, legs, powerlifting, shoulders, strength, triceps
   })
   const [availableVideos, setAvailableVideos] = useState<any[]>([])
   const [showVideoBrowser, setShowVideoBrowser] = useState(false)
@@ -128,7 +186,20 @@ export default function ProgramsPage() {
     fetchUsers()
     fetchVideos()
     fetchMealImages()
+    fetchExerciseLibrary()
   }, [activeTab])
+
+  const fetchExerciseLibrary = async () => {
+    try {
+      const response = await fetch('/api/exercise-library')
+      if (response.ok) {
+        const data = await response.json()
+        setExerciseLibrary(data.exercises || [])
+      }
+    } catch (error) {
+      console.error('Error fetching exercise library:', error)
+    }
+  }
 
   const fetchVideos = async () => {
     setIsLoadingVideos(true)
@@ -161,7 +232,7 @@ export default function ProgramsPage() {
       }
 
       console.log('🔄 Fetching videos from API...')
-      const response = await fetch('/api/videos?limit=500') // Get first 500 videos
+      const response = await fetch('/api/videos?limit=10000') // Get all videos
       console.log('📡 Response status:', response.status, response.statusText)
       
       if (response.ok) {
@@ -696,20 +767,42 @@ export default function ProgramsPage() {
   }
 
   // Exercise Library Functions
-  const handleSaveExerciseToLibrary = () => {
+  const handleSaveExerciseToLibrary = async () => {
     if (!exerciseFormData.name.trim()) {
-      alert('تکایە ناوی یاری بنووسە')
+      alert('تکایە ناوی ئێکسەرسایز بنووسە')
       return
     }
 
-    const newExercise = {
-      id: Date.now().toString(),
-      ...exerciseFormData,
-      savedAt: new Date().toISOString()
-    }
+    try {
+      const newExercise = {
+        name: exerciseFormData.name,
+        sets: exerciseFormData.sets,
+        reps: exerciseFormData.reps,
+        notes: exerciseFormData.notes,
+        videoUrls: exerciseFormData.videoUrls || [],
+        videos: exerciseFormData.videos || [],
+        savedAt: new Date().toISOString(),
+        createdBy: 'superadmin' // You can get this from auth context
+      }
 
-    setExerciseLibrary([...exerciseLibrary, newExercise])
-    alert('✅ یارییەکە خەزێنکرا بۆ کتێبخانە!')
+      // Save to Firestore
+      const response = await fetch('/api/exercise-library', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newExercise)
+      })
+
+      if (response.ok) {
+        const savedExercise = await response.json()
+        setExerciseLibrary([...exerciseLibrary, savedExercise])
+        alert('✅ ئێکسەرسایزەکە خەزێنکرا بۆ کتێبخانە!')
+      } else {
+        alert('❌ هەڵە لە خەزنکردن')
+      }
+    } catch (error) {
+      console.error('Error saving exercise:', error)
+      alert('❌ هەڵە لە خەزنکردن')
+    }
   }
 
   const handleSelectExerciseFromLibrary = (exercise: any) => {
@@ -724,8 +817,22 @@ export default function ProgramsPage() {
     setShowExerciseLibrary(false)
   }
 
-  const handleDeleteExerciseFromLibrary = (exerciseId: string) => {
-    setExerciseLibrary(exerciseLibrary.filter(e => e.id !== exerciseId))
+  const handleDeleteExerciseFromLibrary = async (exerciseId: string) => {
+    try {
+      const response = await fetch(`/api/exercise-library?id=${exerciseId}`, {
+        method: 'DELETE'
+      })
+
+      if (response.ok) {
+        setExerciseLibrary(exerciseLibrary.filter(e => e.id !== exerciseId))
+        alert('✅ ئێکسەرسایزەکە سڕایەوە')
+      } else {
+        alert('❌ هەڵە لە سڕینەوە')
+      }
+    } catch (error) {
+      console.error('Error deleting exercise:', error)
+      alert('❌ هەڵە لە سڕینەوە')
+    }
   }
 
   const handleCopyExercisesToDay = (targetDay: string) => {
@@ -1610,7 +1717,7 @@ export default function ProgramsPage() {
               : 'bg-slate-900 border-blue-500/50'
           }`}>
             <DialogHeader className="border-b pb-5 mb-6" style={{ borderColor: activeTab === 'nutrition' ? 'rgba(16, 185, 129, 0.2)' : 'rgba(59, 130, 246, 0.2)' }}>
-              <DialogTitle className="text-3xl font-semibold flex items-center gap-4">
+              <DialogTitle className="text-3xl font-semibold flex items-center gap-4 rtl:flex-row-reverse">
                 <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${
                   activeTab === 'nutrition'
                     ? 'bg-emerald-500/20 border border-emerald-500/40'
@@ -1839,8 +1946,8 @@ export default function ProgramsPage() {
                                 )}
                               </div>
                               <div className={isRTL ? 'text-right' : 'text-left'}>
-                                <p className="text-white font-bold text-lg mb-1">{user.name || 'No Name'}</p>
-                                <p className="text-gray-400 text-sm font-medium">{user.email}</p>
+                                <p className="text-white font-semibold text-sm mb-1 truncate">{user.name || 'No Name'}</p>
+                                <p className="text-gray-400 text-xs font-medium truncate">{user.email}</p>
                               </div>
                             </div>
                             <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -1911,11 +2018,19 @@ export default function ProgramsPage() {
                     </div>
 
                     {/* Current Day Content */}
-                    <Card className="bg-slate-800/50 border-slate-700">
-                      <CardHeader className="border-b border-slate-700/50 pb-3">
+                    <Card className="bg-gradient-to-br from-slate-800/60 to-slate-900/40 border-slate-700/50 backdrop-blur-sm overflow-hidden">
+                      <CardHeader className="border-b border-slate-700/30 pb-4 bg-gradient-to-r from-blue-500/5 to-cyan-500/5">
                         <div className={`flex items-center justify-between ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className="flex items-center gap-2 bg-slate-900/50 rounded-lg px-3 py-1.5">
-                            <span className="text-xs text-gray-400">{t("restDay")}</span>
+                          <div className={`flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg shadow-blue-500/30">
+                              <span className="text-white text-lg">📅</span>
+                            </div>
+                            <h4 className="text-white font-bold text-lg">
+                              {dayNames[currentDay as keyof typeof dayNames]}
+                            </h4>
+                          </div>
+                          <div className={`flex items-center gap-3 bg-slate-800/60 rounded-xl px-4 py-2.5 border border-slate-700/50 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <span className="text-sm font-medium text-slate-300">{t("restDay")}</span>
                             <label className="relative inline-flex items-center cursor-pointer">
                               <input 
                                 type="checkbox" 
@@ -1923,26 +2038,23 @@ export default function ProgramsPage() {
                                 onChange={() => toggleRestDay(currentDay)}
                                 className="sr-only peer" 
                               />
-                              <div className="w-10 h-5 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-orange-500"></div>
+                              <div className="w-11 h-6 bg-slate-700 rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-orange-500 peer-checked:to-amber-500 peer-checked:shadow-lg peer-checked:shadow-orange-500/50"></div>
                             </label>
                           </div>
-                          <h4 className="text-white font-bold text-lg">
-                            📅 {dayNames[currentDay as keyof typeof dayNames]}
-                          </h4>
                         </div>
                       </CardHeader>
                       
-                      <CardContent className="p-4">
+                      <CardContent className="p-5">
                         {!newProgram.weeklySchedule?.[currentDay]?.rest ? (
-                          <div className="space-y-3">
+                          <div className="space-y-4">
                             {newProgram.weeklySchedule?.[currentDay]?.exercises?.length > 0 ? (
-                              <div className="space-y-2 max-h-48 overflow-y-auto pr-2">
+                              <div className="space-y-2.5 max-h-64 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-slate-700 scrollbar-track-slate-800/50">
                                 {newProgram.weeklySchedule[currentDay].exercises.map((exercise: any, index: number) => (
                                   <div 
                                     key={index} 
-                                    className="flex items-center gap-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/30"
+                                    className="group flex items-center gap-3 p-3.5 rounded-xl bg-gradient-to-r from-blue-500/10 to-cyan-500/5 border border-blue-500/20 hover:border-blue-500/40 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10"
                                   >
-                                    <div className="w-7 h-7 rounded-lg bg-blue-500 flex items-center justify-center flex-shrink-0">
+                                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center flex-shrink-0 shadow-md">
                                       <span className="text-white font-bold text-sm">{index + 1}</span>
                                     </div>
                                     <div className="flex-1 min-w-0">
@@ -1960,7 +2072,7 @@ export default function ProgramsPage() {
                                       size="sm"
                                       variant="outline"
                                       onClick={() => removeExerciseFromDay(currentDay, index)}
-                                      className="border-red-700/50 text-red-400 hover:bg-red-500/20 h-7 w-7 p-0"
+                                      className="border-red-500/30 text-red-400 hover:bg-red-500/20 hover:border-red-500/50 h-8 w-8 p-0 transition-all duration-300 opacity-0 group-hover:opacity-100"
                                     >
                                       <X className="w-4 h-4" />
                                     </Button>
@@ -1968,16 +2080,19 @@ export default function ProgramsPage() {
                                 ))}
                               </div>
                             ) : (
-                              <div className="text-center py-6 border-2 border-dashed border-slate-700 rounded-lg">
-                                <Activity className="w-10 h-10 text-gray-600 mx-auto mb-2" />
-                                <p className="text-gray-400 text-sm">{t("noExercisesAdded")}</p>
+                              <div className="text-center py-12 border-2 border-dashed border-slate-700/50 rounded-2xl bg-slate-900/20">
+                                <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center mx-auto mb-4">
+                                  <Activity className="w-8 h-8 text-blue-400" />
+                                </div>
+                                <p className="text-slate-300 font-medium mb-1">{t("noExercisesAdded")}</p>
+                                <p className="text-slate-500 text-sm">{t("addExercisesToStart")}</p>
                               </div>
                             )}
 
-                            <div className="grid grid-cols-2 gap-2">
+                            <div className="grid grid-cols-2 gap-3 pt-2">
                               <Button
                                 onClick={() => addExerciseToDay(currentDay)}
-                                className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700"
+                                className="bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 shadow-lg shadow-blue-500/30 hover:shadow-xl hover:shadow-blue-500/40 transition-all duration-300"
                               >
                                 <Plus className="w-5 h-5 mr-2" />
                                 {t("addExerciseButton")}
@@ -1988,7 +2103,7 @@ export default function ProgramsPage() {
                                   setShowCopyExercisesDialog(true)
                                 }}
                                 variant="outline"
-                                className="border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10"
+                                className="border-cyan-500/40 text-cyan-400 hover:bg-cyan-500/10 hover:border-cyan-500/60 transition-all duration-300"
                                 disabled={!newProgram.weeklySchedule?.[currentDay]?.exercises?.length}
                               >
                                 <Dumbbell className="w-5 h-5 mr-2" />
@@ -2007,23 +2122,60 @@ export default function ProgramsPage() {
                     </Card>
 
                     {/* Week Summary - Compact */}
-                    <Card className="bg-slate-800/30 border-slate-700">
-                      <CardContent className="p-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-gray-400">{t("weekSummaryLabel")}</span>
-                          <div className="flex gap-3 text-xs">
-                            <span className="text-green-400">
-                              ✓ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.exercises?.length > 0).length} {t("activeLabel")}
-                            </span>
-                            <span className="text-orange-400">
-                              ○ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length} {t("restLabel")}
-                            </span>
-                            <span className="text-blue-400">
-                              Σ {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.exercises?.length || 0), 0)} {t("exercisesLabel")}
-                            </span>
-                            <span className="text-cyan-400">
-                              ◇ {getAllUniqueExercises().length} {t("uniqueLabel")}
-                            </span>
+                    <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/30 border-slate-700/50 backdrop-blur-sm">
+                      <CardContent className="p-5">
+                        <div className="flex flex-col gap-4">
+                          <div className="flex items-center gap-2 pb-3 border-b border-slate-700/50 rtl:flex-row-reverse">
+                            <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center">
+                              <span className="text-purple-400 font-bold text-sm">Σ</span>
+                            </div>
+                            <span className="text-sm font-bold text-white">{t("weekSummaryLabel")}</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-green-500/10 border border-green-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-green-500/20 flex items-center justify-center">
+                                <span className="text-green-400 text-xs">✓</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-green-300/70">{t("activeLabel")}</p>
+                                <p className="text-sm font-bold text-green-400">
+                                  {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.exercises?.length > 0).length}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-orange-500/10 border border-orange-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-orange-500/20 flex items-center justify-center">
+                                <span className="text-orange-400 text-xs">○</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-orange-300/70">{t("restLabel")}</p>
+                                <p className="text-sm font-bold text-orange-400">
+                                  {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-blue-500/10 border border-blue-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-blue-500/20 flex items-center justify-center">
+                                <span className="text-blue-400 text-xs font-bold">Σ</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-blue-300/70">{t("exercisesLabel")}</p>
+                                <p className="text-sm font-bold text-blue-400">
+                                  {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.exercises?.length || 0), 0)}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-cyan-500/10 border border-cyan-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-cyan-500/20 flex items-center justify-center">
+                                <span className="text-cyan-400 text-xs">◇</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-cyan-300/70">{t("uniqueLabel")}</p>
+                                <p className="text-sm font-bold text-cyan-400">
+                                  {getAllUniqueExercises().length}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -2261,23 +2413,60 @@ export default function ProgramsPage() {
                     </Card>
 
                     {/* Week Summary - Compact */}
-                    <Card className="bg-slate-800/30 border-slate-700">
-                      <CardContent className="p-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-xs font-semibold text-gray-400">{t("weekSummary")}</span>
-                          <div className="flex gap-3 text-xs">
-                            <span className="text-green-400">
-                              ✓ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.meals?.length > 0).length} {t("active")}
-                            </span>
-                            <span className="text-orange-400">
-                              ○ {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length} {t("rest")}
-                            </span>
-                            <span className="text-green-400">
-                              Σ {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.meals?.length || 0), 0)} {t("meals")}
-                            </span>
-                            <span className="text-purple-400">
-                              ◇ {getAllUniqueMeals().length} {t("different")}
-                            </span>
+                    <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/30 border-slate-700/50 backdrop-blur-sm">
+                      <CardContent className="p-5">
+                        <div className="flex flex-col gap-4">
+                          <div className="flex items-center gap-2 pb-3 border-b border-slate-700/50 rtl:flex-row-reverse">
+                            <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center">
+                              <span className="text-emerald-400 font-bold text-sm">Σ</span>
+                            </div>
+                            <span className="text-sm font-bold text-white">{t("weekSummary")}</span>
+                          </div>
+                          <div className="grid grid-cols-2 gap-3">
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-green-500/10 border border-green-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-green-500/20 flex items-center justify-center">
+                                <span className="text-green-400 text-xs">✓</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-green-300/70">{t("active")}</p>
+                                <p className="text-sm font-bold text-green-400">
+                                  {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.meals?.length > 0).length}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-orange-500/10 border border-orange-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-orange-500/20 flex items-center justify-center">
+                                <span className="text-orange-400 text-xs">○</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-orange-300/70">{t("rest")}</p>
+                                <p className="text-sm font-bold text-orange-400">
+                                  {Object.values(newProgram.weeklySchedule || {}).filter((d: any) => d.rest).length}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-green-500/10 border border-green-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-green-500/20 flex items-center justify-center">
+                                <span className="text-green-400 text-xs font-bold">Σ</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-green-300/70">{t("meals")}</p>
+                                <p className="text-sm font-bold text-green-400">
+                                  {Object.values(newProgram.weeklySchedule || {}).reduce((sum: number, d: any) => sum + (d.meals?.length || 0), 0)}
+                                </p>
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2 p-2.5 rounded-lg bg-purple-500/10 border border-purple-500/20 rtl:flex-row-reverse">
+                              <div className="w-6 h-6 rounded-md bg-purple-500/20 flex items-center justify-center">
+                                <span className="text-purple-400 text-xs">◇</span>
+                              </div>
+                              <div>
+                                <p className="text-xs text-purple-300/70">{t("different")}</p>
+                                <p className="text-sm font-bold text-purple-400">
+                                  {getAllUniqueMeals().length}
+                                </p>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       </CardContent>
@@ -2482,24 +2671,41 @@ export default function ProgramsPage() {
             </DialogHeader>
 
             <div className="space-y-8 py-2">
-              {/* Quick Actions */}
-              <div className="flex gap-3">
-                <Button
+              {/* Quick Actions - Modern Design */}
+              <div className="grid grid-cols-2 gap-3">
+                {/* Exercise Library Button */}
+                <button
                   onClick={() => setShowExerciseLibrary(true)}
-                  variant="outline"
-                  className="flex-1 border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/10 h-14 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-cyan-500/10"
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-slate-800/95 to-slate-900 p-4 border-2 border-cyan-500/20 hover:border-cyan-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-cyan-500/20"
                 >
-                  <Dumbbell className="w-5 h-5 mr-2" />
-                  {t("exerciseLibraryButton")}
-                </Button>
-                <Button
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <Dumbbell className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-white font-bold text-sm">Exercise Library</span>
+                      <span className="text-cyan-400 text-xs">{exerciseLibrary.length} saved</span>
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-cyan-500/5 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
+
+                {/* Save to Library Button */}
+                <button
                   onClick={handleSaveExerciseToLibrary}
-                  variant="outline"
-                  className="flex-1 border-blue-500/30 text-blue-400 hover:bg-blue-500/10 h-14 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/10"
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-br from-slate-800 via-slate-800/95 to-slate-900 p-4 border-2 border-blue-500/20 hover:border-blue-500/50 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-blue-500/20"
                 >
-                  <Save className="w-5 h-5 mr-2" />
-                  {t("saveToLibrary")}
-                </Button>
+                  <div className="relative z-10 flex items-center justify-center gap-3">
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform duration-300">
+                      <Save className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex flex-col items-start">
+                      <span className="text-white font-bold text-sm">Save to Library</span>
+                      <span className="text-blue-400 text-xs">Quick save</span>
+                    </div>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-blue-500/5 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </button>
               </div>
 
               {/* Exercise Name */}
@@ -2564,20 +2770,34 @@ export default function ProgramsPage() {
                           <p className="text-xs text-gray-400 italic truncate">💡 {video.notes}</p>
                         )}
 
-                        {/* Remove Button */}
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={() => {
-                            const newVideos = exerciseFormData.videos.filter((_, i) => i !== index)
-                            const newUrls = exerciseFormData.videoUrls.filter((_, i) => i !== index)
-                            setExerciseFormData({ ...exerciseFormData, videos: newVideos, videoUrls: newUrls })
-                          }}
-                          className="w-full h-7 border-red-700/50 text-red-400 hover:bg-red-500/20 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105"
-                        >
-                          <X className="w-3 h-3 mr-1" />
-                          {t("cancel")}
-                        </Button>
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-2 gap-1.5">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              setCurrentExerciseInfo(video)
+                              setShowExerciseInfoDialog(true)
+                            }}
+                            className="h-7 border-blue-700/50 text-blue-400 hover:bg-blue-500/20 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105"
+                          >
+                            <Info className="w-3 h-3 mr-1" />
+                            {t("info")}
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => {
+                              const newVideos = exerciseFormData.videos.filter((_, i) => i !== index)
+                              const newUrls = exerciseFormData.videoUrls.filter((_, i) => i !== index)
+                              setExerciseFormData({ ...exerciseFormData, videos: newVideos, videoUrls: newUrls })
+                            }}
+                            className="h-7 border-red-700/50 text-red-400 hover:bg-red-500/20 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105"
+                          >
+                            <X className="w-3 h-3 mr-1" />
+                            {t("cancel")}
+                          </Button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2662,7 +2882,7 @@ export default function ProgramsPage() {
 
         {/* Video Browser Dialog */}
         <Dialog open={showVideoBrowser} onOpenChange={setShowVideoBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-[98vw] sm:max-w-2xl md:max-w-4xl lg:max-w-6xl xl:max-w-7xl max-h-[90vh] overflow-hidden flex flex-col scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-pink-500/60">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-[98vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-pink-500/60">
             <DialogHeader className="border-b border-pink-500/20 pb-6 mb-6">
               <DialogTitle className={`flex items-center justify-between gap-4 text-3xl ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -2672,7 +2892,10 @@ export default function ProgramsPage() {
                   <div className={isRTL ? 'text-right' : ''}>
                     <div className="text-white font-semibold">{t("selectVideo")}</div>
                     <div className="text-base text-pink-400 font-normal mt-1">
-                      {availableVideos.length} {t("videosInStorage")}
+                      {availableVideos.length} {t("videosInStorage")} 
+                      {availableVideos.length > 0 && (
+                        <span className="text-green-400 ml-2">✓</span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -2736,90 +2959,159 @@ export default function ProgramsPage() {
                   </div>
 
                   {/* Filters */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {/* Gender Filter */}
-                    <select
-                      dir={isRTL ? 'rtl' : 'ltr'}
-                      value={videoFilters.gender}
-                      onChange={(e) => {
-                        setVideoFilters({ ...videoFilters, gender: e.target.value })
-                        setVideoPage(1)
-                      }}
-                      className="h-14 px-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-base transition-all duration-300 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20"
-                    >
-                      <option value="all">{t("allGenders")}</option>
-                      <option value="male">Male</option>
-                      <option value="female">Female</option>
-                    </select>
+                  <div className={`flex flex-wrap items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    {/* Gender Filters */}
+                    <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <button
+                        onClick={() => {
+                          setVideoFilters({ ...videoFilters, gender: 'all' })
+                          setVideoPage(1)
+                        }}
+                        className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg ${
+                          videoFilters.gender === 'all'
+                            ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-pink-500/40'
+                            : 'bg-slate-800/60 text-gray-300 hover:bg-slate-700/80 border border-slate-700/50'
+                        }`}
+                      >
+                        🔄 {t("all")}
+                      </button>
+                      <button
+                        onClick={() => {
+                          setVideoFilters({ ...videoFilters, gender: 'male' })
+                          setVideoPage(1)
+                        }}
+                        className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg ${
+                          videoFilters.gender === 'male'
+                            ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-blue-500/40'
+                            : 'bg-slate-800/60 text-gray-300 hover:bg-slate-700/80 border border-slate-700/50'
+                        }`}
+                      >
+                        👨 Male
+                      </button>
+                      <button
+                        onClick={() => {
+                          setVideoFilters({ ...videoFilters, gender: 'female' })
+                          setVideoPage(1)
+                        }}
+                        className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg ${
+                          videoFilters.gender === 'female'
+                            ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-pink-500/40'
+                            : 'bg-slate-800/60 text-gray-300 hover:bg-slate-700/80 border border-slate-700/50'
+                        }`}
+                      >
+                        👩 Female
+                      </button>
+                    </div>
 
-                    {/* Level Filter */}
-                    <select
-                      dir={isRTL ? 'rtl' : 'ltr'}
-                      value={videoFilters.level}
-                      onChange={(e) => {
-                        setVideoFilters({ ...videoFilters, level: e.target.value })
-                        setVideoPage(1)
-                      }}
-                      className="h-14 px-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-base transition-all duration-300 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20"
-                    >
-                      <option value="all">{t("allLevels")}</option>
-                      <option value="beginner">{t("beginner")}</option>
-                      <option value="intermediate">{t("intermediate")}</option>
-                      <option value="advanced">{t("advanced")}</option>
-                    </select>
+                    {/* Divider */}
+                    <div className="h-10 w-px bg-gradient-to-b from-transparent via-slate-600 to-transparent"></div>
 
-                    {/* Body Part Filter */}
-                    <select
-                      dir={isRTL ? 'rtl' : 'ltr'}
-                      value={videoFilters.bodyPart}
-                      onChange={(e) => {
-                        setVideoFilters({ ...videoFilters, bodyPart: e.target.value })
-                        setVideoPage(1)
-                      }}
-                      className="h-14 px-4 rounded-xl bg-slate-800/50 border border-slate-700 text-white text-base transition-all duration-300 focus:border-pink-500/50 focus:ring-2 focus:ring-pink-500/20"
-                    >
-                      <option value="all">{t("allBodyParts")}</option>
-                      <option value="chest">{t("chest")}</option>
-                      <option value="back">{t("back")}</option>
-                      <option value="legs">{t("legs")}</option>
-                      <option value="shoulders">{t("shoulders")}</option>
-                      <option value="arms">{t("arms")}</option>
-                      <option value="core">{t("core")}</option>
-                    </select>
+                    {/* Category Filter Dropdown */}
+                    <div className={`flex gap-3 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <label className="text-base font-bold text-white flex items-center gap-2 whitespace-nowrap">
+                        {isRTL ? ':پۆلێن' : 'Category:'}
+                      </label>
+                      <select
+                        value={videoFilters.category}
+                        onChange={(e) => {
+                          setVideoFilters({ ...videoFilters, category: e.target.value })
+                          setVideoPage(1)
+                        }}
+                        dir="ltr"
+                        className="min-w-[200px] px-5 py-3 rounded-xl font-bold bg-slate-800 border-2 border-slate-600 text-white hover:border-pink-500 focus:border-pink-500 focus:ring-4 focus:ring-pink-500/20 focus:outline-none transition-all duration-200 cursor-pointer shadow-lg hover:shadow-pink-500/30"
+                      >
+                        {[
+                          { value: 'all', label: 'All', emoji: '🔄', count: 0 },
+                          { value: 'legs', label: 'Legs', emoji: '🦵', count: 491 },
+                          { value: 'back', label: 'Back', emoji: '💪', count: 288 },
+                          { value: 'shoulders', label: 'Shoulders', emoji: '💪', count: 256 },
+                          { value: 'abs', label: 'Abs', emoji: '🔥', count: 239 },
+                          { value: 'functional', label: 'Functional', emoji: '⚡', count: 200 },
+                          { value: 'chest', label: 'Chest', emoji: '🦾', count: 193 },
+                          { value: 'biceps', label: 'Biceps', emoji: '💪', count: 160 },
+                          { value: 'flexibility', label: 'Flexibility', emoji: '🤸', count: 88 },
+                          { value: 'triceps', label: 'Triceps', emoji: '💪', count: 80 },
+                          { value: 'cardio', label: 'Cardio', emoji: '❤️', count: 42 },
+                          { value: 'forearms', label: 'Forearms', emoji: '💪', count: 35 },
+                          { value: 'powerlifting', label: 'Powerlifting', emoji: '🏋️', count: 34 },
+                          { value: 'strength', label: 'Strength', emoji: '💪', count: 20 },
+                          { value: 'balance', label: 'Balance', emoji: '⚖️', count: 2 }
+                        ].map((cat) => {
+                          // Calculate actual count based on gender filter
+                          const actualCount = cat.value === 'all' 
+                            ? (Array.isArray(availableVideos) ? availableVideos : []).filter(v => {
+                                const name = v.displayName?.toLowerCase() || ''
+                                let matchesGender = true
+                                if (videoFilters.gender === 'male') {
+                                  matchesGender = name.includes('_male') && !name.includes('_female')
+                                } else if (videoFilters.gender === 'female') {
+                                  matchesGender = name.includes('_female')
+                                }
+                                return matchesGender
+                              }).length
+                            : (Array.isArray(availableVideos) ? availableVideos : []).filter(v => {
+                                const name = v.displayName?.toLowerCase() || ''
+                                let matchesGender = true
+                                if (videoFilters.gender === 'male') {
+                                  matchesGender = name.includes('_male') && !name.includes('_female')
+                                } else if (videoFilters.gender === 'female') {
+                                  matchesGender = name.includes('_female')
+                                }
+                                const matchesCategory = (v.category && v.category.toLowerCase() === cat.value) || name.includes(cat.value)
+                                return matchesGender && matchesCategory
+                              }).length
+
+                          return (
+                            <option key={cat.value} value={cat.value}>
+                              {cat.emoji} {cat.label} ({actualCount})
+                            </option>
+                          )
+                        })}
+                      </select>
+                    </div>
                   </div>
-
-                  <p className={`text-base text-pink-400 font-semibold ${isRTL ? 'text-right' : ''}`}>
-                    {(Array.isArray(availableVideos) ? availableVideos : [])
-                      .filter(v => {
-                        const name = v.displayName.toLowerCase()
-                        const matchesSearch = name.includes(videoSearchQuery.toLowerCase())
-                        const matchesGender = videoFilters.gender === 'all' || name.includes(videoFilters.gender)
-                        const matchesLevel = videoFilters.level === 'all' || name.includes(videoFilters.level)
-                        const matchesBodyPart = videoFilters.bodyPart === 'all' || name.includes(videoFilters.bodyPart)
-                        return matchesSearch && matchesGender && matchesLevel && matchesBodyPart
-                      }).length} {t("videosFound")}
-                  </p>
                 </div>
 
                 {/* Videos Grid */}
-                <div className="flex-1 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-pink-500/60">
-                  <div className="space-y-1.5">
+                <div className="flex-1 overflow-y-auto pr-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                  <style jsx>{`
+                    div::-webkit-scrollbar {
+                      display: none;
+                    }
+                  `}</style>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3">
                   {(Array.isArray(availableVideos) ? availableVideos : [])
                     .filter(video => {
-                      const name = video.displayName.toLowerCase()
+                      const name = video.displayName?.toLowerCase() || ''
                       const matchesSearch = name.includes(videoSearchQuery.toLowerCase())
-                      const matchesGender = videoFilters.gender === 'all' || name.includes(videoFilters.gender)
-                      const matchesLevel = videoFilters.level === 'all' || name.includes(videoFilters.level)
-                      const matchesBodyPart = videoFilters.bodyPart === 'all' || name.includes(videoFilters.bodyPart)
-                      return matchesSearch && matchesGender && matchesLevel && matchesBodyPart
+                      
+                      // Fixed gender filter - check for _male or _female specifically
+                      let matchesGender = true
+                      if (videoFilters.gender === 'male') {
+                        matchesGender = name.includes('_male') && !name.includes('_female')
+                      } else if (videoFilters.gender === 'female') {
+                        matchesGender = name.includes('_female')
+                      }
+                      
+                      // Category filter - check video category
+                      const matchesCategory = videoFilters.category === 'all' || 
+                        (video.category && video.category.toLowerCase() === videoFilters.category) ||
+                        name.includes(videoFilters.category)
+                      
+                      return matchesSearch && matchesGender && matchesCategory
                     })
                     .slice((videoPage - 1) * videosPerPage, videoPage * videosPerPage)
                     .map((video, index) => {
+                      if (!video || !video.displayName) {
+                        console.warn('⚠️ Invalid video at index', index, video);
+                        return null;
+                      }
+                      console.log('📹 Rendering video:', index, video.displayName);
                       const isSelected = exerciseFormData.videoUrls.includes(video.url)
                       return (
                         <div 
                           key={index} 
-                          className={`group relative flex items-center gap-3 p-2 rounded-lg border transition-all duration-300 cursor-pointer ${isRTL ? 'flex-row-reverse' : ''} ${
+                          className={`group relative flex flex-col rounded-lg border transition-all duration-300 cursor-pointer overflow-hidden ${
                             isSelected 
                               ? 'bg-green-500/10 border-green-500/50 shadow-sm shadow-green-500/10' 
                               : 'bg-slate-800/40 border-slate-700/50 hover:border-pink-500/50 hover:bg-slate-800/60 hover:shadow-sm'
@@ -2829,147 +3121,279 @@ export default function ProgramsPage() {
                             setShowVideoDetailDialog(true)
                           }}
                         >
-                          {/* Video Thumbnail */}
+                          {/* Exercise Image */}
                           <div 
-                            className="relative w-20 h-14 flex-shrink-0 rounded-md overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900"
-                            onMouseEnter={(e) => {
-                              const vid = e.currentTarget.querySelector('video')
-                              if (vid && vid.paused) vid.play().catch(() => {})
-                            }}
-                            onMouseLeave={(e) => {
-                              const vid = e.currentTarget.querySelector('video')
-                              if (vid) {
-                                vid.pause()
-                                vid.currentTime = 0
-                              }
-                            }}
+                            className="relative w-full aspect-video overflow-hidden bg-gradient-to-br from-slate-800 to-slate-900"
                           >
-                            {video.url ? (
-                              <>
-                                <video 
-                                  src={video.url}
-                                  className="w-full h-full object-cover"
-                                  muted
-                                  loop
-                                  preload="metadata"
-                                  playsInline
-                                  onError={(e) => {
-                                    const target = e.currentTarget
-                                    target.style.display = 'none'
-                                  }}
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 to-transparent" />
-                                <div className="absolute inset-0 flex items-center justify-center opacity-100 group-hover:opacity-0 transition-opacity">
-                                  <div className="w-7 h-7 rounded-full bg-pink-500/80 backdrop-blur-sm flex items-center justify-center">
-                                    <Play className="w-3.5 h-3.5 text-white ml-0.5" />
+                            {(() => {
+                              // Get base video name
+                              let videoBaseName = video.displayName.replace('.mp4', '').trim();
+                              
+                              // Check if there's a mapping for this exact video name
+                              const baseNameClean = videoBaseName
+                                .replace(/_Female \(\d+\)/, '')
+                                .replace(/_female \(\d+\)/, '')
+                                .replace(/_Male \(\d+\)/, '')
+                                .replace(/_male \(\d+\)/, '')
+                                .replace(/ \(\d+\)$/, '')
+                                .replace(/_[Ff]emale$/, '')
+                                .replace(/_[Mm]ale$/, '')
+                                .trim();
+                              
+                              // Apply mapping if exists
+                              let imageName = videoBaseName;
+                              if (videoToImageNameMap[baseNameClean]) {
+                                // Replace base name but preserve gender/number suffixes
+                                const genderMatch = videoBaseName.match(/(_[Ff]emale|_[Mm]ale).*$/);
+                                const numberMatch = videoBaseName.match(/\d+$/);
+                                imageName = videoToImageNameMap[baseNameClean];
+                                if (genderMatch) imageName += genderMatch[0];
+                              }
+                              
+                              // Normalize video filename to match image naming
+                              imageName = imageName
+                              
+                              // Convert all (2) (3) etc patterns to 1 2 etc
+                              imageName = imageName
+                                .replace(/_Female \((\d+)\)/g, (match, num) => {
+                                  const n = parseInt(num) - 1;
+                                  return n > 0 ? `_Female${n}` : '_Female';
+                                })
+                                .replace(/_female \((\d+)\)/g, (match, num) => {
+                                  const n = parseInt(num) - 1;
+                                  return n > 0 ? `_female${n}` : '_female';
+                                })
+                                .replace(/_Male \((\d+)\)/g, (match, num) => {
+                                  const n = parseInt(num) - 1;
+                                  return n > 0 ? `_Male${n}` : '_Male';
+                                })
+                                .replace(/_male \((\d+)\)/g, (match, num) => {
+                                  const n = parseInt(num) - 1;
+                                  return n > 0 ? `_male${n}` : '_male';
+                                })
+                                .replace(/ \((\d+)\)$/g, (match, num) => {
+                                  const n = parseInt(num) - 1;
+                                  return n > 0 ? n.toString() : '';
+                                });
+                              
+                              // Primary: Use exact video name (with parentheses) - matches extracted frames
+                              const exactVideoName = video.displayName.replace('.mp4', '').trim();
+                              let imagePath = `/exercises/images/all/${exactVideoName}.jpg`;
+                              
+                              // Fallback paths array - try multiple options
+                              const fallbackPaths: string[] = [];
+                              
+                              // 1. Try normalized name (without parentheses)
+                              if (exactVideoName !== imageName) {
+                                fallbackPaths.push(`/exercises/images/all/${imageName}.jpg`);
+                              }
+                              
+                              // 2. If Male, try Female version
+                              const femaleVersion = exactVideoName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
+                              if (femaleVersion !== exactVideoName) {
+                                fallbackPaths.push(`/exercises/images/all/${femaleVersion}.jpg`);
+                              }
+                              
+                              // 3. Try normalized female version
+                              const normalizedFemale = imageName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
+                              if (normalizedFemale !== imageName && normalizedFemale !== femaleVersion) {
+                                fallbackPaths.push(`/exercises/images/all/${normalizedFemale}.jpg`);
+                              }
+                              
+                              // 4. Try without gender suffix
+                              const noGender = imageName.replace(/_[Ff]emale\d*$/, '').replace(/_[Mm]ale\d*$/, '');
+                              if (noGender !== imageName) {
+                                fallbackPaths.push(`/exercises/images/all/${noGender}.jpg`);
+                              }
+                              
+                              // 3. Try base name without numbers
+                              const baseNameMatch = imageName.match(/^(.+?)(_[Ff]emale|_[Mm]ale)?\d*$/);
+                              if (baseNameMatch && baseNameMatch[1] !== imageName) {
+                                fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}.jpg`);
+                                fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}_female.jpg`);
+                              }
+                              
+                              // 4. Try with extra spaces (common typo in image names)
+                              fallbackPaths.push(`/exercises/images/all/${noGender}  .jpg`);
+                              fallbackPaths.push(`/exercises/images/all/${noGender}   .jpg`);
+                              
+                              return (
+                                <>
+                                  <img 
+                                    src={imagePath}
+                                    alt={video.displayName}
+                                    loading="lazy"
+                                    className="w-full h-full object-contain bg-white"
+                                    data-fallback-index="0"
+                                    data-fallback-paths={JSON.stringify(fallbackPaths)}
+                                    onError={(e) => {
+                                      const target = e.currentTarget;
+                                      const fallbackIndex = parseInt(target.getAttribute('data-fallback-index') || '0');
+                                      const fallbackPathsStr = target.getAttribute('data-fallback-paths');
+                                      
+                                      if (fallbackPathsStr) {
+                                        try {
+                                          const paths = JSON.parse(fallbackPathsStr) as string[];
+                                          
+                                          if (fallbackIndex < paths.length) {
+                                            // Try next fallback
+                                            target.src = paths[fallbackIndex];
+                                            target.setAttribute('data-fallback-index', (fallbackIndex + 1).toString());
+                                            return;
+                                          }
+                                        } catch (err) {
+                                          console.error('Error parsing fallback paths:', err);
+                                        }
+                                      }
+                                      
+                                      // All fallbacks failed, hide image
+                                      target.style.display = 'none';
+                                    }}
+                                  />
+                                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent" />
+                                  
+                                  {/* Video icon - shown always as fallback */}
+                                  <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                    <Video className="w-8 h-8 text-slate-400 opacity-50" />
                                   </div>
-                                </div>
-                              </>
-                            ) : (
-                              <div className="absolute inset-0 flex items-center justify-center">
-                                <Video className="w-6 h-6 text-slate-600" />
-                              </div>
-                            )}
+                                </>
+                              )
+                            })()}
                             {isSelected && (
-                              <div className={`absolute top-0.5 ${isRTL ? 'left-0.5' : 'right-0.5'}`}>
-                                <div className="w-4 h-4 rounded bg-green-500 flex items-center justify-center shadow-md">
-                                  <Check className="w-3 h-3 text-white" />
+                              <div className="absolute top-1 right-1">
+                                <div className="w-6 h-6 rounded-full bg-green-500 flex items-center justify-center shadow-lg">
+                                  <Check className="w-4 h-4 text-white" />
                                 </div>
                               </div>
                             )}
                           </div>
 
                           {/* Video Info */}
-                          <div className={`flex-1 min-w-0 ${isRTL ? 'text-right' : ''}`}>
-                            <h4 className="text-white font-medium text-sm truncate mb-0.5">{video.displayName}</h4>
-                            <div className={`flex gap-1.5 items-center text-xs ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                          <div className="p-2 space-y-2">
+                            <h4 className="text-white font-medium text-xs truncate">{video.displayName}</h4>
+                            <div className="flex gap-1.5 items-center justify-between text-xs">
                               <span className="text-gray-500">
                                 {(video.size / (1024 * 1024)).toFixed(1)} MB
                               </span>
                               {isSelected && (
-                                <>
-                                  <span className="text-gray-600">•</span>
-                                  <span className="text-green-400 font-medium">✓</span>
-                                </>
+                                <span className="text-green-400 font-medium flex items-center gap-1">
+                                  <Check className="w-3 h-3" /> Selected
+                                </span>
                               )}
                             </div>
                           </div>
 
-                          {/* Select Button */}
-                          <Button
-                            type="button"
-                            size="sm"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              if (isSelected) {
-                                setExerciseFormData({ 
-                                  ...exerciseFormData, 
-                                  videoUrls: exerciseFormData.videoUrls.filter(u => u !== video.url),
-                                  videos: exerciseFormData.videos.filter(v => v.url !== video.url)
-                                })
-                              } else {
+                          {/* Action Buttons */}
+                          <div className="p-2 pt-0 flex gap-2">
+                            {/* View Button */}
+                            <Button
+                              type="button"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
                                 setCurrentVideoForDetail({ name: video.displayName, url: video.url })
                                 setShowVideoDetailDialog(true)
-                              }
-                            }}
-                            className={`h-7 px-3 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105 flex-shrink-0 ${
-                              isSelected
-                                ? 'bg-red-500/90 hover:bg-red-600'
-                                : 'bg-pink-500/90 hover:bg-pink-600'
-                            }`}
-                          >
-                            {isSelected ? (
-                              <>
-                                <X className="w-3 h-3 mr-1" />
-                                {t("cancel")}
-                              </>
-                            ) : (
-                              <>
-                                <Plus className="w-3 h-3 mr-1" />
-                                {t("select")}
-                              </>
-                            )}
-                          </Button>
+                              }}
+                              className="flex-1 h-8 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105 bg-blue-500/90 hover:bg-blue-600"
+                            >
+                              <Play className="w-3 h-3 mr-1" />
+                              Play
+                            </Button>
+                            
+                            {/* Select/Remove Button */}
+                            <Button
+                              type="button"
+                              size="sm"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                if (isSelected) {
+                                  setExerciseFormData({ 
+                                    ...exerciseFormData, 
+                                    videoUrls: exerciseFormData.videoUrls.filter(u => u !== video.url),
+                                    videos: exerciseFormData.videos.filter(v => v.url !== video.url)
+                                  })
+                                } else {
+                                  setCurrentVideoForDetail({ name: video.displayName, url: video.url })
+                                  setShowVideoDetailDialog(true)
+                                }
+                              }}
+                              className={`flex-1 h-8 rounded-md text-xs font-medium transition-all duration-300 hover:scale-105 ${
+                                isSelected
+                                  ? 'bg-red-500/90 hover:bg-red-600'
+                                  : 'bg-pink-500/90 hover:bg-pink-600'
+                              }`}
+                            >
+                              {isSelected ? (
+                                <>
+                                  <X className="w-3 h-3 mr-1" />
+                                  Remove
+                                </>
+                              ) : (
+                                <>
+                                  <Plus className="w-3 h-3 mr-1" />
+                                  Add
+                                </>
+                              )}
+                            </Button>
+                          </div>
                         </div>
                       )
-                    })}
+                    }).filter(Boolean)}
                   </div>
                 </div>
 
                 {/* Pagination */}
                 {(() => {
-                  const filteredVideos = (Array.isArray(availableVideos) ? availableVideos : []).filter(v => {
-                    const name = v.displayName.toLowerCase()
+                  const filteredVideos = (Array.isArray(availableVideos) ? availableVideos : []).filter(video => {
+                    const name = video.displayName?.toLowerCase() || ''
                     const matchesSearch = name.includes(videoSearchQuery.toLowerCase())
-                    const matchesGender = videoFilters.gender === 'all' || name.includes(videoFilters.gender)
-                    const matchesLevel = videoFilters.level === 'all' || name.includes(videoFilters.level)
-                    const matchesBodyPart = videoFilters.bodyPart === 'all' || name.includes(videoFilters.bodyPart)
-                    return matchesSearch && matchesGender && matchesLevel && matchesBodyPart
+                    
+                    // Fixed gender filter - check for _male or _female specifically
+                    let matchesGender = true
+                    if (videoFilters.gender === 'male') {
+                      matchesGender = name.includes('_male') && !name.includes('_female')
+                    } else if (videoFilters.gender === 'female') {
+                      matchesGender = name.includes('_female')
+                    }
+                    
+                    // Category filter - check video category
+                    const matchesCategory = videoFilters.category === 'all' || 
+                      (video.category && video.category.toLowerCase() === videoFilters.category) ||
+                      name.includes(videoFilters.category)
+                    
+                    return matchesSearch && matchesGender && matchesCategory
                   })
                   const totalPages = Math.ceil(filteredVideos.length / videosPerPage)
                   
                   return filteredVideos.length > videosPerPage && (
-                    <div className={`flex items-center justify-center gap-3 pt-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center justify-center gap-2 pt-4 border-t border-pink-500/20 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setVideoPage(prev => Math.max(1, prev - 1))}
                         disabled={videoPage === 1}
-                        className="border-slate-700 text-gray-300 hover:bg-slate-800 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
+                        className="group border-pink-500/40 text-pink-400 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white hover:border-pink-500 disabled:opacity-20 disabled:cursor-not-allowed h-11 w-11 p-0 rounded-xl transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-pink-500/30 disabled:hover:scale-100 disabled:hover:shadow-none"
                       >
-                        ← {t("previous")}
+                        <svg className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                        </svg>
                       </Button>
-                      <div className="px-6 py-3 rounded-xl bg-slate-800/50 text-white text-base font-bold border border-pink-500/30">
-                        {videoPage} / {totalPages}
+                      
+                      <div className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500/30 via-rose-500/30 to-pink-500/30 backdrop-blur-sm text-white text-base font-black border-2 border-pink-500/50 min-w-[100px] text-center shadow-lg shadow-pink-500/20 relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
+                        <span className="relative z-10">{videoPage} / {totalPages}</span>
                       </div>
+                      
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setVideoPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={videoPage >= totalPages}
-                        className="border-slate-700 text-gray-300 hover:bg-slate-800 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
+                        className="group border-pink-500/40 text-pink-400 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white hover:border-pink-500 disabled:opacity-20 disabled:cursor-not-allowed h-11 w-11 p-0 rounded-xl transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-pink-500/30 disabled:hover:scale-100 disabled:hover:shadow-none"
                       >
-                        {t("next")} →
+                        <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                        </svg>
                       </Button>
                     </div>
                   )
@@ -3000,22 +3424,37 @@ export default function ProgramsPage() {
 
         {/* Video Detail Dialog */}
         <Dialog open={showVideoDetailDialog} onOpenChange={setShowVideoDetailDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[95vw] sm:max-w-md md:max-w-lg lg:max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[98vw] sm:max-w-3xl max-h-[95vh] overflow-y-auto p-3 sm:p-6">
             <DialogHeader>
-              <DialogTitle className="flex items-center gap-3 text-xl">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
-                  <Video className="w-5 h-5 text-white" />
+              <DialogTitle className="flex items-center gap-2 text-base sm:text-xl">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
+                  <Video className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-white">{t("videoDetails")}</div>
-                  <div className="text-sm text-gray-400 font-normal mt-1 truncate">
+                <div className="flex-1 min-w-0">
+                  <div className="text-white text-sm sm:text-base">{t("videoDetails")}</div>
+                  <div className="text-xs sm:text-sm text-gray-400 font-normal mt-0.5 truncate">
                     {currentVideoForDetail?.name}
                   </div>
                 </div>
               </DialogTitle>
             </DialogHeader>
 
-            <div className="space-y-4 py-4">
+            <div className="space-y-3 sm:space-y-4 py-2 sm:py-4">
+              {/* Video Player */}
+              {currentVideoForDetail?.url && (
+                <div className="relative w-full aspect-video rounded-lg overflow-hidden bg-white">
+                  <video
+                    src={currentVideoForDetail.url}
+                    controls
+                    preload="metadata"
+                    className="w-full h-full"
+                    controlsList="nodownload"
+                  >
+                    Your browser does not support the video tag.
+                  </video>
+                </div>
+              )}
+
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label className="text-white font-bold flex items-center gap-2">
@@ -3102,6 +3541,126 @@ export default function ProgramsPage() {
               >
                 <Check className="w-5 h-5 mr-2" />
                 {t("addButton")}
+              </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
+
+        {/* Exercise Info Dialog */}
+        <Dialog open={showExerciseInfoDialog} onOpenChange={setShowExerciseInfoDialog}>
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/40 scrollbar-track-slate-800/50">
+            <DialogHeader className="border-b border-blue-500/20 pb-4">
+              <DialogTitle className={`flex items-center gap-3 text-2xl ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
+                  <Info className="w-6 h-6 text-white" />
+                </div>
+                <div className={`flex-1 ${isRTL ? 'text-right' : ''}`}>
+                  <div className="text-white font-bold">{currentExerciseInfo?.name || t("exerciseInfo")}</div>
+                  <div className="text-sm text-blue-400 font-normal mt-1">
+                    {currentExerciseInfo?.gender && `${currentExerciseInfo.gender === 'male' ? '👨 ' : currentExerciseInfo.gender === 'female' ? '👩 ' : ''}${currentExerciseInfo.gender}`}
+                  </div>
+                </div>
+              </DialogTitle>
+            </DialogHeader>
+
+            <div className="space-y-4 py-4">
+              {/* Basic Info */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                  <div className="text-xs text-blue-400 font-medium mb-1">📊 {t("level")}</div>
+                  <div className="text-white font-bold">{currentExerciseInfo?.level || 'N/A'}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-cyan-500/10 border border-cyan-500/30">
+                  <div className="text-xs text-cyan-400 font-medium mb-1">🎯 {t("bodyPart")}</div>
+                  <div className="text-white font-bold">{currentExerciseInfo?.bodyPart || 'N/A'}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-green-500/10 border border-green-500/30">
+                  <div className="text-xs text-green-400 font-medium mb-1">🔢 Sets</div>
+                  <div className="text-white font-bold">{currentExerciseInfo?.sets || 'N/A'}</div>
+                </div>
+                <div className="p-3 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                  <div className="text-xs text-purple-400 font-medium mb-1">🔄 Reps</div>
+                  <div className="text-white font-bold">{currentExerciseInfo?.reps || 'N/A'}</div>
+                </div>
+              </div>
+
+              {/* Equipment */}
+              {currentExerciseInfo?.equipment && (
+                <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Dumbbell className="w-4 h-4 text-orange-400" />
+                    <h3 className="text-white font-bold text-sm">🛠️ {t("equipment")}</h3>
+                  </div>
+                  <p className={`text-gray-300 text-sm ${isRTL ? 'text-right' : ''}`}>{currentExerciseInfo.equipment}</p>
+                </div>
+              )}
+
+              {/* Description */}
+              {currentExerciseInfo?.description && (
+                <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/30">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Activity className="w-4 h-4 text-blue-400" />
+                    <h3 className="text-white font-bold text-sm">📖 {t("description")}</h3>
+                  </div>
+                  <p className={`text-gray-300 text-sm leading-relaxed whitespace-pre-wrap ${isRTL ? 'text-right' : ''}`}>{currentExerciseInfo.description}</p>
+                </div>
+              )}
+
+              {/* Tips */}
+              {currentExerciseInfo?.tips && (
+                <div className="p-4 rounded-lg bg-yellow-500/10 border border-yellow-500/30">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Lightbulb className="w-4 h-4 text-yellow-400" />
+                    <h3 className="text-white font-bold text-sm">💡 {t("tips")}</h3>
+                  </div>
+                  <p className={`text-gray-300 text-sm leading-relaxed whitespace-pre-wrap ${isRTL ? 'text-right' : ''}`}>{currentExerciseInfo.tips}</p>
+                </div>
+              )}
+
+              {/* Primary Muscles */}
+              {currentExerciseInfo?.primaryMuscles && (
+                <div className="p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Target className="w-4 h-4 text-red-400" />
+                    <h3 className="text-white font-bold text-sm">💪 {t("primaryMuscles")}</h3>
+                  </div>
+                  <p className={`text-gray-300 text-sm ${isRTL ? 'text-right' : ''}`}>{currentExerciseInfo.primaryMuscles}</p>
+                </div>
+              )}
+
+              {/* Secondary Muscles */}
+              {currentExerciseInfo?.secondaryMuscles && (
+                <div className="p-4 rounded-lg bg-purple-500/10 border border-purple-500/30">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <TrendingUp className="w-4 h-4 text-purple-400" />
+                    <h3 className="text-white font-bold text-sm">🦾 {t("secondaryMuscles")}</h3>
+                  </div>
+                  <p className={`text-gray-300 text-sm ${isRTL ? 'text-right' : ''}`}>{currentExerciseInfo.secondaryMuscles}</p>
+                </div>
+              )}
+
+              {/* Notes */}
+              {currentExerciseInfo?.notes && (
+                <div className="p-4 rounded-lg bg-slate-800/50 border border-slate-700">
+                  <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <Star className="w-4 h-4 text-gray-400" />
+                    <h3 className="text-white font-bold text-sm">📝 {t("notes")}</h3>
+                  </div>
+                  <p className={`text-gray-300 text-sm italic ${isRTL ? 'text-right' : ''}`}>{currentExerciseInfo.notes}</p>
+                </div>
+              )}
+            </div>
+
+            <div className={`flex gap-3 pt-4 border-t border-blue-500/20 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <Button
+                onClick={() => {
+                  setShowExerciseInfoDialog(false)
+                  setCurrentExerciseInfo(null)
+                }}
+                className="flex-1 h-12 bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-base font-bold shadow-lg"
+              >
+                <Check className="w-5 h-5 mr-2" />
+                {t("close")}
               </Button>
             </div>
           </DialogContent>
