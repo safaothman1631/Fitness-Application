@@ -246,6 +246,7 @@ export type TranslationKey =
   | "saveFitnessInfo"
   // Settings page keys
   | "accountSecurityTitle"
+  | "manageAccountSecurity"
   | "notificationPreferencesTitle"
   | "privacySettingsTitle"
   | "workoutReminders"
@@ -537,12 +538,73 @@ export type TranslationKey =
   | "dark"
   | "system"
   | "systemFollowsOS"
+  | "tapToActivate"
   | "pushNotifications"
   | "applyLanguage"
   | "accountActions"
   | "accountActionsDesc"
   | "logoutButton"
   | "more"
+  // Settings Page Specific
+  | "customizeYourExperience"
+  | "chooseYourPreferredTheme"
+  | "selectYourPreferredLanguage"
+  | "appInformation"
+  | "appVersion"
+  | "appBuild"
+  | "appPlatform"
+  | "mobileAndWeb"
+  | "youWillBeRedirectedToLogin"
+  | "loggingOut"
+  | "manageNotificationSettings"
+  | "notificationChannels"
+  | "chooseNotificationMethod"
+  | "getInstantAlerts"
+  | "textMessageAlerts"
+  | "activityNotifications"
+  | "chooseActivityNotifications"
+  | "workoutReminders"
+  | "dailyWorkoutNotifications"
+  | "mealPlans"
+  | "nutritionUpdates"
+  | "physioSessions"
+  | "therapyAppointments"
+  | "activeNotifications"
+  | "activeChannels"
+  | "activeActivities"
+  | "totalActive"
+  | "savePreferences"
+  | "notificationsSaved"
+  | "updatePersonalInfo"
+  | "enterYourName"
+  | "enterPhoneNumber"
+  | "clickCameraToUpload"
+  | "userNotFound"
+  | "profileSavedSuccessfully"
+  | "failedToSaveProfile"
+  | "pleaseEnterName"
+  | "invalidWeight"
+  | "invalidHeight"
+  | "saving"
+  | "passwordChangedSuccessfully"
+  | "currentPasswordIncorrect"
+  | "weakPassword"
+  | "requiresRecentLogin"
+  | "failedToChangePassword"
+  | "loggedOutSuccessfully"
+  | "joined"
+  | "active"
+  | "expired"
+  | "accessKey"
+  | "notSet"
+  | "goal"
+  | "cancel"
+  // More Menu
+  | "accessProfileSettings"
+  | "viewYourProfile"
+  | "managePreferences"
+  | "notificationSettingsDesc"
+  | "signOutFromAccount"
   // Manage Profile Dialog
   | "manageProfile"
   | "changeAvatar"
@@ -1645,6 +1707,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   saveFitnessInfo: "Save Fitness Info",
   // Settings page (EN)
   accountSecurityTitle: "Account Security",
+  manageAccountSecurity: "Manage your account security",
   notificationPreferencesTitle: "Notification Preferences",
   privacySettingsTitle: "Privacy Settings",
   workoutReminders: "Workout Reminders",
@@ -1924,12 +1987,73 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   dark: "Dark",
   system: "System",
   systemFollowsOS: "System follows your OS theme.",
+  tapToActivate: "Tap to activate",
   pushNotifications: "Push Notifications",
   applyLanguage: "Apply Language",
   accountActions: "Account Actions",
   accountActionsDesc: "Logging out will clear your session and return you to the login screen.",
   logoutButton: "Logout",
   more: "More",
+  // Settings Page Specific
+  customizeYourExperience: "Customize your app experience",
+  chooseYourPreferredTheme: "Choose your preferred theme",
+  selectYourPreferredLanguage: "Select your preferred language",
+  appInformation: "App Information",
+  appVersion: "Version",
+  appBuild: "Build",
+  appPlatform: "Platform",
+  mobileAndWeb: "Mobile & Web",
+  youWillBeRedirectedToLogin: "You will be redirected to the login page",
+  loggingOut: "Logging out...",
+  manageNotificationSettings: "Manage how you receive notifications",
+  notificationChannels: "Notification Channels",
+  chooseNotificationMethod: "Choose how you want to be notified",
+  getInstantAlerts: "Get instant alerts",
+  textMessageAlerts: "Text message alerts",
+  activityNotifications: "Activity Notifications",
+  chooseActivityNotifications: "Choose what activities to be notified about",
+  workoutReminders: "Workout Reminders",
+  dailyWorkoutNotifications: "Daily workout notifications",
+  mealPlans: "Meal Plans",
+  nutritionUpdates: "Nutrition updates",
+  physioSessions: "Physio Sessions",
+  therapyAppointments: "Therapy appointments",
+  activeNotifications: "Active Notifications",
+  activeChannels: "Active Channels",
+  activeActivities: "Active Activities",
+  totalActive: "Total Active",
+  savePreferences: "Save Preferences",
+  notificationsSaved: "Notification preferences saved successfully!",
+  updatePersonalInfo: "Update your personal information",
+  enterYourName: "Enter your name",
+  enterPhoneNumber: "Enter phone number",
+  clickCameraToUpload: "Click the camera icon to upload a photo",
+  userNotFound: "Error: User not found",
+  profileSavedSuccessfully: "Profile saved successfully!",
+  failedToSaveProfile: "Failed to save profile",
+  pleaseEnterName: "Please enter your name",
+  invalidWeight: "Please enter a valid weight (0-500 kg)",
+  invalidHeight: "Please enter a valid height (0-300 cm)",
+  saving: "Saving...",
+  passwordChangedSuccessfully: "Password changed successfully!",
+  currentPasswordIncorrect: "Current password is incorrect",
+  weakPassword: "New password is too weak. Use at least 6 characters",
+  requiresRecentLogin: "Please log out and log in again before changing password",
+  failedToChangePassword: "Failed to change password. Please try again",
+  loggedOutSuccessfully: "Logged out successfully",
+  joined: "Joined",
+  active: "Active",
+  expired: "Expired",
+  accessKey: "Access Key",
+  notSet: "Not Set",
+  goal: "Goal",
+  cancel: "Cancel",
+  // More Menu (English)
+  accessProfileSettings: "Access your profile, settings, and notifications",
+  viewYourProfile: "View your profile",
+  managePreferences: "Manage preferences",
+  notificationSettingsDesc: "Notification settings",
+  signOutFromAccount: "Sign out from account",
   // Manage Profile Dialog (English)
   manageProfile: "Manage Profile",
   changeAvatar: "Change Avatar",
@@ -2962,6 +3086,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,saveFitnessInfo: "حفظ معلومات اللياقة"
     // Settings page (AR placeholders)
     ,accountSecurityTitle: "أمان الحساب"
+    ,manageAccountSecurity: "إدارة أمان حسابك"
     ,notificationPreferencesTitle: "تفضيلات الإشعارات"
     ,privacySettingsTitle: "إعدادات الخصوصية"
     ,workoutReminders: "تذكيرات التمرين"
@@ -3235,12 +3360,43 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,dark: "داكن"
   ,system: "نظام"
   ,systemFollowsOS: "يتبع النظام موضوع نظام التشغيل."
+  ,tapToActivate: "انقر للتفعيل"
   ,pushNotifications: "إشعارات الدفع"
   ,applyLanguage: "تطبيق اللغة"
   ,accountActions: "إجراءات الحساب"
   ,accountActionsDesc: "تسجيل الخروج سيمسح جلستك ويعيدك إلى شاشة تسجيل الدخول."
   ,logoutButton: "تسجيل الخروج"
   ,more: "المزيد"
+  // Settings Page Specific
+  ,customizeYourExperience: "تخصيص تجربتك في التطبيق"
+  ,chooseYourPreferredTheme: "اختر المظهر المفضل لديك"
+  ,selectYourPreferredLanguage: "اختر لغتك المفضلة"
+  ,appInformation: "معلومات التطبيق"
+  ,appVersion: "الإصدار"
+  ,appBuild: "البناء"
+  ,appPlatform: "المنصة"
+  ,mobileAndWeb: "موبايل وويب"
+  ,youWillBeRedirectedToLogin: "سيتم توجيهك إلى صفحة تسجيل الدخول"
+  ,loggingOut: "جارٍ تسجيل الخروج..."
+  ,manageNotificationSettings: "إدارة كيفية تلقي الإشعارات"
+  ,notificationChannels: "قنوات الإشعارات"
+  ,chooseNotificationMethod: "اختر كيفية تلقي الإشعارات"
+  ,getInstantAlerts: "احصل على تنبيهات فورية"
+  ,textMessageAlerts: "تنبيهات الرسائل النصية"
+  ,activityNotifications: "إشعارات النشاط"
+  ,chooseActivityNotifications: "اختر الأنشطة التي تريد تلقي إشعارات عنها"
+  ,workoutReminders: "تذكيرات التمرين"
+  ,dailyWorkoutNotifications: "إشعارات التمرين اليومية"
+  ,mealPlans: "خطط الوجبات"
+  ,nutritionUpdates: "تحديثات التغذية"
+  ,physioSessions: "جلسات العلاج الطبيعي"
+  ,therapyAppointments: "مواعيد العلاج"
+  ,activeNotifications: "الإشعارات النشطة"
+  ,activeChannels: "القنوات النشطة"
+  ,activeActivities: "الأنشطة النشطة"
+  ,totalActive: "المجموع النشط"
+  ,savePreferences: "حفظ التفضيلات"
+  ,notificationsSaved: "تم حفظ تفضيلات الإشعارات بنجاح!"
   // Manage Profile Dialog (Arabic)
   ,manageProfile: "إدارة الملف الشخصي"
   ,changeAvatar: "تغيير الصورة"
@@ -3913,6 +4069,36 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,timesSubscribed: "مرات الاشتراك"
   ,manualUpgrade: "ترقية يدوية"
   ,navigation: "التنقل"
+  ,updatePersonalInfo: "تحديث معلوماتك الشخصية"
+  ,enterYourName: "أدخل اسمك"
+  ,enterPhoneNumber: "أدخل رقم الهاتف"
+  ,clickCameraToUpload: "انقر على أيقونة الكاميرا لتحميل صورة"
+  ,userNotFound: "خطأ: المستخدم غير موجود"
+  ,profileSavedSuccessfully: "تم حفظ الملف الشخصي بنجاح!"
+  ,failedToSaveProfile: "فشل حفظ الملف الشخصي"
+  ,pleaseEnterName: "الرجاء إدخال اسمك"
+  ,invalidWeight: "الرجاء إدخال وزن صحيح (0-500 كجم)"
+  ,invalidHeight: "الرجاء إدخال طول صحيح (0-300 سم)"
+  ,saving: "جارٍ الحفظ..."
+  ,passwordChangedSuccessfully: "تم تغيير كلمة المرور بنجاح!"
+  ,currentPasswordIncorrect: "كلمة المرور الحالية غير صحيحة"
+  ,weakPassword: "كلمة المرور الجديدة ضعيفة جداً. استخدم 6 أحرف على الأقل"
+  ,requiresRecentLogin: "يرجى تسجيل الخروج وتسجيل الدخول مرة أخرى قبل تغيير كلمة المرور"
+  ,failedToChangePassword: "فشل تغيير كلمة المرور. يرجى المحاولة مرة أخرى"
+  ,loggedOutSuccessfully: "تم تسجيل الخروج بنجاح"
+  ,joined: "انضم في"
+  ,active: "نشط"
+  ,expired: "منتهي الصلاحية"
+  ,accessKey: "مفتاح الوصول"
+  ,notSet: "غير محدد"
+  ,goal: "الهدف"
+  ,cancel: "إلغاء"
+  // More Menu (Arabic)
+  ,accessProfileSettings: "الوصول إلى ملفك الشخصي والإعدادات والإشعارات"
+  ,viewYourProfile: "عرض ملفك الشخصي"
+  ,managePreferences: "إدارة التفضيلات"
+  ,notificationSettingsDesc: "إعدادات الإشعارات"
+  ,signOutFromAccount: "تسجيل الخروج من الحساب"
   },
   // Minimal Kurdish (Sorani) placeholders
   ku: {
@@ -3976,7 +4162,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,firstNamePlaceholder: "ناوی یەکەمت بنووسە"
   ,lastNamePlaceholder: "ناوی کۆتاییت بنووسە"
   ,emailAddress: "ئیمەیڵ"
+  ,email: "ئیمەیڵ"
   ,emailOrUsername: "ئیمەیڵ یان ناوی بەکارهێنەر"
+  ,name: "ناو"
+  ,phone: "ژمارەی مۆبایل"
   ,password: "وشەی نهێنی"
   ,rememberMe: "بیرم بهێنەوە"
   ,forgotPassword: "ئایا پاسوۆردی هەژمارەکەت بیرت چووە؟"
@@ -4098,6 +4287,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,saveFitnessInfo: "خەزنکردنی زانیاری تەندروستی"
     // Settings page (KU placeholders)
     ,accountSecurityTitle: "ئاسایشەکانی هەژمار"
+    ,manageAccountSecurity: "بەڕێوەبردنی ئاسایشی هەژمارەکەت"
     ,notificationPreferencesTitle: "هەڵبژاردەکانی ئاگانامە"
     ,privacySettingsTitle: "ڕێکخستنەکانی تایبەتمەندی"
     ,workoutReminders: "بیرخەرەوەکانی وەرزش"
@@ -4373,12 +4563,43 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,dark: "تاریک"
     ,system: "سیستەم"
     ,systemFollowsOS: "سیستەم شوێن ڕوکاری سیستەمی کارگێڕەکەت دەکەوێت."
+    ,tapToActivate: "کرتە بکە بۆ چالاککردن"
     ,pushNotifications: "ئاگانامەی پێش"
     ,applyLanguage: "جێبەجێکردنی زمان"
     ,accountActions: "کردارەکانی هەژمار"
     ,accountActionsDesc: "دەرچوون دەبێتە هۆی پاککردنەوەی دانیشتنەکەت و گەڕانەوەت بۆ پەڕەی چوونەژوورەوە."
     ,logoutButton: "دەرچوون"
     ,more: "زیاتر"
+    // Settings Page Specific
+    ,customizeYourExperience: "ئەزموونی ئەپەکەت دڵخواز بکە"
+    ,chooseYourPreferredTheme: "ڕوکاری دڵخوازت هەڵبژێرە"
+    ,selectYourPreferredLanguage: "زمانی دڵخوازت هەڵبژێرە"
+    ,appInformation: "زانیاریی ئەپ"
+    ,appVersion: "وەشان"
+    ,appBuild: "بیلد"
+    ,appPlatform: "پلاتفۆرم"
+    ,mobileAndWeb: "مۆبایل و وێب"
+    ,youWillBeRedirectedToLogin: "ئاراستە دەکرێیتەوە بۆ پەڕەی چوونەژوورەوە"
+    ,loggingOut: "دەرچوون..."
+    ,manageNotificationSettings: "بەڕێوەبردنی چۆنیەتی وەرگرتنی ئاگادارییەکان"
+    ,notificationChannels: "کەناڵەکانی ئاگادارکردنەوە"
+    ,chooseNotificationMethod: "هەڵبژێرە چۆن دەتەوێت ئاگادار بکرێیتەوە"
+    ,getInstantAlerts: "ئاگاداریی خێرا وەربگرە"
+    ,textMessageAlerts: "ئاگاداریی نامەی دەقی"
+    ,activityNotifications: "ئاگاداریی چالاکییەکان"
+    ,chooseActivityNotifications: "هەڵبژێرە کام چالاکییەکان ئاگادارت بکەنەوە"
+    ,workoutReminders: "بیرخستنەوەی ڕاهێنان"
+    ,dailyWorkoutNotifications: "ئاگادارییەکانی ڕاهێنانی ڕۆژانە"
+    ,mealPlans: "پلانی خواردن"
+    ,nutritionUpdates: "نوێکردنەوەی خۆراک"
+    ,physioSessions: "دانیشتنەکانی فیزیۆتێراپی"
+    ,therapyAppointments: "کاتی چارەسەرکردن"
+    ,activeNotifications: "ئاگاداریی چالاک"
+    ,activeChannels: "کەناڵی چالاک"
+    ,activeActivities: "چالاکیی چالاک"
+    ,totalActive: "کۆی چالاک"
+    ,savePreferences: "پاشەکەوتکردنی هەڵبژاردنەکان"
+    ,notificationsSaved: "هەڵبژاردنەکانی ئاگادارکردنەوە بە سەرکەوتوویی پاشەکەوت کرا!"
     // Manage Profile Dialog (Kurdish)
     ,manageProfile: "بەڕێوەبردنی پڕۆفایل"
     ,changeAvatar: "گۆڕینی وێنە"
@@ -5226,6 +5447,32 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,timesSubscribed: "جار بووە بە PRO"
     ,manualUpgrade: "باڵابردنی بە دەستی"
     ,navigation: "گەشتکردن"
+    ,userNotFound: "هەڵە: بەکارهێنەر نەدۆزرایەوە"
+    ,profileSavedSuccessfully: "پرۆفایل بە سەرکەوتوویی پاشەکەوت کرا!"
+    ,failedToSaveProfile: "پاشەکەوتکردنی پرۆفایل سەرکەوتوو نەبوو"
+    ,pleaseEnterName: "تکایە ناوت بنووسە"
+    ,invalidWeight: "تکایە کێشێکی دروست بنووسە (0-500 کیلۆگرام)"
+    ,invalidHeight: "تکایە بڵاوێکی دروست بنووسە (0-300 سەنتیمەتر)"
+    ,saving: "پاشەکەوت دەکرێت..."
+    ,passwordChangedSuccessfully: "وشەی نهێنی بە سەرکەوتوویی گۆڕدرا!"
+    ,currentPasswordIncorrect: "وشەی نهێنیی ئێستا هەڵەیە"
+    ,weakPassword: "وشەی نهێنیی نوێ زۆر لاوازە. بەلایەنی کەم 6 پیت بەکار بهێنە"
+    ,requiresRecentLogin: "تکایە دەرچوو و دووبارە چوونە ژوورەوە پێش گۆڕینی وشەی نهێنی"
+    ,failedToChangePassword: "گۆڕینی وشەی نهێنی سەرکەوتوو نەبوو. تکایە دووبارە هەوڵ بدەرەوە"
+    ,loggedOutSuccessfully: "بە سەرکەوتوویی دەرچوویت"
+    ,joined: "پەیوەندی کرد"
+    ,active: "چالاک"
+    ,expired: "بەسەرچووە"
+    ,accessKey: "کلیلی دەستگەیشتن"
+    ,notSet: "دانەنراوە"
+    ,goal: "ئامانج"
+    ,cancel: "پاشگەزبوونەوە"
+    // More Menu (Kurdish)
+    ,accessProfileSettings: "دەستگەیشتن بە پرۆفایل، ڕێکخستن و ئاگاداریەکان"
+    ,viewYourProfile: "پرۆفایلەکەت ببینە"
+    ,managePreferences: "بەڕێوەبردنی هەڵبژاردنەکان"
+    ,notificationSettingsDesc: "ڕێکخستنەکانی ئاگاداری"
+    ,signOutFromAccount: "دەرچوون لە هەژمار"
     ,awaitingReview: "چاوەڕوانی پێداچوونەوە"
     ,firestoreConnection: "پەیوەندی Firestore"
     ,nextjsRuntime: "Next.js Runtime"
@@ -5233,6 +5480,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,manageUsers: "بەڕێوەبردنی بەکارهێنەران"
     ,reviewRequests: "پێداچوونەوە بە داواکاری"
     ,totalPrograms: "کۆی پرۆگرامەکان"
+    ,updatePersonalInfo: "زانیاری کەسی خۆت نوێ بکەرەوە"
+    ,enterYourName: "ناوت بنووسە"
+    ,enterPhoneNumber: "ژمارەی مۆبایل بنووسە"
+    ,clickCameraToUpload: "کرتە لە ئایکۆنی کامێرا بکە بۆ بارکردنی وێنە"
+    ,userNotFound: "هەڵە: بەکارهێنەر نەدۆزرایەوە"
+    ,profileSavedSuccessfully: "پڕۆفایل بە سەرکەوتوویی پاشەکەوت کرا!"
+    ,failedToSaveProfile: "پاشەکەوتکردنی پڕۆفایل سەرکەوتوو نەبوو"
+    ,cancel: "پاشگەزبوونەوە"
   },
   // Minimal Turkish placeholders
   tr: {
@@ -5417,6 +5672,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     saveFitnessInfo: "Fitness Bilgilerini Kaydet",
   // Settings page (TR placeholders)
   accountSecurityTitle: "Hesap Güvenliği",
+  manageAccountSecurity: "Hesap güvenliğinizi yönetin",
   notificationPreferencesTitle: "Bildirim Tercihleri",
   privacySettingsTitle: "Gizlilik Ayarları",
   workoutReminders: "Antrenman Hatırlatıcıları",
@@ -5687,12 +5943,72 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   dark: "Koyu",
   system: "Sistem",
   systemFollowsOS: "Sistem, işletim sisteminizin temasını takip eder.",
+  tapToActivate: "Etkinleştirmek için dokunun",
   pushNotifications: "Bildirimler",
   applyLanguage: "Dili Uygula",
   accountActions: "Hesap İşlemleri",
   accountActionsDesc: "Çıkış yapmak oturumunuzu temizler ve giriş ekranına döndürür.",
   logoutButton: "Çıkış Yap",
   more: "Daha Fazla",
+  customizeYourExperience: "Uygulama deneyiminizi özelleştirin",
+  chooseYourPreferredTheme: "Tercih ettiğiniz temayı seçin",
+  selectYourPreferredLanguage: "Tercih ettiğiniz dili seçin",
+  appInformation: "Uygulama Bilgileri",
+  appVersion: "Sürüm",
+  appBuild: "Yapı",
+  appPlatform: "Platform",
+  mobileAndWeb: "Mobil ve Web",
+  youWillBeRedirectedToLogin: "Giriş sayfasına yönlendirileceksiniz",
+  loggingOut: "Çıkış yapılıyor...",
+  manageNotificationSettings: "Bildirimleri nasıl alacağınızı yönetin",
+  notificationChannels: "Bildirim Kanalları",
+  chooseNotificationMethod: "Nasıl bildirim almak istediğinizi seçin",
+  getInstantAlerts: "Anında uyarılar alın",
+  textMessageAlerts: "Kısa mesaj uyarıları",
+  activityNotifications: "Etkinlik Bildirimleri",
+  chooseActivityNotifications: "Hangi etkinlikler hakkında bildirim almak istediğinizi seçin",
+  workoutReminders: "Antrenman Hatırlatıcıları",
+  dailyWorkoutNotifications: "Günlük antrenman bildirimleri",
+  mealPlans: "Yemek Planları",
+  nutritionUpdates: "Beslenme güncellemeleri",
+  physioSessions: "Fizyoterapi Seansları",
+  therapyAppointments: "Terapi randevuları",
+  activeNotifications: "Aktif Bildirimler",
+  activeChannels: "Aktif Kanallar",
+  activeActivities: "Aktif Etkinlikler",
+  totalActive: "Toplam Aktif",
+  savePreferences: "Tercihleri Kaydet",
+  notificationsSaved: "Bildirim tercihleri başarıyla kaydedildi!",
+  updatePersonalInfo: "Kişisel bilgilerinizi güncelleyin",
+  enterYourName: "Adınızı girin",
+  enterPhoneNumber: "Telefon numarasını girin",
+  clickCameraToUpload: "Fotoğraf yüklemek için kamera simgesine tıklayın",
+  userNotFound: "Hata: Kullanıcı bulunamadı",
+  profileSavedSuccessfully: "Profil başarıyla kaydedildi!",
+  failedToSaveProfile: "Profil kaydedilemedi",
+  pleaseEnterName: "Lütfen adınızı girin",
+  invalidWeight: "Lütfen geçerli bir kilo girin (0-500 kg)",
+  invalidHeight: "Lütfen geçerli bir boy girin (0-300 cm)",
+  saving: "Kaydediliyor...",
+  passwordChangedSuccessfully: "Şifre başarıyla değiştirildi!",
+  currentPasswordIncorrect: "Mevcut şifre yanlış",
+  weakPassword: "Yeni şifre çok zayıf. En az 6 karakter kullanın",
+  requiresRecentLogin: "Şifre değiştirmeden önce lütfen çıkış yapıp tekrar giriş yapın",
+  failedToChangePassword: "Şifre değiştirilemedi. Lütfen tekrar deneyin",
+  loggedOutSuccessfully: "Başarıyla çıkış yapıldı",
+  joined: "Katıldı",
+  active: "Aktif",
+  expired: "Süresi Doldu",
+  accessKey: "Erişim Anahtarı",
+  notSet: "Ayarlanmadı",
+  goal: "Hedef",
+  cancel: "İptal",
+  // More Menu (Turkish)
+  accessProfileSettings: "Profilinize, ayarlarınıza ve bildirimlerinize erişin",
+  viewYourProfile: "Profilinizi görüntüleyin",
+  managePreferences: "Tercihleri yönetin",
+  notificationSettingsDesc: "Bildirim ayarları",
+  signOutFromAccount: "Hesaptan çıkış yap",
   // Manage Profile Dialog (Turkish)
   manageProfile: "Profili Yönet",
   changeAvatar: "Avatarı Değiştir",

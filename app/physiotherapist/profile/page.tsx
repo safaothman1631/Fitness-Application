@@ -144,14 +144,19 @@ export default function PhysiotherapistProfile() {
 		<SidebarSleek role="physiotherapist">
 			<div className="space-y-6">
 				{/* Header */}
-				<div>
-					<h1 className="text-3xl font-bold text-white mb-2">{t("myProfile")}</h1>
-					<p className="text-gray-400">{t("professionalInfo")}</p>
+				<div className="flex items-center gap-3">
+					<div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#10B2E3] to-[#73E8FF] flex items-center justify-center shadow-lg shadow-[#10B2E3]/30">
+						<User className="w-6 h-6 text-white" />
+					</div>
+					<div>
+						<h1 className="text-3xl font-bold text-white">{t("myProfile")}</h1>
+						<p className="text-gray-400 text-sm">{t("professionalInfo")}</p>
+					</div>
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 					{/* Profile Card */}
-					<Card className="fitpro-card md:col-span-1">
+					<Card className="bg-gradient-to-br from-cyan-500/10 to-blue-600/10 border-cyan-500/30 md:col-span-1">
 						<CardContent className="p-6 text-center">
 							<div className="w-24 h-24 rounded-full bg-blue-500/20 flex items-center justify-center mx-auto mb-4 text-3xl text-blue-400 font-bold">
 								{profileData.firstName ? profileData.firstName.charAt(0) : "P"}{profileData.lastName ? profileData.lastName.charAt(0) : "T"}
@@ -178,7 +183,7 @@ export default function PhysiotherapistProfile() {
 					</Card>
 
 					{/* Edit Profile */}
-					<Card className="fitpro-card md:col-span-2">
+					<Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/30 md:col-span-2">
 						<CardHeader className="flex items-center justify-between">
 							<CardTitle className="text-white">{t("editProfile")}</CardTitle>
 							{!isEditingProfile && (
@@ -186,7 +191,7 @@ export default function PhysiotherapistProfile() {
 									variant="outline"
 									size="sm"
 									onClick={() => setIsEditingProfile(true)}
-									className="fitpro-button"
+									className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white border-none"
 								>
 									<User className="w-4 h-4 mr-2" />
 									{t("edit")}
@@ -298,10 +303,10 @@ export default function PhysiotherapistProfile() {
 				</div>
 
 				{/* Professional Information */}
-				<Card className="fitpro-card">
+				<Card className="bg-gradient-to-br from-amber-500/10 to-orange-600/10 border-amber-500/30">
 					<CardHeader className="flex items-center justify-between">
 						<CardTitle className="flex items-center gap-2 text-white">
-							<Briefcase className="w-5 h-5" />
+							<Briefcase className="w-5 h-5 text-amber-400" />
 							{t("professionalInformation")}
 						</CardTitle>
 						{!isEditingProfessional && (
@@ -309,7 +314,7 @@ export default function PhysiotherapistProfile() {
 								variant="outline"
 								size="sm"
 								onClick={() => setIsEditingProfessional(true)}
-								className="fitpro-button"
+								className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-none"
 							>
 								<User className="w-4 h-4 mr-2" />
 								{t("edit")}

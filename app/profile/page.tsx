@@ -1,8 +1,9 @@
-﻿"use client"
+"use client"
 
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import AuthGuard from "@/components/auth-guard"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -10,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "@/components/ui/toaster"
-import { Edit2, Save, Camera, Lock, Mail, Phone, Activity, Calendar, Settings as SettingsIcon, LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, Weight, Ruler, Goal, LogOut } from "lucide-react"
+import { Edit2, Save, Camera, Lock, Mail, Phone, Activity, Calendar, Settings as SettingsIcon, LayoutDashboard, Dumbbell, Utensils, HeartPulse, User, Weight, Ruler, Goal, LogOut, Bell, MoreVertical } from "lucide-react"
 import { useMobile } from "@/hooks/use-mobile"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
@@ -61,6 +62,7 @@ export default function ProfilePage() {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const [notifyEmail, setNotifyEmail] = useState(true)
   const [notifyPush, setNotifyPush] = useState(true)
+  const [saving, setSaving] = useState(false)
 
   useEffect(() => {
     // Load user data from Firestore
@@ -144,7 +146,7 @@ export default function ProfilePage() {
 
     // Listen for storage changes (from test panel or login)
     const handleStorageChange = () => {
-      console.log('≡ƒöä Profile: Storage changed, updating subscription...') // Debug log
+      console.log('=== Profile: Storage changed, updating subscription...') // Debug log
       updateSubscriptionData()
     }
 
@@ -170,10 +172,26 @@ export default function ProfilePage() {
   }
 
   const saveProfile = async () => {
+    // Validation
+    if (!draft.name.trim()) {
+      toast({ description: t("pleaseEnterName") || "Please enter your name", variant: "destructive" })
+      return
+    }
+    if (draft.weight < 0 || draft.weight > 500) {
+      toast({ description: t("invalidWeight") || "Please enter a valid weight (0-500 kg)", variant: "destructive" })
+      return
+    }
+    if (draft.height < 0 || draft.height > 300) {
+      toast({ description: t("invalidHeight") || "Please enter a valid height (0-300 cm)", variant: "destructive" })
+      return
+    }
+
+    setSaving(true)
     try {
       const userId = localStorage.getItem("userId")
       if (!userId) {
-        toast({ description: "Error: User not found", variant: "destructive" })
+        toast({ description: t("userNotFound") || "Error: User not found", variant: "destructive" })
+        setSaving(false)
         return
       }
 
@@ -200,11 +218,13 @@ export default function ProfilePage() {
       // Save avatar to localStorage
       if (draftAvatar) localStorage.setItem("profileAvatar", draftAvatar)
       
-      toast({ description: "Profile saved successfully!" })
+      toast({ description: t("profileSavedSuccessfully") || "Profile saved successfully!" })
       setOpen(false)
     } catch (error) {
       console.error("Error saving profile:", error)
-      toast({ description: "Failed to save profile", variant: "destructive" })
+      toast({ description: t("failedToSaveProfile") || "Failed to save profile", variant: "destructive" })
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -260,19 +280,19 @@ export default function ProfilePage() {
       setNewPassword("")
       setConfirmPassword("")
       
-      toast({ description: "Γ£à Password changed successfully!", variant: "default" })
+      toast({ description: t("passwordChangedSuccessfully") || "Password changed successfully!", variant: "default" })
     } catch (error: any) {
       console.error("Password change error:", error)
       
       // Handle specific Firebase errors
       if (error.code === "auth/wrong-password" || error.code === "auth/invalid-credential") {
-        toast({ description: "Current password is incorrect.", variant: "destructive" })
+        toast({ description: t("currentPasswordIncorrect") || "Current password is incorrect.", variant: "destructive" })
       } else if (error.code === "auth/weak-password") {
-        toast({ description: "New password is too weak. Use at least 6 characters.", variant: "destructive" })
+        toast({ description: t("weakPassword") || "New password is too weak. Use at least 6 characters.", variant: "destructive" })
       } else if (error.code === "auth/requires-recent-login") {
-        toast({ description: "Please log out and log in again before changing password.", variant: "destructive" })
+        toast({ description: t("requiresRecentLogin") || "Please log out and log in again before changing password.", variant: "destructive" })
       } else {
-        toast({ description: "Failed to change password. Please try again.", variant: "destructive" })
+        toast({ description: t("failedToChangePassword") || "Failed to change password. Please try again.", variant: "destructive" })
       }
     } finally {
       setChangingPassword(false)
@@ -297,7 +317,7 @@ export default function ProfilePage() {
       ]
       keysToRemove.forEach(key => localStorage.removeItem(key))
       
-      toast({ description: "Logged out successfully" })
+      toast({ description: t("loggedOutSuccessfully") || "Logged out successfully" })
       
       // Redirect to login after brief delay for toast
       setTimeout(() => {
@@ -324,445 +344,367 @@ export default function ProfilePage() {
 
   return (
     <AuthGuard requiredRole="user" allowedRoles={["user"]}>
-    <>
-    <Toaster />
-    <PageTransition>
-    <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
-      <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-[#6366F1] to-[#818CF8] bg-clip-text text-transparent mb-2">
-          {t("profile")}
-        </h1>
-        <p className="text-[#B6C4CF] mb-8">{t("manageFitnessProfileDesc")}</p>
-
-        {/* Subscription Warning */}
-        {subscriptionStatus.isExpired && (
-          <SubscriptionWarning variant="expired" />
-        )}
-        {!subscriptionStatus.isExpired && subscriptionStatus.daysRemaining <= 7 && subscriptionStatus.daysRemaining > 0 && (
-          <SubscriptionWarning variant="warning" daysRemaining={subscriptionStatus.daysRemaining} />
-        )}
-
-        {/* Subscription Info Card */}
-        <SubscriptionInfoCard
-          userKey={userKey}
-          joinDate={joinDate}
-          expiryDate={expiryDate}
-          isActive={subscriptionStatus.isActive}
-          daysRemaining={subscriptionStatus.daysRemaining}
-        />
-
-        <section className="space-y-5">
-        <Card className="bg-[#101A23] border-[#2E3944]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">{t("account")}</CardTitle>
-          </CardHeader>
-          <CardContent className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-800 flex items-center justify-center">
-              {avatar ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={avatar} alt={`${profile.name}'s profile avatar`} className="w-full h-full object-cover" />
-              ) : (
-                <UserIcon className="w-6 h-6 text-slate-400" />
-              )}
-            </div>
-            <div className="flex-1">
-              <p className="text-white font-semibold leading-tight">{profile.name}</p>
-              <p className="text-slate-400 text-sm">{profile.email}</p>
-            </div>
-            {isMobile ? (
-              <Sheet open={open} onOpenChange={o => { if(!o) resetDraft(); setOpen(o) }}>
-                <SheetTrigger asChild>
-                  <Button className="h-9">{t("manageLabel")}</Button>
-                </SheetTrigger>
-                <SheetContent side="bottom" className="rounded-t-2xl p-0 max-h-[90vh] h-[90vh] bg-slate-950 border-slate-800">
-                  <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
-                    <SheetTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> {t("manageProfile")}</SheetTitle>
-                  </SheetHeader>
-                  <ScrollArea className="h-[calc(90vh-4rem)]">
-                    <div className="p-5 space-y-6">
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-800 flex items-center justify-center">
-                          {draftAvatar ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={draftAvatar} alt="avatar" className="w-full h-full object-cover" />
-                          ) : (
-                            <UserIcon className="w-8 h-8 text-slate-500" />
-                          )}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="inline-flex items-center gap-2 text-xs font-medium text-white cursor-pointer">
-                            <Camera className="w-4 h-4" />
-                            <span>{t("changeAvatar")}</span>
-                            <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
-                          </label>
-                          <p className="text-slate-500 text-xs">PNG/JPG up to 2MB.</p>
-                        </div>
-                      </div>
-                      <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-400" /> {t("personal")}</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("fullName")}</Label>
-                              <Input value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
-                              <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
-                              <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> {t("joinDate")}</Label>
-                              <Input value={draft.joinDate} onChange={e=>setDraft({...draft,joinDate:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("goal")}</Label>
-                              <Input value={draft.goal} onChange={e=>setDraft({...draft,goal:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("experience")}</Label>
-                              <Input value={draft.experience} onChange={e=>setDraft({...draft,experience:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> {t("physical")}</CardTitle></CardHeader>
-                        <CardContent className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label className="text-gray-200 text-sm font-medium">{t("weight")}</Label>
-                            <Input type="number" value={draft.weight} onChange={e=>setDraft({...draft,weight:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
-                          </div>
-                          <div>
-                            <Label className="text-gray-200 text-sm font-medium">{t("height")}</Label>
-                            <Input type="number" value={draft.height} onChange={e=>setDraft({...draft,height:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Lock className="w-4 h-4 text-purple-400" /> {t("security")}</CardTitle></CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("current")}</Label>
-                              <Input type="password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("new")}</Label>
-                              <Input type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("confirm")}</Label>
-                              <Input type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                          </div>
-                          <Button onClick={changePassword} disabled={changingPassword} variant="outline" className="w-full">
-                            {changingPassword ? t("updating") : t("changePasswordLabel")}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                      <div className="flex gap-3 justify-end pt-2">
-                        <Button variant="outline" onClick={resetDraft} className="border-slate-700">Cancel</Button>
-                        <Button onClick={saveProfile} disabled={!isDirty} className="gap-2 disabled:opacity-50"><Save className="w-4 h-4" /> {isDirty ? "Save" : "Saved"}</Button>
+      <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950">
+        <Toaster />
+        <div className="px-4 sm:px-6 lg:px-8 py-6 max-w-[1400px] mx-auto pb-28">
+          
+          {/* Bento Grid Layout - Modern Design */}
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 md:gap-6">
+            
+            {/* Hero Card - Large */}
+            <div className="lg:col-span-12 relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-600/20 via-purple-500/10 to-pink-500/20 backdrop-blur-xl border border-purple-500/30 p-8 md:p-10 group hover:scale-[1.005] hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(168,85,247,0.2),transparent_60%)] animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-pink-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 animate-shimmer" />
+              <div className="relative">
+                <div className="flex flex-col items-center gap-6">
+                  <div className="relative group/avatar">
+                    <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur-xl opacity-50 group-hover/avatar:opacity-100 group-hover/avatar:blur-2xl transition-all duration-500 animate-pulse" />
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-1.5 shadow-2xl group-hover/avatar:scale-105 group-hover/avatar:rotate-3 transition-all duration-500">
+                      <div className="w-full h-full rounded-[1.3rem] overflow-hidden bg-slate-800 flex items-center justify-center">
+                        {avatar ? (
+                          <img src={avatar} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          <UserIcon className="w-12 h-12 text-purple-400" />
+                        )}
                       </div>
                     </div>
-                  </ScrollArea>
-                </SheetContent>
-              </Sheet>
-            ) : (
-              <Dialog open={open} onOpenChange={o => { if(!o) resetDraft(); setOpen(o) }}>
-                <DialogTrigger asChild>
-                  <Button className="h-9">Manage</Button>
-                </DialogTrigger>
-                <DialogContent className="max-h-[85vh] w-full sm:max-w-lg p-0 overflow-hidden">
-                  <DialogHeader className="p-5 border-b border-slate-800 bg-slate-900">
-                    <DialogTitle className="text-white flex items-center gap-2"><UserIcon className="w-5 h-5 text-indigo-400" /> {t("manageProfile")}</DialogTitle>
-                  </DialogHeader>
-                  <ScrollArea className="h-full max-h-[calc(85vh-4rem)]">
-                    <div className="p-5 space-y-6">
-                      <div className="flex items-center gap-4">
-                        <div className="relative w-20 h-20 rounded-xl overflow-hidden bg-slate-800 flex items-center justify-center">
-                          {draftAvatar ? (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img src={draftAvatar} alt="avatar" className="w-full h-full object-cover" />
-                          ) : (
-                            <UserIcon className="w-8 h-8 text-slate-500" />
-                          )}
-                        </div>
-                        <div className="flex flex-col gap-2">
-                          <label className="inline-flex items-center gap-2 text-xs font-medium text-white cursor-pointer">
-                            <Camera className="w-4 h-4" />
-                            <span>{t("changeAvatar")}</span>
-                            <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
-                          </label>
-                          <p className="text-slate-500 text-xs">PNG/JPG up to 2MB.</p>
-                        </div>
-                      </div>
-                      <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Activity className="w-4 h-4 text-cyan-400" /> {t("personal")}</CardTitle></CardHeader>
-                        <CardContent className="space-y-4">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("fullName")}</Label>
-                              <Input value={draft.name} onChange={e=>setDraft({...draft,name:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Mail className="w-3 h-3" /> {t("email")}</Label>
-                              <Input type="email" value={draft.email} disabled className="mt-1 bg-slate-950 border-slate-800 opacity-60 cursor-not-allowed" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Phone className="w-3 h-3" /> {t("phone")}</Label>
-                              <Input value={draft.phone} onChange={e=>setDraft({...draft,phone:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium flex items-center gap-1"><Calendar className="w-3 h-3" /> {t("joinDate")}</Label>
-                              <Input value={draft.joinDate} onChange={e=>setDraft({...draft,joinDate:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("goal")}</Label>
-                              <Input value={draft.goal} onChange={e=>setDraft({...draft,goal:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("experience")}</Label>
-                              <Input value={draft.experience} onChange={e=>setDraft({...draft,experience:e.target.value})} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Weight className="w-4 h-4 text-emerald-400" /> {t("physical")}</CardTitle></CardHeader>
-                        <CardContent className="grid grid-cols-2 gap-4">
-                          <div>
-                            <Label className="text-gray-200 text-sm font-medium">{t("weight")}</Label>
-                            <Input type="number" value={draft.weight} onChange={e=>setDraft({...draft,weight:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
-                          </div>
-                          <div>
-                            <Label className="text-gray-200 text-sm font-medium">{t("height")}</Label>
-                            <Input type="number" value={draft.height} onChange={e=>setDraft({...draft,height:parseInt(e.target.value||'0')})} className="mt-1 bg-slate-950 border-slate-800" />
-                          </div>
-                        </CardContent>
-                      </Card>
-                      <Card className="bg-slate-900/70 border-slate-800">
-                        <CardHeader className="pb-3"><CardTitle className="text-white text-sm flex items-center gap-2"><Lock className="w-4 h-4 text-purple-400" /> {t("security")}</CardTitle></CardHeader>
-                        <CardContent className="space-y-3">
-                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("current")}</Label>
-                              <Input type="password" value={currentPassword} onChange={e=>setCurrentPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("new")}</Label>
-                              <Input type="password" value={newPassword} onChange={e=>setNewPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                            <div>
-                              <Label className="text-gray-200 text-sm font-medium">{t("confirm")}</Label>
-                              <Input type="password" value={confirmPassword} onChange={e=>setConfirmPassword(e.target.value)} className="mt-1 bg-slate-950 border-slate-800" />
-                            </div>
-                          </div>
-                          <Button onClick={changePassword} disabled={changingPassword} variant="outline" className="w-full">
-                            {changingPassword ? t("updating") : t("changePasswordLabel")}
-                          </Button>
-                        </CardContent>
-                      </Card>
-                      <div className="flex gap-3 justify-end pt-2">
-                        <Button variant="outline" onClick={resetDraft} className="border-slate-700">Cancel</Button>
-                        <Button onClick={saveProfile} disabled={!isDirty} className="gap-2 disabled:opacity-50"><Save className="w-4 h-4" /> {isDirty ? "Save" : "Saved"}</Button>
-                      </div>
-                    </div>
-                  </ScrollArea>
-                </DialogContent>
-              </Dialog>
-            )}
-          </CardContent>
-        </Card>
-
-        <Card className="bg-[#101A23] border-[#2E3944]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">{t("stats")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-3 gap-3 text-center">
-              <div className="p-3 rounded-lg bg-slate-800/50">
-                <Weight className="w-4 h-4 mx-auto text-emerald-400" />
-                <p className="text-white font-semibold mt-1">{profile.weight}kg</p>
-                <p className="text-gray-200 text-sm font-medium">{t("weightLabel")}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-slate-800/50">
-                <Ruler className="w-4 h-4 mx-auto text-cyan-400" />
-                <p className="text-white font-semibold mt-1">{profile.height}cm</p>
-                <p className="text-gray-200 text-sm font-medium">{t("heightLabel")}</p>
-              </div>
-              <div className="p-3 rounded-lg bg-slate-800/50">
-                {/* Goal icon fallback */}
-                <span className="block w-4 h-4 mx-auto rounded-full bg-blue-400" />
-                <p className="text-white font-semibold mt-1 truncate">{t("buildMuscle")}</p>
-                <p className="text-gray-200 text-sm font-medium">{t("goalLabel")}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card className="bg-[#101A23] border-[#2E3944]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">{t("shortcuts")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-3 gap-3">
-            <Link href="/workout"><Button variant="outline" className="w-full">{t("workoutLabel")}</Button></Link>
-            <Link href="/meals"><Button variant="outline" className="w-full">{t("mealsLabel")}</Button></Link>
-            <Link href="/physio"><Button variant="outline" className="w-full">{t("physioLabel")}</Button></Link>
-          </CardContent>
-        </Card>
-
-        {/* Settings Card */}
-        <Card className="bg-[#101A23] border-[#2E3944]">
-          <CardHeader className="pb-3">
-            <CardTitle className="text-white text-sm">{t("preferences")}</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Button 
-              onClick={() => setSettingsOpen(true)}
-              variant="outline" 
-              className="w-full bg-gradient-to-r from-indigo-600 to-indigo-500 border-indigo-500 hover:from-indigo-700 hover:to-indigo-600 text-white transition-all duration-300"
-            >
-              <SettingsIcon className="w-4 h-4 mr-2" />
-              {t("settings")}
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Settings Bottom Sheet */}
-        <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
-        <SheetContent 
-          side="bottom" 
-          className="bg-slate-950 border-t border-slate-800 text-white rounded-t-2xl p-0 max-h-[88vh] h-[88vh] animate-slideUp"
-        >
-          <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
-            <SheetTitle className="text-white flex items-center gap-2"><SettingsIcon className="w-5 h-5 text-indigo-400" /> {t("settings")}</SheetTitle>
-          </SheetHeader>
-          <ScrollArea className="h-[calc(88vh-4rem)]">
-            <div className="p-5 space-y-6"
-              style={{
-                animation: "fadeIn 0.4s ease-out"
-              }}
-            >
-              {/* Appearance */}
-              <Card className="bg-slate-900/70 border-slate-800">
-                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">{t("appearance")}</CardTitle></CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-3 gap-3">
-                    {[
-                      { key: "light", label: t("light") },
-                      { key: "dark", label: t("dark") },
-                      { key: "system", label: t("system") },
-                    ].map((m) => (
-                      <button
-                        key={m.key}
-                        type="button"
-                        onClick={() => setTheme(m.key as any)}
-                        className={`p-3 rounded-xl border text-xs font-medium ${theme===m.key?"border-indigo-500 bg-indigo-500/10 text-white":"border-slate-700 bg-slate-800/50 text-slate-300"}`}
-                      >
-                        {m.label}
-                      </button>
-                    ))}
                   </div>
-                  <p className="text-[11px] text-slate-500 mt-2">{t("systemFollowsOS")}</p>
-                </CardContent>
-              </Card>
-
-              {/* Notifications */}
-              <Card className="bg-slate-900/70 border-slate-800">
-                <CardHeader className="pb-3"><CardTitle className="text-white text-sm">{t("notificationsTitle")}</CardTitle></CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-                    <span className="text-sm">{t("emailNotifications")}</span>
-                    <input type="checkbox" checked={notifyEmail} onChange={e=>setNotifyEmail(e.target.checked)} className="w-4 h-4" />
-                  </div>
-                  <div className="flex items-center justify-between p-3 bg-slate-800/50 rounded-lg">
-                    <span className="text-sm">{t("pushNotifications")}</span>
-                    <input type="checkbox" checked={notifyPush} onChange={e=>setNotifyPush(e.target.checked)} className="w-4 h-4" />
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Language */}
-              <Card className="bg-gradient-to-br from-slate-900/90 via-slate-900/80 to-slate-800/70 border-slate-700/50 shadow-xl">
-                <CardHeader className="pb-4 border-b border-slate-700/30">
-                  <CardTitle className="text-white text-base font-semibold flex items-center gap-2">
-                    <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5h12M9 3v2m1.048 9.5A18.022 18.022 0 016.412 9m6.088 9h7M11 21l5-10 5 10M12.751 5C11.783 10.77 8.07 15.61 3 18.129" />
-                    </svg>
-                    {t("languageSettings")}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="pt-6 space-y-5">
-                  <div className="space-y-3">
-                    <label className="text-slate-300 text-sm font-medium block">
-                      {t("selectLanguage")}
-                    </label>
-                    <select
-                      value={selectedLanguage}
-                      onChange={(e) => setSelectedLanguage(e.target.value as "en" | "tr" | "ar" | "ku")}
-                      className="w-full bg-slate-950/80 border-2 border-slate-700/60 hover:border-blue-500/50 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm rounded-xl px-4 py-3.5 text-white transition-all duration-200 outline-none cursor-pointer shadow-inner"
-                    >
-                      <option value="en" className="bg-slate-900">≡ƒç¼≡ƒçº English</option>
-                      <option value="tr" className="bg-slate-900">≡ƒç╣≡ƒç╖ T├╝rk├ºe</option>
-                      <option value="ar" className="bg-slate-900">≡ƒç╕≡ƒçª ╪º┘ä╪╣╪▒╪¿┘è╪⌐</option>
-                      <option value="ku" className="bg-slate-900">ΓÿÇ∩╕Å Kurd├«</option>
-                    </select>
-                  </div>
-                  
-                  <button
-                    onClick={() => {
-                      setLanguage(selectedLanguage as "en" | "tr" | "ar" | "ku");
-                      toast({
-                        title: "Γ£ô Language Changed",
-                        description: "Your language preference has been updated successfully.",
-                      });
-                    }}
-                    className="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white font-semibold py-3.5 px-6 rounded-xl transition-all duration-300 transform hover:scale-[1.02] active:scale-[0.98] shadow-lg hover:shadow-blue-500/30 flex items-center justify-center gap-2"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    {t("applyLanguage")}
-                  </button>
-                </CardContent>
-              </Card>
-
-              {/* Logout Section */}
-              <Card className="bg-red-950/20 border-red-900/30">
-                <CardHeader className="pb-3">
-                  <CardTitle className="text-white text-sm">{t("accountActions")}</CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="p-3 bg-slate-900/50 rounded-lg">
-                    <p className="text-xs text-slate-400 mb-3">
-                      {t("accountActionsDesc")}
+                  <div className="text-center animate-in fade-in slide-in-from-left-4 duration-700">
+                    <h1 className="text-3xl sm:text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-pink-200 mb-2 animate-in fade-in slide-in-from-bottom-2 duration-500">{profile.name || "User"}</h1>
+                    <p className="text-purple-200/70 text-base mb-4 flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3 duration-700 justify-center">
+                      <Mail className="w-4 h-4" />
+                      <span>{profile.email}</span>
                     </p>
-                    <Button
-                      onClick={handleLogout}
-                      className="w-full bg-red-600 hover:bg-red-700 text-white border-0 transition-all duration-300"
-                    >
-                      <LogOut className="w-4 h-4 mr-2" />
-                      {t("logoutButton")}
-                    </Button>
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      <span className="px-4 py-2 rounded-xl bg-purple-500/20 border border-purple-500/30 text-purple-200 text-sm font-medium flex items-center gap-2 hover:scale-[1.02] hover:bg-purple-500/30 transition-all duration-300 animate-in fade-in slide-in-from-left-4 delay-100">
+                        <Calendar className="w-4 h-4 animate-pulse" />
+                        {t("joined")} {joinDate}
+                      </span>
+                      <span className={`px-4 py-2 rounded-xl border text-sm font-medium flex items-center gap-2 hover:scale-[1.02] transition-all duration-300 animate-in fade-in slide-in-from-left-4 delay-200 ${
+                        subscriptionStatus.isActive 
+                          ? 'bg-green-500/20 border-green-500/30 text-green-300 hover:bg-green-500/30' 
+                          : 'bg-red-500/20 border-red-500/30 text-red-300 hover:bg-red-500/30'
+                      }`}>
+                        <Activity className="w-4 h-4 animate-bounce" />
+                        {subscriptionStatus.isActive ? t("active") : t("expired")}
+                      </span>
+                    </div>
                   </div>
-                </CardContent>
-              </Card>
+                  <Dialog open={open} onOpenChange={o => { if(!o) resetDraft(); setOpen(o) }}>
+                    <DialogTrigger asChild>
+                      <Button className="group/btn relative overflow-hidden bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white px-6 py-6 rounded-2xl shadow-lg shadow-purple-500/30 transition-all hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/40 duration-300 animate-in fade-in zoom-in-50 delay-300">
+                        <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000" />
+                        <Edit2 className="w-5 h-5 mr-2 group-hover/btn:rotate-12 transition-transform duration-300" />
+                        {t("edit")}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-purple-500/30 text-white max-w-3xl backdrop-blur-xl shadow-2xl shadow-purple-500/20">
+                      <DialogHeader className="relative pb-6 border-b border-white/10">
+                        <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
+                        <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-500/20 rounded-full blur-3xl animate-pulse" />
+                        <DialogTitle className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white via-purple-200 to-pink-200 flex items-center gap-3 relative justify-end">
+                          <span>{t("editProfile")}</span>
+                          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg shadow-purple-500/50 animate-pulse">
+                            <Edit2 className="w-6 h-6 text-white" />
+                          </div>
+                        </DialogTitle>
+                        <p className="text-slate-400 text-sm mt-2 relative text-right">{t("updatePersonalInfo")}</p>
+                      </DialogHeader>
+                      <ScrollArea className="max-h-[65vh] pr-4">
+                        <div className="space-y-6 py-6">
+                          
+                          {/* Avatar Upload Section */}
+                          <div className="flex flex-col items-center gap-4 p-6 rounded-2xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 border border-purple-500/30">
+                            <div className="relative group/upload">
+                              <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-pink-600 rounded-3xl blur-xl opacity-50 group-hover/upload:opacity-100 transition-opacity duration-500" />
+                              <div className="relative w-24 h-24 rounded-3xl overflow-hidden bg-gradient-to-br from-purple-500 to-pink-500 p-1 shadow-xl">
+                                <div className="w-full h-full rounded-[1.3rem] overflow-hidden bg-slate-800 flex items-center justify-center">
+                                  {draftAvatar ? (
+                                    <img src={draftAvatar} alt="Preview" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <UserIcon className="w-10 h-10 text-purple-400" />
+                                  )}
+                                </div>
+                              </div>
+                              <label htmlFor="avatar-upload" className="absolute -bottom-2 -right-2 w-10 h-10 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 flex items-center justify-center cursor-pointer hover:scale-110 transition-transform shadow-lg shadow-purple-500/50">
+                                <Camera className="w-5 h-5 text-white" />
+                                <input 
+                                  id="avatar-upload" 
+                                  type="file" 
+                                  accept="image/*" 
+                                  className="hidden" 
+                                  onChange={handleAvatarChange}
+                                />
+                              </label>
+                            </div>
+                            <p className="text-xs text-slate-400 text-center">{t("clickCameraToUpload")}</p>
+                          </div>
+
+                          {/* Form Fields */}
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                            <div className="group relative">
+                              <Label className="text-slate-300 font-semibold mb-2 flex flex-row-reverse items-center gap-2 group-hover:text-white transition-colors justify-end">
+                                <User className="w-4 h-4 text-purple-400" />
+                                {t("name")}
+                              </Label>
+                              <Input 
+                                value={draft.name} 
+                                onChange={e => setDraft({...draft, name: e.target.value})} 
+                                className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all hover:bg-slate-800 backdrop-blur-sm text-right" 
+                                placeholder={t("enterYourName")}
+                              />
+                            </div>
+                            <div className="group relative">
+                              <Label className="text-slate-300 font-semibold mb-2 flex flex-row-reverse items-center gap-2 group-hover:text-white transition-colors justify-end">
+                                <Phone className="w-4 h-4 text-cyan-400" />
+                                {t("phone")}
+                              </Label>
+                              <Input 
+                                value={draft.phone} 
+                                onChange={e => setDraft({...draft, phone: e.target.value})} 
+                                className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl focus:border-cyan-500 focus:ring-2 focus:ring-cyan-500/20 transition-all hover:bg-slate-800 backdrop-blur-sm text-right" 
+                                placeholder={t("enterPhoneNumber")}
+                              />
+                            </div>
+                            <div className="group relative">
+                              <Label className="text-slate-300 font-semibold mb-2 flex flex-row-reverse items-center gap-2 group-hover:text-white transition-colors justify-end">
+                                <Weight className="w-4 h-4 text-emerald-400" />
+                                {t("weightLabel")}
+                              </Label>
+                              <div className="relative">
+                                <Input 
+                                  type="number" 
+                                  value={draft.weight} 
+                                  onChange={e => setDraft({...draft, weight: Number(e.target.value)})} 
+                                  className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl pr-12 focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20 transition-all hover:bg-slate-800 backdrop-blur-sm text-right" 
+                                  placeholder="0"
+                                  min="0"
+                                  max="500"
+                                />
+                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-emerald-400 font-semibold text-sm">kg</span>
+                              </div>
+                            </div>
+                            <div className="group relative">
+                              <Label className="text-slate-300 font-semibold mb-2 flex flex-row-reverse items-center gap-2 group-hover:text-white transition-colors justify-end">
+                                <Ruler className="w-4 h-4 text-blue-400" />
+                                {t("heightLabel")}
+                              </Label>
+                              <div className="relative">
+                                <Input 
+                                  type="number" 
+                                  value={draft.height} 
+                                  onChange={e => setDraft({...draft, height: Number(e.target.value)})} 
+                                  className="bg-slate-800/50 border-slate-700 text-white h-12 rounded-xl pr-12 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all hover:bg-slate-800 backdrop-blur-sm text-right" 
+                                  placeholder="0"
+                                  min="0"
+                                  max="300"
+                                />
+                                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-blue-400 font-semibold text-sm">cm</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          {/* Action Buttons */}
+                          <div className="flex gap-3 pt-4">
+                            <Button 
+                              onClick={resetDraft}
+                              variant="outline"
+                              className="flex-1 h-14 rounded-xl border-slate-700 bg-slate-800/50 text-white hover:bg-slate-800 hover:border-slate-600 transition-all group/cancel"
+                            >
+                              <span className="group-hover/cancel:scale-110 transition-transform">{t("cancel")}</span>
+                            </Button>
+                            <Button 
+                              onClick={saveProfile} 
+                              disabled={!isDirty || saving}
+                              className="flex-1 h-14 rounded-xl bg-gradient-to-r from-purple-500 to-pink-600 hover:from-purple-600 hover:to-pink-700 text-white shadow-lg shadow-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/50 transition-all hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 group/save relative overflow-hidden"
+                            >
+                              <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover/save:translate-x-full transition-transform duration-1000" />
+                              {saving ? (
+                                <>
+                                  <div className="w-5 h-5 mr-2 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                                  {t("saving") || "Saving..."}
+                                </>
+                              ) : (
+                                <>
+                                  <Save className="w-5 h-5 mr-2 group-hover/save:rotate-12 transition-transform duration-300" />
+                                  {t("saveChanges")}
+                                </>
+                              )}
+                            </Button>
+                          </div>
+                        </div>
+                      </ScrollArea>
+                    </DialogContent>
+                  </Dialog>
+                </div>
+              </div>
             </div>
-          </ScrollArea>
-        </SheetContent>
+
+            {/* Subscription Key Card */}
+            <div className="lg:col-span-12 relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500/10 to-cyan-500/10 backdrop-blur-xl border border-cyan-500/30 p-6 group hover:scale-[1.005] hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 delay-150">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(59,130,246,0.15),transparent_60%)] animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-blue-500/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-4 animate-in fade-in slide-in-from-left-4 justify-end">
+                  <div>
+                    <p className="text-xs text-cyan-300/70 font-medium uppercase tracking-wider text-right">{t("accessKey")}</p>
+                    <p className="text-lg font-bold text-white text-right">{userKey || t("notSet")}</p>
+                  </div>
+                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center shadow-lg group-hover:scale-105 group-hover:rotate-6 transition-all duration-500">
+                    <Lock className="w-6 h-6 text-white group-hover:animate-pulse" />
+                  </div>
+                </div>
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between text-slate-300">
+                    <span className={subscriptionStatus.isActive ? 'text-green-400' : 'text-red-400'}>
+                      {subscriptionStatus.isActive ? t("active") : t("expired")}
+                    </span>
+                    <span>{t("status")}</span>
+                  </div>
+                  {subscriptionStatus.daysRemaining > 0 && (
+                    <div className="flex justify-between text-slate-300">
+                      <span className="text-cyan-400 font-semibold">{subscriptionStatus.daysRemaining}</span>
+                      <span>{t("daysLeft")}</span>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Stats Grid - 3 Cards */}
+            <div className="lg:col-span-12 relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-500/10 to-green-500/10 backdrop-blur-xl border border-emerald-500/30 p-6 group hover:scale-[1.005] hover:shadow-2xl hover:shadow-emerald-500/20 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 delay-200">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(16,185,129,0.15),transparent_60%)] animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/0 via-green-500/10 to-emerald-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-2 animate-in fade-in slide-in-from-left-4 justify-end">
+                  <p className="text-sm text-emerald-300/70 font-semibold uppercase tracking-wider group-hover:text-emerald-300 transition-colors">{t("weight")}</p>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 flex items-center justify-center group-hover:scale-105 group-hover:rotate-12 transition-all duration-500">
+                    <Weight className="w-5 h-5 text-white group-hover:animate-bounce" />
+                  </div>
+                </div>
+                <p className="text-4xl font-black text-white group-hover:scale-105 transition-transform duration-300 text-right">{profile.weight}<span className="text-xl text-emerald-400 ml-1 animate-pulse">kg</span></p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-12 relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-500/10 to-blue-500/10 backdrop-blur-xl border border-cyan-500/30 p-6 group hover:scale-[1.005] hover:shadow-2xl hover:shadow-cyan-500/20 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 delay-300">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(6,182,212,0.15),transparent_60%)] animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/0 via-blue-500/10 to-cyan-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-2 animate-in fade-in slide-in-from-left-4 justify-end">
+                  <p className="text-sm text-cyan-300/70 font-semibold uppercase tracking-wider group-hover:text-cyan-300 transition-colors">{t("height")}</p>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center group-hover:scale-105 group-hover:rotate-12 transition-all duration-500">
+                    <Ruler className="w-5 h-5 text-white group-hover:animate-bounce" />
+                  </div>
+                </div>
+                <p className="text-4xl font-black text-white group-hover:scale-105 transition-transform duration-300 text-right">{profile.height}<span className="text-xl text-cyan-400 ml-1 animate-pulse">cm</span></p>
+              </div>
+            </div>
+
+            <div className="lg:col-span-12 relative overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500/10 to-pink-500/10 backdrop-blur-xl border border-purple-500/30 p-6 group hover:scale-[1.005] hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-500 animate-in fade-in slide-in-from-bottom-4 delay-500">
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.15),transparent_60%)] animate-pulse" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-pink-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              <div className="relative">
+                <div className="flex items-center gap-3 mb-2 animate-in fade-in slide-in-from-left-4 justify-end">
+                  <p className="text-sm text-purple-300/70 font-semibold uppercase tracking-wider group-hover:text-purple-300 transition-colors">{t("goal")}</p>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center group-hover:scale-105 group-hover:rotate-12 transition-all duration-500">
+                    <Goal className="w-5 h-5 text-white group-hover:animate-spin" />
+                  </div>
+                </div>
+                <p className="text-xl font-bold text-white group-hover:scale-105 transition-transform duration-300 text-right">{t("buildMuscle")}</p>
+              </div>
+            </div>
+
+
+
+          </div>
+        </div>
+
+        {/* Settings Sheet - Outside of Grid */}
+        <Sheet open={settingsOpen} onOpenChange={setSettingsOpen}>
+          <SheetContent side="bottom" className="bg-slate-950 border-t border-slate-800 text-white rounded-t-2xl p-0 max-h-[88vh] h-[88vh]">
+            <SheetHeader className="p-5 border-b border-slate-800 bg-slate-900 rounded-t-2xl">
+              <SheetTitle className="text-white flex items-center gap-2">
+                <SettingsIcon className="w-5 h-5 text-indigo-400" /> 
+                {t("settings")}
+              </SheetTitle>
+            </SheetHeader>
+            <ScrollArea className="h-[calc(88vh-4rem)]">
+              <div className="p-5 space-y-6">
+                <Card className="bg-gradient-to-br from-indigo-500/10 to-purple-600/10 border-indigo-500/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-white flex items-center gap-2 justify-end">
+                      <span>{t("appearance")}</span>
+                      <SettingsIcon className="w-5 h-5 text-indigo-400" />
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-3 gap-3">
+                      {[
+                        { key: "light", label: t("light") },
+                        { key: "dark", label: t("dark") },
+                        { key: "system", label: t("system") },
+                      ].map(({ key, label }) => (
+                        <button
+                          key={key}
+                          onClick={() => setTheme(key)}
+                          className={`p-4 rounded-xl border transition-all ${
+                            theme === key
+                              ? "bg-indigo-500/20 border-indigo-500/50 text-white"
+                              : "bg-white/5 border-white/10 text-slate-400 hover:bg-white/10"
+                          }`}
+                        >
+                          {label}
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-gradient-to-br from-purple-500/10 to-pink-600/10 border-purple-500/30">
+                  <CardHeader className="pb-3">
+                    <CardTitle className="text-white">Language</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { code: "en", label: "English" },
+                        { code: "ar", label: "العربية" },
+                        { code: "ku", label: "کوردی" },
+                        { code: "tr", label: "Türkçe" }
+                      ].map(lang => (
+                        <button
+                          key={lang.code}
+                          onClick={() => setLanguage(lang.code as any)}
+                          className={`p-4 rounded-xl border transition-all ${
+                            language === lang.code
+                              ? "bg-purple-500/20 border-purple-500/50 text-white"
+                              : "bg-white/5 border-white/10 text-slate-400"
+                          }`}
+                        >
+                          {lang.label}
+                        </button>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Button 
+                  onClick={() => {
+                    localStorage.clear()
+                    router.push("/login")
+                  }}
+                  className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 py-6"
+                >
+                  <LogOut className="w-5 h-5 mr-2" />
+                  {t("logout")}
+                </Button>
+              </div>
+            </ScrollArea>
+          </SheetContent>
         </Sheet>
 
-      </section>
+        <BottomNav activeTab="profile" />
       </div>
-    </div>
-    </PageTransition>
-      <BottomNav activeTab="profile" />
-    </>
     </AuthGuard>
   )
 }

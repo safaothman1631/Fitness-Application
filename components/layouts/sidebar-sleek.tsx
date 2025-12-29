@@ -67,6 +67,10 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
 
   // Role-specific navigation
   const navigationConfig = {
+    user: {
+      main: [],
+      menu: []
+    },
     superadmin: {
       main: [
         { label: t("dashboard"), path: "/superadmin", icon: "Home" },
@@ -111,11 +115,35 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
         { label: t("settings"), path: "/physiotherapist/settings", icon: "Settings" },
         { label: t("notifications"), path: "/physiotherapist/notifications", icon: "Bell" },
       ]
+    },
+    trainer: {
+      main: [
+        { label: t("dashboard"), path: "/trainer", icon: "Home" },
+        { label: t("workouts"), path: "/trainer/workouts", icon: "Dumbbell" },
+        { label: t("users"), path: "/trainer/users", icon: "Users" },
+      ],
+      menu: [
+        { label: t("profile"), path: "/trainer/profile", icon: "User" },
+        { label: t("settings"), path: "/trainer/settings", icon: "Settings" },
+        { label: t("notifications"), path: "/trainer/notifications", icon: "Bell" },
+      ]
+    },
+    owner: {
+      main: [
+        { label: t("dashboard"), path: "/owner", icon: "Home" },
+        { label: t("analytics"), path: "/owner/analytics", icon: "TrendingUp" },
+        { label: t("settings"), path: "/owner/settings", icon: "Settings" },
+      ],
+      menu: [
+        { label: t("profile"), path: "/owner/profile", icon: "User" },
+        { label: t("settings"), path: "/owner/settings", icon: "Settings" },
+        { label: t("notifications"), path: "/owner/notifications", icon: "Bell" },
+      ]
     }
   }
 
-  const mainNavItems = navigationConfig[role]?.main || navigationConfig.superadmin.main
-  const menuItems = navigationConfig[role]?.menu || navigationConfig.superadmin.menu
+  const mainNavItems = navigationConfig[role]?.main || navigationConfig.user.main
+  const menuItems = navigationConfig[role]?.menu || navigationConfig.user.menu
 
   // Update active index when pathname changes
   useEffect(() => {
@@ -167,20 +195,38 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
           <div className={`w-10 h-10 rounded-xl flex items-center justify-center shadow-lg ${
             role === 'physiotherapist' 
               ? 'bg-gradient-to-br from-emerald-500 to-teal-600 shadow-emerald-500/30' 
+              : role === 'user'
+              ? 'bg-gradient-to-br from-purple-500 to-pink-600 shadow-purple-500/30'
               : 'bg-gradient-to-br from-cyan-500 to-blue-600 shadow-cyan-500/30'
           }`}>
             {role === 'physiotherapist' ? (
               <Activity className="w-6 h-6 text-white" />
+            ) : role === 'user' ? (
+              <User className="w-6 h-6 text-white" />
             ) : (
               <Shield className="w-6 h-6 text-white" />
             )}
           </div>
           <div>
             <h1 className="text-white font-bold text-lg">
-              {role === 'physiotherapist' ? 'Physiotherapist' : 'SuperAdmin'}
+              {role === 'physiotherapist' 
+                ? 'Physiotherapist' 
+                : role === 'user'
+                ? 'FitPro'
+                : role === 'trainer'
+                ? 'Trainer'
+                : role === 'admin-physiotherapist'
+                ? 'Admin Physiotherapist'
+                : role === 'owner'
+                ? 'Owner'
+                : 'SuperAdmin'}
             </h1>
             <p className="text-xs text-gray-400">
-              {role === 'physiotherapist' ? t("medicalDashboard") : t("controlPanel")}
+              {role === 'physiotherapist' 
+                ? t("medicalDashboard") 
+                : role === 'user'
+                ? t("yourFitness")
+                : t("controlPanel")}
             </p>
           </div>
         </div>
@@ -299,16 +345,50 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
           <div className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-bold ${
             role === 'physiotherapist'
               ? 'bg-gradient-to-br from-emerald-500 to-teal-500'
-              : 'bg-gradient-to-br from-purple-500 to-pink-500'
+              : role === 'user'
+              ? 'bg-gradient-to-br from-purple-500 to-pink-500'
+              : role === 'trainer'
+              ? 'bg-gradient-to-br from-orange-500 to-red-500'
+              : 'bg-gradient-to-br from-cyan-500 to-blue-500'
           }`}>
-            {role === 'physiotherapist' ? 'PT' : 'SA'}
+            {role === 'physiotherapist' 
+              ? 'PT' 
+              : role === 'user'
+              ? 'U'
+              : role === 'trainer'
+              ? 'T'
+              : role === 'admin-physiotherapist'
+              ? 'AP'
+              : role === 'owner'
+              ? 'O'
+              : 'SA'}
           </div>
           <div className="flex-1 min-w-0">
             <p className="text-white font-medium text-sm truncate">
-              {role === 'physiotherapist' ? 'Physiotherapist' : 'Super Admin'}
+              {role === 'physiotherapist' 
+                ? 'Physiotherapist' 
+                : role === 'user'
+                ? 'User'
+                : role === 'trainer'
+                ? 'Trainer'
+                : role === 'admin-physiotherapist'
+                ? 'Admin Physio'
+                : role === 'owner'
+                ? 'Owner'
+                : 'Super Admin'}
             </p>
             <p className="text-xs text-gray-400 truncate">
-              {role === 'physiotherapist' ? 'physio@clinic.com' : 'admin@system.com'}
+              {role === 'physiotherapist' 
+                ? 'physio@clinic.com' 
+                : role === 'user'
+                ? 'user@fitpro.com'
+                : role === 'trainer'
+                ? 'trainer@fitpro.com'
+                : role === 'admin-physiotherapist'
+                ? 'admin.physio@clinic.com'
+                : role === 'owner'
+                ? 'owner@fitpro.com'
+                : 'admin@system.com'}
             </p>
           </div>
         </div>

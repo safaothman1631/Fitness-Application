@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import SidebarSleek from "@/components/layouts/sidebar-sleek"
-import { Save, Lock, Bell, Eye, Shield, Loader2 } from "lucide-react"
+import { Save, Lock, Bell, Eye, Shield, Loader2, Settings as SettingsIcon, AlertCircle } from "lucide-react"
 import { useLanguage } from "@/hooks/useLanguage"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
@@ -20,19 +20,19 @@ interface NotificationPreferences {
 	emailNotifications: boolean
 }
 
-export default function PhysiotherapistSettings() {
-	const { t } = useLanguage()
-	const router = useRouter()
-	
-	const [userId, setUserId] = useState<string | null>(null)
-	const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
-	
-	// TODO: Replace with actual physiotherapist ID from auth
-	const physiotherapistId = "physio1"
-	
-	const [loading, setLoading] = useState(true)
-	const [saving, setSaving] = useState(false)
-	const [updatingPassword, setUpdatingPassword] = useState(false)
+	export default function PhysiotherapistSettings() {
+		const { t } = useLanguage()
+		const router = useRouter()
+		
+		const [userId, setUserId] = useState<string | null>(null)
+		const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+		
+		// TODO: Replace with actual physiotherapist ID from auth
+		const physiotherapistId = "physio1"
+		
+		const [loading, setLoading] = useState(true)
+		const [saving, setSaving] = useState(false)
+		const [updatingPassword, setUpdatingPassword] = useState(false)
 	
 	const [preferences, setPreferences] = useState<NotificationPreferences>({
 		patientMessages: true,
@@ -200,17 +200,23 @@ export default function PhysiotherapistSettings() {
 	
 	return (
 		<SidebarSleek role="physiotherapist">
-			<div className="space-y-6">
-				<div>
-					<h1 className="text-3xl font-bold text-white mb-2">{t("settings")}</h1>
-					<p className="text-gray-400">{t("manageAccountPreferences")}</p>
+			<div className="space-y-12 p-4 md:p-6">
+				{/* Header */}
+				<div className="flex items-center gap-3">
+					<div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+						<SettingsIcon className="w-6 h-6 text-white" />
+					</div>
+					<div>
+						<h1 className="text-3xl font-bold text-white">{t("settings")}</h1>
+						<p className="text-gray-400 text-sm">{t("manageAccountPreferences")}</p>
+					</div>
 				</div>
 
 				{/* Account Settings */}
-				<Card className="fitpro-card">
+				<Card className="bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/30">
 					<CardHeader>
 						<CardTitle className="text-white flex items-center gap-2">
-							<Shield className="w-5 h-5" />
+							<Shield className="w-5 h-5 text-red-400" />
 							{t("accountSecurity")}
 						</CardTitle>
 					</CardHeader>
@@ -274,7 +280,7 @@ export default function PhysiotherapistSettings() {
 						<Button 
 							onClick={handleUpdatePassword}
 							disabled={updatingPassword}
-							className="w-full fitpro-button rounded-xl gap-2"
+							className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl gap-2"
 						>
 							{updatingPassword ? (
 								<>
@@ -292,10 +298,10 @@ export default function PhysiotherapistSettings() {
 				</Card>
 
 				{/* Notification Settings */}
-				<Card className="fitpro-card">
+				<Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30">
 					<CardHeader>
 						<CardTitle className="text-white flex items-center gap-2">
-							<Bell className="w-5 h-5" />
+							<Bell className="w-5 h-5 text-blue-400" />
 							{t("notificationPreferences")}
 						</CardTitle>
 					</CardHeader>
@@ -307,86 +313,74 @@ export default function PhysiotherapistSettings() {
 							</div>
 						) : (
 							<>
-								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+								<div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
 									<div>
 										<p className="text-white font-semibold">{t("patientMessages")}</p>
 										<p className="text-gray-400 text-sm">{t("getNotifiedPatientMessages")}</p>
 									</div>
-									<button
-										onClick={() => handleToggle("patientMessages")}
-										className={`relative w-12 h-6 rounded-full transition-colors ${
-											preferences.patientMessages ? "bg-blue-500" : "bg-gray-600"
-										}`}
-									>
-										<span
-											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-												preferences.patientMessages ? "translate-x-6" : ""
-											}`}
+									<label className="relative inline-flex items-center cursor-pointer">
+										<input 
+											type="checkbox" 
+											checked={preferences.patientMessages}
+											onChange={() => handleToggle("patientMessages")}
+											className="sr-only peer" 
 										/>
-									</button>
+										<div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600"></div>
+									</label>
 								</div>
 
-								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+								<div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
 									<div>
 										<p className="text-white font-semibold">{t("appointmentRemindersLabel")}</p>
 										<p className="text-gray-400 text-sm">{t("reminderBeforeAppointment")}</p>
 									</div>
-									<button
-										onClick={() => handleToggle("appointmentReminders")}
-										className={`relative w-12 h-6 rounded-full transition-colors ${
-											preferences.appointmentReminders ? "bg-blue-500" : "bg-gray-600"
-										}`}
-									>
-										<span
-											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-												preferences.appointmentReminders ? "translate-x-6" : ""
-											}`}
+									<label className="relative inline-flex items-center cursor-pointer">
+										<input 
+											type="checkbox" 
+											checked={preferences.appointmentReminders}
+											onChange={() => handleToggle("appointmentReminders")}
+											className="sr-only peer" 
 										/>
-									</button>
+										<div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600"></div>
+									</label>
 								</div>
 
-								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+								<div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
 									<div>
 										<p className="text-white font-semibold">{t("progressAlertsLabel")}</p>
 										<p className="text-gray-400 text-sm">{t("notifyPatientProgress")}</p>
 									</div>
-									<button
-										onClick={() => handleToggle("progressAlerts")}
-										className={`relative w-12 h-6 rounded-full transition-colors ${
-											preferences.progressAlerts ? "bg-blue-500" : "bg-gray-600"
-										}`}
-									>
-										<span
-											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-												preferences.progressAlerts ? "translate-x-6" : ""
-											}`}
+									<label className="relative inline-flex items-center cursor-pointer">
+										<input 
+											type="checkbox" 
+											checked={preferences.progressAlerts}
+											onChange={() => handleToggle("progressAlerts")}
+											className="sr-only peer" 
 										/>
-									</button>
+										<div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600"></div>
+									</label>
 								</div>
 
-								<div className="flex items-center justify-between p-4 bg-slate-800/30 rounded-lg hover:bg-slate-800/50 transition-colors">
+								<div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
 									<div>
 										<p className="text-white font-semibold">{t("emailNotifications")}</p>
 										<p className="text-gray-400 text-sm">{t("receiveDailyEmails")}</p>
 									</div>
-									<button
-										onClick={() => handleToggle("emailNotifications")}
-										className={`relative w-12 h-6 rounded-full transition-colors ${
-											preferences.emailNotifications ? "bg-blue-500" : "bg-gray-600"
-										}`}
-									>
-										<span
-											className={`absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
-												preferences.emailNotifications ? "translate-x-6" : ""
-											}`}
+									<label className="relative inline-flex items-center cursor-pointer">
+										<input 
+											type="checkbox" 
+											checked={preferences.emailNotifications}
+											onChange={() => handleToggle("emailNotifications")}
+											className="sr-only peer" 
 										/>
-									</button>
+										<div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600"></div>
+									</label>
 								</div>
 
 								<Button 
 									onClick={handleSavePreferences}
 									disabled={saving}
-									className="w-full fitpro-button rounded-xl gap-2"
+									className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-xl gap-2"
 								>
 									{saving ? (
 										<>
@@ -406,19 +400,22 @@ export default function PhysiotherapistSettings() {
 				</Card>
 
 				{/* Privacy Settings */}
-				<Card className="fitpro-card">
+				<Card className="bg-gradient-to-br from-purple-500/10 to-purple-600/10 border-purple-500/30">
 					<CardHeader>
 						<CardTitle className="text-white flex items-center gap-2">
-							<Eye className="w-5 h-5" />
+							<Eye className="w-5 h-5 text-purple-400" />
 							{t("privacySettings")}
 						</CardTitle>
 					</CardHeader>
 				</Card>
 
 				{/* Danger Zone */}
-				<Card className="fitpro-card border-red-500/20">
+				<Card className="bg-gradient-to-br from-red-500/10 to-orange-600/10 border-red-500/30">
 					<CardHeader>
-						<CardTitle className="text-red-400">{t("dangerZone")}</CardTitle>
+						<CardTitle className="text-red-400 flex items-center gap-2">
+							<AlertCircle className="w-5 h-5" />
+							{t("dangerZone")}
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<Button variant="outline" className="w-full border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-xl">

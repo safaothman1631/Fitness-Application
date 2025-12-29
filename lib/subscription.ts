@@ -152,14 +152,21 @@ export function getUserAccessKey(): string {
  * Get user's join date from localStorage
  */
 export function getUserJoinDate(): string {
-  if (typeof window === 'undefined') return new Date().toISOString()
+  if (typeof window === 'undefined') return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
   
   let joinDate = localStorage.getItem('userJoinDate')
   if (!joinDate) {
     joinDate = new Date().toISOString()
     localStorage.setItem('userJoinDate', joinDate)
   }
-  return joinDate
+  
+  // Format the date for display
+  try {
+    const date = new Date(joinDate)
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  } catch (e) {
+    return new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  }
 }
 
 /**

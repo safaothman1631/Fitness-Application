@@ -4,10 +4,12 @@ import { useState } from "react"
 import AuthGuard from "@/components/auth-guard"
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import FitproLayout from "@/components/fitpro-layout"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
+import { useLanguage } from "@/hooks/useLanguage"
 import { Flame, TrendingUp, Award, Calendar, Activity, Zap } from "lucide-react"
 
 export default function ProgressPage() {
+  const { t } = useLanguage()
   const [progressData] = useState([
     { week: "1", strength: 20, cardio: 25, flexibility: 15 },
     { week: "2", strength: 35, cardio: 32, flexibility: 28 },
@@ -64,19 +66,31 @@ export default function ProgressPage() {
 
   return (
     <AuthGuard requiredRole="user">
-    <FitproLayout role="user">
+    <SidebarSleek role="user">
       <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">Progress</h1>
-          <p className="text-gray-400">Track your fitness journey and achievements</p>
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+            <TrendingUp className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">{t("progress")}</h1>
+            <p className="text-gray-400 text-sm">{t("trackFitnessJourney")}</p>
+          </div>
         </div>
 
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           {stats.map((stat, idx) => {
             const Icon = stat.icon
+            const gradients = [
+              "bg-gradient-to-br from-orange-500/10 to-red-600/10 border-orange-500/30",
+              "bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30",
+              "bg-gradient-to-br from-cyan-500/10 to-cyan-600/10 border-cyan-500/30",
+              "bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/30"
+            ]
             return (
-              <Card key={idx} className="fitpro-card">
+              <Card key={idx} className={gradients[idx]}>
                 <CardContent className="p-6">
                   <div className="flex items-start justify-between">
                     <div>
@@ -97,10 +111,10 @@ export default function ProgressPage() {
         </div>
 
         {/* Progress Chart */}
-        <Card className="fitpro-card">
+        <Card className="bg-gradient-to-br from-blue-500/10 to-purple-600/10 border-blue-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <TrendingUp className="w-5 h-5 text-blue-500" />
+              <TrendingUp className="w-5 h-5 text-blue-400" />
               Progress Over 6 Weeks
             </CardTitle>
           </CardHeader>
@@ -127,10 +141,10 @@ export default function ProgressPage() {
         </Card>
 
         {/* Weekly Activity */}
-        <Card className="fitpro-card">
+        <Card className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-green-500" />
+              <Calendar className="w-5 h-5 text-green-400" />
               Weekly Activity
             </CardTitle>
           </CardHeader>
@@ -180,7 +194,7 @@ export default function ProgressPage() {
           </CardContent>
         </Card>
       </div>
-    </FitproLayout>
+    </SidebarSleek>
     </AuthGuard>
   )
 }

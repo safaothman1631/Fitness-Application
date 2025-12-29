@@ -15,7 +15,7 @@ export const roleConfigs: Record<AppRole, RoleConfig> = {
       { key: "progress", path: "/progress", icon: "TrendingUp" },
     ],
     menu: [
-      { key: "profile", path: "/user-dashboard/profile", icon: "User" },
+      { key: "profile", path: "/profile", icon: "User" },
       { key: "notifications", path: "/user-dashboard/notifications", icon: "Bell" },
       { key: "settings", path: "/user-dashboard/settings", icon: "Settings" },
   // Help removed

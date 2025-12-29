@@ -78,7 +78,7 @@ export default function SuperAdminPage() {
   return (
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
-        <div className="space-y-8">
+        <div className="space-y-12 p-4 md:p-6">
           {/* Header Section */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-cyan-500/10 via-blue-500/10 to-purple-500/10 border border-cyan-500/20 p-8">
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-5"></div>

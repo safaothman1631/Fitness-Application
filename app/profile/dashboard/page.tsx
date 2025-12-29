@@ -6,13 +6,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import FitproLayout from "@/components/fitpro-layout"
-import { User, Mail, Phone, Calendar, Weight, Ruler, Activity, Edit2, Save, Camera, Lock, Moon, Bell, Globe, LogOut, Sun, Monitor } from "lucide-react"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
+import { useLanguage } from "@/hooks/useLanguage"
+import { User, Mail, Phone, Calendar, Weight, Ruler, Activity, Edit2, Save, Camera, Lock, Moon, Bell, Globe, LogOut, Sun, Monitor, Settings } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useToast } from "@/hooks/use-toast"
 
 export default function ProfilePage() {
   const { toast } = useToast()
+  const { t } = useLanguage()
   const router = useRouter()
   const [isEditing, setIsEditing] = useState(false)
   const [profile, setProfile] = useState({
@@ -98,17 +100,21 @@ export default function ProfilePage() {
   }
 
   return (
-    <FitproLayout role="user">
+    <SidebarSleek role="user">
       <div className="max-w-4xl mx-auto space-y-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-white">Profile</h1>
-            <p className="text-gray-400 mt-1">Manage your account and fitness preferences</p>
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <User className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <h1 className="text-3xl font-bold text-white">{t("profile")}</h1>
+            <p className="text-gray-400 text-sm">{t("manageAccountFitness")}</p>
           </div>
           {!isEditing && (
-            <Button onClick={() => setIsEditing(true)} className="fitpro-button rounded-xl gap-2">
+            <Button onClick={() => setIsEditing(true)} className="bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white rounded-xl gap-2">
               <Edit2 className="w-4 h-4" />
-              Edit Profile
+              {t("editProfile")}
             </Button>
           )}
         </div>
@@ -118,7 +124,7 @@ export default function ProfilePage() {
           <div className="md:col-span-2 space-y-6">
 
   {/* Profile Header */}
-        <Card className="fitpro-card overflow-hidden">
+        <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 overflow-hidden">
           <div className="bg-gradient-to-r from-blue-600 to-cyan-500 h-24" />
           <CardContent className="p-6 -mt-12 relative">
             <div className="flex items-end gap-6">
@@ -148,11 +154,11 @@ export default function ProfilePage() {
         </Card>
 
   {/* Personal Information */}
-        <Card className="fitpro-card">
+        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-500" />
-              Personal Information
+              <User className="w-5 h-5 text-blue-400" />
+              {t("personalInformation")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -209,11 +215,11 @@ export default function ProfilePage() {
         </Card>
 
   {/* Physical Information */}
-        <Card className="fitpro-card">
+        <Card className="bg-gradient-to-br from-cyan-500/10 to-cyan-600/10 border-cyan-500/30">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <Activity className="w-5 h-5 text-cyan-500" />
-              Physical Information
+              <Activity className="w-5 h-5 text-cyan-400" />
+              {t("physicalInformation")}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -305,7 +311,7 @@ export default function ProfilePage() {
         <Card className="fitpro-card">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
-              <Lock className="w-5 h-5 text-purple-500" />
+              <Lock className="w-5 h-5 text-purple-400" />
               Security
             </CardTitle>
           </CardHeader>
@@ -354,9 +360,9 @@ export default function ProfilePage() {
           </div>
           {/* Settings column */}
           <div className="space-y-6">
-            <Card className="fitpro-card">
+            <Card className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 border-indigo-500/30">
               <CardHeader>
-                <CardTitle className="text-white flex items-center gap-2"><Lock className="w-5 h-5 text-purple-500" /> Quick Settings</CardTitle>
+                <CardTitle className="text-white flex items-center gap-2"><Settings className="w-5 h-5 text-indigo-400" /> Quick Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-3">
@@ -420,6 +426,6 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
-    </FitproLayout>
+    </SidebarSleek>
   )
 }

@@ -183,7 +183,7 @@ export default function SuperAdminSettings() {
   return (
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
-        <div className="space-y-6">
+        <div className="space-y-12 p-4 md:p-6">
           {/* Header */}
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/30">

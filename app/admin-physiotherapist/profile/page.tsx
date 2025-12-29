@@ -113,61 +113,50 @@ export default function AdminPhysiotherapistProfilePage() {
   return (
     <AuthGuard allowedRoles={["admin-physiotherapist"]}>
       <SidebarSleek role="admin-physiotherapist">
-        <div className="min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6">
+        <div className="space-y-12 p-4 md:p-6">
           {/* Header */}
-          <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-cyan-500/10 via-blue-500/10 to-purple-500/10 backdrop-blur-xl border border-white/10 p-8 mb-6">
-            <div className="relative z-10">
-              <div className="flex items-center justify-between flex-wrap gap-4">
-                <div className="flex items-center gap-4">
-                  <div className="relative">
-                    <div className="absolute inset-0 bg-cyan-500 blur-2xl opacity-50 animate-pulse" />
-                    <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-500 flex items-center justify-center shadow-2xl">
-                      <User className="w-8 h-8 text-white" />
-                    </div>
-                  </div>
-                  <div>
-                    <h1 className="text-4xl font-black text-white tracking-tight">
-                      {t("myProfile")}
-                    </h1>
-                    <p className="text-cyan-400 mt-1 font-medium">
-                      {t("adminPhysiotherapist")}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex gap-3">
-                  {!editing ? (
-                    <Button
-                      onClick={() => setEditing(true)}
-                      className="bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600"
-                    >
-                      <Edit2 className="w-4 h-4 mr-2" />
-                      {t("editProfile")}
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        onClick={() => {
-                          setEditData(profileData)
-                          setEditing(false)
-                        }}
-                        variant="outline"
-                        className="border-white/10 text-slate-400 hover:text-white"
-                      >
-                        <X className="w-4 h-4 mr-2" />
-                        {t("cancel")}
-                      </Button>
-                      <Button
-                        onClick={handleSave}
-                        disabled={saving}
-                        className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
-                      >
-                        <Save className="w-4 h-4 mr-2" />
-                        {saving ? t("saving") : t("saveChanges")}
-                      </Button>
-                    </>
-                  )}
-                </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#10B2E3] to-[#73E8FF] flex items-center justify-center shadow-lg shadow-[#10B2E3]/30">
+                <User className="w-6 h-6 text-white" />
               </div>
+              <div>
+                <h1 className="text-3xl font-bold text-white">{t("myProfile")}</h1>
+                <p className="text-gray-400 text-sm">{t("adminPhysiotherapist")}</p>
+              </div>
+            </div>
+            <div className="flex gap-3">
+              {!editing ? (
+                <Button
+                  onClick={() => setEditing(true)}
+                  className="bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] hover:from-[#0E9FCC] hover:to-[#5DD5EE] text-white"
+                >
+                  <Edit2 className="w-4 h-4 mr-2" />
+                  {t("editProfile")}
+                </Button>
+              ) : (
+                <>
+                  <Button
+                    onClick={() => {
+                      setEditData(profileData)
+                      setEditing(false)
+                    }}
+                    variant="outline"
+                    className="border-white/10 text-slate-400 hover:text-white"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    {t("cancel")}
+                  </Button>
+                  <Button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600"
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    {saving ? t("saving") : t("saveChanges")}
+                  </Button>
+                </>
+              )}
             </div>
           </div>
 

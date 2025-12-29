@@ -5,7 +5,7 @@ import { useLanguage } from "@/contexts/language-context"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import FitproLayout from "@/components/fitpro-layout"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
 import { Search, Dumbbell, Clock, Target, ChevronRight, Plus } from "lucide-react"
 interface WorkoutCategory {
   id: string
@@ -30,11 +30,17 @@ export default function WorkoutsPage() {
   )
 
   return (
-    <FitproLayout role="user">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold text-white mb-2">{t("workouts")}</h1>
-          <p className="text-gray-400">{t("browseWorkoutsSubtitle")}</p>
+    <SidebarSleek role="user">
+      <div className="space-y-12 p-4 md:p-6">
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center shadow-lg shadow-orange-500/30">
+            <Dumbbell className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">{t("workouts")}</h1>
+            <p className="text-gray-400 text-sm">{t("browseWorkoutsSubtitle")}</p>
+          </div>
         </div>
 
         {/* Search Bar */}
@@ -55,7 +61,7 @@ export default function WorkoutsPage() {
           {categories.length > 0 ? (
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
               {categories.map((cat) => (
-                <Card key={cat.id} className="fitpro-card hover:border-blue-500/50 transition-all cursor-pointer">
+                <Card key={cat.id} className="bg-gradient-to-br from-orange-500/10 to-red-600/10 border-orange-500/30 hover:border-orange-500/50 transition-all cursor-pointer">
                   <CardContent className="p-4 text-center">
                     <div className="text-3xl mb-2">{cat.icon}</div>
                     <p className="text-white font-semibold text-sm">{cat.name}</p>
@@ -65,7 +71,7 @@ export default function WorkoutsPage() {
               ))}
             </div>
           ) : (
-            <Card className="fitpro-card text-center p-8 border-dashed">
+            <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 text-center p-8 border-dashed">
               <Dumbbell className="w-12 h-12 text-gray-600 mx-auto mb-4" />
               <p className="text-gray-400 mb-2">No workout categories available</p>
               <p className="text-gray-500 text-sm">Categories will be added by your trainer</p>
@@ -85,7 +91,7 @@ export default function WorkoutsPage() {
                 )
                 .map((workout) => (                <Card
                   key={workout.id}
-                  className="fitpro-card hover:border-blue-500/50 transition-all overflow-hidden cursor-pointer group"
+                  className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 hover:border-orange-500/50 transition-all overflow-hidden cursor-pointer group"
                 >
                   <CardContent className="p-0">
                     <div className="bg-gradient-to-br from-blue-600/20 to-cyan-500/20 p-6 text-center min-h-[180px] flex items-center justify-center">
@@ -122,9 +128,9 @@ export default function WorkoutsPage() {
               ))}
             </div>
           ) : (
-            <Card className="fitpro-card text-center p-12 border-dashed">
-              <div className="w-20 h-20 rounded-full bg-blue-500/10 flex items-center justify-center mx-auto mb-4">
-                <Plus className="w-10 h-10 text-blue-400" />
+            <Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50 text-center p-12 border-dashed">
+              <div className="w-20 h-20 rounded-full bg-orange-500/10 flex items-center justify-center mx-auto mb-4">
+                <Plus className="w-10 h-10 text-orange-400" />
               </div>
               <h3 className="text-xl font-bold text-white mb-2">No Workouts Yet</h3>
               <p className="text-gray-400 mb-4">Your trainer will assign workouts to you</p>
@@ -132,6 +138,6 @@ export default function WorkoutsPage() {
           )}
         </div>
       </div>
-    </FitproLayout>
+    </SidebarSleek>
   )
 }

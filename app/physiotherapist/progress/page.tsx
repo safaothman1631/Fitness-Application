@@ -152,52 +152,63 @@ export default function PhysiotherapistProgressPage() {
 			) : (
 				<div className="space-y-6">
 					{/* Header */}
-					<div>
-						<h1 className="text-3xl font-bold text-white mb-2">{t("progressTracking")}</h1>
-						<p className="text-gray-400">{t("monitorRecovery")}</p>
+					<div className="flex items-center gap-3">
+						<div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-green-500/30">
+							<TrendingUp className="w-6 h-6 text-white" />
+						</div>
+						<div>
+							<h1 className="text-3xl font-bold text-white">{t("progressTracking")}</h1>
+							<p className="text-gray-400 text-sm">{t("monitorRecovery")}</p>
+						</div>
 					</div>
 
 				{/* Stats */}
 				<div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-					<Card className="fitpro-card">
+					<Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-gray-400 text-sm mb-1">{t("totalRecords")}</p>
 									<p className="text-3xl font-bold text-white">{progressRecords.length}</p>
 								</div>
-								<LineChart className="w-10 h-10 text-blue-500" />
+								<div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+									<LineChart className="w-6 h-6 text-blue-400" />
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<Card className="fitpro-card">
+					<Card className="bg-gradient-to-br from-green-500/10 to-emerald-600/10 border-green-500/30">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-gray-400 text-sm mb-1">{t("patientsTracked")}</p>
 									<p className="text-3xl font-bold text-white">{new Set(progressRecords.map((r) => r.patientId)).size}</p>
 								</div>
-								<Activity className="w-10 h-10 text-green-500" />
+								<div className="w-12 h-12 rounded-xl bg-green-500/20 flex items-center justify-center">
+									<Activity className="w-6 h-6 text-green-400" />
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 
-					<Card className="fitpro-card">
+					<Card className="bg-gradient-to-br from-yellow-500/10 to-yellow-600/10 border-yellow-500/30">
 						<CardContent className="p-6">
 							<div className="flex items-center justify-between">
 								<div>
 									<p className="text-gray-400 text-sm mb-1">{t("avgImprovement")}</p>
-									<p className="text-3xl font-bold text-yellow-500">+18%</p>
+									<p className="text-3xl font-bold text-yellow-400">+18%</p>
 								</div>
-								<TrendingUp className="w-10 h-10 text-yellow-500" />
+								<div className="w-12 h-12 rounded-xl bg-yellow-500/20 flex items-center justify-center">
+									<TrendingUp className="w-6 h-6 text-yellow-400" />
+								</div>
 							</div>
 						</CardContent>
 					</Card>
 				</div>
 
 				{/* Progress by Patient */}
-				<Card className="fitpro-card">
+				<Card className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 border-slate-700/50">
 					<CardContent className="p-6">
 						<div className="flex gap-4 mb-6">
 							<div className="relative flex-1">

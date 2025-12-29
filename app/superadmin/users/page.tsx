@@ -233,7 +233,7 @@ export default function UsersPage() {
   return (
     <AuthGuard requiredRole="superadmin">
       <SidebarSleek role="superadmin">
-        <div className="space-y-6">
+        <div className="space-y-12 p-4 md:p-6">
           {/* Enhanced Header with Gradient Background */}
           <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-600/20 via-purple-600/20 to-pink-600/20 border border-blue-500/30 backdrop-blur-xl">
             <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10"></div>

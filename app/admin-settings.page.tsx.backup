@@ -1,0 +1,290 @@
+﻿"use client"
+
+import { useState } from "react"
+import AuthGuard from "@/components/auth-guard"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
+import { Lock, Bell, Eye, EyeOff, Save, Moon, Sun, Monitor, LogOut, Shield, Settings as SettingsIcon, AlertCircle } from "lucide-react"
+import { useTheme } from "next-themes"
+import { useRouter } from "next/navigation"
+import { auth } from "@/lib/firebase"
+import { onAuthStateChanged } from "firebase/auth"
+import { useEffect } from "react"
+import { toast } from "sonner"
+import { useLanguage } from "@/hooks/useLanguage"
+
+export default function SettingsPage() {
+  const { t } = useLanguage()
+  const [showPassword, setShowPassword] = useState(false)
+  const [userId, setUserId] = useState<string | null>(null)
+  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false)
+  const [settings, setSettings] = useState({
+    emailNotifications: true,
+    pushNotifications: true,
+    smsNotifications: false,
+    privateProfile: false,
+  })
+  const { theme, setTheme } = useTheme()
+  const router = useRouter()
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        setUserId(user.uid)
+        
+        // Fetch user data including 2FA status
+        const token = await user.getIdToken()
+        const userDataResponse = await fetch(`/api/users/${user.uid}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        })
+        if (userDataResponse.ok) {
+          const userData = await userDataResponse.json()
+          setTwoFactorEnabled(userData.twoFactorEnabled ?? false)
+        }
+      }
+    })
+    return () => unsubscribe()
+  }, [])
+
+  const handleToggle2FA = async (enabled: boolean) => {
+    if (enabled) {
+      router.push('/settings/two-factor')
+    } else {
+      if (confirm('Are you sure you want to disable Two-Factor Authentication?')) {
+        try {
+          const token = await auth.currentUser?.getIdToken()
+          const response = await fetch(`/api/users/${userId}`, {
+            method: 'PATCH',
+            headers: { 
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            },
+            body: JSON.stringify({ twoFactorEnabled: false })
+          })
+          if (response.ok) {
+            setTwoFactorEnabled(false)
+            toast.success('Two-Factor Authentication disabled!')
+          } else {
+            const errorData = await response.json()
+            toast.error(`Failed to disable 2FA: ${errorData.error || 'Unknown error'}`)
+          }
+        } catch (error) {
+          console.error('Error disabling 2FA:', error)
+          toast.error('Error disabling 2FA')
+        }
+      }
+    }
+  }
+
+  const logout = () => {
+    try {
+      ["userRole","profileData","profileAvatar","workoutTasksCompleted","mealTasksCompleted","submittedWorkouts","submittedMeals","customScheduleItems"].forEach(k=>localStorage.removeItem(k))
+    } catch {}
+    router.push("/login")
+  }
+
+  return (
+    <AuthGuard requiredRole="user">
+    <SidebarSleek role="user">
+      <div className="max-w-2xl mx-auto space-y-6">
+        {/* Header */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center shadow-lg shadow-purple-500/30">
+            <SettingsIcon className="w-6 h-6 text-white" />
+          </div>
+          <div>
+            <h1 className="text-3xl font-bold text-white">{t("settings")}</h1>
+            <p className="text-gray-400 text-sm">{t("manageAccountPreferences")}</p>
+          </div>
+        </div>
+
+        {/* Appearance */}
+        <Card className="bg-gradient-to-br from-indigo-500/10 to-indigo-600/10 border-indigo-500/30">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Moon className="w-5 h-5 text-indigo-400" />
+              {t("appearance")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-3 gap-3">
+              {[
+                { key: "light", label: "Light", icon: <Sun className="w-4 h-4" /> },
+                { key: "dark", label: "Dark", icon: <Moon className="w-4 h-4" /> },
+                { key: "system", label: "System", icon: <Monitor className="w-4 h-4" /> },
+              ].map(m => (
+                <button
+                  key={m.key}
+                  onClick={() => setTheme(m.key)}
+                  className={`flex flex-col items-center gap-2 p-4 rounded-xl border text-xs font-medium transition-colors ${theme===m.key?"border-blue-500 bg-blue-500/10 text-white":"border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600"}`}
+                >
+                  {m.icon}
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            <p className="text-xs text-slate-500">Your interface will follow the selected mode. System uses OS setting.</p>
+          </CardContent>
+        </Card>
+
+        {/* Security Settings */}
+        <Card className="bg-gradient-to-br from-red-500/10 to-red-600/10 border-red-500/30">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Lock className="w-5 h-5 text-red-400" />
+              {t("security")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            {/* 2FA Toggle */}
+            <div className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center">
+                  <Shield className="w-6 h-6 text-blue-400" />
+                </div>
+                <div>
+                  <p className="text-white font-semibold">Two-Factor Authentication</p>
+                  <p className="text-gray-400 text-sm">Add an extra layer of security</p>
+                  {twoFactorEnabled && (
+                    <p className="text-green-400 text-xs mt-1">✓ Enabled</p>
+                  )}
+                </div>
+              </div>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input 
+                  type="checkbox" 
+                  checked={twoFactorEnabled}
+                  onChange={(e) => handleToggle2FA(e.target.checked)}
+                  className="sr-only peer" 
+                />
+                <div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-green-500 peer-checked:to-emerald-600"></div>
+              </label>
+            </div>
+
+            {/* Password Change */}
+            <div>
+              <Label className="text-gray-300 mb-2 block">Current Password</Label>
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter current password"
+                  className="fitpro-input rounded-xl pr-10"
+                />
+                <button
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-2.5 text-gray-500 hover:text-gray-400"
+                >
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                </button>
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-gray-300 mb-2 block">New Password</Label>
+              <Input type="password" placeholder="Enter new password" className="fitpro-input rounded-xl" />
+            </div>
+
+            <div>
+              <Label className="text-gray-300 mb-2 block">Confirm Password</Label>
+              <Input type="password" placeholder="Confirm new password" className="fitpro-input rounded-xl" />
+            </div>
+
+            <Button className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl gap-2">
+              <Lock className="w-4 h-4" />
+              {t("updatePassword")}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Notification Settings */}
+        <Card className="bg-gradient-to-br from-blue-500/10 to-blue-600/10 border-blue-500/30">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Bell className="w-5 h-5 text-blue-400" />
+              {t("notifications")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {[
+              {
+                label: t("emailNotifications"),
+                description: t("receiveWorkoutReminders"),
+                key: "emailNotifications",
+              },
+              {
+                label: t("pushNotifications"),
+                description: t("receivePushNotifications"),
+                key: "pushNotifications",
+              },
+              {
+                label: t("smsNotifications"),
+                description: t("receiveWorkoutUpdates"),
+                key: "smsNotifications",
+              },
+              {
+                label: t("privateProfile"),
+                description: t("hideProfileFromUsers"),
+                key: "privateProfile",
+              },
+            ].map((item) => (
+              <div key={item.key} className="flex items-center justify-between p-4 rounded-xl bg-slate-800/50 hover:bg-slate-800/70 transition-colors">
+                <div>
+                  <p className="text-white font-semibold">{item.label}</p>
+                  <p className="text-gray-400 text-sm">{item.description}</p>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer">
+                  <input 
+                    type="checkbox" 
+                    checked={settings[item.key as keyof typeof settings]}
+                    onChange={(e) =>
+                      setSettings({
+                        ...settings,
+                        [item.key]: e.target.checked,
+                      })
+                    }
+                    className="sr-only peer" 
+                  />
+                  <div className="w-14 h-7 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-gradient-to-r peer-checked:from-blue-500 peer-checked:to-blue-600"></div>
+                </label>
+              </div>
+            ))}
+
+            <Button className="w-full bg-gradient-to-r from-blue-500 to-cyan-600 hover:from-blue-600 hover:to-cyan-700 text-white rounded-xl gap-2 mt-4">
+              <Save className="w-4 h-4" />
+              {t("savePreferences")}
+            </Button>
+          </CardContent>
+        </Card>
+
+        {/* Danger Zone & Logout */}
+        <Card className="bg-gradient-to-br from-red-500/10 to-orange-600/10 border-red-500/30">
+          <CardHeader>
+            <CardTitle className="text-red-400 flex items-center gap-2">
+              <AlertCircle className="w-5 h-5" />
+              {t("dangerZone")}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-gray-400 text-sm">These actions cannot be undone. Please proceed with caution.</p>
+
+            <div className="flex gap-3">
+              <Button variant="outline" className="flex-1 border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-xl">
+                Download My Data
+              </Button>
+              <Button variant="outline" className="flex-1 border-red-500/50 text-red-400 hover:bg-red-500/10 rounded-xl">
+                Delete Account
+              </Button>
+            </div>
+            <Button onClick={logout} variant="outline" className="w-full border-slate-700 text-slate-300 hover:bg-red-600/10 hover:border-red-600 flex items-center justify-center gap-2 rounded-xl">
+              <LogOut className="w-4 h-4" /> Logout
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    </SidebarSleek>
+    </AuthGuard>
+  )
+}
