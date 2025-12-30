@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { adminStorage } from '@/lib/firebase-admin'
+import { adminStorage, adminDb } from '@/lib/firebase-admin'
 
 // GET - List all videos from Firebase Storage or get a specific video by name
 export async function GET(request: NextRequest) {
@@ -124,6 +124,18 @@ export async function GET(request: NextRequest) {
     const pageVideos = videoFiles.slice(startIndex, endIndex)
     console.log(`🎥 Processing ${pageVideos.length} videos for current page`)
     
+    // Get all exercises from Firestore to match categories
+    const exercisesSnapshot = await adminDb.collection('exercises').get()
+    const exerciseCategories = new Map()
+    exercisesSnapshot.forEach(doc => {
+      const data = doc.data()
+      if (data.videoUrl && data.videoUrl.high) {
+        const videoName = data.videoUrl.high.split('/').pop()
+        exerciseCategories.set(videoName, data.category || 'uncategorized')
+      }
+    })
+    console.log(`📋 Loaded ${exerciseCategories.size} exercise categories from Firestore`)
+    
     const videos = await Promise.all(
       pageVideos.map(async (file, index) => {
         try {
@@ -137,6 +149,10 @@ export async function GET(request: NextRequest) {
 
           const [metadata] = await file.getMetadata()
 
+          // Get category from Firestore by matching video filename
+          const videoFileName = file.name.split('/').pop()
+          const category = exerciseCategories.get(videoFileName) || 'uncategorized'
+
           const videoData = {
             name: file.name,
             displayName: file.name.split('/').pop(), // Just the filename
@@ -145,6 +161,7 @@ export async function GET(request: NextRequest) {
             contentType: metadata.contentType,
             createdAt: metadata.timeCreated,
             updatedAt: metadata.updated,
+            category: category, // Add category from folder name
           }
           
           console.log(`✅ Successfully processed: ${videoData.displayName}`)

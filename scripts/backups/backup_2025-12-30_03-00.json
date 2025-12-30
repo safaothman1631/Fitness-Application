@@ -1,6 +1,7 @@
 {
-  "timestamp": "2025-12-08T11:30:34.471Z",
-  "date": "2025-12-08_14-30",
+  "timestamp": "2025-12-30T00:00:03.501Z",
+  "date": "2025-12-30_03-00",
+  "projectId": "final-database-51935",
   "collections": [
     {
       "collection": "users",
@@ -17,10 +18,60 @@
               "_seconds": 1763924012,
               "_nanoseconds": 163000000
             },
+            "membership": "Pro",
             "updatedAt": {
-              "_seconds": 1763924012,
-              "_nanoseconds": 163000000
-            }
+              "_seconds": 1765654981,
+              "_nanoseconds": 795000000
+            },
+            "lastLogin": "2025-12-04T16:42:00.526Z",
+            "lastActive": "2025-12-04T16:42:00.526Z"
+          }
+        },
+        {
+          "id": "AhJ8ruMpzTSS3aDmrPhkiaNcOaT2",
+          "data": {
+            "email": "darinvipapp@gmail.com",
+            "name": "Darin Fitness",
+            "firstName": "Darin",
+            "lastName": "Fitness",
+            "role": "user",
+            "subscriptionEndDate": null,
+            "isActive": true,
+            "emailVerified": false,
+            "joinDate": "2025-12-17T17:25:43.736Z",
+            "createdAt": "2025-12-17T17:25:43.736Z",
+            "approvedDate": {
+              "_seconds": 1766186319,
+              "_nanoseconds": 553000000
+            },
+            "approvedBy": "superadmin",
+            "status": "active",
+            "subscriptionEnd": {
+              "_seconds": 1768819170,
+              "_nanoseconds": 636000000
+            },
+            "proExpiryDate": {
+              "_seconds": 1768819170,
+              "_nanoseconds": 636000000
+            },
+            "subscriptionAmount": "100",
+            "subscriptionStatus": "active",
+            "membership": "Pro",
+            "subscriptionDuration": 1,
+            "membershipDate": {
+              "_seconds": 1766227170,
+              "_nanoseconds": 636000000
+            },
+            "updatedAt": {
+              "_seconds": 1766227170,
+              "_nanoseconds": 636000000
+            },
+            "subscriptionStart": {
+              "_seconds": 1766140770,
+              "_nanoseconds": 636000000
+            },
+            "lastLogin": "2025-12-24T19:22:51.552Z",
+            "lastActive": "2025-12-24T19:22:51.552Z"
           }
         },
         {
@@ -31,14 +82,47 @@
             "role": "admin-physiotherapist",
             "emailVerified": true,
             "status": "active",
+            "membership": "Pro",
+            "phone": "",
+            "bio": "",
+            "specialization": "",
+            "licenseNumber": "",
+            "department": "",
             "createdAt": {
-              "_seconds": 1763924013,
-              "_nanoseconds": 308000000
+              "_seconds": 1765659083,
+              "_nanoseconds": 290000000
             },
             "updatedAt": {
-              "_seconds": 1763924013,
-              "_nanoseconds": 308000000
-            }
+              "_seconds": 1765659083,
+              "_nanoseconds": 290000000
+            },
+            "lastLogin": "2025-12-25T18:42:36.361Z",
+            "lastActive": "2025-12-25T18:42:36.361Z"
+          }
+        },
+        {
+          "id": "ETaEnFH7lJT2sGI95ty9JMnnwr03",
+          "data": {
+            "approvedDate": {
+              "_seconds": 1765654707,
+              "_nanoseconds": 369000000
+            },
+            "emailVerified": true,
+            "firstName": "Regular",
+            "lastName": "User",
+            "createdAt": {
+              "_seconds": 1765654707,
+              "_nanoseconds": 369000000
+            },
+            "joinDate": "2025-12-13T19:38:26.710Z",
+            "role": "user",
+            "name": "Regular User",
+            "membership": "Free",
+            "email": "regularuser@darinfitness.com",
+            "isActive": true,
+            "status": "active",
+            "lastLogin": "2025-12-14T09:28:43.010Z",
+            "lastActive": "2025-12-14T09:28:43.010Z"
           }
         },
         {
@@ -49,14 +133,17 @@
             "role": "trainer",
             "emailVerified": true,
             "status": "active",
+            "membership": "Pro",
             "createdAt": {
-              "_seconds": 1763924015,
-              "_nanoseconds": 432000000
+              "_seconds": 1765659085,
+              "_nanoseconds": 959000000
             },
             "updatedAt": {
-              "_seconds": 1763924015,
-              "_nanoseconds": 432000000
-            }
+              "_seconds": 1765659085,
+              "_nanoseconds": 959000000
+            },
+            "lastLogin": "2025-12-17T14:51:23.820Z",
+            "lastActive": "2025-12-17T14:51:23.820Z"
           }
         },
         {
@@ -67,32 +154,38 @@
             "role": "physiotherapist",
             "emailVerified": true,
             "status": "active",
+            "membership": "Pro",
             "createdAt": {
-              "_seconds": 1763924014,
-              "_nanoseconds": 346000000
+              "_seconds": 1765659084,
+              "_nanoseconds": 637000000
             },
             "updatedAt": {
-              "_seconds": 1763924014,
-              "_nanoseconds": 346000000
-            }
+              "_seconds": 1765659084,
+              "_nanoseconds": 637000000
+            },
+            "lastLogin": "2025-12-27T22:54:19.616Z",
+            "lastActive": "2025-12-27T22:54:19.616Z"
           }
         },
         {
           "id": "GSF5Au67hDNra0bNuRgOgqDJdj83",
           "data": {
             "email": "owner@darinfitness.com",
-            "name": "Gym Owner",
             "role": "owner",
             "emailVerified": true,
             "status": "active",
+            "name": "System Owner",
+            "membership": "Pro",
             "createdAt": {
-              "_seconds": 1763924010,
-              "_nanoseconds": 956000000
+              "_seconds": 1765659090,
+              "_nanoseconds": 985000000
             },
             "updatedAt": {
-              "_seconds": 1763924010,
-              "_nanoseconds": 956000000
-            }
+              "_seconds": 1765659090,
+              "_nanoseconds": 985000000
+            },
+            "lastLogin": "2025-12-14T00:49:12.839Z",
+            "lastActive": "2025-12-14T00:49:12.839Z"
           }
         },
         {
@@ -101,12 +194,162 @@
             "createdAt": "2025-12-03T22:06:37.199Z",
             "uid": "IkxYL7BngNa1g5HE3sZdGaeRhxG3",
             "joinDate": "2025-12-03T22:06:37.199Z",
-            "role": "physiotherapist",
             "name": "Dr. Admin",
             "subscriptionStatus": "active",
             "membership": "Pro",
             "isActive": true,
-            "email": "doctor@fitpro.com"
+            "email": "doctor@fitpro.com",
+            "revokedDate": {
+              "_seconds": 1765648308,
+              "_nanoseconds": 41000000
+            },
+            "membershipDate": {
+              "_seconds": 1765662900,
+              "_nanoseconds": 14000000
+            },
+            "status": "active",
+            "lastLogin": "2025-12-09T12:41:26.793Z",
+            "lastActive": "2025-12-09T12:41:26.793Z",
+            "emailVerified": true,
+            "role": "admin"
+          }
+        },
+        {
+          "id": "IpDv1caNZLMKclXJ4OUWQGaFd1N2",
+          "data": {
+            "email": "user@fitpro.com",
+            "displayName": "User",
+            "role": "user",
+            "createdAt": "2025-12-18T23:30:00.929Z",
+            "emailVerified": true,
+            "approvedDate": "2025-12-18T23:29:52.058Z",
+            "lastLogin": "2025-12-20T12:16:27.795Z",
+            "lastActive": "2025-12-20T12:16:27.795Z"
+          }
+        },
+        {
+          "id": "JvUTNS4GQ9SXa9piToMyg77wpGe2",
+          "data": {
+            "email": "testuser@darinfitness.com",
+            "name": "Test User",
+            "firstName": "Test",
+            "lastName": "User",
+            "emailVerified": true,
+            "isActive": true,
+            "joinDate": "2025-12-13T19:31:19.950Z",
+            "createdAt": {
+              "_seconds": 1765654280,
+              "_nanoseconds": 629000000
+            },
+            "approvedDate": {
+              "_seconds": 1765654358,
+              "_nanoseconds": 959000000
+            },
+            "role": "trainer",
+            "approvedBy": "superadmin",
+            "status": "active",
+            "membership": "Pro",
+            "updatedAt": {
+              "_seconds": 1765654984,
+              "_nanoseconds": 599000000
+            },
+            "lastLogin": "2025-11-24T19:32:31.152Z",
+            "lastActive": "2025-11-24T19:32:31.152Z"
+          }
+        },
+        {
+          "id": "Uy3E1iMxI4GqKtTpOxcL",
+          "data": {
+            "email": "physio3@darinfitness.com",
+            "name": "Dr. Karzan Hassan",
+            "role": "physiotherapist",
+            "status": "active",
+            "specialization": "Orthopedic Rehabilitation",
+            "emailVerified": true,
+            "createdAt": {
+              "_seconds": 1765648859,
+              "_nanoseconds": 992000000
+            },
+            "membership": "Pro",
+            "updatedAt": {
+              "_seconds": 1765654984,
+              "_nanoseconds": 897000000
+            },
+            "lastLogin": "2025-11-29T23:37:37.275Z",
+            "lastActive": "2025-11-29T23:37:37.275Z"
+          }
+        },
+        {
+          "id": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+          "data": {
+            "email": "ashnamusa1631@gmail.com",
+            "name": "Ashna musa",
+            "firstName": "Ashna",
+            "lastName": "musa",
+            "role": "user",
+            "subscriptionEndDate": null,
+            "isActive": true,
+            "emailVerified": false,
+            "joinDate": "2025-12-13T19:18:41.258Z",
+            "createdAt": "2025-12-13T19:18:41.258Z",
+            "approvedDate": {
+              "_seconds": 1765654354,
+              "_nanoseconds": 353000000
+            },
+            "approvedBy": "superadmin",
+            "status": "active",
+            "subscriptionEnd": {
+              "_seconds": 1768247517,
+              "_nanoseconds": 331000000
+            },
+            "proExpiryDate": {
+              "_seconds": 1768247517,
+              "_nanoseconds": 331000000
+            },
+            "subscriptionAmount": "50000",
+            "subscriptionStatus": "active",
+            "membership": "Pro",
+            "subscriptionDuration": 1,
+            "membershipDate": {
+              "_seconds": 1765662900,
+              "_nanoseconds": 272000000
+            },
+            "subscriptionStart": {
+              "_seconds": 1765569117,
+              "_nanoseconds": 331000000
+            },
+            "goal": "",
+            "phone": "655959",
+            "weight": 0,
+            "activityLevel": "",
+            "height": 0,
+            "notifyPhysio": true,
+            "notifyWorkout": true,
+            "notifyMeals": true,
+            "notifyEmail": true,
+            "notifyPush": true,
+            "notifySMS": true,
+            "twoFactorEnabled": false,
+            "twoFactorSetupInProgress": true,
+            "lastLogin": "2025-12-29T07:03:06.441Z",
+            "lastActive": "2025-12-29T07:03:06.441Z",
+            "twoFactorSecret": "IRJDOXR4ONWXU42XIVKG2NCJPEZGEULSIBCDQ3ZXFJJGOXJ3IVXQ",
+            "updatedAt": {
+              "_seconds": 1766991844,
+              "_nanoseconds": 128000000
+            }
+          }
+        },
+        {
+          "id": "Z4vA0CXZtcd5GCAj7UzDJRh7yy03",
+          "data": {
+            "email": "trainer@fitpro.com",
+            "displayName": "Trainer",
+            "role": "trainer",
+            "createdAt": "2025-12-18T23:29:59.448Z",
+            "emailVerified": true,
+            "lastLogin": "2025-12-19T21:48:09.035Z",
+            "lastActive": "2025-12-19T21:48:09.035Z"
           }
         },
         {
@@ -137,6 +380,16 @@
             "updatedAt": {
               "_seconds": 1764012933,
               "_nanoseconds": 354000000
+            },
+            "membershipDate": {
+              "_seconds": 1765662900,
+              "_nanoseconds": 539000000
+            },
+            "lastLogin": "2025-12-03T18:29:51.984Z",
+            "lastActive": "2025-12-03T18:29:51.984Z",
+            "subscriptionStart": {
+              "_seconds": 1763840133,
+              "_nanoseconds": 354000000
             }
           }
         },
@@ -152,10 +405,195 @@
             "role": "user",
             "membership": "Pro",
             "subscriptionStatus": "active",
-            "subscriptionEnd": "2025-12-24T15:14:23.273Z",
             "isActive": true,
             "joinDate": "2025-11-24T15:14:24.344Z",
-            "createdAt": "2025-11-24T15:14:24.344Z"
+            "createdAt": "2025-11-24T15:14:24.344Z",
+            "membershipDate": {
+              "_seconds": 1765662900,
+              "_nanoseconds": 800000000
+            },
+            "lastLogin": "2025-11-19T17:34:30.767Z",
+            "lastActive": "2025-11-19T17:34:30.767Z",
+            "subscriptionEnd": {
+              "_seconds": 1766589263,
+              "_nanoseconds": 273000000
+            },
+            "subscriptionStart": {
+              "_seconds": 1766284417,
+              "_nanoseconds": 828000000
+            }
+          }
+        },
+        {
+          "id": "cTQeBeSgHWcI5kvGvY7rLxaQVEY2",
+          "data": {
+            "email": "owner@fitpro.com",
+            "displayName": "Owner",
+            "role": "owner",
+            "createdAt": "2025-12-18T23:29:56.704Z",
+            "emailVerified": true
+          }
+        },
+        {
+          "id": "cwIKe1ou3xSpsB75ub6KCawlhfU2",
+          "data": {
+            "email": "suhaibmodern36@gmail.com",
+            "name": "Suhaib  Hamadameen ",
+            "firstName": "Suhaib ",
+            "lastName": "Hamadameen ",
+            "role": "user",
+            "subscriptionEndDate": null,
+            "isActive": true,
+            "emailVerified": false,
+            "joinDate": "2025-12-25T18:28:45.981Z",
+            "createdAt": "2025-12-25T18:28:45.981Z",
+            "approvedDate": {
+              "_seconds": 1766687875,
+              "_nanoseconds": 434000000
+            },
+            "approvedBy": "superadmin",
+            "status": "active",
+            "subscriptionEnd": {
+              "_seconds": 1769279958,
+              "_nanoseconds": 337000000
+            },
+            "proExpiryDate": {
+              "_seconds": 1769279958,
+              "_nanoseconds": 337000000
+            },
+            "subscriptionAmount": "50000",
+            "subscriptionStart": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "subscriptionStatus": "active",
+            "membership": "Pro",
+            "subscriptionDuration": 1,
+            "membershipDate": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "updatedAt": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "lastLogin": "2025-12-25T18:39:47.512Z",
+            "lastActive": "2025-12-25T18:39:47.512Z"
+          }
+        },
+        {
+          "id": "k9qbTbcrr8Y7OvXM3wYh72pIGoQ2",
+          "data": {
+            "email": "superadmin@fitpro.com",
+            "displayName": "Super Admin",
+            "role": "superadmin",
+            "createdAt": "2025-12-18T23:29:53.843Z",
+            "emailVerified": true,
+            "twoFactorEnabledAt": {
+              "_seconds": 1766456155,
+              "_nanoseconds": 533000000
+            },
+            "twoFactorBackupCodes": [
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "C441LB8M"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "code": "QFK5S8OJ",
+                "used": false
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "LRZVA6G5"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "ZN40XLDN"
+              },
+              {
+                "used": false,
+                "code": "QSQ64ZHM",
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                }
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "083R3J74"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "IWJ0E43W"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "HNPWG0IK"
+              }
+            ],
+            "emailNotifications": true,
+            "language": "en",
+            "notificationsEnabled": true,
+            "darkMode": true,
+            "twoFactorEnabled": false,
+            "twoFactorSecret": "IFJESPTBOBKWKORRKQYXMZZGMZDXQQLLEMZEYN3SLNMG4WSBFJEA",
+            "twoFactorSetupInProgress": true,
+            "updatedAt": {
+              "_seconds": 1766687810,
+              "_nanoseconds": 585000000
+            },
+            "lastLogin": "2025-12-29T22:57:32.547Z",
+            "lastActive": "2025-12-29T22:57:32.547Z"
+          }
+        },
+        {
+          "id": "mHvOi4Av3qTB9euwW8jE",
+          "data": {
+            "email": "physio2@darinfitness.com",
+            "name": "Dr. Sara Ahmed",
+            "role": "physiotherapist",
+            "status": "active",
+            "specialization": "Sports Physiotherapy",
+            "emailVerified": true,
+            "createdAt": {
+              "_seconds": 1765648859,
+              "_nanoseconds": 305000000
+            },
+            "membership": "Pro",
+            "updatedAt": {
+              "_seconds": 1765654985,
+              "_nanoseconds": 577000000
+            },
+            "lastLogin": "2025-11-28T17:54:25.285Z",
+            "lastActive": "2025-11-28T17:54:25.285Z"
           }
         },
         {
@@ -186,7 +624,52 @@
             "updatedAt": {
               "_seconds": 1764013105,
               "_nanoseconds": 360000000
+            },
+            "membershipDate": {
+              "_seconds": 1765662901,
+              "_nanoseconds": 55000000
+            },
+            "lastLogin": "2025-12-07T10:40:08.883Z",
+            "lastActive": "2025-12-07T10:40:08.883Z",
+            "subscriptionStart": {
+              "_seconds": 1763926705,
+              "_nanoseconds": 360000000
             }
+          }
+        },
+        {
+          "id": "physio1",
+          "data": {
+            "email": "ahmed.physio@example.com",
+            "password": "$2b$10$cO4UDkJJxyFRFWv8sNB8VegNS9y4NjbvpDMT8c9aIGDiDaI04r7PS",
+            "name": "Ahmed Kurdistan",
+            "createdAt": "2025-12-10T00:08:34.072Z",
+            "passwordUpdatedAt": "2025-12-10T00:08:34.072Z",
+            "role": "user",
+            "revokedDate": {
+              "_seconds": 1765648311,
+              "_nanoseconds": 536000000
+            },
+            "status": "revoked",
+            "lastLogin": "2025-12-11T22:11:04.340Z",
+            "lastActive": "2025-12-11T22:11:04.340Z"
+          }
+        },
+        {
+          "id": "user_rashad_123",
+          "data": {
+            "id": "user_rashad_123",
+            "email": "rashad.ali@gmail.com",
+            "password": "$2b$10$MXMiWoJszoHljLhRUEkDKOSqhXOXasMeJa/45oFa6lkBySwrRArHi",
+            "role": "user",
+            "name": "Rashad Ali",
+            "phone": "+964 750 555 6677",
+            "age": 32,
+            "gender": "Male",
+            "createdAt": "2025-12-10T00:14:30.151Z",
+            "passwordUpdatedAt": "2025-12-10T00:14:30.152Z",
+            "lastLogin": "2025-12-15T19:20:54.209Z",
+            "lastActive": "2025-12-15T19:20:54.209Z"
           }
         },
         {
@@ -197,18 +680,101 @@
             "role": "superadmin",
             "emailVerified": true,
             "status": "active",
-            "createdAt": {
-              "_seconds": 1763924009,
-              "_nanoseconds": 876000000
+            "approvedDate": {
+              "_seconds": 1765654065,
+              "_nanoseconds": 658000000
             },
+            "firstName": "Super",
+            "lastName": "Admin",
+            "isActive": true,
+            "membership": "Pro",
+            "createdAt": {
+              "_seconds": 1765659088,
+              "_nanoseconds": 329000000
+            },
+            "twoFactorSecret": "KZZD4ZKDIBGEMVB6NZBEOLBSKF3W64JJNVKGY5KBORZVGUCAFBJA",
+            "twoFactorEnabled": true,
+            "twoFactorEnabledAt": {
+              "_seconds": 1766450894,
+              "_nanoseconds": 8000000
+            },
+            "twoFactorBackupCodes": [
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "ZCHD2S70"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "01FCKF62"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "MNHYWPJP"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "TFI2E3DV"
+              },
+              {
+                "used": false,
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "JH6PXUUY"
+              },
+              {
+                "used": false,
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "01IR3EO5"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "H6B4SDSI",
+                "used": false
+              },
+              {
+                "used": false,
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "W2WNHFBS"
+              }
+            ],
+            "twoFactorSetupInProgress": false,
             "updatedAt": {
-              "_seconds": 1763924009,
-              "_nanoseconds": 876000000
-            }
+              "_seconds": 1766450894,
+              "_nanoseconds": 8000000
+            },
+            "lastLogin": "2025-12-23T01:10:04.051Z",
+            "lastActive": "2025-12-23T01:10:04.051Z"
           }
         }
       ],
-      "count": 10
+      "count": 23
     },
     {
       "collection": "trainers",
@@ -227,7 +793,9 @@
             "phone": "+90 555 234 5678",
             "experience": "12 years",
             "active": true,
-            "createdAt": "2025-11-12T02:48:05.407Z"
+            "createdAt": "2025-11-12T02:48:05.407Z",
+            "specialty": "Orthopedic Rehabilitation",
+            "updatedAt": "2025-12-16T02:12:39.211Z"
           }
         },
         {
@@ -239,25 +807,9 @@
             "phone": "+90 555 123 4567",
             "experience": "8 years",
             "active": true,
-            "createdAt": "2025-11-12T02:48:05.406Z"
-          }
-        },
-        {
-          "id": "physiotherapist_1",
-          "data": {
-            "profile": {
-              "firstName": "Safa",
-              "lastName": "Othman",
-              "phone": "+92-300-1234567",
-              "specialization": "Orthopedic & Sports Rehabilitation",
-              "licenseNumber": "PT-2020-1234",
-              "email": "ayesha@example.com"
-            },
-            "updatedAt": "2025-12-08T09:55:30.462Z",
-            "professional": {
-              "bio": "Experienced physiotherapist specializing in orthopedic rehabilitation and sports injury treatment.",
-              "experience": "8 years"
-            }
+            "createdAt": "2025-11-12T02:48:05.406Z",
+            "specialty": "Sports Injury",
+            "updatedAt": "2025-12-16T02:12:39.907Z"
           }
         },
         {
@@ -269,11 +821,13 @@
             "phone": "+90 555 345 6789",
             "experience": "5 years",
             "active": true,
-            "createdAt": "2025-11-12T02:48:05.407Z"
+            "createdAt": "2025-11-12T02:48:05.407Z",
+            "specialty": "Manual Therapy",
+            "updatedAt": "2025-12-16T02:12:40.189Z"
           }
         }
       ],
-      "count": 4
+      "count": 3
     },
     {
       "collection": "patients",
@@ -283,6 +837,102 @@
     {
       "collection": "physio-requests",
       "documents": [
+        {
+          "id": "0hbHgsU0FB7rhsHHkh2z",
+          "data": {
+            "notes": "",
+            "painPercent": 67,
+            "injuryType": "Twgdhruri",
+            "userId": "cwIKe1ou3xSpsB75ub6KCawlhfU2",
+            "userName": "suhaibmodern36@gmail.com",
+            "userPhone": "",
+            "physioName": "Physiotherapist",
+            "physioId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "userEmail": "",
+            "createdAt": "2025-12-25T18:40:29.051Z",
+            "completed": false,
+            "userAge": 0,
+            "appointment": {
+              "date": "2025-12-26",
+              "time": "09:00",
+              "notes": "",
+              "price": "50"
+            },
+            "status": "accepted",
+            "updatedAt": "2025-12-25T18:46:46.717Z"
+          }
+        },
+        {
+          "id": "2DL0FuPp8ZQi6QrAvO9L",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "ashnamusa1631@gmail.com",
+            "userEmail": "",
+            "userPhone": "",
+            "userAge": 0,
+            "physioId": "DqfC3RwwlXKM62edhjuc",
+            "physioName": "Dr. Kemal Öztürk",
+            "injuryType": "ئئئئئئئئئئئئئئئئئئئئئئئئئئئئئئئئ",
+            "painPercent": 100,
+            "notes": "",
+            "status": "pending",
+            "completed": false,
+            "createdAt": "2025-12-13T19:55:37.226Z",
+            "updatedAt": "2025-12-13T19:55:37.226Z"
+          }
+        },
+        {
+          "id": "5Nu9VKXQD3N8NX8D4c17",
+          "data": {
+            "userId": "user002",
+            "userName": "Hana Ali",
+            "userEmail": "hana@example.com",
+            "userPhone": "+964 770 333 4444",
+            "userAge": 28,
+            "userGender": "Female",
+            "physioId": "physio1",
+            "physioName": "Ahmed Kurdistan",
+            "injuryType": "Knee Injury",
+            "painPercent": 60,
+            "notes": "Knee pain after sports injury. Need rehabilitation program.",
+            "status": "accepted",
+            "completed": false,
+            "createdAt": "2025-12-09T19:08:34.685Z",
+            "updatedAt": "2025-12-10T00:08:35.011Z",
+            "appointment": {
+              "date": "2025-12-11",
+              "time": "10:00",
+              "price": "50",
+              "notes": "First consultation session"
+            }
+          }
+        },
+        {
+          "id": "6TBGcHOIyQOGR6eigrHh",
+          "data": {
+            "userId": "user_rashad_123",
+            "userName": "Rashad Ali",
+            "userEmail": "rashad.ali@gmail.com",
+            "userPhone": "+964 750 555 6677",
+            "userAge": 32,
+            "userGender": "Male",
+            "physioId": "physio1",
+            "physioName": "Ahmed Kurdistan",
+            "injuryType": "Shoulder Pain",
+            "painPercent": 65,
+            "notes": "I have shoulder pain after gym workout. Need professional consultation and treatment plan.",
+            "completed": false,
+            "createdAt": "2025-12-10T00:14:31.568Z",
+            "appointment": {
+              "date": "2025-12-11",
+              "time": "09:00",
+              "price": "55522",
+              "notes": ""
+            },
+            "status": "accepted",
+            "updatedAt": "2025-12-10T00:15:19.899Z"
+          }
+        },
         {
           "id": "HJtgEZFoPe22PYLYD6o1",
           "data": {
@@ -348,6 +998,25 @@
           }
         },
         {
+          "id": "ap6IjRTeV8IK3v7LXwCX",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "ashnamusa1631@gmail.com",
+            "userEmail": "",
+            "userPhone": "",
+            "userAge": 0,
+            "physioId": "w4yuHKB5WnLQnIszrkV2",
+            "physioName": "Dr. Rana Ahmad",
+            "injuryType": "8888888888888888888888888",
+            "painPercent": 50,
+            "notes": "",
+            "status": "pending",
+            "completed": false,
+            "createdAt": "2025-12-13T19:55:53.611Z",
+            "updatedAt": "2025-12-13T19:55:53.611Z"
+          }
+        },
+        {
           "id": "cMq97iIAvhXqGct3aYRr",
           "data": {
             "userId": "z6hLRnWDKMQOk2EimNeiKsz2a8H2",
@@ -361,6 +1030,25 @@
             "completed": false,
             "createdAt": "2025-11-13T09:47:10.828Z",
             "updatedAt": "2025-11-13T09:47:10.828Z"
+          }
+        },
+        {
+          "id": "fpEEUKxn9Odvf7g2xKDa",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "ashnamusa1631@gmail.com",
+            "userEmail": "",
+            "userPhone": "",
+            "userAge": 0,
+            "physioId": "mHvOi4Av3qTB9euwW8jE",
+            "physioName": "Dr. Sara Ahmed",
+            "injuryType": "Bsjsb",
+            "painPercent": 85,
+            "notes": "Bsbzb",
+            "status": "pending",
+            "completed": false,
+            "createdAt": "2025-12-20T08:56:47.375Z",
+            "updatedAt": "2025-12-20T08:56:47.375Z"
           }
         },
         {
@@ -380,6 +1068,25 @@
           }
         },
         {
+          "id": "kWA0irkE7mC1Gl5xbDbX",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "ashnamusa1631@gmail.com",
+            "userEmail": "",
+            "userPhone": "",
+            "userAge": 0,
+            "physioId": "G4WOsWyhwXr9s80JGT9S",
+            "physioName": "Dr. Aylin Yılmaz",
+            "injuryType": "لللللللللللللللللللللللللللللللل",
+            "painPercent": 50,
+            "notes": "",
+            "status": "pending",
+            "completed": false,
+            "createdAt": "2025-12-13T19:55:45.317Z",
+            "updatedAt": "2025-12-13T19:55:45.317Z"
+          }
+        },
+        {
           "id": "nUQ4CFHMVh9W90s3ivYx",
           "data": {
             "userId": "warning@darinfitness.com",
@@ -394,14 +1101,803 @@
             "completed": true,
             "updatedAt": "2025-11-12T03:09:19.571Z"
           }
+        },
+        {
+          "id": "xtE5vfH2Hw43duhYsPET",
+          "data": {
+            "userId": "user001",
+            "userName": "Sardar Mohammed",
+            "userEmail": "sardar@example.com",
+            "userPhone": "+964 750 111 2222",
+            "userAge": 35,
+            "userGender": "Male",
+            "physioId": "physio1",
+            "physioName": "Ahmed Kurdistan",
+            "injuryType": "Lower Back Pain",
+            "painPercent": 75,
+            "notes": "Chronic lower back pain for 3 months. Pain increases after sitting for long periods.",
+            "completed": false,
+            "createdAt": "2025-12-09T22:08:34.685Z",
+            "appointment": {
+              "date": "2025-12-11",
+              "time": "09:00",
+              "price": "555",
+              "notes": ""
+            },
+            "status": "accepted",
+            "updatedAt": "2025-12-10T00:11:00.614Z"
+          }
         }
       ],
-      "count": 7
+      "count": 15
     },
     {
       "collection": "appointments",
-      "documents": [],
-      "count": 0
+      "documents": [
+        {
+          "id": "4cfKvXSAV0nwcHo8AxOh",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1763832753,
+              "_nanoseconds": 139000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 8 - Shoulder Rehabilitation treatment",
+            "price": 74
+          }
+        },
+        {
+          "id": "5NPaOTmbOalvR0pbbwK9",
+          "data": {
+            "patientId": "3WHP7GPedc2w7QGjb3Rj",
+            "patientName": "Layla Hussein",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764612063,
+              "_nanoseconds": 876000000
+            },
+            "time": "04:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Ankle Injury treatment",
+            "price": 40
+          }
+        },
+        {
+          "id": "5WP7aduBhXcQw5Zg8Zx8",
+          "data": {
+            "patientId": "4ONxj9L4JaUoY18WOEjF",
+            "patientName": "سارە حەمە",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765647148,
+              "_nanoseconds": 304000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Knee Injury treatment",
+            "price": 78
+          }
+        },
+        {
+          "id": "6tRYJUpS98y7CQxisDqa",
+          "data": {
+            "patientId": "3WHP7GPedc2w7QGjb3Rj",
+            "patientName": "Layla Hussein",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764957663,
+              "_nanoseconds": 201000000
+            },
+            "time": "02:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Ankle Injury treatment",
+            "price": 65
+          }
+        },
+        {
+          "id": "9QC6M8Oszoi83noG5hbD",
+          "data": {
+            "patientId": "B6XgWz8NHseB76pPzqOm",
+            "patientName": "أحمد محمد",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765647146,
+              "_nanoseconds": 72000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Back Pain treatment",
+            "price": 79
+          }
+        },
+        {
+          "id": "AjlfPUXCOHxHLbSnoMaY",
+          "data": {
+            "patientId": "ybzzzpdk9vSZRUPYdRkC",
+            "patientName": "علی محمود",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765648859,
+              "_nanoseconds": 820000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Spinal Pain treatment",
+            "price": 48
+          }
+        },
+        {
+          "id": "BXyUasawOWgGIFmoUNiw",
+          "data": {
+            "patientId": "uMZSYDCIVVcUasd4uiHE",
+            "patientName": "زینب کریم",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1765648868,
+              "_nanoseconds": 266000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Post-Surgery Rehabilitation treatment",
+            "price": 41
+          }
+        },
+        {
+          "id": "GhHkC3E0ILpRfYwM0XEO",
+          "data": {
+            "patientId": "rv88ef5tvgjJgtmLQpCI",
+            "patientName": "Omer Ali",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1765303265,
+              "_nanoseconds": 906000000
+            },
+            "time": "11:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Sports Injury treatment",
+            "price": 44
+          }
+        },
+        {
+          "id": "ILhE2LBrHEesRw7xc2Pz",
+          "data": {
+            "patientId": "rv88ef5tvgjJgtmLQpCI",
+            "patientName": "Omer Ali",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1765648865,
+              "_nanoseconds": 201000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Sports Injury treatment",
+            "price": 42
+          }
+        },
+        {
+          "id": "JfmdaGC3Rywz1GSYKToD",
+          "data": {
+            "patientId": "3WHP7GPedc2w7QGjb3Rj",
+            "patientName": "Layla Hussein",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765648862,
+              "_nanoseconds": 183000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Ankle Injury treatment",
+            "price": 47
+          }
+        },
+        {
+          "id": "JgQBwVuSM6PS0szYU2oJ",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764610351,
+              "_nanoseconds": 907000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 5 - Shoulder Rehabilitation treatment",
+            "price": 67
+          }
+        },
+        {
+          "id": "KYQbvgFDm4dzUhg8cxKS",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765128750,
+              "_nanoseconds": 945000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Shoulder Rehabilitation treatment",
+            "price": 68
+          }
+        },
+        {
+          "id": "OcuGKg9KY4tOonSTRh0O",
+          "data": {
+            "patientId": "3WHP7GPedc2w7QGjb3Rj",
+            "patientName": "Layla Hussein",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764266464,
+              "_nanoseconds": 201000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 5 - Ankle Injury treatment",
+            "price": 59
+          }
+        },
+        {
+          "id": "PkOnabpWVShbxyJsYHJL",
+          "data": {
+            "physiotherapistId": "physio1",
+            "patientName": "Rashad Ali",
+            "patientId": "215O89gRIGhMHNExWOND",
+            "date": "2588-02-05",
+            "time": "14:00",
+            "duration": 60,
+            "type": "in-person",
+            "status": "scheduled",
+            "reason": "؛م؛ملف",
+            "location": "و",
+            "notes": "ل؛م",
+            "fee": 5055,
+            "platformCommission": 758,
+            "createdAt": "2025-12-10T11:45:01.830Z",
+            "updatedAt": "2025-12-10T11:45:01.830Z",
+            "price": 63
+          }
+        },
+        {
+          "id": "QSSeznfrjFk5S3pR5QNZ",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764351152,
+              "_nanoseconds": 177000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 6 - Shoulder Rehabilitation treatment",
+            "price": 55
+          }
+        },
+        {
+          "id": "RAX5GZBVYyBbnHsETtmr",
+          "data": {
+            "patientId": "MUnj1pFA2WRVTeQBqdmW",
+            "patientName": "Hiwa Rashid",
+            "physiotherapistId": "mHvOi4Av3qTB9euwW8jE",
+            "physiotherapistName": "Dr. Sara Ahmed",
+            "date": {
+              "_seconds": 1765303271,
+              "_nanoseconds": 995000000
+            },
+            "time": "11:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Neck Pain treatment",
+            "price": 65
+          }
+        },
+        {
+          "id": "SetP5Mny3Jbm8vH3SaTG",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764091952,
+              "_nanoseconds": 865000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 7 - Shoulder Rehabilitation treatment",
+            "price": 61
+          }
+        },
+        {
+          "id": "UVqV85gZs1qTeibTSLcu",
+          "data": {
+            "patientId": "MUnj1pFA2WRVTeQBqdmW",
+            "patientName": "Hiwa Rashid",
+            "physiotherapistId": "mHvOi4Av3qTB9euwW8jE",
+            "physiotherapistName": "Dr. Sara Ahmed",
+            "date": {
+              "_seconds": 1764266473,
+              "_nanoseconds": 353000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 5 - Neck Pain treatment",
+            "price": 55
+          }
+        },
+        {
+          "id": "WmKuZ2lkwiIU1ohyTlg5",
+          "data": {
+            "patientId": "4ONxj9L4JaUoY18WOEjF",
+            "patientName": "سارە حەمە",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765128749,
+              "_nanoseconds": 260000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Knee Injury treatment",
+            "price": 49
+          }
+        },
+        {
+          "id": "YAXOPYF7CCDmNuZu3dUa",
+          "data": {
+            "patientId": "rv88ef5tvgjJgtmLQpCI",
+            "patientName": "Omer Ali",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1764957666,
+              "_nanoseconds": 231000000
+            },
+            "time": "02:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Sports Injury treatment",
+            "price": 72
+          }
+        },
+        {
+          "id": "YlRK80ra5lubPunC2LIp",
+          "data": {
+            "patientId": "B6XgWz8NHseB76pPzqOm",
+            "patientName": "أحمد محمد",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764610347,
+              "_nanoseconds": 989000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 5 - Back Pain treatment",
+            "price": 48
+          }
+        },
+        {
+          "id": "Z88SqEXPEW4pDTuTIeqY",
+          "data": {
+            "patientId": "uMZSYDCIVVcUasd4uiHE",
+            "patientName": "زینب کریم",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1764612069,
+              "_nanoseconds": 955000000
+            },
+            "time": "04:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Post-Surgery Rehabilitation treatment",
+            "price": 80
+          }
+        },
+        {
+          "id": "ZJVJBo0l6zpqF0y5uLqF",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764869551,
+              "_nanoseconds": 220000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Shoulder Rehabilitation treatment",
+            "price": 51
+          }
+        },
+        {
+          "id": "a635FnBbJjiaI8j3dRy2",
+          "data": {
+            "patientId": "uMZSYDCIVVcUasd4uiHE",
+            "patientName": "زینب کریم",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1764266470,
+              "_nanoseconds": 321000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 5 - Post-Surgery Rehabilitation treatment",
+            "price": 62
+          }
+        },
+        {
+          "id": "apzQVQjh1LHXKkHAQyP1",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765387950,
+              "_nanoseconds": 212000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Shoulder Rehabilitation treatment",
+            "price": 44
+          }
+        },
+        {
+          "id": "aw6EIGVs2uR5OQUE5Qdt",
+          "data": {
+            "patientId": "ybzzzpdk9vSZRUPYdRkC",
+            "patientName": "علی محمود",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764612061,
+              "_nanoseconds": 172000000
+            },
+            "time": "04:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Spinal Pain treatment",
+            "price": 44
+          }
+        },
+        {
+          "id": "cMdPP9AKSh451KWlAQyi",
+          "data": {
+            "patientId": "B6XgWz8NHseB76pPzqOm",
+            "patientName": "أحمد محمد",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765387946,
+              "_nanoseconds": 358000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Back Pain treatment",
+            "price": 78
+          }
+        },
+        {
+          "id": "e43UX2yZbtesh73p6zNG",
+          "data": {
+            "patientId": "3WHP7GPedc2w7QGjb3Rj",
+            "patientName": "Layla Hussein",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765303262,
+              "_nanoseconds": 838000000
+            },
+            "time": "11:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Ankle Injury treatment",
+            "price": 63
+          }
+        },
+        {
+          "id": "eljVUKRuw53pFEzGUvaq",
+          "data": {
+            "patientId": "rv88ef5tvgjJgtmLQpCI",
+            "patientName": "Omer Ali",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1764266467,
+              "_nanoseconds": 250000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "cancelled",
+            "notes": "Session 5 - Sports Injury treatment",
+            "price": 65
+          }
+        },
+        {
+          "id": "giwX4dMGExcgnBwfLEpl",
+          "data": {
+            "patientId": "oBPoLCrzQ4x3WG6qeeMT",
+            "patientName": "محمد کریم",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765647149,
+              "_nanoseconds": 892000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Shoulder Rehabilitation treatment",
+            "price": 49
+          }
+        },
+        {
+          "id": "kmlmTZHcia103eUgu0CT",
+          "data": {
+            "patientId": "4ONxj9L4JaUoY18WOEjF",
+            "patientName": "سارە حەمە",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765387948,
+              "_nanoseconds": 948000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Knee Injury treatment",
+            "price": 42
+          }
+        },
+        {
+          "id": "l7kpCbctwScJtpj9GUWH",
+          "data": {
+            "patientId": "MUnj1pFA2WRVTeQBqdmW",
+            "patientName": "Hiwa Rashid",
+            "physiotherapistId": "mHvOi4Av3qTB9euwW8jE",
+            "physiotherapistName": "Dr. Sara Ahmed",
+            "date": {
+              "_seconds": 1765648871,
+              "_nanoseconds": 351000000
+            },
+            "time": "09:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 1 - Neck Pain treatment",
+            "price": 58
+          }
+        },
+        {
+          "id": "liOhlHnkZvmi8MX9CWze",
+          "data": {
+            "patientId": "MUnj1pFA2WRVTeQBqdmW",
+            "patientName": "Hiwa Rashid",
+            "physiotherapistId": "mHvOi4Av3qTB9euwW8jE",
+            "physiotherapistName": "Dr. Sara Ahmed",
+            "date": {
+              "_seconds": 1764957672,
+              "_nanoseconds": 372000000
+            },
+            "time": "02:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Neck Pain treatment",
+            "price": 76
+          }
+        },
+        {
+          "id": "ljaHNOYND4SYK5PklPO7",
+          "data": {
+            "patientId": "MUnj1pFA2WRVTeQBqdmW",
+            "patientName": "Hiwa Rashid",
+            "physiotherapistId": "mHvOi4Av3qTB9euwW8jE",
+            "physiotherapistName": "Dr. Sara Ahmed",
+            "date": {
+              "_seconds": 1764612073,
+              "_nanoseconds": 25000000
+            },
+            "time": "04:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Neck Pain treatment",
+            "price": 52
+          }
+        },
+        {
+          "id": "nZVmm8FPxL88YBu5SbO7",
+          "data": {
+            "patientId": "ybzzzpdk9vSZRUPYdRkC",
+            "patientName": "علی محمود",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765303260,
+              "_nanoseconds": 160000000
+            },
+            "time": "11:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Spinal Pain treatment",
+            "price": 58
+          }
+        },
+        {
+          "id": "pN2KD7TUV0NxFaaVL0tv",
+          "data": {
+            "patientId": "rv88ef5tvgjJgtmLQpCI",
+            "patientName": "Omer Ali",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1764612066,
+              "_nanoseconds": 922000000
+            },
+            "time": "04:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Sports Injury treatment",
+            "price": 58
+          }
+        },
+        {
+          "id": "pir9p1tpJ6aSDrSsrkFt",
+          "data": {
+            "patientId": "ybzzzpdk9vSZRUPYdRkC",
+            "patientName": "علی محمود",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764957660,
+              "_nanoseconds": 829000000
+            },
+            "time": "02:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Spinal Pain treatment",
+            "price": 79
+          }
+        },
+        {
+          "id": "qvaipFPUSnTL0O6s8qpS",
+          "data": {
+            "patientId": "B6XgWz8NHseB76pPzqOm",
+            "patientName": "أحمد محمد",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1764869547,
+              "_nanoseconds": 351000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 4 - Back Pain treatment",
+            "price": 71
+          }
+        },
+        {
+          "id": "sVXrz0jVSJgcLcK54rkL",
+          "data": {
+            "patientId": "uMZSYDCIVVcUasd4uiHE",
+            "patientName": "زینب کریم",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1764957669,
+              "_nanoseconds": 310000000
+            },
+            "time": "02:00 PM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Post-Surgery Rehabilitation treatment",
+            "price": 63
+          }
+        },
+        {
+          "id": "w6mQR753Dbl6n5KKVAx3",
+          "data": {
+            "physiotherapistId": "physio1",
+            "patientName": "Rashad Ali",
+            "patientId": "215O89gRIGhMHNExWOND",
+            "date": "275760-02-05",
+            "time": "17:55",
+            "duration": 90,
+            "type": "in-person",
+            "status": "scheduled",
+            "reason": "dwfwwedwed",
+            "location": "wedwd",
+            "notes": "",
+            "fee": 5000000000000,
+            "platformCommission": 750000000000,
+            "createdAt": "2025-12-10T12:02:35.654Z",
+            "updatedAt": "2025-12-10T12:02:35.654Z",
+            "price": 78
+          }
+        },
+        {
+          "id": "wzkDaXI18qY78mtHdODp",
+          "data": {
+            "patientId": "uMZSYDCIVVcUasd4uiHE",
+            "patientName": "زینب کریم",
+            "physiotherapistId": "Uy3E1iMxI4GqKtTpOxcL",
+            "physiotherapistName": "Dr. Karzan Hassan",
+            "date": {
+              "_seconds": 1765303268,
+              "_nanoseconds": 942000000
+            },
+            "time": "11:00 AM",
+            "duration": "60 minutes",
+            "status": "completed",
+            "notes": "Session 2 - Post-Surgery Rehabilitation treatment",
+            "price": 55
+          }
+        },
+        {
+          "id": "zh3OwiN4nejExMk314Mi",
+          "data": {
+            "patientId": "B6XgWz8NHseB76pPzqOm",
+            "patientName": "أحمد محمد",
+            "physiotherapistId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "physiotherapistName": "Physiotherapist",
+            "date": {
+              "_seconds": 1765128747,
+              "_nanoseconds": 27000000
+            },
+            "time": "10:00 AM",
+            "duration": "60 minutes",
+            "status": "scheduled",
+            "notes": "Session 3 - Back Pain treatment",
+            "price": 48
+          }
+        }
+      ],
+      "count": 42
     },
     {
       "collection": "workouts",
@@ -68938,13 +70434,89 @@
     },
     {
       "collection": "settings",
-      "documents": [],
-      "count": 0
+      "documents": [
+        {
+          "id": "EIsUVie88STKiMHbV1scbDmxkwE3",
+          "data": {
+            "notifications": {
+              "newRequests": true,
+              "doctorApprovals": true,
+              "systemUpdates": true,
+              "emailNotifications": true
+            },
+            "privacy": {
+              "profileVisibility": "private",
+              "showEmail": false,
+              "showPhone": false
+            },
+            "appearance": {
+              "theme": "dark",
+              "language": "ku"
+            },
+            "createdAt": {
+              "_seconds": 1765657459,
+              "_nanoseconds": 778000000
+            },
+            "updatedAt": {
+              "_seconds": 1765657459,
+              "_nanoseconds": 778000000
+            }
+          }
+        },
+        {
+          "id": "physio1",
+          "data": {
+            "patientMessages": true,
+            "appointmentReminders": true,
+            "progressAlerts": true,
+            "emailNotifications": false,
+            "updatedAt": "2025-12-10T00:08:33.754Z"
+          }
+        }
+      ],
+      "count": 2
     },
     {
       "collection": "notifications",
-      "documents": [],
-      "count": 0
+      "documents": [
+        {
+          "id": "54v5FyHp2UPuCZAC88d9",
+          "data": {
+            "updatedAt": "2025-12-25T18:40:29.179Z",
+            "category": "request",
+            "type": "info",
+            "title": "ریکوێستی نەخۆشی نوێ",
+            "message": "suhaibmodern36@gmail.com (بێ ئیمەیڵ) ریکوێستی ناردووە بۆ تۆ",
+            "metadata": {
+              "patientName": "suhaibmodern36@gmail.com",
+              "injuryType": "Twgdhruri",
+              "requestId": "0hbHgsU0FB7rhsHHkh2z"
+            },
+            "userId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "read": false,
+            "createdAt": "2025-12-25T18:40:29.179Z"
+          }
+        },
+        {
+          "id": "92kyW3t7TFmZfU2V2pFD",
+          "data": {
+            "userId": "mHvOi4Av3qTB9euwW8jE",
+            "title": "ریکوێستی نەخۆشی نوێ",
+            "message": "ashnamusa1631@gmail.com (بێ ئیمەیڵ) ریکوێستی ناردووە بۆ تۆ",
+            "type": "info",
+            "category": "request",
+            "metadata": {
+              "requestId": "fpEEUKxn9Odvf7g2xKDa",
+              "patientName": "ashnamusa1631@gmail.com",
+              "injuryType": "Bsjsb"
+            },
+            "read": false,
+            "createdAt": "2025-12-20T08:56:47.480Z",
+            "updatedAt": "2025-12-20T08:56:47.480Z"
+          }
+        }
+      ],
+      "count": 2
     },
     {
       "collection": "community-posts",
@@ -68954,6 +70526,102 @@
     {
       "collection": "payments",
       "documents": [
+        {
+          "id": "12caNic8SXyVUOG8sKO3",
+          "data": {
+            "userId": "nmnUOSvqr9Tlmy3iz7IZaBMp0vW2",
+            "userName": "Safa O Abdulkareem",
+            "userEmail": "safaothman11@gmail.com",
+            "amount": 500000,
+            "currency": "IQD",
+            "duration": 2,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1763926705,
+              "_nanoseconds": 360000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1769197105,
+              "_nanoseconds": 360000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1763926705,
+              "_nanoseconds": 360000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282355,
+              "_nanoseconds": 873000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
+        },
+        {
+          "id": "CGLrt5m5i7kFL4meMk6O",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "Ashna musa",
+            "userEmail": "ashnamusa1631@gmail.com",
+            "amount": 50000,
+            "currency": "IQD",
+            "duration": 1,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1765569117,
+              "_nanoseconds": 331000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1768247517,
+              "_nanoseconds": 331000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1765569117,
+              "_nanoseconds": 331000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282354,
+              "_nanoseconds": 21000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
+        },
+        {
+          "id": "CVUYicsTFZa0XVgr7G1J",
+          "data": {
+            "userId": "aYT8NPQg1uROsOdaN6NU1fe8VWF3",
+            "userName": "Safa O Abdulkareem",
+            "userEmail": "safaothman1@gmail.com",
+            "amount": 500000,
+            "currency": "IQD",
+            "duration": 3,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1763840133,
+              "_nanoseconds": 354000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1771788933,
+              "_nanoseconds": 354000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1763840133,
+              "_nanoseconds": 354000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282354,
+              "_nanoseconds": 925000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
+        },
         {
           "id": "DAnYhVyMp1C39mOEnraG",
           "data": {
@@ -69063,6 +70731,38 @@
           }
         },
         {
+          "id": "WrWE4IcbApizikP1RvJs",
+          "data": {
+            "currency": "IQD",
+            "subscriptionStart": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "createdAt": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 531000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1769279958,
+              "_nanoseconds": 337000000
+            },
+            "method": "Admin Approved",
+            "status": "completed",
+            "amount": 50000,
+            "userId": "cwIKe1ou3xSpsB75ub6KCawlhfU2",
+            "updatedAt": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 531000000
+            },
+            "relatedType": "pro-request",
+            "relatedId": "YqrFzvAFleryecqCCiff",
+            "userEmail": "suhaibmodern36@gmail.com",
+            "userName": "Suhaib  Hamadameen ",
+            "duration": 1,
+            "type": "pro-subscription"
+          }
+        },
+        {
           "id": "bD8ytskKyiQsWSxMHZR2",
           "data": {
             "userId": "1dcXN8WW9MPsJOIVmbake9Vdvsz1",
@@ -69088,9 +70788,41 @@
               "_nanoseconds": 881000000
             }
           }
+        },
+        {
+          "id": "zSZqLflgVBj8Io3v0hra",
+          "data": {
+            "userId": "AhJ8ruMpzTSS3aDmrPhkiaNcOaT2",
+            "userName": "Darin Fitness",
+            "userEmail": "darinvipapp@gmail.com",
+            "amount": 100,
+            "currency": "IQD",
+            "duration": 1,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1766140770,
+              "_nanoseconds": 636000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1768819170,
+              "_nanoseconds": 636000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1766140770,
+              "_nanoseconds": 636000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282353,
+              "_nanoseconds": 98000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
         }
       ],
-      "count": 5
+      "count": 10
     },
     {
       "collection": "subscriptions",
@@ -69127,6 +70859,6 @@
     "totalCollections": 21,
     "successfulCollections": 21,
     "failedCollections": 0,
-    "totalDocuments": 2159
+    "totalDocuments": 2230
   }
 }

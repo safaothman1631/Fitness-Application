@@ -196,7 +196,7 @@ export default function AdminPhysiotherapistSettingsPage() {
   return (
     <AuthGuard allowedRoles={["admin-physiotherapist"]}>
       <SidebarSleek role="admin-physiotherapist">
-        <div className="space-y-6 p-4 md:p-6 lg:p-8 pb-6 max-w-6xl mx-auto pt-6">
+        <div className="space-y-6 p-4 md:p-6 lg:p-8 pb-6 max-w-6xl mx-auto pt-6 scrollbar-none overflow-y-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
           {/* Ultra Modern Header with Glassmorphism */}
           <div className="relative overflow-hidden rounded-3xl bg-white/[0.02] backdrop-blur-3xl border border-white/10 p-6 md:p-8 mt-4 shadow-[0_8px_32px_rgba(0,0,0,0.4)] transition-all duration-500 hover:shadow-[0_8px_48px_rgba(251,146,60,0.3)] hover:border-orange-500/30 group"
                style={{ 
@@ -272,8 +272,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                       settings.notifications.newRequests ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/50" : "bg-slate-700/50 backdrop-blur-sm"
                     }`}
                   >
-                    <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                      settings.notifications.newRequests ? "translate-x-7" : ""
+                    <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                      settings.notifications.newRequests ? "translate-x-7 rtl:-translate-x-7" : ""
                     }`} />
                   </button>
                 </div>
@@ -298,8 +298,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                       settings.notifications.doctorApprovals ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/50" : "bg-slate-700/50 backdrop-blur-sm"
                     }`}
                   >
-                    <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                      settings.notifications.doctorApprovals ? "translate-x-7" : ""
+                    <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                      settings.notifications.doctorApprovals ? "translate-x-7 rtl:-translate-x-7" : ""
                     }`} />
                   </button>
                 </div>
@@ -324,8 +324,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                       settings.notifications.systemUpdates ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/50" : "bg-slate-700/50 backdrop-blur-sm"
                     }`}
                   >
-                    <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                      settings.notifications.systemUpdates ? "translate-x-7" : ""
+                    <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                      settings.notifications.systemUpdates ? "translate-x-7 rtl:-translate-x-7" : ""
                     }`} />
                   </button>
                 </div>
@@ -350,8 +350,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                       settings.notifications.emailNotifications ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/50" : "bg-slate-700/50 backdrop-blur-sm"
                     }`}
                   >
-                    <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                      settings.notifications.emailNotifications ? "translate-x-7" : ""
+                    <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                      settings.notifications.emailNotifications ? "translate-x-7 rtl:-translate-x-7" : ""
                     }`} />
                   </button>
                 </div>
@@ -417,8 +417,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                       settings.privacy.showEmail ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/50" : "bg-slate-700/50 backdrop-blur-sm"
                     }`}
                   >
-                    <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                      settings.privacy.showEmail ? "translate-x-7" : ""
+                    <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                      settings.privacy.showEmail ? "translate-x-7 rtl:-translate-x-7" : ""
                     }`} />
                   </button>
                 </div>
@@ -443,8 +443,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                       settings.privacy.showPhone ? "bg-gradient-to-r from-green-500 to-emerald-600 shadow-lg shadow-green-500/50" : "bg-slate-700/50 backdrop-blur-sm"
                     }`}
                   >
-                    <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                      settings.privacy.showPhone ? "translate-x-7" : ""
+                    <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                      settings.privacy.showPhone ? "translate-x-7 rtl:-translate-x-7" : ""
                     }`} />
                   </button>
                 </div>
@@ -726,8 +726,8 @@ export default function AdminPhysiotherapistSettingsPage() {
                               : 'bg-slate-700/50 backdrop-blur-sm'
                           }`}
                         >
-                          <div className={`absolute top-[2px] left-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
-                            isActive ? 'translate-x-7' : ''
+                          <div className={`absolute top-[2px] start-[2px] w-6 h-6 bg-white rounded-full shadow-md transition-all duration-300 ${
+                            isActive ? 'translate-x-7 rtl:-translate-x-7' : ''
                           }`} />
                         </div>
                       </div>

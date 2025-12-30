@@ -1453,6 +1453,14 @@ export type TranslationKey =
   | "manageUsers"
   | "reviewRequests"
   | "totalPrograms"
+  | "info"
+  | "exerciseInfo"
+  | "tips"
+  | "primaryMuscles"
+  | "secondaryMuscles"
+  | "equipment"
+  | "bodyPart"
+  | "level"
 
 export const languages: Record<Language, string> = {
   en: "English",
@@ -2546,6 +2554,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   manageUsers: "Manage Users",
   reviewRequests: "Review Requests",
   totalPrograms: "Total Programs",
+  info: "Info",
+  exerciseInfo: "Exercise Information",
+  tips: "Tips",
+  primaryMuscles: "Primary Muscles",
+  secondaryMuscles: "Secondary Muscles",
+  equipment: "Equipment",
+  bodyPart: "Body Part",
+  level: "Level",
   // Subscription History Dialog - English
   subscriptionHistory: "Subscription History",
   loadingSubscriptionHistory: "Loading subscription history...",
@@ -4093,6 +4109,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,notSet: "غير محدد"
   ,goal: "الهدف"
   ,cancel: "إلغاء"
+  ,info: "معلومات"
+  ,exerciseInfo: "معلومات التمرين"
+  ,tips: "نصائح"
+  ,primaryMuscles: "العضلات الأساسية"
+  ,secondaryMuscles: "العضلات الثانوية"
+  ,equipment: "المعدات"
+  ,bodyPart: "جزء الجسم"
+  ,level: "المستوى"
   // More Menu (Arabic)
   ,accessProfileSettings: "الوصول إلى ملفك الشخصي والإعدادات والإشعارات"
   ,viewYourProfile: "عرض ملفك الشخصي"
@@ -5480,6 +5504,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,manageUsers: "بەڕێوەبردنی بەکارهێنەران"
     ,reviewRequests: "پێداچوونەوە بە داواکاری"
     ,totalPrograms: "کۆی پرۆگرامەکان"
+    ,info: "زانیاری"
+    ,exerciseInfo: "زانیاری ڕاهێنان"
+    ,tips: "ئامۆژگاری"
+    ,primaryMuscles: "ماسولکە سەرەکییەکان"
+    ,secondaryMuscles: "ماسولکە لاوەکییەکان"
+    ,equipment: "ئامێر"
+    ,bodyPart: "بەشی لەش"
+    ,level: "ئاست"
     ,updatePersonalInfo: "زانیاری کەسی خۆت نوێ بکەرەوە"
     ,enterYourName: "ناوت بنووسە"
     ,enterPhoneNumber: "ژمارەی مۆبایل بنووسە"
@@ -5488,6 +5520,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,profileSavedSuccessfully: "پڕۆفایل بە سەرکەوتوویی پاشەکەوت کرا!"
     ,failedToSaveProfile: "پاشەکەوتکردنی پڕۆفایل سەرکەوتوو نەبوو"
     ,cancel: "پاشگەزبوونەوە"
+    ,info: "Bilgi"
+    ,exerciseInfo: "Egzersiz Bilgileri"
+    ,tips: "İpuçları"
+    ,primaryMuscles: "Birincil Kaslar"
+    ,secondaryMuscles: "İkincil Kaslar"
+    ,equipment: "Ekipman"
+    ,bodyPart: "Vücut Bölümü"
+    ,level: "Seviye"
   },
   // Minimal Turkish placeholders
   tr: {
