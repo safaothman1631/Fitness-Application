@@ -3178,45 +3178,44 @@ export default function ProgramsPage() {
                               
                               // Primary: Use exact video name (with parentheses) - matches extracted frames
                               const exactVideoName = video.displayName.replace('.mp4', '').trim();
-                              const firebaseStorageBase = 'https://firebasestorage.googleapis.com/v0/b/final-database-f63e1.appspot.com/o/exercise-images%2Fall%2F';
-                              let imagePath = `${firebaseStorageBase}${encodeURIComponent(exactVideoName)}.jpg?alt=media`;
+                              let imagePath = `/exercises/images/all/${exactVideoName}.jpg`;
                               
                               // Fallback paths array - try multiple options
                               const fallbackPaths: string[] = [];
                               
                               // 1. Try normalized name (without parentheses)
                               if (exactVideoName !== imageName) {
-                                fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(imageName)}.jpg?alt=media`);
+                                fallbackPaths.push(`/exercises/images/all/${imageName}.jpg`);
                               }
                               
                               // 2. If Male, try Female version
                               const femaleVersion = exactVideoName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
                               if (femaleVersion !== exactVideoName) {
-                                fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(femaleVersion)}.jpg?alt=media`);
+                                fallbackPaths.push(`/exercises/images/all/${femaleVersion}.jpg`);
                               }
                               
                               // 3. Try normalized female version
                               const normalizedFemale = imageName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
                               if (normalizedFemale !== imageName && normalizedFemale !== femaleVersion) {
-                                fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(normalizedFemale)}.jpg?alt=media`);
+                                fallbackPaths.push(`/exercises/images/all/${normalizedFemale}.jpg`);
                               }
                               
                               // 4. Try without gender suffix
                               const noGender = imageName.replace(/_[Ff]emale\d*$/, '').replace(/_[Mm]ale\d*$/, '');
                               if (noGender !== imageName) {
-                                fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(noGender)}.jpg?alt=media`);
+                                fallbackPaths.push(`/exercises/images/all/${noGender}.jpg`);
                               }
                               
                               // 3. Try base name without numbers
                               const baseNameMatch = imageName.match(/^(.+?)(_[Ff]emale|_[Mm]ale)?\d*$/);
                               if (baseNameMatch && baseNameMatch[1] !== imageName) {
-                                fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(baseNameMatch[1])}.jpg?alt=media`);
-                                fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(baseNameMatch[1])}_female.jpg?alt=media`);
+                                fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}.jpg`);
+                                fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}_female.jpg`);
                               }
                               
                               // 4. Try with extra spaces (common typo in image names)
-                              fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(noGender)}%20%20.jpg?alt=media`);
-                              fallbackPaths.push(`${firebaseStorageBase}${encodeURIComponent(noGender)}%20%20%20.jpg?alt=media`);
+                              fallbackPaths.push(`/exercises/images/all/${noGender}  .jpg`);
+                              fallbackPaths.push(`/exercises/images/all/${noGender}   .jpg`);
                               
                               return (
                                 <>

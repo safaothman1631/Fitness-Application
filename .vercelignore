@@ -40,15 +40,6 @@ yarn.lock
 *.mkv
 *.webm
 
-# Ignore exercise images directory - served from Firebase Storage
-public/exercises/
-public/exercises/**
-public/**/*.jpg
-public/**/*.jpeg
-public/**/*.png
-!public/logo.png
-!public/icon*.png
-
 # Ignore backup/test files
 *.bak
 *.tmp
