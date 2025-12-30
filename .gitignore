@@ -77,3 +77,29 @@ temp_*
 *.zip
 ffmpeg*
 model_3d_*.glb
+
+# Exercise images and videos - stored in Firebase Storage
+public/exercises/
+public/exercises/**
+*.mp4
+*.avi
+*.mov
+*.jpg
+*.jpeg
+*.png
+!public/logo.png
+!public/icon*.png
+!app/**/*.png
+!app/**/*.jpg
+
+# Analysis and automation scripts
+analyze-*.js
+auto-*.js
+extract-*.js
+flatten-*.js
+full-*.js
+detect-*.js
+rename-*.js
+*.json.backup
+video-image-*.json
+auto-generated-mapping.json
