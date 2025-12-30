@@ -398,7 +398,7 @@ export default function ProfilePage() {
                         {t("edit")}
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-purple-500/30 text-white max-w-3xl backdrop-blur-xl shadow-2xl shadow-purple-500/20">
+                    <DialogContent className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-purple-500/30 text-white max-w-[96vw] sm:max-w-3xl backdrop-blur-xl shadow-2xl shadow-purple-500/20">
                       <DialogHeader className="relative pb-6 border-b border-white/10">
                         <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/20 rounded-full blur-3xl animate-pulse" />
                         <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-pink-500/20 rounded-full blur-3xl animate-pulse" />

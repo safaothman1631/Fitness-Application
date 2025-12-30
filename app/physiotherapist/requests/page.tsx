@@ -543,7 +543,7 @@ export default function PhysiotherapistRequestsPage() {
 
         {/* Detail Dialog */}
         <Dialog open={isDetailDialogOpen} onOpenChange={setIsDetailDialogOpen}>
-          <DialogContent className="bg-slate-900 border-slate-800 max-w-2xl">
+          <DialogContent className="bg-slate-900 border-slate-800 max-w-[96vw] sm:max-w-2xl">
             {selectedRequest && (
               <>
                 <DialogHeader>
@@ -665,7 +665,7 @@ export default function PhysiotherapistRequestsPage() {
 
         {/* Appointment Scheduling Dialog */}
         <Dialog open={isAppointmentDialogOpen} onOpenChange={setIsAppointmentDialogOpen}>
-          <DialogContent className="bg-slate-900 border-cyan-500/30 max-w-md">
+          <DialogContent className="bg-slate-900 border-cyan-500/30 max-w-[92vw] sm:max-w-md">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent flex items-center gap-2">
                 <Calendar className="w-6 h-6 text-cyan-400" />

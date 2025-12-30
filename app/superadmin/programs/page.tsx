@@ -1526,7 +1526,7 @@ export default function ProgramsPage() {
 
         {/* Delete Success Dialog */}
         <Dialog open={showDeleteSuccessDialog} onOpenChange={setShowDeleteSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە سڕایەوە</DialogTitle>
             </DialogHeader>
@@ -1621,7 +1621,7 @@ export default function ProgramsPage() {
 
         {/* Delete Confirmation Dialog */}
         <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-[95vw] sm:max-w-md md:max-w-lg lg:max-w-xl mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-[92vw] sm:max-w-md md:max-w-lg lg:max-w-xl">
             <DialogHeader className="sr-only">
               <DialogTitle>سڕینەوەی بەرنامە</DialogTitle>
             </DialogHeader>
@@ -1711,7 +1711,7 @@ export default function ProgramsPage() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className={`text-white max-w-[98vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto border transition-all scrollbar-thin scrollbar-thumb-purple-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-purple-500/60 mx-4 sm:mx-0 ${
+          <DialogContent className={`text-white max-w-[96vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto border transition-all scrollbar-thin scrollbar-thumb-purple-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-purple-500/60 ${
             activeTab === 'nutrition'
               ? 'bg-slate-900 border-emerald-500/50'
               : 'bg-slate-900 border-blue-500/50'
@@ -2550,7 +2550,7 @@ export default function ProgramsPage() {
 
         {/* Success Dialog */}
         <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە پاشەکەوت کرا</DialogTitle>
             </DialogHeader>
@@ -2655,7 +2655,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Dialog */}
         <Dialog open={isExerciseDialogOpen} onOpenChange={setIsExerciseDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[98vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-cyan-500/60 mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-cyan-500/60">
             <DialogHeader className="border-b border-cyan-500/20 pb-6 mb-6">
               <DialogTitle className="flex items-center gap-4 text-3xl">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 transition-all duration-300 hover:scale-105">
@@ -2882,16 +2882,16 @@ export default function ProgramsPage() {
 
         {/* Video Browser Dialog */}
         <Dialog open={showVideoBrowser} onOpenChange={setShowVideoBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-[98vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[95vw] max-h-[95vh] overflow-hidden flex flex-col scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-pink-500/60 mx-4 sm:mx-0">
-            <DialogHeader className="border-b border-pink-500/20 pb-6 mb-6">
-              <DialogTitle className={`flex items-center justify-between gap-4 text-3xl ${isRTL ? 'flex-row-reverse' : ''}`}>
-                <div className={`flex items-center gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/20 transition-all duration-300 hover:scale-105">
-                    <Video className="w-8 h-8 text-white" />
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-[96vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[92vw] max-h-[95vh] overflow-hidden flex flex-col p-3 sm:p-4 md:p-6">
+            <DialogHeader className="border-b border-pink-500/20 pb-3 sm:pb-4 mb-3 sm:mb-4">
+              <DialogTitle className={`flex items-center justify-between gap-2 text-xl sm:text-2xl ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex items-center gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-pink-500 to-rose-600 flex items-center justify-center shadow-lg shadow-pink-500/20">
+                    <Video className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
                   <div className={isRTL ? 'text-right' : ''}>
-                    <div className="text-white font-semibold">{t("selectVideo")}</div>
-                    <div className="text-base text-pink-400 font-normal mt-1">
+                    <div className="text-white font-semibold text-base sm:text-lg">{t("selectVideo")}</div>
+                    <div className="text-xs sm:text-sm text-pink-400 font-normal mt-0.5">
                       {availableVideos.length} {t("videosInStorage")} 
                       {availableVideos.length > 0 && (
                         <span className="text-green-400 ml-2">✓</span>
@@ -2908,9 +2908,9 @@ export default function ProgramsPage() {
                     sessionStorage.removeItem('exerciseVideosTime')
                     fetchVideos()
                   }}
-                  className="border-pink-500/50 text-pink-400 hover:bg-pink-500/10 h-12 px-6 rounded-xl transition-all duration-300 hover:scale-105"
+                  className="border-pink-500/50 text-pink-400 hover:bg-pink-500/10 h-8 sm:h-10 px-3 sm:px-4 rounded-lg text-xs sm:text-sm"
                 >
-                  <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                   </svg>
                   Refresh
@@ -2942,10 +2942,10 @@ export default function ProgramsPage() {
             ) : (
               <>
                 {/* Search & Filters */}
-                <div className="mb-6 space-y-4">
+                <div className="mb-3 sm:mb-4 space-y-2 sm:space-y-3">
                   {/* Search Bar */}
                   <div className="relative">
-                    <Search className={`absolute ${isRTL ? 'right-4' : 'left-4'} top-1/2 -translate-y-1/2 w-6 h-6 text-pink-400`} />
+                    <Search className={`absolute ${isRTL ? 'right-3' : 'left-3'} top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-pink-400`} />
                     <Input
                       dir={isRTL ? 'rtl' : 'ltr'}
                       placeholder={t("searchByVideoName")}
@@ -2954,22 +2954,22 @@ export default function ProgramsPage() {
                         setVideoSearchQuery(e.target.value)
                         setVideoPage(1)
                       }}
-                      className={`${isRTL ? 'pr-14' : 'pl-14'} h-16 bg-slate-800/50 border-slate-700 text-white rounded-xl text-base transition-all duration-300 focus:border-pink-500/50 focus:shadow-lg focus:shadow-pink-500/10 ${isRTL ? 'text-right' : ''}`}
+                      className={`${isRTL ? 'pr-10 sm:pr-12' : 'pl-10 sm:pl-12'} h-10 sm:h-12 bg-slate-800/50 border-slate-700 text-white rounded-lg text-sm transition-all duration-300 focus:border-pink-500/50 ${isRTL ? 'text-right' : ''}`}
                     />
                   </div>
 
                   {/* Filters */}
-                  <div className={`flex flex-wrap items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex flex-wrap items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
                     {/* Gender Filters */}
-                    <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <button
                         onClick={() => {
                           setVideoFilters({ ...videoFilters, gender: 'all' })
                           setVideoPage(1)
                         }}
-                        className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg ${
+                        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                           videoFilters.gender === 'all'
-                            ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-pink-500/40'
+                            ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white'
                             : 'bg-slate-800/60 text-gray-300 hover:bg-slate-700/80 border border-slate-700/50'
                         }`}
                       >
@@ -2980,9 +2980,9 @@ export default function ProgramsPage() {
                           setVideoFilters({ ...videoFilters, gender: 'male' })
                           setVideoPage(1)
                         }}
-                        className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg ${
+                        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                           videoFilters.gender === 'male'
-                            ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-blue-500/40'
+                            ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white'
                             : 'bg-slate-800/60 text-gray-300 hover:bg-slate-700/80 border border-slate-700/50'
                         }`}
                       >
@@ -2993,7 +2993,7 @@ export default function ProgramsPage() {
                           setVideoFilters({ ...videoFilters, gender: 'female' })
                           setVideoPage(1)
                         }}
-                        className={`px-6 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg ${
+                        className={`px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                           videoFilters.gender === 'female'
                             ? 'bg-gradient-to-r from-pink-500 to-rose-600 text-white shadow-pink-500/40'
                             : 'bg-slate-800/60 text-gray-300 hover:bg-slate-700/80 border border-slate-700/50'
@@ -3004,11 +3004,11 @@ export default function ProgramsPage() {
                     </div>
 
                     {/* Divider */}
-                    <div className="h-10 w-px bg-gradient-to-b from-transparent via-slate-600 to-transparent"></div>
+                    <div className="h-6 sm:h-8 w-px bg-gradient-to-b from-transparent via-slate-600 to-transparent"></div>
 
                     {/* Category Filter Dropdown */}
-                    <div className={`flex gap-3 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
-                      <label className="text-base font-bold text-white flex items-center gap-2 whitespace-nowrap">
+                    <div className={`flex gap-1.5 sm:gap-2 items-center ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <label className="text-xs sm:text-sm font-semibold text-white flex items-center gap-1.5 whitespace-nowrap">
                         {isRTL ? ':پۆلێن' : 'Category:'}
                       </label>
                       <select
@@ -3018,7 +3018,7 @@ export default function ProgramsPage() {
                           setVideoPage(1)
                         }}
                         dir="ltr"
-                        className="min-w-[200px] px-5 py-3 rounded-xl font-bold bg-slate-800 border-2 border-slate-600 text-white hover:border-pink-500 focus:border-pink-500 focus:ring-4 focus:ring-pink-500/20 focus:outline-none transition-all duration-200 cursor-pointer shadow-lg hover:shadow-pink-500/30"
+                        className="min-w-[140px] sm:min-w-[180px] px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-semibold bg-slate-800 border border-slate-600 text-white hover:border-pink-500 focus:border-pink-500 focus:outline-none transition-all cursor-pointer"
                       >
                         {[
                           { value: 'all', label: 'All', emoji: '🔄', count: 0 },
@@ -3073,13 +3073,8 @@ export default function ProgramsPage() {
                 </div>
 
                 {/* Videos Grid */}
-                <div className="flex-1 overflow-y-auto pr-2" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
-                  <style jsx>{`
-                    div::-webkit-scrollbar {
-                      display: none;
-                    }
-                  `}</style>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3">
+                <div className="flex-1 overflow-y-auto px-1 scrollbar-thin scrollbar-thumb-pink-500/40 scrollbar-track-transparent hover:scrollbar-thumb-pink-500/60">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 pr-2 pb-4">
                   {(Array.isArray(availableVideos) ? availableVideos : [])
                     .filter(video => {
                       const name = video.displayName?.toLowerCase() || ''
@@ -3370,22 +3365,21 @@ export default function ProgramsPage() {
                   const totalPages = Math.ceil(filteredVideos.length / videosPerPage)
                   
                   return filteredVideos.length > videosPerPage && (
-                    <div className={`flex items-center justify-center gap-2 pt-4 border-t border-pink-500/20 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                    <div className={`flex items-center justify-center gap-2 pt-3 border-t border-pink-500/20 ${isRTL ? 'flex-row-reverse' : ''}`}>
                       <Button
                         size="sm"
                         variant="outline"
                         onClick={() => setVideoPage(prev => Math.max(1, prev - 1))}
                         disabled={videoPage === 1}
-                        className="group border-pink-500/40 text-pink-400 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white hover:border-pink-500 disabled:opacity-20 disabled:cursor-not-allowed h-11 w-11 p-0 rounded-xl transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-pink-500/30 disabled:hover:scale-100 disabled:hover:shadow-none"
+                        className="group border-pink-500/40 text-pink-400 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white hover:border-pink-500 disabled:opacity-20 disabled:cursor-not-allowed h-8 w-8 sm:h-9 sm:w-9 p-0 rounded-lg"
                       >
-                        <svg className="w-5 h-5 transition-transform duration-300 group-hover:-translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                         </svg>
                       </Button>
                       
-                      <div className="px-6 py-2.5 rounded-xl bg-gradient-to-r from-pink-500/30 via-rose-500/30 to-pink-500/30 backdrop-blur-sm text-white text-base font-black border-2 border-pink-500/50 min-w-[100px] text-center shadow-lg shadow-pink-500/20 relative overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer"></div>
-                        <span className="relative z-10">{videoPage} / {totalPages}</span>
+                      <div className="px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg bg-gradient-to-r from-pink-500/30 via-rose-500/30 to-pink-500/30 backdrop-blur-sm text-white text-xs sm:text-sm font-bold border border-pink-500/50 min-w-[70px] sm:min-w-[80px] text-center">
+                        <span>{videoPage} / {totalPages}</span>
                       </div>
                       
                       <Button
@@ -3393,9 +3387,9 @@ export default function ProgramsPage() {
                         variant="outline"
                         onClick={() => setVideoPage(prev => Math.min(totalPages, prev + 1))}
                         disabled={videoPage >= totalPages}
-                        className="group border-pink-500/40 text-pink-400 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white hover:border-pink-500 disabled:opacity-20 disabled:cursor-not-allowed h-11 w-11 p-0 rounded-xl transition-all duration-300 hover:scale-110 hover:shadow-lg hover:shadow-pink-500/30 disabled:hover:scale-100 disabled:hover:shadow-none"
+                        className="group border-pink-500/40 text-pink-400 hover:bg-gradient-to-r hover:from-pink-500 hover:to-rose-500 hover:text-white hover:border-pink-500 disabled:opacity-20 disabled:cursor-not-allowed h-8 w-8 sm:h-9 sm:w-9 p-0 rounded-lg"
                       >
-                        <svg className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                         </svg>
                       </Button>
@@ -3404,20 +3398,20 @@ export default function ProgramsPage() {
                 })()}
 
                 {/* Action Buttons */}
-                <div className={`flex gap-4 pt-6 border-t border-pink-500/20 mt-6 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-pink-500/20 mt-3 sm:mt-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
                   <Button
                     onClick={() => setShowVideoBrowser(false)}
                     variant="outline"
-                    className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-16 text-base font-semibold rounded-xl transition-all duration-300 hover:scale-105"
+                    className="flex-1 border-slate-700 text-gray-300 hover:bg-slate-800 h-10 sm:h-12 text-xs sm:text-sm font-semibold rounded-lg"
                   >
-                    <X className="w-5 h-5 mr-2" />
+                    <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1" />
                     {t("cancel")}
                   </Button>
                   <Button
                     onClick={() => setShowVideoBrowser(false)}
-                    className="flex-1 h-16 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-xl font-bold shadow-lg hover:shadow-green-500/30 rounded-xl transition-all duration-300 hover:scale-105"
+                    className="flex-1 h-10 sm:h-12 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-sm sm:text-base font-bold rounded-lg"
                   >
-                    <Check className="w-6 h-6 mr-2" />
+                    <Check className="w-4 h-4 sm:w-5 sm:h-5 mr-1" />
                     {t("saveWithCount")} ({exerciseFormData.videos.length})
                   </Button>
                 </div>
@@ -3428,7 +3422,7 @@ export default function ProgramsPage() {
 
         {/* Video Detail Dialog */}
         <Dialog open={showVideoDetailDialog} onOpenChange={setShowVideoDetailDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[98vw] sm:max-w-3xl max-h-[95vh] overflow-y-auto p-3 sm:p-6 mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[96vw] sm:max-w-3xl max-h-[95vh] overflow-y-auto p-3 sm:p-6">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-base sm:text-xl">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -3552,7 +3546,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Info Dialog */}
         <Dialog open={showExerciseInfoDialog} onOpenChange={setShowExerciseInfoDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/40 scrollbar-track-slate-800/50 mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/40 scrollbar-track-slate-800/50">
             <DialogHeader className="border-b border-blue-500/20 pb-4">
               <DialogTitle className={`flex items-center gap-3 text-2xl ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -3672,7 +3666,7 @@ export default function ProgramsPage() {
 
         {/* Meal Dialog */}
         <Dialog open={isMealDialogOpen} onOpenChange={setIsMealDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-[98vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-[96vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
@@ -4011,7 +4005,7 @@ export default function ProgramsPage() {
 
         {/* Meal Library Dialog */}
         <Dialog open={showMealLibrary} onOpenChange={setShowMealLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[98vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -4144,7 +4138,7 @@ export default function ProgramsPage() {
 
         {/* Copy Meals Dialog */}
         <Dialog open={showCopyMealsDialog} onOpenChange={setShowCopyMealsDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -4239,7 +4233,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Library Dialog */}
         <Dialog open={showExerciseLibrary} onOpenChange={setShowExerciseLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[98vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -4353,7 +4347,7 @@ export default function ProgramsPage() {
 
         {/* Copy Exercises Dialog */}
         <Dialog open={showCopyExercisesDialog} onOpenChange={setShowCopyExercisesDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[95vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -4445,7 +4439,7 @@ export default function ProgramsPage() {
 
         {/* Meal Image Browser Dialog */}
         <Dialog open={showMealImageBrowser} onOpenChange={setShowMealImageBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-[98vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col mx-4 sm:mx-0">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">

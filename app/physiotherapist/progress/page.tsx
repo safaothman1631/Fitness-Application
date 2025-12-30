@@ -304,7 +304,7 @@ export default function PhysiotherapistProgressPage() {
 
 				{/* Progress Modal */}
 				<Dialog open={progressModalOpen} onOpenChange={setProgressModalOpen}>
-					<DialogContent className="bg-slate-900 border-slate-700 max-w-2xl max-h-[90vh] overflow-y-auto">
+					<DialogContent className="bg-slate-900 border-slate-700 max-w-[96vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
 						<DialogHeader className="space-y-3">
 							<div className="flex items-center gap-3">
 								<div className="p-2 rounded-xl bg-blue-500/10 border border-blue-500/20">

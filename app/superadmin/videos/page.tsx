@@ -212,7 +212,7 @@ export default function VideosTestPage() {
 
       {/* Video Player Dialog */}
       <Dialog open={showVideoDialog} onOpenChange={setShowVideoDialog}>
-        <DialogContent className="max-w-4xl bg-slate-900 border-2 border-blue-500/30">
+        <DialogContent className="max-w-[96vw] sm:max-w-4xl bg-slate-900 border-2 border-blue-500/30">
           <DialogHeader>
             <DialogTitle className="flex items-center justify-between text-white">
               <div className="flex items-center gap-3">

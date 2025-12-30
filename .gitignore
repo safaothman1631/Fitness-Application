@@ -78,15 +78,21 @@ temp_*
 ffmpeg*
 model_3d_*.glb
 
-# Exercise images and videos - stored in Firebase Storage
-public/exercises/
-public/exercises/**
+# Exercise videos - stored in Firebase Storage
+public/exercises/videos/
+public/exercises/**/*.mp4
+public/exercises/**/*.avi
+public/exercises/**/*.mov
 *.mp4
 *.avi
 *.mov
-*.jpg
-*.jpeg
-*.png
+
+# Allow exercise images to be committed
+!public/exercises/images/**/*.jpg
+!public/exercises/images/**/*.jpeg
+!public/exercises/images/**/*.png
+
+# Allow other images
 !public/logo.png
 !public/icon*.png
 !app/**/*.png

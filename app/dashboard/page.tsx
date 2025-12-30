@@ -275,7 +275,7 @@ function UserDashboard() {
 
       {/* Notification Dialog */}
       <Dialog open={notificationOpen} onOpenChange={handleDialogOpen}>
-        <DialogContent className="bg-[#101A23] border-[#2E3944] text-white max-w-md max-h-[80vh]">
+        <DialogContent className="bg-[#101A23] border-[#2E3944] text-white max-w-[92vw] sm:max-w-md max-h-[80vh]">
           <DialogHeader>
             <DialogTitle className="text-xl font-bold flex items-center gap-2">
               <Bell className="w-5 h-5 text-[#10B2E3]" />

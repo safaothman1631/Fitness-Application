@@ -2352,7 +2352,7 @@ export default function OwnerDashboard() {
 
         {/* User Details Dialog */}
         <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
-          <DialogContent className="max-w-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/30 border-2 border-emerald-500/40 text-white shadow-2xl shadow-emerald-500/20">
+          <DialogContent className="max-w-[96vw] sm:max-w-2xl bg-gradient-to-br from-slate-900 via-slate-900 to-emerald-950/30 border-2 border-emerald-500/40 text-white shadow-2xl shadow-emerald-500/20">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 via-teal-500 to-emerald-600 flex items-center justify-center shadow-lg shadow-emerald-500/40">
@@ -2486,7 +2486,7 @@ export default function OwnerDashboard() {
 
         {/* Status Change Confirmation Dialog */}
         <Dialog open={statusDialogOpen} onOpenChange={setStatusDialogOpen}>
-          <DialogContent className="max-w-md bg-gradient-to-br from-slate-900 via-slate-900 to-orange-950/30 border-2 border-orange-500/40 text-white shadow-2xl shadow-orange-500/20">
+          <DialogContent className="max-w-[92vw] sm:max-w-md bg-gradient-to-br from-slate-900 via-slate-900 to-orange-950/30 border-2 border-orange-500/40 text-white shadow-2xl shadow-orange-500/20">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold flex items-center gap-3">
                 <div className={`w-12 h-12 rounded-full flex items-center justify-center shadow-lg ${

@@ -529,7 +529,7 @@ export default function PatientsPage() {
 
 			{/* Progress Modal */}
 			<Dialog open={progressModalOpen} onOpenChange={setProgressModalOpen}>
-				<DialogContent className="fitpro-card border-cyan-500/20 max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+				<DialogContent className="fitpro-card border-cyan-500/20 max-w-[96vw] sm:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
 					<DialogHeader className="flex-shrink-0">
 						<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
 							{t("patientProgress")}
@@ -722,7 +722,7 @@ export default function PatientsPage() {
 
 			{/* Session View Modal */}
 			<Dialog open={sessionViewModalOpen} onOpenChange={setSessionViewModalOpen}>
-				<DialogContent className="fitpro-card border-cyan-500/20 max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+				<DialogContent className="fitpro-card border-cyan-500/20 max-w-[96vw] sm:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
 					<DialogHeader>
 						<DialogTitle className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">
 							Session Details

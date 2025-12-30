@@ -500,7 +500,7 @@ export default function AppointmentsPage() {
                   {t("newAppointment")}
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-slate-900 border-slate-800 max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="bg-slate-900 border-slate-800 max-w-[96vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="text-2xl text-white">{t("newAppointment")}</DialogTitle>
                   <DialogDescription className="text-slate-400">
@@ -966,7 +966,7 @@ export default function AppointmentsPage() {
 
         {/* Confirm Appointment Dialog with Session Details */}
         <Dialog open={isConfirmDialogOpen} onOpenChange={setIsConfirmDialogOpen}>
-          <DialogContent className="bg-slate-900 border-cyan-500/30 max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-slate-900 border-cyan-500/30 max-w-[96vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent flex items-center gap-2">
                 <CheckCircle2 className="w-6 h-6 text-green-400" />

@@ -289,7 +289,7 @@ export default function UsersPage() {
                       <span className="font-semibold">{t("addNewUser")}</span>
                     </Button>
                   </DialogTrigger>
-              <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogContent className="bg-slate-900 border-slate-800 text-white max-w-[96vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle className="text-2xl font-bold flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
@@ -1194,7 +1194,7 @@ export default function UsersPage() {
 
         {/* Edit User Dialog */}
         <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/30 border-2 border-blue-600/40 text-white shadow-2xl shadow-blue-500/20 max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-900 to-blue-950/30 border-2 border-blue-600/40 text-white shadow-2xl shadow-blue-500/20 max-w-[96vw] sm:max-w-2xl">
             <DialogHeader>
               <DialogTitle className="text-2xl font-bold flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/40">
@@ -1398,7 +1398,7 @@ export default function UsersPage() {
 
         {/* PRO Approval Dialog */}
         <Dialog open={showProDialog} onOpenChange={setShowProDialog}>
-          <DialogContent className="bg-gradient-to-br from-purple-900 via-pink-900 to-purple-900 border-4 border-purple-500/50 shadow-2xl max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-purple-900 via-pink-900 to-purple-900 border-4 border-purple-500/50 shadow-2xl max-w-[92vw] sm:max-w-xl">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">
@@ -1587,7 +1587,7 @@ export default function UsersPage() {
 
         {/* Duplicate Email Error Dialog */}
         <Dialog open={showDuplicateEmailDialog} onOpenChange={setShowDuplicateEmailDialog}>
-          <DialogContent className="bg-gradient-to-br from-red-950 via-orange-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-red-950 via-orange-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-[92vw] sm:max-w-xl">
             <DialogHeader className="sr-only">
               <DialogTitle>ئیمەیڵی دووبارە</DialogTitle>
             </DialogHeader>
@@ -1671,7 +1671,7 @@ export default function UsersPage() {
 
         {/* Pro Approval Error Dialog */}
         <Dialog open={showProErrorDialog} onOpenChange={setShowProErrorDialog}>
-          <DialogContent className="bg-gradient-to-br from-red-950 via-rose-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-red-950 via-rose-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-[92vw] sm:max-w-xl">
             <DialogHeader className="sr-only">
               <DialogTitle>هەڵە لە پەسەندکردن</DialogTitle>
             </DialogHeader>
@@ -1757,7 +1757,7 @@ export default function UsersPage() {
 
         {/* Pro Approval Success Dialog */}
         <Dialog open={showProSuccessDialog} onOpenChange={setShowProSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-purple-950 via-pink-900 to-purple-950 border-4 border-purple-500/50 shadow-2xl max-w-lg max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-gradient-to-br from-purple-950 via-pink-900 to-purple-950 border-4 border-purple-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg max-h-[90vh] overflow-y-auto">
             <DialogHeader className="sr-only">
               <DialogTitle>پەسەندکردنی PRO سەرکەوتوو بوو</DialogTitle>
             </DialogHeader>
@@ -1869,7 +1869,7 @@ export default function UsersPage() {
 
         {/* Subscription History Dialog */}
         <Dialog open={showSubscriptionDialog} onOpenChange={setShowSubscriptionDialog}>
-          <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-slate-900 border-slate-700 text-white max-w-[96vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto">
             {isLoadingSubscription ? (
               <div className="text-center py-12">
                 <div className="inline-block w-16 h-16 border-4 border-cyan-500 border-t-transparent rounded-full animate-spin mb-4"></div>

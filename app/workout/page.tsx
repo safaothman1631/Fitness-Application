@@ -518,7 +518,7 @@ export default function WorkoutPage() {
 
       {/* Day Workout Dialog */}
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-2xl max-h-[90vh]">
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-2xl max-h-[90vh]">
           <DialogHeader>
             <DialogTitle className={`text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent ${isRTL ? 'text-right pr-12' : ''}`}>
               {selectedDay && t(selectedDay.toLowerCase() as any)} {t("workout")}
@@ -604,7 +604,7 @@ export default function WorkoutPage() {
 
       {/* Exercise Detail Dialog */}
       <Dialog open={!!selectedExercise} onOpenChange={(open) => !open && setSelectedExercise(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-3xl max-h-[90vh]">
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-3xl max-h-[90vh]">
           <DialogHeader>
             <DialogTitle className={`text-2xl font-bold text-white ${isRTL ? 'text-right pr-12' : ''}`}>
               {selectedExercise?.name}

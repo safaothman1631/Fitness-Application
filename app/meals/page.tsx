@@ -442,7 +442,7 @@ export default function MealsPage() {
 
       {/* Day Meals Dialog */}
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-2xl max-h-[90vh]">
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-2xl max-h-[90vh]">
           <DialogHeader>
             <DialogTitle className={`text-2xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent ${isRTL ? 'text-right pr-12' : ''}`}>
               {selectedDay && t(selectedDay.toLowerCase() as any)} {t("meals")}
@@ -508,7 +508,7 @@ export default function MealsPage() {
 
       {/* Meal Detail Dialog */}
       <Dialog open={!!selectedMeal} onOpenChange={(open) => !open && setSelectedMeal(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-3xl max-h-[90vh]">
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-3xl max-h-[90vh]">
           <DialogHeader>
             <DialogTitle className={`text-2xl font-bold text-white ${isRTL ? 'text-right pr-12' : ''}`}>
               {selectedMeal?.name}
@@ -652,7 +652,7 @@ export default function MealsPage() {
 
       {/* Image Overlay Dialog */}
       <Dialog open={showImageOverlay} onOpenChange={setShowImageOverlay}>
-        <DialogContent className="max-w-7xl max-h-[95vh] bg-black/95 border-amber-500/30 p-0 overflow-hidden">
+        <DialogContent className="max-w-[98vw] sm:max-w-7xl max-h-[95vh] bg-black/95 border-amber-500/30 p-0 overflow-hidden">
           <DialogHeader className="sr-only">
             <DialogTitle>{selectedMeal?.name}</DialogTitle>
           </DialogHeader>

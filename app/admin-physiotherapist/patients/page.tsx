@@ -300,7 +300,7 @@ export default function AdminPhysioPatientsPage() {
 
           {/* Patient Detail Modal */}
           <Dialog open={detailModalOpen} onOpenChange={setDetailModalOpen}>
-            <DialogContent className="max-w-5xl max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-white/10">
+            <DialogContent className="max-w-[96vw] sm:max-w-5xl max-h-[90vh] overflow-hidden flex flex-col bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border border-white/10">
               {selectedPatientDetail && (
                 <>
                   <DialogHeader className="flex-shrink-0 border-b border-white/10 pb-4">

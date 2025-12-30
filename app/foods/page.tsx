@@ -112,7 +112,7 @@ export default function FoodsPage() {
 
       {/* Food Detail Dialog */}
       <Dialog open={!!selectedFood} onOpenChange={(open) => !open && setSelectedFood(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-amber-400 to-orange-500 bg-clip-text text-transparent">
               {selectedFood?.name}
