@@ -1759,23 +1759,23 @@ export default function ProgramsPage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-2 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-5">
                   <div className="space-y-3">
-                    <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>⏱️ {t("duration")}</Label>
+                    <Label className={`text-white text-sm sm:text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>⏱️ {t("duration")}</Label>
                     <Input
                       value={newProgram.duration}
                       onChange={(e) => setNewProgram({ ...newProgram, duration: e.target.value })}
                       placeholder={t("example30mins")}
-                      className="bg-slate-800 border-slate-600 text-white h-14 text-base focus:border-blue-500 transition-colors"
+                      className="bg-slate-800 border-slate-600 text-white h-12 sm:h-14 text-sm sm:text-base focus:border-blue-500 transition-colors"
                       dir={isRTL ? 'rtl' : 'ltr'}
                     />
                   </div>
                   <div className="space-y-3">
-                    <Label className={`text-white text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>⭐ {t("level")}</Label>
+                    <Label className={`text-white text-sm sm:text-base font-medium flex items-center gap-2 ${isRTL ? 'justify-end' : ''}`}>⭐ {t("level")}</Label>
                     <select
                       value={newProgram.difficulty}
                       onChange={(e) => setNewProgram({ ...newProgram, difficulty: e.target.value })}
-                      className="w-full h-14 bg-slate-800 border border-slate-600 text-white text-base rounded-xl px-4 focus:border-blue-500 transition-colors"
+                      className="w-full h-12 sm:h-14 bg-slate-800 border border-slate-600 text-white text-sm sm:text-base rounded-xl px-3 sm:px-4 focus:border-blue-500 transition-colors"
                       dir={isRTL ? 'rtl' : 'ltr'}
                     >
                       <option value="beginner">🟢 {t("beginner")}</option>
@@ -1870,34 +1870,34 @@ export default function ProgramsPage() {
 
                 {/* Search Users */}
                 <div className="relative">
-                  <Search className={`absolute top-1/2 -translate-y-1/2 w-5 h-5 text-purple-400 ${isRTL ? 'right-4' : 'left-4'}`} />
+                  <Search className={`absolute top-1/2 -translate-y-1/2 w-4 h-4 sm:w-5 sm:h-5 text-purple-400 ${isRTL ? 'right-3 sm:right-4' : 'left-3 sm:left-4'}`} />
                   <Input
                     placeholder={t("searchByNameOrEmail")}
                     value={userSearchQuery}
                     onChange={(e) => setUserSearchQuery(e.target.value)}
-                    className={`h-14 bg-slate-800 border-slate-600 text-white text-base focus:border-purple-500 transition-colors ${isRTL ? 'pr-12' : 'pl-12'}`}
+                    className={`h-12 sm:h-14 bg-slate-800 border-slate-600 text-white text-sm sm:text-base focus:border-purple-500 transition-colors ${isRTL ? 'pr-10 sm:pr-12' : 'pl-10 sm:pl-12'}`}
                     dir={isRTL ? 'rtl' : 'ltr'}
                   />
                 </div>
 
                 {/* Select All / Clear */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                   <Button
                     type="button"
                     onClick={selectAllUsers}
                     variant="outline"
-                    className="h-12 border-purple-500/40 text-purple-300 hover:bg-purple-500/10 font-medium"
+                    className="h-10 sm:h-12 border-purple-500/40 text-purple-300 hover:bg-purple-500/10 font-medium text-xs sm:text-sm"
                   >
-                    <UserPlus className="w-5 h-5 mr-2" />
+                    <UserPlus className="w-4 h-4 mr-1.5" />
                     {t("selectAllUsers")} ({filteredUsers.length})
                   </Button>
                   <Button
                     type="button"
                     onClick={clearUserSelection}
                     variant="outline"
-                    className="h-12 border-slate-600 text-gray-300 hover:bg-slate-800 font-medium"
+                    className="h-10 sm:h-12 border-slate-600 text-gray-300 hover:bg-slate-800 font-medium text-xs sm:text-sm"
                   >
-                    <X className="w-5 h-5 mr-2" />
+                    <X className="w-4 h-4 mr-1.5" />
                     {t("clearAll")}
                   </Button>
                 </div>
@@ -1979,7 +1979,7 @@ export default function ProgramsPage() {
                     </div>
 
                     {/* Days Tabs - Compact */}
-                    <div className="grid grid-cols-7 gap-1.5">
+                    <div className="grid grid-cols-4 sm:grid-cols-7 gap-1">
                       {Object.keys(newProgram.weeklySchedule || {}).map((day) => {
                         const dayData = newProgram.weeklySchedule?.[day]
                         const isActive = currentDay === day
@@ -1990,24 +1990,24 @@ export default function ProgramsPage() {
                           <button
                             key={day}
                             onClick={() => setCurrentDay(day)}
-                            className={`relative px-2 py-3 rounded-lg text-xs font-bold transition-all duration-200 ${
+                            className={`relative px-1 sm:px-2 py-2 sm:py-3 rounded-lg text-[10px] sm:text-xs font-bold transition-all duration-200 ${
                               isActive
                                 ? 'bg-gradient-to-r from-blue-500 to-cyan-600 text-white shadow-lg scale-105'
                                 : 'bg-slate-800/50 text-gray-400 hover:bg-slate-800'
                             }`}
                           >
-                            <div className="flex flex-col items-center gap-1">
-                              <span className="text-[10px]">{dayNames[day as keyof typeof dayNames]}</span>
+                            <div className="flex flex-col items-center gap-0.5 sm:gap-1">
+                              <span className="text-[9px] sm:text-[10px] leading-tight">{dayNames[day as keyof typeof dayNames]}</span>
                               {!isActive && (
-                                <div className="flex items-center justify-center h-4">
+                                <div className="flex items-center justify-center h-3 sm:h-4">
                                   {isRest ? (
-                                    <Heart className="w-3 h-3 text-orange-400" />
+                                    <Heart className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-orange-400" />
                                   ) : hasExercises ? (
-                                    <div className="w-4 h-4 rounded-full bg-green-500/40 flex items-center justify-center">
-                                      <span className="text-[9px] text-green-300 font-bold">{dayData.exercises.length}</span>
+                                    <div className="w-3 h-3 sm:w-4 sm:h-4 rounded-full bg-green-500/40 flex items-center justify-center">
+                                      <span className="text-[8px] sm:text-[9px] text-green-300 font-bold">{dayData.exercises.length}</span>
                                     </div>
                                   ) : (
-                                    <div className="w-2 h-2 rounded-full bg-gray-600"></div>
+                                    <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-600"></div>
                                   )}
                                 </div>
                               )}
