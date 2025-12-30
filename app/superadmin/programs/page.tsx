@@ -3183,41 +3183,39 @@ export default function ProgramsPage() {
                               // Fallback paths array - try multiple options
                               const fallbackPaths: string[] = [];
                               
-                              if (!firestoreImage) {
-                                // 1. Try normalized name (without parentheses)
-                                if (exactVideoName !== imageName) {
-                                  fallbackPaths.push(`/exercises/images/all/${imageName}.jpg`);
-                                }
-                                
-                                // 2. If Male, try Female version
-                                const femaleVersion = exactVideoName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
-                                if (femaleVersion !== exactVideoName) {
-                                  fallbackPaths.push(`/exercises/images/all/${femaleVersion}.jpg`);
-                                }
-                                
-                                // 3. Try normalized female version
-                                const normalizedFemale = imageName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
-                                if (normalizedFemale !== imageName && normalizedFemale !== femaleVersion) {
-                                  fallbackPaths.push(`/exercises/images/all/${normalizedFemale}.jpg`);
-                                }
-                                
-                                // 4. Try without gender suffix
-                                const noGender = imageName.replace(/_[Ff]emale\d*$/, '').replace(/_[Mm]ale\d*$/, '');
-                                if (noGender !== imageName) {
-                                  fallbackPaths.push(`/exercises/images/all/${noGender}.jpg`);
-                                }
-                                
-                                // 5. Try base name without numbers
-                                const baseNameMatch = imageName.match(/^(.+?)(_[Ff]emale|_[Mm]ale)?\d*$/);
-                                if (baseNameMatch && baseNameMatch[1] !== imageName) {
-                                  fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}.jpg`);
-                                  fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}_female.jpg`);
-                                }
-                                
-                                // 6. Try with extra spaces (common typo in image names)
-                                fallbackPaths.push(`/exercises/images/all/${noGender}  .jpg`);
-                                fallbackPaths.push(`/exercises/images/all/${noGender}   .jpg`);
+                              // 1. Try normalized name (without parentheses)
+                              if (exactVideoName !== imageName) {
+                                fallbackPaths.push(`/exercises/images/all/${imageName}.jpg`);
                               }
+                              
+                              // 2. If Male, try Female version
+                              const femaleVersion = exactVideoName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
+                              if (femaleVersion !== exactVideoName) {
+                                fallbackPaths.push(`/exercises/images/all/${femaleVersion}.jpg`);
+                              }
+                              
+                              // 3. Try normalized female version
+                              const normalizedFemale = imageName.replace(/_Male/g, '_Female').replace(/_male/g, '_female');
+                              if (normalizedFemale !== imageName && normalizedFemale !== femaleVersion) {
+                                fallbackPaths.push(`/exercises/images/all/${normalizedFemale}.jpg`);
+                              }
+                              
+                              // 4. Try without gender suffix
+                              const noGender = imageName.replace(/_[Ff]emale\d*$/, '').replace(/_[Mm]ale\d*$/, '');
+                              if (noGender !== imageName) {
+                                fallbackPaths.push(`/exercises/images/all/${noGender}.jpg`);
+                              }
+                              
+                              // 5. Try base name without numbers
+                              const baseNameMatch = imageName.match(/^(.+?)(_[Ff]emale|_[Mm]ale)?\d*$/);
+                              if (baseNameMatch && baseNameMatch[1] !== imageName) {
+                                fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}.jpg`);
+                                fallbackPaths.push(`/exercises/images/all/${baseNameMatch[1]}_female.jpg`);
+                              }
+                              
+                              // 6. Try with extra spaces (common typo in image names)
+                              fallbackPaths.push(`/exercises/images/all/${noGender}  .jpg`);
+                              fallbackPaths.push(`/exercises/images/all/${noGender}   .jpg`);
                               
                               return (
                                 <>
