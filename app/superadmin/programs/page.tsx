@@ -1526,7 +1526,7 @@ export default function ProgramsPage() {
 
         {/* Delete Success Dialog */}
         <Dialog open={showDeleteSuccessDialog} onOpenChange={setShowDeleteSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-orange-950 via-red-900 to-orange-950 border-4 border-orange-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl overflow-x-hidden">
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە سڕایەوە</DialogTitle>
             </DialogHeader>
@@ -1621,7 +1621,7 @@ export default function ProgramsPage() {
 
         {/* Delete Confirmation Dialog */}
         <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-[92vw] sm:max-w-md md:max-w-lg lg:max-w-xl">
+          <DialogContent className="bg-gradient-to-br from-red-950 via-red-900 to-red-950 border-4 border-red-500/50 shadow-2xl max-w-[92vw] sm:max-w-md md:max-w-lg lg:max-w-xl overflow-x-hidden">
             <DialogHeader className="sr-only">
               <DialogTitle>سڕینەوەی بەرنامە</DialogTitle>
             </DialogHeader>
@@ -1711,7 +1711,7 @@ export default function ProgramsPage() {
 
         {/* Create/Edit Dialog */}
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-          <DialogContent className={`text-white max-w-[96vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-y-auto border transition-all scrollbar-thin scrollbar-thumb-purple-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-purple-500/60 ${
+          <DialogContent className={`text-white max-w-[96vw] sm:max-w-2xl md:max-w-3xl lg:max-w-4xl xl:max-w-5xl max-h-[90vh] overflow-x-hidden overflow-y-auto border transition-all scrollbar-thin scrollbar-thumb-purple-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-purple-500/60 ${
             activeTab === 'nutrition'
               ? 'bg-slate-900 border-emerald-500/50'
               : 'bg-slate-900 border-blue-500/50'
@@ -2550,7 +2550,7 @@ export default function ProgramsPage() {
 
         {/* Success Dialog */}
         <Dialog open={showSuccessDialog} onOpenChange={setShowSuccessDialog}>
-          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-green-900 via-emerald-900 to-green-900 border-4 border-green-500/50 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl overflow-x-hidden">
             <DialogHeader className="sr-only">
               <DialogTitle>بەرنامەکە پاشەکەوت کرا</DialogTitle>
             </DialogHeader>
@@ -2655,7 +2655,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Dialog */}
         <Dialog open={isExerciseDialogOpen} onOpenChange={setIsExerciseDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-cyan-500/60">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-cyan-500/40 scrollbar-track-slate-800/50 hover:scrollbar-thumb-cyan-500/60">
             <DialogHeader className="border-b border-cyan-500/20 pb-6 mb-6">
               <DialogTitle className="flex items-center gap-4 text-3xl">
                 <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg shadow-cyan-500/20 transition-all duration-300 hover:scale-105">
@@ -2882,7 +2882,7 @@ export default function ProgramsPage() {
 
         {/* Video Browser Dialog */}
         <Dialog open={showVideoBrowser} onOpenChange={setShowVideoBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-[96vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[92vw] max-h-[95vh] overflow-hidden flex flex-col p-3 sm:p-4 md:p-6">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-pink-500/30 shadow-2xl max-w-[96vw] sm:max-w-3xl md:max-w-5xl lg:max-w-7xl xl:max-w-[92vw] max-h-[95vh] overflow-x-hidden overflow-hidden flex flex-col p-3 sm:p-4 md:p-6">
             <DialogHeader className="border-b border-pink-500/20 pb-3 sm:pb-4 mb-3 sm:mb-4">
               <DialogTitle className={`flex items-center justify-between gap-2 text-xl sm:text-2xl ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className={`flex items-center gap-2 sm:gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
@@ -3422,7 +3422,7 @@ export default function ProgramsPage() {
 
         {/* Video Detail Dialog */}
         <Dialog open={showVideoDetailDialog} onOpenChange={setShowVideoDetailDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[96vw] sm:max-w-3xl max-h-[95vh] overflow-y-auto p-3 sm:p-6">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[96vw] sm:max-w-3xl max-h-[95vh] overflow-x-hidden overflow-y-auto p-3 sm:p-6">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-2 text-base sm:text-xl">
                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -3546,7 +3546,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Info Dialog */}
         <Dialog open={showExerciseInfoDialog} onOpenChange={setShowExerciseInfoDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/40 scrollbar-track-slate-800/50">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-x-hidden overflow-y-auto scrollbar-thin scrollbar-thumb-blue-500/40 scrollbar-track-slate-800/50">
             <DialogHeader className="border-b border-blue-500/20 pb-4">
               <DialogTitle className={`flex items-center gap-3 text-2xl ${isRTL ? 'flex-row-reverse' : ''}`}>
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -3666,7 +3666,7 @@ export default function ProgramsPage() {
 
         {/* Meal Dialog */}
         <Dialog open={isMealDialogOpen} onOpenChange={setIsMealDialogOpen}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-[96vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-green-500/30 shadow-2xl max-w-[96vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl max-h-[90vh] overflow-x-hidden overflow-y-auto">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 flex items-center justify-center shadow-lg">
@@ -4005,7 +4005,7 @@ export default function ProgramsPage() {
 
         {/* Meal Library Dialog */}
         <Dialog open={showMealLibrary} onOpenChange={setShowMealLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-purple-900/20 to-slate-900 border-2 border-purple-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-x-hidden overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center shadow-lg">
@@ -4138,7 +4138,7 @@ export default function ProgramsPage() {
 
         {/* Copy Meals Dialog */}
         <Dialog open={showCopyMealsDialog} onOpenChange={setShowCopyMealsDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900 border-2 border-blue-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl overflow-x-hidden">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-cyan-600 flex items-center justify-center shadow-lg">
@@ -4233,7 +4233,7 @@ export default function ProgramsPage() {
 
         {/* Exercise Library Dialog */}
         <Dialog open={showExerciseLibrary} onOpenChange={setShowExerciseLibrary}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] overflow-x-hidden overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -4347,7 +4347,7 @@ export default function ProgramsPage() {
 
         {/* Copy Exercises Dialog */}
         <Dialog open={showCopyExercisesDialog} onOpenChange={setShowCopyExercisesDialog}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-cyan-900/20 to-slate-900 border-2 border-cyan-500/30 shadow-2xl max-w-[92vw] sm:max-w-lg md:max-w-xl lg:max-w-2xl overflow-x-hidden">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg">
@@ -4439,7 +4439,7 @@ export default function ProgramsPage() {
 
         {/* Meal Image Browser Dialog */}
         <Dialog open={showMealImageBrowser} onOpenChange={setShowMealImageBrowser}>
-          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+          <DialogContent className="bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 border-2 border-yellow-500/30 shadow-2xl max-w-[96vw] sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-4xl max-h-[90vh] overflow-x-hidden overflow-hidden flex flex-col">
             <DialogHeader>
               <DialogTitle className="flex items-center gap-3 text-2xl">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500 to-orange-600 flex items-center justify-center shadow-lg">
