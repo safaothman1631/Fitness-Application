@@ -1853,22 +1853,6 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 	}
 	
 	// Use custom Three.js model for muscles/nerves or combined views
-	// Force touch-action: none on canvas after mount
-	useEffect(() => {
-		// Set touch-action on canvas element directly
-		const setCanvasTouchAction = () => {
-			const canvases = document.querySelectorAll('canvas');
-			canvases.forEach(canvas => {
-				canvas.style.touchAction = 'none';
-			});
-		};
-		
-		// Run immediately and after a short delay (for canvas creation)
-		setCanvasTouchAction();
-		const timer = setTimeout(setCanvasTouchAction, 500);
-		
-		return () => clearTimeout(timer);
-	}, [showMuscles, showBones, showNerves]);
 	
 	return (
 		<div 
@@ -1878,7 +1862,8 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 			height: '100%', 
 			position: 'relative', 
 			background: '#0f172a',
-			touchAction: 'none',
+			touchAction: 'pan-x pan-y',
+			pointerEvents: 'auto',
 			overflow: 'hidden',
 		}}
 		>
@@ -1912,28 +1897,19 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 					antialias: true,
 					toneMapping: THREE.ACESFilmicToneMapping,
 					toneMappingExposure: 1.2,
-					powerPreference: 'high-performance', // بۆ خێرایی زیاتر
-				}}
-				style={{ 
-					width: '100%', 
-					height: '100%',
-					touchAction: 'none !important' as any,
-					display: 'block',
-				}}
-				dpr={[1, 2]} // باشترکردنی کوالیتی لە سکرینی وردەکاندا
-				onCreated={({ gl }) => {
-					// Force touch-action none on the canvas element
-					gl.domElement.style.touchAction = 'none';
-				}}
-			>
-				<color attach="background" args={['#0f172a']} />
-				
-				<OrbitControls 
-					makeDefault
-					enablePan={true} // ڕێگەپێدان بە جوڵاندن
-					enableZoom={true}
-					enableRotate={true}
-					minDistance={1.5}
+				powerPreference: 'high-performance',
+			}}
+			style={{ 
+				width: '100%', 
+				height: '100%',
+				touchAction: 'pan-x pan-y',
+				pointerEvents: 'auto',
+				display: 'block',
+			}}
+			dpr={[1, 2]}
+			onCreated={({ gl }) => {
+				gl.domElement.style.touchAction = 'pan-x pan-y';
+				gl.domElement.style.pointerEvents = 'auto';
 					maxDistance={12}
 					maxPolarAngle={Math.PI * 0.9} // زیاتر بەرەو خوار
 					minPolarAngle={Math.PI * 0.1} // زیاتر بەرەو سەر
