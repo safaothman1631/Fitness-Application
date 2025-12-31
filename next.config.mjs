@@ -84,7 +84,7 @@ const nextConfig = {
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: https: blob:",
               "font-src 'self' data:",
-              "connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.upstash.io https://storage.googleapis.com https://*.firebasestorage.app https://vitals.vercel-insights.com",
+              "connect-src 'self' blob: data: https://*.googleapis.com https://*.firebaseio.com https://*.cloudfunctions.net wss://*.firebaseio.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com https://*.upstash.io https://storage.googleapis.com https://*.firebasestorage.app https://vitals.vercel-insights.com",
               "frame-src 'self' https://*.firebaseapp.com",
               "media-src * blob: data:",
               "object-src 'none'",
