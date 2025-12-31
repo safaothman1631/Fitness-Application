@@ -1853,8 +1853,35 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 	}
 	
 	// Use custom Three.js model for muscles/nerves or combined views
+	// Force touch-action: none on canvas after mount
+	useEffect(() => {
+		const canvas = document.querySelector('canvas[data-engine]');
+		if (canvas) {
+			(canvas as HTMLCanvasElement).style.touchAction = 'none';
+		}
+		// Also add event listener to prevent default touch behavior
+		const preventDefaultTouch = (e: TouchEvent) => {
+			if (e.touches.length > 0) {
+				e.preventDefault();
+			}
+		};
+		const container = document.getElementById('three-canvas-container');
+		if (container) {
+			container.addEventListener('touchstart', preventDefaultTouch, { passive: false });
+			container.addEventListener('touchmove', preventDefaultTouch, { passive: false });
+		}
+		return () => {
+			if (container) {
+				container.removeEventListener('touchstart', preventDefaultTouch);
+				container.removeEventListener('touchmove', preventDefaultTouch);
+			}
+		};
+	}, [showMuscles, showBones, showNerves]);
+	
 	return (
-		<div style={{ 
+		<div 
+			id="three-canvas-container"
+			style={{ 
 			width: '100%', 
 			height: '100%', 
 			position: 'relative', 
@@ -1863,7 +1890,11 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 			userSelect: 'none',
 			WebkitUserSelect: 'none',
 			WebkitTouchCallout: 'none',
-		}}>
+			overflow: 'hidden',
+		}}
+		onTouchStart={(e) => e.stopPropagation()}
+		onTouchMove={(e) => e.stopPropagation()}
+		>
 			{/* ڕێنمایی مۆبایل */}
 			<div style={{
 				position: 'absolute',
@@ -1899,13 +1930,19 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 				style={{ 
 					width: '100%', 
 					height: '100%',
-					touchAction: 'none',
+					touchAction: 'none !important' as any,
+					display: 'block',
 				}}
 				dpr={[1, 2]} // باشترکردنی کوالیتی لە سکرینی وردەکاندا
+				onCreated={({ gl }) => {
+					// Force touch-action none on the canvas element
+					gl.domElement.style.touchAction = 'none';
+				}}
 			>
 				<color attach="background" args={['#0f172a']} />
 				
 				<OrbitControls 
+					makeDefault
 					enablePan={true} // ڕێگەپێدان بە جوڵاندن
 					enableZoom={true}
 					enableRotate={true}
@@ -1913,11 +1950,11 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 					maxDistance={12}
 					maxPolarAngle={Math.PI * 0.9} // زیاتر بەرەو خوار
 					minPolarAngle={Math.PI * 0.1} // زیاتر بەرەو سەر
-					enableDamping
+					enableDamping={true}
 					dampingFactor={0.1}
-					rotateSpeed={0.8} // خێرایی سوڕاندن
-					zoomSpeed={1.2} // خێرایی زووم
-					panSpeed={0.8} // خێرایی جوڵاندن
+					rotateSpeed={1.0} // خێرایی سوڕاندن
+					zoomSpeed={1.5} // خێرایی زووم
+					panSpeed={1.0} // خێرایی جوڵاندن
 					target={[0, 0.8, 0]}
 					// بۆ touch مۆبایل
 					touches={{

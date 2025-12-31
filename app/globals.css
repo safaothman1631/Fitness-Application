@@ -3,6 +3,19 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Fix Three.js canvas touch controls for mobile */
+canvas[data-engine^="three.js"] {
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+#three-canvas-container {
+  touch-action: none !important;
+  -webkit-touch-callout: none !important;
+}
+
 /* Hide scrollbar globally - CRITICAL: Must be at top level */
 html {
   scrollbar-width: none !important;
