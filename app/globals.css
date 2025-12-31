@@ -4,11 +4,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* Fix Three.js canvas touch controls for mobile */
-canvas[data-engine^="three.js"] {
-  touch-action: none !important;
-}
-
-#three-canvas-container {
+canvas {
   touch-action: none !important;
 }
 
