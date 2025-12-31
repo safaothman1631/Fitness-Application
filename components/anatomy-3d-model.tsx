@@ -1902,19 +1902,54 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 				width: '100%', 
 				height: '100%',
 				touchAction: 'none',
-				pointerEvents: 'auto',
 				display: 'block',
 			}}
 			dpr={[1, 2]}
-			onCreated={({ gl }) => {
-				gl.domElement.style.touchAction = 'none';
+			onCreated={({ gl, camera }) => {
+				const canvas = gl.domElement
+				canvas.style.touchAction = 'none'
 				
+				// ڕاستەوخۆ touch event handlers بۆ مۆبایل
+				let isDragging = false
+				let previousTouch = { x: 0, y: 0 }
+				
+				canvas.addEventListener('touchstart', (e) => {
+					isDragging = true
+					if (e.touches.length === 1) {
+						previousTouch = {
+							x: e.touches[0].clientX,
+							y: e.touches[0].clientY
+						}
+					}
+				}, { passive: false })
+				
+				canvas.addEventListener('touchmove', (e) => {
+					e.preventDefault()
+					if (!isDragging) return
+					
+					if (e.touches.length === 1) {
+						// سوڕاندن بە یەک پەنجە
+						const deltaX = e.touches[0].clientX - previousTouch.x
+						const deltaY = e.touches[0].clientY - previousTouch.y
+						
+						camera.position.x -= deltaX * 0.01
+						camera.position.y += deltaY * 0.01
+						
+						previousTouch = {
+							x: e.touches[0].clientX,
+							y: e.touches[0].clientY
+						}
+					}
+				}, { passive: false })
+				
+				canvas.addEventListener('touchend', () => {
+					isDragging = false
+				}, { passive: false })
 			}}
 		>
 			<color attach="background" args={['#0f172a']} />
 			
 			<OrbitControls 
-				makeDefault
 				enablePan={true}
 				enableZoom={true}
 				enableRotate={true}
@@ -1922,29 +1957,12 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 				maxDistance={12}
 				maxPolarAngle={Math.PI * 0.9}
 				minPolarAngle={Math.PI * 0.1}
-				enableDamping={true}
-				dampingFactor={0.1}
-				rotateSpeed={1.0}
-				zoomSpeed={1.5}
-				panSpeed={1.0}
+				enableDamping={false}
+				rotateSpeed={0.5}
+				zoomSpeed={1.0}
+				panSpeed={0.5}
 				target={[0, 0.8, 0]}
-				touches={{
-					ONE: THREE.TOUCH.ROTATE,
-					TWO: THREE.TOUCH.DOLLY_PAN
-			}}
-			mouseButtons={{
-				LEFT: THREE.MOUSE.ROTATE,
-				MIDDLE: THREE.MOUSE.DOLLY,
-				RIGHT: THREE.MOUSE.PAN
-			}}
-		/>
-		
-		<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
-	</Canvas>
-
-	{/* ????????? ???? ?? ?????? */}
-	<div style={{
-		position: 'absolute',
+			/>
 		bottom: '80px',
 				right: '10px',
 				display: 'flex',
