@@ -1910,26 +1910,28 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 			onCreated={({ gl }) => {
 				gl.domElement.style.touchAction = 'pan-x pan-y';
 				gl.domElement.style.pointerEvents = 'auto';
-					maxDistance={12}
-					maxPolarAngle={Math.PI * 0.9} // زیاتر بەرەو خوار
-					minPolarAngle={Math.PI * 0.1} // زیاتر بەرەو سەر
-					enableDamping={true}
-					dampingFactor={0.1}
-					rotateSpeed={1.0} // خێرایی سوڕاندن
-					zoomSpeed={1.5} // خێرایی زووم
-					panSpeed={1.0} // خێرایی جوڵاندن
-					target={[0, 0.8, 0]}
-					// بۆ touch مۆبایل
-					touches={{
-						ONE: THREE.TOUCH.ROTATE,   // یەک پەنجە = سوڕاندن
-						TWO: THREE.TOUCH.DOLLY_PAN // دوو پەنجە = زووم و جوڵاندن
-					}}
-					mouseButtons={{
-						LEFT: THREE.MOUSE.ROTATE,
-						MIDDLE: THREE.MOUSE.DOLLY,
-						RIGHT: THREE.MOUSE.PAN
-					}}
-				/>
+			}}
+		>
+			<color attach="background" args={['#0f172a']} />
+			
+			<OrbitControls 
+				makeDefault
+				enablePan={true}
+				enableZoom={true}
+				enableRotate={true}
+				minDistance={1.5}
+				maxDistance={12}
+				maxPolarAngle={Math.PI * 0.9}
+				minPolarAngle={Math.PI * 0.1}
+				enableDamping={true}
+				dampingFactor={0.1}
+				rotateSpeed={1.0}
+				zoomSpeed={1.5}
+				panSpeed={1.0}
+				target={[0, 0.8, 0]}
+				touches={{
+					ONE: THREE.TOUCH.ROTATE,
+					TWO: THREE.TOUCH.DOLLY_PAN
 				
 				<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
 			</Canvas>
