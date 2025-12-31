@@ -58,6 +58,18 @@ export default function WorkoutPage() {
   const { t, language } = useLanguage()
   const isRTL = language === "ar" || language === "ku"
 
+  // Helper: Get accessible days for user (Saturday to today only)
+  // Saturday = day 0, Sunday = day 1, ..., Friday = day 6
+  const getAccessibleDays = (): string[] => {
+    const daysOrder = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+    const jsDay = new Date().getDay() // JavaScript: Sunday = 0, Saturday = 6
+    // Convert to our system: Saturday = 0, Sunday = 1, ..., Friday = 6
+    const todayIndex = jsDay === 6 ? 0 : jsDay + 1
+    
+    // Return days from Saturday (0) to today (inclusive)
+    return daysOrder.slice(0, todayIndex + 1)
+  }
+
   // Get exercise ordinal translation key
   const getExerciseOrdinal = (num: number): TranslationKey => {
     const ordinals: TranslationKey[] = [
@@ -427,7 +439,20 @@ export default function WorkoutPage() {
 
             {view === "week" && (
               <div className="space-y-2">
-                {workoutSchedule.map((dayWorkout, i) => {
+                {(() => {
+                  // Filter workoutSchedule to show only accessible days (Saturday to today)
+                  const accessibleDays = getAccessibleDays()
+                  const filteredSchedule = workoutSchedule.filter(dayWorkout => 
+                    accessibleDays.includes(dayWorkout.day.toLowerCase())
+                  )
+                  
+                  // Sort by day order (Saturday first)
+                  const daysOrder = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']
+                  filteredSchedule.sort((a, b) => 
+                    daysOrder.indexOf(a.day.toLowerCase()) - daysOrder.indexOf(b.day.toLowerCase())
+                  )
+                  
+                  return filteredSchedule.map((dayWorkout, i) => {
                   const exerciseCount = dayWorkout.exercises.length
                   const isRestDay = dayWorkout.exercises[0]?.muscleGroup === "Recovery"
                   return (
@@ -472,7 +497,7 @@ export default function WorkoutPage() {
                       </div>
                     </button>
                   )
-                })}
+                })})()}
                 {!workoutSchedule.length && (
                   <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
                     <CardContent className="text-center py-20 px-6">

@@ -56,6 +56,18 @@ export default function MealsPage() {
   const { t, language } = useLanguage()
   const isRTL = language === "ar" || language === "ku"
 
+  // Helper: Get accessible days for user (Saturday to today only)
+  // Saturday = day 0, Sunday = day 1, ..., Friday = day 6
+  const getAccessibleDays = (): string[] => {
+    const daysOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    const jsDay = new Date().getDay() // JavaScript: Sunday = 0, Saturday = 6
+    // Convert to our system: Saturday = 0, Sunday = 1, ..., Friday = 6
+    const todayIndex = jsDay === 6 ? 0 : jsDay + 1
+    
+    // Return days from Saturday (0) to today (inclusive)
+    return daysOrder.slice(0, todayIndex + 1)
+  }
+
   // Get meal ordinal translation key (reusing exercise keys)
   const getMealOrdinal = (num: number): TranslationKey => {
     const ordinals: TranslationKey[] = [
@@ -366,7 +378,43 @@ export default function MealsPage() {
 
             {view === "week" && (
               <div className="space-y-2">
-                {mealSchedule.length > 0 ? mealSchedule.map((dayMeal, i) => {
+                {(() => {
+                  // Filter mealSchedule to show only accessible days (Saturday to today)
+                  const accessibleDays = getAccessibleDays()
+                  const filteredSchedule = mealSchedule.filter(dayMeal => 
+                    accessibleDays.includes(dayMeal.day)
+                  )
+                  
+                  // Sort by day order (Saturday first)
+                  const daysOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+                  filteredSchedule.sort((a, b) => 
+                    daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)
+                  )
+                  
+                  if (filteredSchedule.length === 0) {
+                    return (
+                  <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
+                    <CardContent className="text-center py-20 px-6">
+                      <div className="relative inline-block mb-6">
+                        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 flex items-center justify-center shadow-2xl shadow-amber-500/20 border border-amber-500/30">
+                          <Utensils className="w-14 h-14 text-amber-400" />
+                        </div>
+                        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+                          <span className="text-white text-xl">🍽️</span>
+                        </div>
+                      </div>
+                      <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                        {language === 'ku' ? 'خشتەی خواردن نییە' : language === 'ar' ? 'لا يوجد جدول وجبات' : 'No Meal Schedule'}
+                      </h3>
+                      <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
+                        {language === 'ku' ? 'مەشقگەرەکەت خشتەی خواردنت بۆ دیاری دەکات' : language === 'ar' ? 'سيقوم مدربك بتعيين جدول الوجبات لك' : 'Your trainer will assign a meal schedule to you'}
+                      </p>
+                    </CardContent>
+                  </Card>
+                    )
+                  }
+                  
+                  return filteredSchedule.map((dayMeal, i) => {
                   const mealCount = dayMeal.meals.length
                   const totalCalories = dayMeal.meals.reduce((sum, m) => sum + m.calories, 0)
                   return (
@@ -388,7 +436,7 @@ export default function MealsPage() {
                       {/* Center: Text content */}
                       <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
                         <p className="text-white font-semibold text-sm">{t(dayMeal.day.toLowerCase() as any)}</p>
-                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} ΓÇó {totalCalories} {t("kcal")}</p>
+                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} • {totalCalories} {t("kcal")}</p>
                       </div>
                       
                       {/* Left column: Icon */}
@@ -399,39 +447,7 @@ export default function MealsPage() {
                       </div>
                     </button>
                   )
-                }) : (
-                  <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
-                    <CardContent className="text-center py-20 px-6">
-                      <div className="relative inline-block mb-6">
-                        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 flex items-center justify-center shadow-2xl shadow-amber-500/20 border border-amber-500/30">
-                          <Utensils className="w-14 h-14 text-amber-400" />
-                        </div>
-                        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center shadow-lg">
-                          <span className="text-white text-xl">≡ƒì╜∩╕Å</span>
-                        </div>
-                      </div>
-                      <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                        {language === 'ku' ? '╪«╪┤╪¬█ò█î ╪«┘ê╪º╪▒╪»┘å ┘å█î█î█ò' : language === 'ar' ? '┘ä╪º ┘è┘ê╪¼╪» ╪¼╪»┘ê┘ä ┘ê╪¼╪¿╪º╪¬' : 'No Meal Plan'}
-                      </h3>
-                      <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
-                        {language === 'ku' ? '┘à█ò╪┤┘é┌»█ò╪▒█ò┌⌐█ò╪¬ ╪«╪┤╪¬█ò█î ╪«┘ê╪º╪▒╪»┘å╪¬ ╪¿█å ╪»█î╪º╪▒█î ╪»█ò┌⌐╪º╪¬' : language === 'ar' ? '╪│┘è┘é┘ê┘à ┘à╪»╪▒╪¿┘â ╪¿╪¬╪╣┘è┘è┘å ╪«╪╖╪⌐ ╪º┘ä┘ê╪¼╪¿╪º╪¬ ┘ä┘â' : 'Your trainer will assign a meal plan to you'}
-                      </p>
-                      <p className="text-gray-500 text-sm mb-8">
-                        {language === 'ku' ? '╪»┘ê╪º╪¬╪▒ ╪│█ò╪▒╪»╪º┘å█î ╪¿┌⌐█ò╪▒█ò┘ê█ò █î╪º┘å ┘╛█ò█î┘ê█ò┘å╪»█î ╪¿█ò ┘à█ò╪┤┘é┌»█ò╪▒█ò┌⌐█ò╪¬█ò┘ê█ò ╪¿┌⌐█ò' : language === 'ar' ? '╪¬╪¡┘é┘é ┘ä╪º╪¡┘é┘ï╪º ╪ú┘ê ╪º╪¬╪╡┘ä ╪¿┘à╪»╪▒╪¿┘â' : 'Check back later or contact your trainer'}
-                      </p>
-                      <div className="flex flex-wrap gap-3 justify-center text-sm text-gray-500">
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
-                          <Clock className="w-4 h-4 text-cyan-400" />
-                          <span>{language === 'ku' ? '╪¿█ò╪▓┘ê┘ê█î╪º┘å█ò ┌å╪º┘ê█ò┌ò█Ä╪¿█ò' : language === 'ar' ? '╪º┘å╪¬╪╕╪▒ ┘é┘ä┘è┘ä╪º┘ï' : 'Coming Soon'}</span>
-                        </div>
-                        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50">
-                          <Target className="w-4 h-4 text-green-400" />
-                          <span>{language === 'ku' ? '╪«┘ê╪º╪▒╪»┘å█î ╪¬█ò┘å╪»╪▒┘ê╪│╪¬' : language === 'ar' ? '┘ê╪¼╪¿╪º╪¬ ╪╡╪¡┘è╪⌐' : 'Healthy Meals'}</span>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
+                })})()}
               </div>
             )}
             </div>
