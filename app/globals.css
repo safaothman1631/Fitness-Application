@@ -5,13 +5,11 @@
 
 /* Fix Three.js canvas touch controls for mobile */
 canvas[data-engine^="three.js"] {
-  touch-action: pan-x pan-y !important;
-  pointer-events: auto !important;
+  touch-action: none !important;
 }
 
 #three-canvas-container {
-  touch-action: pan-x pan-y !important;
-  pointer-events: auto !important;
+  touch-action: none !important;
 }
 
 /* Hide scrollbar globally - CRITICAL: Must be at top level */

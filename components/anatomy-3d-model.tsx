@@ -1862,8 +1862,7 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 			height: '100%', 
 			position: 'relative', 
 			background: '#0f172a',
-			touchAction: 'pan-x pan-y',
-			pointerEvents: 'auto',
+			touchAction: 'none',
 			overflow: 'hidden',
 		}}
 		>
@@ -1902,14 +1901,14 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 			style={{ 
 				width: '100%', 
 				height: '100%',
-				touchAction: 'pan-x pan-y',
+				touchAction: 'none',
 				pointerEvents: 'auto',
 				display: 'block',
 			}}
 			dpr={[1, 2]}
 			onCreated={({ gl }) => {
-				gl.domElement.style.touchAction = 'pan-x pan-y';
-				gl.domElement.style.pointerEvents = 'auto';
+				gl.domElement.style.touchAction = 'none';
+				
 			}}
 		>
 			<color attach="background" args={['#0f172a']} />
