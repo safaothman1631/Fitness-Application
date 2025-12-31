@@ -1855,27 +1855,19 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 	// Use custom Three.js model for muscles/nerves or combined views
 	// Force touch-action: none on canvas after mount
 	useEffect(() => {
-		const canvas = document.querySelector('canvas[data-engine]');
-		if (canvas) {
-			(canvas as HTMLCanvasElement).style.touchAction = 'none';
-		}
-		// Also add event listener to prevent default touch behavior
-		const preventDefaultTouch = (e: TouchEvent) => {
-			if (e.touches.length > 0) {
-				e.preventDefault();
-			}
+		// Set touch-action on canvas element directly
+		const setCanvasTouchAction = () => {
+			const canvases = document.querySelectorAll('canvas');
+			canvases.forEach(canvas => {
+				canvas.style.touchAction = 'none';
+			});
 		};
-		const container = document.getElementById('three-canvas-container');
-		if (container) {
-			container.addEventListener('touchstart', preventDefaultTouch, { passive: false });
-			container.addEventListener('touchmove', preventDefaultTouch, { passive: false });
-		}
-		return () => {
-			if (container) {
-				container.removeEventListener('touchstart', preventDefaultTouch);
-				container.removeEventListener('touchmove', preventDefaultTouch);
-			}
-		};
+		
+		// Run immediately and after a short delay (for canvas creation)
+		setCanvasTouchAction();
+		const timer = setTimeout(setCanvasTouchAction, 500);
+		
+		return () => clearTimeout(timer);
 	}, [showMuscles, showBones, showNerves]);
 	
 	return (
@@ -1886,14 +1878,9 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 			height: '100%', 
 			position: 'relative', 
 			background: '#0f172a',
-			touchAction: 'none', // بۆ باشتربوونی touch لە مۆبایل
-			userSelect: 'none',
-			WebkitUserSelect: 'none',
-			WebkitTouchCallout: 'none',
+			touchAction: 'none',
 			overflow: 'hidden',
 		}}
-		onTouchStart={(e) => e.stopPropagation()}
-		onTouchMove={(e) => e.stopPropagation()}
 		>
 			{/* ڕێنمایی مۆبایل */}
 			<div style={{
