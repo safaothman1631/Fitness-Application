@@ -1478,7 +1478,40 @@ function SketchfabSearch({ searchQuery, label }: { searchQuery: string; label: s
 	const info = selectedPart ? anatomyInfo[selectedPart] : null
 
 	return (
-		<div style={{ width: '100%', height: '100%', position: 'relative', background: '#0f172a' }}>
+		<div style={{ 
+			width: '100%', 
+			height: '100%', 
+			position: 'relative', 
+			background: '#0f172a',
+			touchAction: 'none', // بۆ باشتربوونی touch لە مۆبایل
+			userSelect: 'none',
+			WebkitUserSelect: 'none',
+			WebkitTouchCallout: 'none',
+		}}>
+			{/* ڕێنمایی مۆبایل */}
+			<div style={{
+				position: 'absolute',
+				top: '10px',
+				left: '50%',
+				transform: 'translateX(-50%)',
+				background: 'rgba(0,0,0,0.7)',
+				color: '#94a3b8',
+				padding: '8px 16px',
+				borderRadius: '20px',
+				fontSize: '12px',
+				zIndex: 10,
+				display: 'flex',
+				alignItems: 'center',
+				gap: '12px',
+				backdropFilter: 'blur(8px)',
+				border: '1px solid rgba(255,255,255,0.1)',
+				whiteSpace: 'nowrap',
+			}}>
+				<span>👆 سوڕاندن</span>
+				<span>🤏 زووم</span>
+				<span>👆👆 کلیک = زانیاری</span>
+			</div>
+
 			<iframe 
 				ref={iframeRef}
 				title={label}
@@ -1489,7 +1522,8 @@ function SketchfabSearch({ searchQuery, label }: { searchQuery: string; label: s
 				style={{ 
 					width: '100%', 
 					height: '100%',
-					border: 'none'
+					border: 'none',
+					touchAction: 'manipulation', // باشتربوونی touch
 				}}
 			/>
 			
@@ -1820,36 +1854,152 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 	
 	// Use custom Three.js model for muscles/nerves or combined views
 	return (
-		<div style={{ width: '100%', height: '100%', position: 'relative', background: '#0f172a' }}>
+		<div style={{ 
+			width: '100%', 
+			height: '100%', 
+			position: 'relative', 
+			background: '#0f172a',
+			touchAction: 'none', // بۆ باشتربوونی touch لە مۆبایل
+			userSelect: 'none',
+			WebkitUserSelect: 'none',
+			WebkitTouchCallout: 'none',
+		}}>
+			{/* ڕێنمایی مۆبایل */}
+			<div style={{
+				position: 'absolute',
+				top: '10px',
+				left: '50%',
+				transform: 'translateX(-50%)',
+				background: 'rgba(0,0,0,0.7)',
+				color: '#94a3b8',
+				padding: '8px 16px',
+				borderRadius: '20px',
+				fontSize: '12px',
+				zIndex: 10,
+				display: 'flex',
+				alignItems: 'center',
+				gap: '12px',
+				backdropFilter: 'blur(8px)',
+				border: '1px solid rgba(255,255,255,0.1)',
+				whiteSpace: 'nowrap',
+			}}>
+				<span>👆 سوڕاندن</span>
+				<span>🤏 زووم</span>
+			</div>
+			
 			<Canvas
 				shadows
-				camera={{ position: [0, 0, 5], fov: 45 }}
+				camera={{ position: [0, 0, 4.5], fov: 50 }}
 				gl={{ 
 					antialias: true,
 					toneMapping: THREE.ACESFilmicToneMapping,
 					toneMappingExposure: 1.2,
+					powerPreference: 'high-performance', // بۆ خێرایی زیاتر
 				}}
 				style={{ 
 					width: '100%', 
-					height: '100%'
+					height: '100%',
+					touchAction: 'none',
 				}}
+				dpr={[1, 2]} // باشترکردنی کوالیتی لە سکرینی وردەکاندا
 			>
 				<color attach="background" args={['#0f172a']} />
 				
 				<OrbitControls 
-					enablePan={false}
+					enablePan={true} // ڕێگەپێدان بە جوڵاندن
 					enableZoom={true}
-					minDistance={2}
-					maxDistance={10}
-					maxPolarAngle={Math.PI / 1.8}
-					minPolarAngle={Math.PI / 6}
+					enableRotate={true}
+					minDistance={1.5}
+					maxDistance={12}
+					maxPolarAngle={Math.PI * 0.9} // زیاتر بەرەو خوار
+					minPolarAngle={Math.PI * 0.1} // زیاتر بەرەو سەر
 					enableDamping
-					dampingFactor={0.08}
+					dampingFactor={0.1}
+					rotateSpeed={0.8} // خێرایی سوڕاندن
+					zoomSpeed={1.2} // خێرایی زووم
+					panSpeed={0.8} // خێرایی جوڵاندن
 					target={[0, 0.8, 0]}
+					// بۆ touch مۆبایل
+					touches={{
+						ONE: THREE.TOUCH.ROTATE,   // یەک پەنجە = سوڕاندن
+						TWO: THREE.TOUCH.DOLLY_PAN // دوو پەنجە = زووم و جوڵاندن
+					}}
+					mouseButtons={{
+						LEFT: THREE.MOUSE.ROTATE,
+						MIDDLE: THREE.MOUSE.DOLLY,
+						RIGHT: THREE.MOUSE.PAN
+					}}
 				/>
 				
 				<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
 			</Canvas>
+			
+			{/* دوگمەکانی زووم بۆ مۆبایل */}
+			<div style={{
+				position: 'absolute',
+				bottom: '80px',
+				right: '10px',
+				display: 'flex',
+				flexDirection: 'column',
+				gap: '8px',
+				zIndex: 10,
+			}}>
+				<button
+					onClick={() => {
+						// زووم ئین بە event dispatch
+						const canvas = document.querySelector('canvas');
+						if (canvas) {
+							canvas.dispatchEvent(new WheelEvent('wheel', { deltaY: -100, bubbles: true }));
+						}
+					}}
+					style={{
+						width: '44px',
+						height: '44px',
+						borderRadius: '50%',
+						background: 'rgba(59, 130, 246, 0.9)',
+						color: 'white',
+						border: 'none',
+						fontSize: '24px',
+						cursor: 'pointer',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+						transition: 'transform 0.2s',
+					}}
+					onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.9)'}
+					onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
+				>
+					+
+				</button>
+				<button
+					onClick={() => {
+						const canvas = document.querySelector('canvas');
+						if (canvas) {
+							canvas.dispatchEvent(new WheelEvent('wheel', { deltaY: 100, bubbles: true }));
+						}
+					}}
+					style={{
+						width: '44px',
+						height: '44px',
+						borderRadius: '50%',
+						background: 'rgba(59, 130, 246, 0.9)',
+						color: 'white',
+						border: 'none',
+						fontSize: '24px',
+						cursor: 'pointer',
+						display: 'flex',
+						alignItems: 'center',
+						justifyContent: 'center',
+						boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+						transition: 'transform 0.2s',
+					}}
+					onTouchStart={(e) => e.currentTarget.style.transform = 'scale(0.9)'}
+					onTouchEnd={(e) => e.currentTarget.style.transform = 'scale(1)'}
+				>
+					−
+				</button>
+			</div>
 		</div>
 	)
 }
