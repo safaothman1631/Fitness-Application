@@ -1963,6 +1963,13 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 				panSpeed={0.5}
 				target={[0, 0.8, 0]}
 			/>
+		
+		<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
+	</Canvas>
+
+	{/* ????????? ???? ?? ?????? */}
+	<div style={{
+		position: 'absolute',
 		bottom: '80px',
 				right: '10px',
 				display: 'flex',
@@ -2029,6 +2036,7 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 		</div>
 	)
 }
+
 
 
 
