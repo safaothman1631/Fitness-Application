@@ -1,9 +1,9 @@
 "use client"
 
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { Canvas, useThree, useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useEffect, useRef, useState } from 'react'
+import { OrbitControls as ThreeOrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 interface Anatomy3DModelProps {
 	showMuscles: boolean
@@ -26,6 +26,46 @@ declare global {
 	interface Window {
 		Sketchfab: any
 	}
+}
+
+// Custom OrbitControls component using native Three.js
+function CameraControls() {
+	const { camera, gl } = useThree()
+	const controlsRef = useRef<ThreeOrbitControls | null>(null)
+
+	useEffect(() => {
+		const controls = new ThreeOrbitControls(camera, gl.domElement)
+		controls.enableDamping = true
+		controls.dampingFactor = 0.05
+		controls.enablePan = false
+		controls.enableZoom = true
+		controls.enableRotate = true
+		controls.minDistance = 2
+		controls.maxDistance = 8
+		controls.rotateSpeed = 0.8
+		controls.zoomSpeed = 0.8
+		controls.target.set(0, 0.8, 0)
+		
+		// Explicitly enable touch events
+		controls.touches = {
+			ONE: THREE.TOUCH.ROTATE,
+			TWO: THREE.TOUCH.DOLLY_PAN
+		}
+		
+		controlsRef.current = controls
+
+		return () => {
+			controls.dispose()
+		}
+	}, [camera, gl])
+
+	useFrame(() => {
+		if (controlsRef.current) {
+			controlsRef.current.update()
+		}
+	})
+
+	return null
 }
 
 function HumanModel({ showMuscles, showBones, showNerves }: { showMuscles: boolean; showBones: boolean; showNerves: boolean }) {
@@ -1906,16 +1946,7 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 		>
 			<color attach="background" args={['#0f172a']} />
 			
-			<OrbitControls 
-				enablePan={false}
-				enableZoom={true}
-				enableRotate={true}
-				minDistance={2}
-				maxDistance={8}
-				rotateSpeed={0.8}
-				zoomSpeed={0.8}
-				target={[0, 0.8, 0]}
-			/>
+			<CameraControls />
 		
 		<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
 	</Canvas>
