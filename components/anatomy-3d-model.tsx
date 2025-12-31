@@ -1932,13 +1932,16 @@ export default function Anatomy3DModel({ showMuscles, showBones, showNerves }: A
 				touches={{
 					ONE: THREE.TOUCH.ROTATE,
 					TWO: THREE.TOUCH.DOLLY_PAN
-				
-				<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
-			</Canvas>
-			
-			{/* دوگمەکانی زووم بۆ مۆبایل */}
-			<div style={{
-				position: 'absolute',
+			}}
+			mouseButtons={{
+				LEFT: THREE.MOUSE.ROTATE,
+				MIDDLE: THREE.MOUSE.DOLLY,
+				RIGHT: THREE.MOUSE.PAN
+			}}
+		/>
+		
+		<HumanModel showMuscles={showMuscles} showBones={showBones} showNerves={showNerves} />
+	</Canvas>
 				bottom: '80px',
 				right: '10px',
 				display: 'flex',
