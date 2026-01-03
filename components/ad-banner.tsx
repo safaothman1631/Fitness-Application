@@ -164,56 +164,47 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
         animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: position === 'top' ? -20 : 20 }}
         transition={{ duration: 0.3 }}
-        className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20 border border-purple-500/30 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300"
+        className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-l from-[#0EA5E9] to-[#38BDF8] p-8 cursor-pointer hover:shadow-2xl transition-all duration-300"
+        onClick={() => handleAdClick(currentAd)}
       >
-        <div
-          onClick={() => handleAdClick(currentAd)}
-          className="flex flex-col md:flex-row items-center gap-6 p-6 cursor-pointer"
-        >
-          {/* Image */}
-          <div className="relative w-full md:w-64 h-40 rounded-xl overflow-hidden flex-shrink-0">
-            <img
-              src={currentAd.imageUrl}
-              alt={currentAd.title}
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-          </div>
-
+        <div className="flex items-center justify-between gap-6">
           {/* Content */}
-          <div className="flex-1 text-center md:text-left">
-            <h3 className="text-white font-bold text-2xl mb-2">
+          <div className="flex-1 text-right">
+            <h3 className="text-white font-bold text-2xl md:text-3xl mb-2">
               {currentAd.title}
             </h3>
             {currentAd.description && (
-              <p className="text-gray-300 text-base mb-4 line-clamp-2">
+              <p className="text-white/90 text-base md:text-lg">
                 {currentAd.description}
               </p>
             )}
-            {currentAd.link && (
-              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300 hover:scale-105">
-                <span>Learn More</span>
-                <ExternalLink className="w-5 h-5" />
-              </div>
-            )}
           </div>
 
-          {/* Ad indicator dots */}
-          {ads.length > 1 && (
-            <div className="flex md:flex-col gap-2 absolute bottom-3 left-1/2 md:left-auto md:right-6 transform -translate-x-1/2 md:translate-x-0">
-              {ads.map((_, index) => (
-                <div
-                  key={index}
-                  className={`rounded-full transition-all duration-300 ${
-                    index === currentAdIndex
-                      ? 'w-2 h-6 md:w-6 md:h-2 bg-purple-400'
-                      : 'w-2 h-2 bg-gray-600'
-                  }`}
-                />
-              ))}
+          {/* Button */}
+          {currentAd.link && (
+            <div className="flex-shrink-0">
+              <div className="px-8 py-3 rounded-xl bg-white text-[#0EA5E9] font-bold text-lg hover:scale-105 transition-transform duration-300 shadow-lg">
+                نیشتا
+              </div>
             </div>
           )}
         </div>
+
+        {/* Ad indicator dots */}
+        {ads.length > 1 && (
+          <div className="flex justify-center gap-2 mt-6">
+            {ads.map((_, index) => (
+              <div
+                key={index}
+                className={`rounded-full transition-all duration-300 ${
+                  index === currentAdIndex
+                    ? 'w-8 h-2 bg-white'
+                    : 'w-2 h-2 bg-white/50'
+                }`}
+              />
+            ))}
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   )
