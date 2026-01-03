@@ -509,64 +509,91 @@ export default function WorkoutPage() {
             {view === "week" && (
               <div className="space-y-2">
                 {(() => {
-                  // Filter workoutSchedule to show only accessible days (Saturday to today)
+                  // Get accessible days (Saturday to today)
                   const accessibleDays = getAccessibleDays()
-                  const filteredSchedule = workoutSchedule.filter(dayWorkout => 
-                    accessibleDays.includes(dayWorkout.day.toLowerCase())
-                  )
                   
-                  // Sort by day order (Saturday first)
+                  // Create complete week schedule with all 7 days
                   const daysOrder = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']
-                  filteredSchedule.sort((a, b) => 
-                    daysOrder.indexOf(a.day.toLowerCase()) - daysOrder.indexOf(b.day.toLowerCase())
-                  )
                   
-                  return filteredSchedule.map((dayWorkout, i) => {
-                  const exerciseCount = dayWorkout.exercises.length
-                  const isRestDay = dayWorkout.exercises[0]?.muscleGroup === "Recovery"
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedDay(dayWorkout.day)}
-                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-purple-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
-                    >
-                      {/* Right column for RTL: Play button + muscle tag */}
-                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
-                        <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
-                          <Play className={`w-4 h-4 text-purple-400 ${isRTL ? 'rotate-180' : ''}`} />
-                        </div>
-                        {!isRestDay && dayWorkout.exercises[0]?.muscleGroup && (
-                          <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs whitespace-nowrap">
-                            {t(dayWorkout.exercises[0].muscleGroup.toLowerCase() === "chest" ? "chest" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "legs" ? "legs" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
-                               dayWorkout.exercises[0].muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Center: Text content */}
-                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        <p className="text-white font-semibold text-sm">{t(dayWorkout.day.toLowerCase() as any)}</p>
-                        <p className="text-[#B6C4CF] text-xs">
-                          {isRestDay ? t("restAndRecovery") : `${exerciseCount} ${t("exercisesCount")}`}
-                        </p>
-                      </div>
-                      
-                      {/* Left column for RTL: Icon */}
-                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
-                        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${isRestDay ? 'bg-slate-800/50' : 'bg-gradient-to-br from-purple-600 to-purple-500'}`}>
-                          {isRestDay ? (
-                            <Calendar className="w-5 h-5 text-slate-400" />
-                          ) : (
-                            <Dumbbell className="w-5 h-5 text-white" />
+                  return daysOrder.map((dayName, i) => {
+                    // Find this day in workoutSchedule
+                    const dayWorkout = workoutSchedule.find(d => d.day.toLowerCase() === dayName)
+                    
+                    // Check if this day is accessible (Saturday to today)
+                    const isAccessible = accessibleDays.includes(dayName)
+                    
+                    // If no workout for this day, show empty/rest day
+                    const exerciseCount = dayWorkout?.exercises.length || 0
+                    const isRestDay = dayWorkout?.exercises?.[0]?.muscleGroup === "Recovery" || !dayWorkout
+                    const displayName = dayName.charAt(0).toUpperCase() + dayName.slice(1)
+                    
+                    return (
+                      <div
+                        key={i}
+                        onClick={() => isAccessible && dayWorkout && setSelectedDay(displayName)}
+                        className={`w-full grid items-center gap-0 p-4 rounded-lg border transition-all duration-300 ${
+                          isAccessible && dayWorkout
+                            ? 'bg-[#0E151B] border-[#2E3944] hover:border-purple-500/50 cursor-pointer group'
+                            : 'bg-[#0E151B]/30 border-[#2E3944]/30 cursor-not-allowed opacity-50'
+                        } ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
+                      >
+                        {/* Right column: Play button + muscle tag */}
+                        <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                          {isAccessible && dayWorkout && (
+                            <>
+                              <div className="w-8 h-8 rounded-full bg-purple-500/10 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                                <Play className={`w-4 h-4 text-purple-400 ${isRTL ? 'rotate-180' : ''}`} />
+                              </div>
+                              {!isRestDay && dayWorkout.exercises[0]?.muscleGroup && (
+                                <div className="px-2 py-1 rounded-full bg-purple-500/10 text-purple-400 text-xs whitespace-nowrap">
+                                  {t(dayWorkout.exercises[0].muscleGroup.toLowerCase() === "chest" ? "chest" : 
+                                     dayWorkout.exercises[0].muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
+                                     dayWorkout.exercises[0].muscleGroup.toLowerCase() === "legs" ? "legs" : 
+                                     dayWorkout.exercises[0].muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
+                                     dayWorkout.exercises[0].muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
+                                </div>
+                              )}
+                            </>
                           )}
                         </div>
+                        
+                        {/* Center: Text content */}
+                        <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                          <p className={`font-semibold text-sm ${isAccessible ? 'text-white' : 'text-gray-500'}`}>
+                            {t(dayName as any)}
+                          </p>
+                          <p className={`text-xs ${isAccessible ? 'text-[#B6C4CF]' : 'text-gray-600'}`}>
+                            {!isAccessible 
+                              ? '🔒' 
+                              : isRestDay 
+                                ? t("restAndRecovery") 
+                                : `${exerciseCount} ${t("exercisesCount")}`
+                            }
+                          </p>
+                        </div>
+                        
+                        {/* Left column: Icon */}
+                        <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                          <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                            !isAccessible 
+                              ? 'bg-slate-800/30' 
+                              : isRestDay 
+                                ? 'bg-slate-800/50' 
+                                : 'bg-gradient-to-br from-purple-600 to-purple-500'
+                          }`}>
+                            {!isAccessible ? (
+                              <Calendar className="w-5 h-5 text-gray-600" />
+                            ) : isRestDay ? (
+                              <Calendar className="w-5 h-5 text-slate-400" />
+                            ) : (
+                              <Dumbbell className="w-5 h-5 text-white" />
+                            )}
+                          </div>
+                        </div>
                       </div>
-                    </button>
-                  )
-                })})()}
+                    )
+                  })
+                })()}
                 {!workoutSchedule.length && (
                   <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
                     <CardContent className="text-center py-20 px-6">
