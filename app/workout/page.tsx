@@ -307,7 +307,18 @@ export default function WorkoutPage() {
   const getTodayWorkout = () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
     const today = days[new Date().getDay()]
-    return workoutSchedule.find(d => d.day === today) || workoutSchedule[0]
+    const todayWorkout = workoutSchedule.find(d => d.day === today)
+    
+    // If no workout found for today, return a rest day object instead of the first day
+    if (!todayWorkout) {
+      return {
+        day: today,
+        exercises: [],
+        isRestDay: true
+      }
+    }
+    
+    return todayWorkout
   }
 
   const handleSubmitDay = () => {
@@ -416,7 +427,7 @@ export default function WorkoutPage() {
                   }
                   
                   const exerciseCount = todayWorkout.exercises.length
-                  const isRestDay = todayWorkout.exercises[0]?.muscleGroup === "Recovery"
+                  const isRestDay = (todayWorkout as any).isRestDay || todayWorkout.exercises[0]?.muscleGroup === "Recovery"
                   
                   return (
                     <button
