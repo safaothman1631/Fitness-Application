@@ -25,6 +25,7 @@ import {
   ClipboardList,
   UserPlus,
   FileText,
+  Sparkles,
 } from "lucide-react"
 import Logo from "./logo"
 import { Button } from "./ui/button"
@@ -41,7 +42,7 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
   const router = useRouter()
   const { t } = useLanguage()
   const cfg = getRoleConfig((role as AppRole) || "user")
-  const iconMap = { Home, Dumbbell, TrendingUp, Users, User, Settings, Bell, HelpCircle, Wrench, Zap, Eye, Bone, Utensils, ClipboardList, UserPlus, FileText } as const
+  const iconMap = { Home, Dumbbell, TrendingUp, Users, User, Settings, Bell, HelpCircle, Wrench, Zap, Eye, Bone, Utensils, ClipboardList, UserPlus, FileText, Sparkles } as const
   const navigationItems = cfg.main.map((i) => ({ name: t(i.key as any), href: i.path, icon: iconMap[i.icon as keyof typeof iconMap] }))
   const menuItems = cfg.menu.map((i) => ({ name: t(i.key as any), href: i.path, icon: iconMap[i.icon as keyof typeof iconMap] }))
 
