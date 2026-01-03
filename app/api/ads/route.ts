@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { db } from '@/lib/firebase-admin'
+import { adminDb } from '@/lib/firebase-admin'
 
 // GET: Fetch all ads or filter by status
 export async function GET(request: NextRequest) {
@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') // 'active' or 'inactive'
     const targetAudience = searchParams.get('targetAudience')
 
-    let query = db.collection('ads').orderBy('createdAt', 'desc')
+    let query = adminDb.collection('ads').orderBy('createdAt', 'desc')
 
     if (status) {
       query = query.where('status', '==', status) as any
@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
       updatedAt: new Date().toISOString()
     }
 
-    const docRef = await db.collection('ads').add(adData)
+    const docRef = await adminDb.collection('ads').add(adData)
 
     return NextResponse.json({ 
       id: docRef.id, 
@@ -93,7 +93,7 @@ export async function PUT(request: NextRequest) {
       )
     }
 
-    const adRef = db.collection('ads').doc(id)
+    const adRef = adminDb.collection('ads').doc(id)
     const adDoc = await adRef.get()
 
     if (!adDoc.exists) {
@@ -137,11 +137,7 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    const adRef = db.collection('ads').doc(id)
-    const adDoc = await adRef.get()
-
-    if (!adDoc.exists) {
-      return NextResponse.json(
+    const adRef = adminDb.collection('ads').doc(id)
         { error: 'Ad not found' },
         { status: 404 }
       )

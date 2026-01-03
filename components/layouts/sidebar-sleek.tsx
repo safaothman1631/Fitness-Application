@@ -7,7 +7,7 @@ import { useLanguage } from "@/hooks/useLanguage"
 import { 
   Home, Users, Settings, Bell, User, TrendingUp, 
   Shield, Key, Database, Activity, FileText, Zap,
-  LogOut, ChevronRight, Menu, X
+  LogOut, ChevronRight, Menu, X, Sparkles
 } from "lucide-react"
 import { AppRole } from "@/lib/roles"
 
@@ -55,7 +55,7 @@ interface SidebarSleekProps {
 
 const iconMap: Record<string, any> = {
   Home, Users, Settings, Bell, User, TrendingUp,
-  Shield, Key, Database, Activity, FileText, Zap, Dumbbell: Activity
+  Shield, Key, Database, Activity, FileText, Zap, Dumbbell: Activity, Sparkles
 }
 
 export default function SidebarSleek({ children, role }: SidebarSleekProps) {
@@ -75,6 +75,7 @@ export default function SidebarSleek({ children, role }: SidebarSleekProps) {
       main: [
         { label: t("dashboard"), path: "/superadmin", icon: "Home" },
         { label: t("registrationRequests"), path: "/superadmin/registration-requests", icon: "FileText" },
+        { label: t("adsManagement"), path: "/superadmin/ads", icon: "Sparkles" },
         { label: t("users"), path: "/superadmin/users", icon: "Users" },
         { label: t("programs"), path: "/superadmin/programs", icon: "Zap" },
         { label: t("database"), path: "/superadmin/database", icon: "Database" },
