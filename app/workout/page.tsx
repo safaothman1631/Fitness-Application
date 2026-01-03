@@ -419,40 +419,44 @@ export default function WorkoutPage() {
                           </div>
                           
                           {/* Title */}
-                          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent text-center">
                             {isRestDay ? t("restDayTitle") : t("noWorkoutToday")}
                           </h2>
                           
                           {/* Description */}
-                          <p className="text-gray-300 text-lg mb-3 max-w-md mx-auto leading-relaxed">
+                          <p className="text-gray-300 text-lg mb-3 max-w-md mx-auto leading-relaxed text-center">
                             {isRestDay ? t("restDayDescription") : t("noWorkoutScheduledForToday")}
                           </p>
                           
                           {isRestDay && (
                             <>
                               {/* Additional rest day info */}
-                              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm mb-8">
-                                <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
-                                <span className="text-purple-300 text-sm font-medium">
-                                  {t("musclesAreRecovering")}
-                                </span>
+                              <div className="flex justify-center mb-8">
+                                <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm">
+                                  <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                                  <span className="text-purple-300 text-sm font-medium text-center">
+                                    {t("musclesAreRecovering")}
+                                  </span>
+                                </div>
                               </div>
                               
                               {/* Enjoy message */}
-                              <p className="text-2xl font-semibold text-purple-200 mb-8">
+                              <p className="text-2xl font-semibold text-purple-200 mb-8 text-center">
                                 {t("enjoyYourRestDay")} 🌟
                               </p>
                             </>
                           )}
                           
                           {/* Action button */}
-                          <Button 
-                            onClick={() => setView("week")}
-                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-base rounded-xl shadow-lg shadow-purple-500/30 border-0 transition-all duration-300 hover:scale-105"
-                          >
-                            <Calendar className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
-                            {t("checkOtherDays")}
-                          </Button>
+                          <div className="flex justify-center">
+                            <Button 
+                              onClick={() => setView("week")}
+                              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-base rounded-xl shadow-lg shadow-purple-500/30 border-0 transition-all duration-300 hover:scale-105"
+                            >
+                              <Calendar className="w-5 h-5 mr-2" />
+                              {t("checkOtherDays")}
+                            </Button>
+                          </div>
                         </CardContent>
                       </Card>
                     )
