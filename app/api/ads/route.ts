@@ -138,6 +138,10 @@ export async function DELETE(request: NextRequest) {
     }
 
     const adRef = adminDb.collection('ads').doc(id)
+    const adDoc = await adRef.get()
+
+    if (!adDoc.exists) {
+      return NextResponse.json(
         { error: 'Ad not found' },
         { status: 404 }
       )
