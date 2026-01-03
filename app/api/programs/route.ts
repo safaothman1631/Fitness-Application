@@ -31,9 +31,12 @@ export async function GET(request: NextRequest) {
 
     // Filter by userId if provided (for user dashboard)
     if (userId) {
-      programs = programs.filter((program: any) => 
-        program.assignedUsers && program.assignedUsers.includes(userId)
-      )
+      console.log('🔍 Filtering programs for userId:', userId)
+      programs = programs.filter((program: any) => {
+        const hasUser = program.assignedUsers && program.assignedUsers.includes(userId)
+        console.log(`  - Program "${program.title}" has assignedUsers:`, program.assignedUsers, '→ includes user?', hasUser)
+        return hasUser
+      })
       console.log(`✅ Found ${programs.length} programs for user ${userId}`)
     } else {
       console.log(`✅ Found ${programs.length} total programs`)
