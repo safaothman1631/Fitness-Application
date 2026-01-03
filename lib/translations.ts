@@ -869,6 +869,13 @@ export type TranslationKey =
   | "copyMealToOtherDay"
   | "restDayMessage"
   | "timeForRestAndRecovery"
+  | "restDayTitle"
+  | "restDayDescription"
+  | "musclesAreRecovering"
+  | "enjoyYourRestDay"
+  | "noWorkoutToday"
+  | "noWorkoutScheduledForToday"
+  | "checkOtherDays"
   | "weekSummary"
   | "active"
   | "rest"
@@ -2338,6 +2345,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   copyMealToOtherDay: "Copy to Another Day",
   restDayMessage: "It's a rest day 😴",
   timeForRestAndRecovery: "Time for rest and recovery",
+  restDayTitle: "Rest Day Today",
+  restDayDescription: "Your body needs time to recover and grow stronger",
+  musclesAreRecovering: "Your muscles are recovering and rebuilding",
+  enjoyYourRestDay: "Enjoy your well-deserved rest!",
+  noWorkoutToday: "No Workout Today",
+  noWorkoutScheduledForToday: "No workout scheduled for today",
+  checkOtherDays: "Check Other Days",
   weekSummary: "Week Summary:",
   active: "Active",
   rest: "Rest",
@@ -3693,6 +3707,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,copyMealToOtherDay: "نسخ إلى يوم آخر"
   ,restDayMessage: "إنه يوم راحة 😴"
   ,timeForRestAndRecovery: "وقت الراحة والتعافي"
+  ,restDayTitle: "يوم راحة اليوم"
+  ,restDayDescription: "جسمك يحتاج وقتاً للتعافي والنمو"
+  ,musclesAreRecovering: "عضلاتك تتعافى وتُعاد بناؤها"
+  ,enjoyYourRestDay: "استمتع براحتك المستحقة!"
+  ,noWorkoutToday: "لا توجد تمارين اليوم"
+  ,noWorkoutScheduledForToday: "لم يتم جدولة تمارين لهذا اليوم"
+  ,checkOtherDays: "تحقق من الأيام الأخرى"
   ,weekSummary: "ملخص الأسبوع:"
   ,active: "نشط"
   ,rest: "راحة"
@@ -4906,6 +4927,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,copyMealToOtherDay: "کۆپی بۆ ڕۆژی تر"
     ,restDayMessage: "ڕۆژی پشووە 😴"
     ,timeForRestAndRecovery: "کاتی ئاسایش و باشبوونەوەیە"
+    ,restDayTitle: "ئەمڕۆ ڕۆژی پشووە"
+    ,restDayDescription: "جەستەت پێویستی بە کات هەیە بۆ چاککردنەوە و بەهێزتربوون"
+    ,musclesAreRecovering: "ماسوولکەکانت چاک دەبنەوە و دوبارە بنیاد دەبنەوە"
+    ,enjoyYourRestDay: "چێژ لە پشووی شایستەی خۆت وەربگرە!"
+    ,noWorkoutToday: "ئەمڕۆ هیچ یارییەک نییە"
+    ,noWorkoutScheduledForToday: "هیچ یارییەک بۆ ئەمڕۆ دیاری نەکراوە"
+    ,checkOtherDays: "سەیری ڕۆژانی تر بکە"
     ,weekSummary: "پوختەی هەفتە:"
     ,active: "چالاک"
     ,rest: "پشوو"
@@ -6331,6 +6359,13 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   copyMealToOtherDay: "Başka Güne Kopyala",
   restDayMessage: "Dinlenme günü 😴",
   timeForRestAndRecovery: "Dinlenme ve toparlanma zamanı",
+  restDayTitle: "Bugün Dinlenme Günü",
+  restDayDescription: "Vücudunuzun toparlanmak ve güçlenmek için zamana ihtiyacı var",
+  musclesAreRecovering: "Kaslarınız toparlanıyor ve yeniden inşa ediliyor",
+  enjoyYourRestDay: "Hak ettiğiniz dinlenmenin tadını çıkarın!",
+  noWorkoutToday: "Bugün Antrenman Yok",
+  noWorkoutScheduledForToday: "Bugün için antrenman planlanmamış",
+  checkOtherDays: "Diğer Günleri Kontrol Et",
   weekSummary: "Hafta Özeti:",
   active: "Aktif",
   rest: "Dinlenme",

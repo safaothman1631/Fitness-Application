@@ -398,29 +398,61 @@ export default function WorkoutPage() {
                   const todayWorkout = getTodayWorkout()
                   
                   if (!todayWorkout || todayWorkout.exercises.length === 0) {
+                    const isRestDay = (todayWorkout as any)?.isRestDay
+                    
                     return (
-                      <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
-                        <CardContent className="text-center py-16 px-6">
-                          <div className="relative">
-                            <div className="w-24 h-24 rounded-3xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 flex items-center justify-center mx-auto mb-6 shadow-lg shadow-purple-500/10 border border-purple-500/20">
-                              <Calendar className="w-12 h-12 text-purple-400" />
-                            </div>
-                            <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-yellow-500/20 border-2 border-yellow-500/50 flex items-center justify-center">
-                              <span className="text-yellow-400 text-lg">Γ£¿</span>
+                      <Card className="border-0 bg-gradient-to-br from-slate-900/80 via-purple-900/20 to-slate-900/80 backdrop-blur-sm overflow-hidden relative">
+                        {/* Animated background gradient */}
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 via-pink-500/5 to-blue-500/5 animate-pulse" />
+                        
+                        {/* Decorative circles */}
+                        <div className="absolute top-0 right-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl" />
+                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl" />
+                        
+                        <CardContent className="relative text-center py-20 px-6">
+                          {/* Icon with glow effect */}
+                          <div className="relative inline-block mb-8">
+                            <div className="absolute inset-0 bg-gradient-to-br from-purple-500/30 to-pink-500/30 rounded-full blur-2xl animate-pulse" />
+                            <div className="relative w-32 h-32 rounded-3xl bg-gradient-to-br from-purple-600/30 via-purple-500/20 to-pink-500/30 flex items-center justify-center shadow-2xl shadow-purple-500/20 border border-purple-500/30 backdrop-blur-sm">
+                              <Calendar className="w-16 h-16 text-purple-300" />
                             </div>
                           </div>
-                          <h3 className="text-2xl font-bold text-white mb-3">
-                            {language === 'ku' ? '╪ª█ò┘à┌ò█å ┘ê█ò╪▒╪▓╪┤ ┘å█î█î█ò' : language === 'ar' ? '┘ä╪º ╪¬┘ê╪¼╪» ╪¬┘à╪º╪▒┘è┘å ╪º┘ä┘è┘ê┘à' : 'No Workout Today'}
-                          </h3>
-                          <p className="text-gray-400 mb-6 text-base max-w-sm mx-auto">
-                            {language === 'ku' ? '┘ç█î┌å ┘ê█ò╪▒╪▓╪┤█Ä┌⌐ ╪¿█å ╪ª█ò┘à┌ò█å ╪»█î╪º╪▒█î ┘å█ò┌⌐╪▒╪º┘ê█ò' : language === 'ar' ? '┘ä┘à ┘è╪¬┘à ╪¬╪¡╪»┘è╪» ╪¬┘à╪º╪▒┘è┘å ┘ä┘ç╪░╪º ╪º┘ä┘è┘ê┘à' : 'No workout scheduled for today'}
+                          
+                          {/* Title */}
+                          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-200 via-pink-200 to-purple-200 bg-clip-text text-transparent">
+                            {isRestDay ? t("restDayTitle") : t("noWorkoutToday")}
+                          </h2>
+                          
+                          {/* Description */}
+                          <p className="text-gray-300 text-lg mb-3 max-w-md mx-auto leading-relaxed">
+                            {isRestDay ? t("restDayDescription") : t("noWorkoutScheduledForToday")}
                           </p>
-                          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                            <Button variant="outline" className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10">
-                              <Calendar className="w-4 h-4 mr-2" />
-                              {language === 'ku' ? '╪▒█å┌ÿ╪º┘å█î ╪¬╪▒ ╪¿╪¿█î┘å█ò' : language === 'ar' ? '╪¬╪¡┘é┘é ┘à┘å ╪º┘ä╪ú┘è╪º┘à ╪º┘ä╪ú╪«╪▒┘ë' : 'Check Other Days'}
-                            </Button>
-                          </div>
+                          
+                          {isRestDay && (
+                            <>
+                              {/* Additional rest day info */}
+                              <div className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-purple-500/10 border border-purple-500/20 backdrop-blur-sm mb-8">
+                                <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse" />
+                                <span className="text-purple-300 text-sm font-medium">
+                                  {t("musclesAreRecovering")}
+                                </span>
+                              </div>
+                              
+                              {/* Enjoy message */}
+                              <p className="text-2xl font-semibold text-purple-200 mb-8">
+                                {t("enjoyYourRestDay")} 🌟
+                              </p>
+                            </>
+                          )}
+                          
+                          {/* Action button */}
+                          <Button 
+                            onClick={() => setView("week")}
+                            className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-8 py-6 text-base rounded-xl shadow-lg shadow-purple-500/30 border-0 transition-all duration-300 hover:scale-105"
+                          >
+                            <Calendar className={`w-5 h-5 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                            {t("checkOtherDays")}
+                          </Button>
                         </CardContent>
                       </Card>
                     )
