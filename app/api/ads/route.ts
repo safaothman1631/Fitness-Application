@@ -8,22 +8,29 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') // 'active' or 'inactive'
     const targetAudience = searchParams.get('targetAudience')
 
-    let query = adminDb.collection('ads').orderBy('createdAt', 'desc')
-
-    if (status) {
-      query = query.where('status', '==', status) as any
-    }
-
-    if (targetAudience) {
-      query = query.where('targetAudience', '==', targetAudience) as any
-    }
-
-    const snapshot = await query.get()
+    // Fetch all ads without complex queries to avoid index requirements
+    const snapshot = await adminDb.collection('ads').get()
     
-    const ads = snapshot.docs.map(doc => ({
+    let ads = snapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     }))
+
+    // Filter in memory to avoid composite index
+    if (status) {
+      ads = ads.filter(ad => ad.status === status)
+    }
+
+    if (targetAudience && targetAudience !== 'all') {
+      ads = ads.filter(ad => ad.targetAudience === targetAudience || ad.targetAudience === 'all')
+    }
+
+    // Sort by createdAt in memory
+    ads.sort((a, b) => {
+      const aTime = a.createdAt?.toMillis ? a.createdAt.toMillis() : 0
+      const bTime = b.createdAt?.toMillis ? b.createdAt.toMillis() : 0
+      return bTime - aTime
+    })
 
     return NextResponse.json(ads)
   } catch (error: any) {

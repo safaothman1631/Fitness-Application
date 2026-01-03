@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { X, ExternalLink } from "lucide-react"
+import { ExternalLink } from "lucide-react"
 import { motion, AnimatePresence } from "framer-motion"
 
 interface Ad {
@@ -21,8 +21,6 @@ interface AdBannerProps {
 export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
   const [ads, setAds] = useState<Ad[]>([])
   const [currentAdIndex, setCurrentAdIndex] = useState(0)
-  const [isVisible, setIsVisible] = useState(true)
-  const [isClosing, setIsClosing] = useState(false)
 
   useEffect(() => {
     fetchAds()
@@ -43,7 +41,10 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
       const response = await fetch(`/api/ads?status=active&targetAudience=${userType}`)
       if (response.ok) {
         const allAds = await response.json()
+        console.log('All ads from API:', allAds)
+        console.log('Looking for position:', position)
         const filteredAds = allAds.filter((ad: any) => ad.position === position)
+        console.log('Filtered ads:', filteredAds)
         setAds(filteredAds)
         
         // Track view
@@ -80,13 +81,6 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
     }
   }
 
-  const handleClose = () => {
-    setIsClosing(true)
-    setTimeout(() => {
-      setIsVisible(false)
-    }, 300)
-  }
-
   const handleAdClick = (ad: Ad) => {
     trackAdClick(ad.id)
     if (ad.link) {
@@ -94,7 +88,7 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
     }
   }
 
-  if (!isVisible || ads.length === 0) return null
+  if (ads.length === 0) return null
 
   const currentAd = ads[currentAdIndex]
 
@@ -104,19 +98,11 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: isClosing ? 0 : 1, x: isClosing ? 20 : 0 }}
+          animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: 20 }}
           transition={{ duration: 0.3 }}
-          className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 backdrop-blur-sm group hover:border-purple-500/50 transition-all duration-300"
+          className="relative rounded-2xl overflow-hidden bg-gradient-to-br from-purple-900/20 to-pink-900/20 border border-purple-500/30 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300"
         >
-          {/* Close Button */}
-          <button
-            onClick={handleClose}
-            className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
-          >
-            <X className="w-4 h-4 text-white" />
-          </button>
-
           <div
             onClick={() => handleAdClick(currentAd)}
             className="cursor-pointer"
@@ -175,19 +161,11 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
     <AnimatePresence>
       <motion.div
         initial={{ opacity: 0, y: position === 'top' ? -20 : 20 }}
-        animate={{ opacity: isClosing ? 0 : 1, y: isClosing ? (position === 'top' ? -20 : 20) : 0 }}
+        animate={{ opacity: 1, y: 0 }}
         exit={{ opacity: 0, y: position === 'top' ? -20 : 20 }}
         transition={{ duration: 0.3 }}
-        className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20 border border-purple-500/30 backdrop-blur-sm group hover:border-purple-500/50 transition-all duration-300"
+        className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-r from-purple-900/20 via-pink-900/20 to-purple-900/20 border border-purple-500/30 backdrop-blur-sm hover:border-purple-500/50 transition-all duration-300"
       >
-        {/* Close Button */}
-        <button
-          onClick={handleClose}
-          className="absolute top-3 right-3 z-20 w-8 h-8 rounded-full bg-black/50 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black/70"
-        >
-          <X className="w-4 h-4 text-white" />
-        </button>
-
         <div
           onClick={() => handleAdClick(currentAd)}
           className="flex flex-col md:flex-row items-center gap-6 p-6 cursor-pointer"

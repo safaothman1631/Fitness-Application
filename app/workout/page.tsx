@@ -13,7 +13,6 @@ import SubscriptionRequiredGuard from "@/components/subscription-guard"
 import { PageTransition } from "@/components/page-transition"
 import { useLanguage } from "@/hooks/useLanguage"
 import { BottomNav } from "@/components/bottom-nav"
-import { AdBanner } from "@/components/ad-banner"
 import type { TranslationKey } from "@/lib/translations"
 
 type ViewMode = "day" | "week" | "month"
@@ -344,11 +343,6 @@ export default function WorkoutPage() {
     <PageTransition>
     <div className="min-h-screen bg-[#0E151B] text-white pb-24 px-4 pt-6">
       <div className="max-w-6xl mx-auto">
-        {/* Top Ad Banner */}
-        <div className="mb-6">
-          <AdBanner position="top" userType="all" />
-        </div>
-
         <h1 className="text-3xl font-bold bg-gradient-to-r from-[#9333EA] to-[#C084FC] bg-clip-text text-transparent mb-2">
           {t("workoutCenter")}
         </h1>

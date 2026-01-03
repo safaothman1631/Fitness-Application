@@ -16,6 +16,7 @@ import AuthGuard from "@/components/auth-guard"
 import { toast } from "sonner"
 import { firestoreProxy } from "@/lib/firestore-proxy"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
+import { AdBanner } from "@/components/ad-banner"
 
 function UserDashboard() {
   const router = useRouter()
@@ -216,6 +217,9 @@ function UserDashboard() {
         {/* PWA Install Prompt */}
         <PWAInstallPrompt />
         
+        {/* Ad Banner */}
+        <AdBanner position="top" userType="all" />
+
         {/* Header */}
         <div className="mb-2 flex items-center justify-between">
           <div>
