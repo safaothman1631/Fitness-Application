@@ -890,6 +890,36 @@ export type TranslationKey =
   | "setMealsForEachDay"
   | "setExercisesForEachDay"
   | "mealName"
+  | "adsManagement"
+  | "createNewAd"
+  | "adTitle"
+  | "adDescription"
+  | "adImage"
+  | "adLink"
+  | "adTargetAudience"
+  | "adStartDate"
+  | "adEndDate"
+  | "adStatus"
+  | "activeAds"
+  | "inactiveAds"
+  | "allUsers"
+  | "proUsers"
+  | "freeUsers"
+  | "editAd"
+  | "deleteAd"
+  | "adCreatedSuccessfully"
+  | "adUpdatedSuccessfully"
+  | "adDeletedSuccessfully"
+  | "noAdsFound"
+  | "uploadImage"
+  | "imageUrl"
+  | "adPosition"
+  | "topBanner"
+  | "bottomBanner"
+  | "sidebar"
+  | "adClicks"
+  | "adViews"
+  | "adPerformance"
   | "mealCategory"
   | "macros"
   | "caloriesRequired"
@@ -2366,6 +2396,36 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   setMealsForEachDay: "Set meals for each day",
   setExercisesForEachDay: "Set exercises for each day",
   mealName: "Meal Name",
+  adsManagement: "Ads Management",
+  createNewAd: "Create New Ad",
+  adTitle: "Ad Title",
+  adDescription: "Ad Description",
+  adImage: "Ad Image",
+  adLink: "Ad Link (URL)",
+  adTargetAudience: "Target Audience",
+  adStartDate: "Start Date",
+  adEndDate: "End Date",
+  adStatus: "Status",
+  activeAds: "Active Ads",
+  inactiveAds: "Inactive Ads",
+  allUsers: "All Users",
+  proUsers: "PRO Users Only",
+  freeUsers: "Free Users Only",
+  editAd: "Edit Ad",
+  deleteAd: "Delete Ad",
+  adCreatedSuccessfully: "Ad created successfully!",
+  adUpdatedSuccessfully: "Ad updated successfully!",
+  adDeletedSuccessfully: "Ad deleted successfully!",
+  noAdsFound: "No ads found. Create your first ad!",
+  uploadImage: "Upload Image",
+  imageUrl: "Image URL",
+  adPosition: "Ad Position",
+  topBanner: "Top Banner",
+  bottomBanner: "Bottom Banner",
+  sidebar: "Sidebar",
+  adClicks: "Clicks",
+  adViews: "Views",
+  adPerformance: "Performance",
   mealCategory: "Meal Category",
   macros: "Macros",
   caloriesRequired: "Calories *",
@@ -3728,6 +3788,36 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,setMealsForEachDay: "حدد الوجبات لكل يوم"
   ,setExercisesForEachDay: "حدد التمارين لكل يوم"
   ,mealName: "اسم الوجبة"
+  ,adsManagement: "إدارة الإعلانات"
+  ,createNewAd: "إنشاء إعلان جديد"
+  ,adTitle: "عنوان الإعلان"
+  ,adDescription: "وصف الإعلان"
+  ,adImage: "صورة الإعلان"
+  ,adLink: "رابط الإعلان (URL)"
+  ,adTargetAudience: "الجمهور المستهدف"
+  ,adStartDate: "تاريخ البدء"
+  ,adEndDate: "تاريخ الانتهاء"
+  ,adStatus: "الحالة"
+  ,activeAds: "الإعلانات النشطة"
+  ,inactiveAds: "الإعلانات غير النشطة"
+  ,allUsers: "جميع المستخدمين"
+  ,proUsers: "PRO فقط"
+  ,freeUsers: "مجاني فقط"
+  ,editAd: "تعديل الإعلان"
+  ,deleteAd: "حذف الإعلان"
+  ,adCreatedSuccessfully: "تم إنشاء الإعلان بنجاح!"
+  ,adUpdatedSuccessfully: "تم تحديث الإعلان بنجاح!"
+  ,adDeletedSuccessfully: "تم حذف الإعلان بنجاح!"
+  ,noAdsFound: "لم يتم العثور على إعلانات. قم بإنشاء أول إعلان!"
+  ,uploadImage: "رفع صورة"
+  ,imageUrl: "رابط الصورة"
+  ,adPosition: "موضع الإعلان"
+  ,topBanner: "بانر علوي"
+  ,bottomBanner: "بانر سفلي"
+  ,sidebar: "الشريط الجانبي"
+  ,adClicks: "النقرات"
+  ,adViews: "المشاهدات"
+  ,adPerformance: "الأداء"
   ,mealCategory: "فئة الوجبة"
   ,macros: "المغذيات الكبرى"
   ,caloriesRequired: "السعرات *"
@@ -4948,6 +5038,36 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,setMealsForEachDay: "خواردنەکانی هەر رۆژێک دیاری بکە"
     ,setExercisesForEachDay: "یارییەکانی هەر رۆژێک دیاری بکە"
     ,mealName: "ناوی خواردن"
+    ,adsManagement: "بەڕێوەبردنی ڕێکلام"
+    ,createNewAd: "دروستکردنی ڕێکلامی نوێ"
+    ,adTitle: "ناونیشانی ڕێکلام"
+    ,adDescription: "وەسفی ڕێکلام"
+    ,adImage: "وێنەی ڕێکلام"
+    ,adLink: "لینکی ڕێکلام (URL)"
+    ,adTargetAudience: "ئامانج"
+    ,adStartDate: "بەرواری دەست پێکردن"
+    ,adEndDate: "بەرواری کۆتایی"
+    ,adStatus: "دۆخ"
+    ,activeAds: "ڕێکلامە چالاکەکان"
+    ,inactiveAds: "ڕێکلامە ناچالاکەکان"
+    ,allUsers: "هەموو یوزەرەکان"
+    ,proUsers: "تەنها PRO"
+    ,freeUsers: "تەنها فری"
+    ,editAd: "دەستکاری ڕێکلام"
+    ,deleteAd: "سڕینەوەی ڕێکلام"
+    ,adCreatedSuccessfully: "ڕێکلام بە سەرکەوتوویی دروست کرا!"
+    ,adUpdatedSuccessfully: "ڕێکلام بە سەرکەوتوویی نوێ کرایەوە!"
+    ,adDeletedSuccessfully: "ڕێکلام بە سەرکەوتوویی سڕایەوە!"
+    ,noAdsFound: "هیچ ڕێکلامێک نەدۆزرایەوە. یەکەمیان دروست بکە!"
+    ,uploadImage: "بارکردنی وێنە"
+    ,imageUrl: "لینکی وێنە"
+    ,adPosition: "شوێنی ڕێکلام"
+    ,topBanner: "بانەری سەرەوە"
+    ,bottomBanner: "بانەری خوارەوە"
+    ,sidebar: "لاتەنیشت"
+    ,adClicks: "کلیک"
+    ,adViews: "بینین"
+    ,adPerformance: "کاراییەکان"
     ,mealCategory: "پۆلی خواردن"
     ,macros: "ماکرۆکان"
     ,caloriesRequired: "کالۆری *"
@@ -6380,6 +6500,36 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   setMealsForEachDay: "Her gün için öğünleri belirle",
   setExercisesForEachDay: "Her gün için egzersizleri belirle",
   mealName: "Öğün Adı",
+  adsManagement: "Reklam Yönetimi",
+  createNewAd: "Yeni Reklam Oluştur",
+  adTitle: "Reklam Başlığı",
+  adDescription: "Reklam Açıklaması",
+  adImage: "Reklam Görseli",
+  adLink: "Reklam Bağlantısı (URL)",
+  adTargetAudience: "Hedef Kitle",
+  adStartDate: "Başlangıç Tarihi",
+  adEndDate: "Bitiş Tarihi",
+  adStatus: "Durum",
+  activeAds: "Aktif Reklamlar",
+  inactiveAds: "Pasif Reklamlar",
+  allUsers: "Tüm Kullanıcılar",
+  proUsers: "Sadece PRO",
+  freeUsers: "Sadece Ücretsiz",
+  editAd: "Reklamı Düzenle",
+  deleteAd: "Reklamı Sil",
+  adCreatedSuccessfully: "Reklam başarıyla oluşturuldu!",
+  adUpdatedSuccessfully: "Reklam başarıyla güncellendi!",
+  adDeletedSuccessfully: "Reklam başarıyla silindi!",
+  noAdsFound: "Reklam bulunamadı. İlk reklamınızı oluşturun!",
+  uploadImage: "Görsel Yükle",
+  imageUrl: "Görsel Bağlantısı",
+  adPosition: "Reklam Konumu",
+  topBanner: "Üst Banner",
+  bottomBanner: "Alt Banner",
+  sidebar: "Kenar Çubuğu",
+  adClicks: "Tıklamalar",
+  adViews: "Görüntülemeler",
+  adPerformance: "Performans",
   mealCategory: "Öğün Kategorisi",
   macros: "Makrolar",
   caloriesRequired: "Kalori *",
