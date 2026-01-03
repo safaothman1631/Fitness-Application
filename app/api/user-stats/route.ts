@@ -20,8 +20,13 @@ export async function GET(request: NextRequest) {
 
     // Calculate current streak
     const workoutDates = workoutsSnapshot.docs
-      .map(doc => doc.data().completedAt?.toDate())
-      .filter(date => date)
+      .map(doc => {
+        const data = doc.data()
+        // Try different timestamp fields that might exist
+        const timestamp = data.completedAt || data.createdAt || data.timestamp || data.date
+        return timestamp?.toDate ? timestamp.toDate() : (timestamp ? new Date(timestamp) : null)
+      })
+      .filter(date => date && !isNaN(date.getTime()))
       .sort((a, b) => b.getTime() - a.getTime())
 
     let currentStreak = 0
@@ -43,17 +48,34 @@ export async function GET(request: NextRequest) {
       }
     }
 
-    // Fetch user progress
-    const progressSnapshot = await adminDb
-      .collection('progress')
-      .where('userId', '==', userId)
-      .orderBy('updatedAt', 'desc')
-      .limit(1)
-      .get()
+    // Fetch user progress - simplified to avoid index issues
+    let overallProgress = 0
+    try {
+      const progressSnapshot = await adminDb
+        .collection('progress')
+        .where('userId', '==', userId)
+        .limit(10)
+        .get()
 
-    const overallProgress = progressSnapshot.empty
-      ? 0
-      : Math.round(progressSnapshot.docs[0].data().progressPercentage || 0)
+      if (!progressSnapshot.empty) {
+        // Get the most recent progress by checking updatedAt client-side
+        const progressDocs = progressSnapshot.docs
+          .map(doc => doc.data())
+          .filter(data => data.updatedAt)
+          .sort((a, b) => {
+            const aTime = a.updatedAt?.toDate?.() || new Date(a.updatedAt)
+            const bTime = b.updatedAt?.toDate?.() || new Date(b.updatedAt)
+            return bTime.getTime() - aTime.getTime()
+          })
+        
+        if (progressDocs.length > 0) {
+          overallProgress = Math.round(progressDocs[0].progressPercentage || 0)
+        }
+      }
+    } catch (progressError) {
+      console.warn('Could not fetch progress, using default:', progressError)
+      overallProgress = 0
+    }
 
     return NextResponse.json({
       totalWorkouts,
