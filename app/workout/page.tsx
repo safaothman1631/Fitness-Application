@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AuthGuard from "@/components/auth-guard"
 import { Dumbbell, Clock, Plus, ListOrdered, Flame, CalendarDays, CheckCircle2, Circle, LayoutDashboard, Utensils, HeartPulse, User, Calendar, Award, Target, Play, Image as ImageIcon, Film } from "lucide-react"
-import { submitWorkout, hasSubmittedWorkoutToday } from "@/lib/submissions"
+import { submitWorkout, hasSubmittedWorkoutToday, getWorkoutSubmissions } from "@/lib/submissions"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
@@ -86,16 +86,42 @@ export default function WorkoutPage() {
       const userId = localStorage.getItem("userId")
       if (!userId) return
       
-      // For now, set default values - will be replaced with real API calls
-      // TODO: Create /api/user/workout-stats endpoint
-      setWorkoutStats({
-        totalWorkouts: 0,
-        activeStreak: 0,
-        caloriesBurned: 0,
-        totalTime: 0
-      })
+      // Fetch real stats from Firebase
+      const response = await fetch(`/api/user-stats?userId=${userId}`)
+      if (response.ok) {
+        const data = await response.json()
+        
+        // Calculate total time and calories from submissions
+        const submissions = getWorkoutSubmissions()
+        const totalTime = submissions.length * 45 // Assume 45 min per workout
+        const caloriesBurned = submissions.length * 350 // Assume 350 cal per workout
+        
+        setWorkoutStats({
+          totalWorkouts: data.totalWorkouts || submissions.length,
+          activeStreak: data.currentStreak || 0,
+          caloriesBurned: caloriesBurned,
+          totalTime: totalTime
+        })
+      } else {
+        // Fallback to localStorage data
+        const submissions = getWorkoutSubmissions()
+        setWorkoutStats({
+          totalWorkouts: submissions.length,
+          activeStreak: 0,
+          caloriesBurned: submissions.length * 350,
+          totalTime: submissions.length * 45
+        })
+      }
     } catch (error) {
       console.error('Error fetching workout stats:', error)
+      // Fallback to localStorage data
+      const submissions = getWorkoutSubmissions()
+      setWorkoutStats({
+        totalWorkouts: submissions.length,
+        activeStreak: 0,
+        caloriesBurned: submissions.length * 350,
+        totalTime: submissions.length * 45
+      })
     }
   }
 
