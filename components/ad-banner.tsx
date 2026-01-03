@@ -30,7 +30,7 @@ export function AdBanner({ position, userType = 'all' }: AdBannerProps) {
     if (ads.length > 1) {
       const interval = setInterval(() => {
         setCurrentAdIndex((prev) => (prev + 1) % ads.length)
-      }, 8000) // Change ad every 8 seconds
+      }, 6000) // Change ad every 6 seconds
 
       return () => clearInterval(interval)
     }
