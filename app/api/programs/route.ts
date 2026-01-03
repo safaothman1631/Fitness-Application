@@ -16,11 +16,20 @@ export async function GET(request: NextRequest) {
     }
 
     const programsSnapshot = await programsQuery.get()
+    console.log('📊 Total documents in programs collection:', programsSnapshot.size)
+    
     let programs = programsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data(),
       createdAt: doc.data().createdAt?.toDate?.()?.toISOString() || doc.data().createdAt
     }))
+    
+    console.log('📋 Programs before filtering:', programs.map(p => ({ 
+      id: p.id, 
+      title: p.title, 
+      type: p.type,
+      assignedUsers: p.assignedUsers 
+    })))
 
     // Sort by createdAt in memory (to avoid Firestore index requirement)
     programs.sort((a: any, b: any) => {
