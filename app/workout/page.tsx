@@ -655,48 +655,85 @@ export default function WorkoutPage() {
 
       {/* Exercise Detail Dialog */}
       <Dialog open={!!selectedExercise} onOpenChange={(open) => !open && setSelectedExercise(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-3xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle className={`text-2xl font-bold text-white ${isRTL ? 'text-right pr-12' : ''}`}>
+        <DialogContent className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-2 border-purple-500/30 text-white max-w-[96vw] sm:max-w-4xl max-h-[90vh] shadow-2xl shadow-purple-500/20">
+          <DialogHeader className="border-b border-purple-500/20 pb-4">
+            <DialogTitle className={`text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent ${isRTL ? 'text-right pr-12' : ''} flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/50 flex items-center justify-center shadow-lg shadow-purple-500/20">
+                <Dumbbell className="w-6 h-6 text-purple-400" />
+              </div>
               {selectedExercise?.name}
             </DialogTitle>
           </DialogHeader>
-          <ScrollArea className="max-h-[70vh]">
+          <ScrollArea className="max-h-[70vh] pr-4">
             {selectedExercise && (
-              <div className="space-y-8">
-                {/* Exercise Info */}
-                <Card className="bg-slate-900/70 border-slate-800">
-                  <CardContent className="p-6">
-                    <div className={`grid grid-cols-2 md:grid-cols-4 gap-6 ${isRTL ? 'text-right' : ''}`}>
-                      <div>
-                        <p className="text-slate-400 text-xs mb-1">{t("sets")}</p>
-                        <p className="text-white font-bold text-2xl">{selectedExercise.sets}</p>
-                      </div>
-                      <div>
-                        <p className="text-slate-400 text-xs mb-1">{t("reps")}</p>
-                        <p className="text-white font-bold text-2xl">{selectedExercise.reps}</p>
-                      </div>
-                      {selectedExercise.duration && (
-                        <div>
-                          <p className="text-slate-400 text-xs mb-1">{t("duration")}</p>
-                          <p className="text-white font-bold text-xl">{selectedExercise.duration}</p>
+              <div className="space-y-6">
+                {/* Exercise Info Cards - Modern Grid */}
+                <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${isRTL ? 'text-right' : ''}`}>
+                  <Card className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 border-purple-500/40 hover:border-purple-400 transition-all hover:shadow-lg hover:shadow-purple-500/20 group">
+                    <CardContent className="p-4">
+                      <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/30 transition-colors">
+                          <ListOrdered className="w-4 h-4 text-purple-400" />
                         </div>
-                      )}
-                      <div>
-                        <p className="text-slate-400 text-xs mb-1">Target</p>
-                        <p className="text-purple-400 font-semibold text-lg">{selectedExercise.muscleGroup}</p>
+                        <p className="text-purple-300 text-xs font-medium uppercase tracking-wide">{t("sets")}</p>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                      <p className="text-white font-bold text-3xl group-hover:text-purple-300 transition-colors">{selectedExercise.sets}</p>
+                    </CardContent>
+                  </Card>
+
+                  <Card className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 border-cyan-500/40 hover:border-cyan-400 transition-all hover:shadow-lg hover:shadow-cyan-500/20 group">
+                    <CardContent className="p-4">
+                      <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/30 transition-colors">
+                          <Target className="w-4 h-4 text-cyan-400" />
+                        </div>
+                        <p className="text-cyan-300 text-xs font-medium uppercase tracking-wide">{t("reps")}</p>
+                      </div>
+                      <p className="text-white font-bold text-3xl group-hover:text-cyan-300 transition-colors">{selectedExercise.reps}</p>
+                    </CardContent>
+                  </Card>
+
+                  {selectedExercise.duration && (
+                    <Card className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 border-orange-500/40 hover:border-orange-400 transition-all hover:shadow-lg hover:shadow-orange-500/20 group">
+                      <CardContent className="p-4">
+                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center group-hover:bg-orange-500/30 transition-colors">
+                            <Clock className="w-4 h-4 text-orange-400" />
+                          </div>
+                          <p className="text-orange-300 text-xs font-medium uppercase tracking-wide">{t("duration")}</p>
+                        </div>
+                        <p className="text-white font-bold text-2xl group-hover:text-orange-300 transition-colors">{selectedExercise.duration}</p>
+                      </CardContent>
+                    </Card>
+                  )}
+
+                  <Card className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 border-pink-500/40 hover:border-pink-400 transition-all hover:shadow-lg hover:shadow-pink-500/20 group">
+                    <CardContent className="p-4">
+                      <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center group-hover:bg-pink-500/30 transition-colors">
+                          <HeartPulse className="w-4 h-4 text-pink-400" />
+                        </div>
+                        <p className="text-pink-300 text-xs font-medium uppercase tracking-wide">Target</p>
+                      </div>
+                      <p className="text-white font-bold text-lg group-hover:text-pink-300 transition-colors">{selectedExercise.muscleGroup}</p>
+                    </CardContent>
+                  </Card>
+                </div>
 
                 {/* Media Section */}
                 {(selectedExercise.videoUrl || selectedExercise.gifUrl || selectedExercise.imageUrl) && (
-                  <Card className="bg-slate-900/70 border-slate-800">
-                    <CardHeader>
-                      <CardTitle className="text-white text-lg">Exercise Demo</CardTitle>
+                  <Card className="bg-gradient-to-br from-slate-900/90 to-slate-800/50 border-2 border-purple-500/30 shadow-xl shadow-purple-500/10 overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-b border-purple-500/30">
+                      <CardTitle className={`text-white text-lg flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        <div className="w-10 h-10 rounded-lg bg-purple-500/20 border border-purple-500/50 flex items-center justify-center">
+                          <Play className="w-5 h-5 text-purple-400" />
+                        </div>
+                        <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-bold">
+                          Exercise Demo
+                        </span>
+                      </CardTitle>
                     </CardHeader>
-                    <CardContent className="space-y-4">
+                    <CardContent className="space-y-4 p-6">
                       {selectedExercise.videos && selectedExercise.videos.length > 0 ? (
                         <div className="space-y-6">
                           {selectedExercise.videos.map((video, index) => (
@@ -818,7 +855,8 @@ export default function WorkoutPage() {
                           ))}
                         </div>
                       ) : selectedExercise.videoUrl ? (
-                        <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30 relative">
+                        <div className="aspect-video bg-gradient-to-br from-slate-900 to-slate-950 rounded-xl overflow-hidden border-2 border-purple-500/40 shadow-2xl shadow-purple-500/20 relative group">
+                          <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"></div>
                           <video 
                             src={selectedExercise.videoUrl} 
                             controls 
@@ -856,20 +894,24 @@ export default function WorkoutPage() {
                         </div>
                       ) : null}
                       {selectedExercise.gifUrl && (
-                        <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
-                          <div className="text-center">
-                            <Play className="w-12 h-12 text-green-400 mx-auto mb-2" />
-                            <p className="text-slate-400 text-sm">GIF animation</p>
-                            <p className="text-green-400 text-xs mt-1">{selectedExercise.gifUrl}</p>
+                        <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-green-500/40 flex items-center justify-center shadow-lg shadow-green-500/10 hover:border-green-400/60 transition-all group">
+                          <div className="text-center p-6">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/30 to-emerald-500/30 border-2 border-green-500/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-green-500/20">
+                              <Play className="w-8 h-8 text-green-400" />
+                            </div>
+                            <p className="text-slate-300 text-base font-bold mb-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">GIF Animation Available</p>
+                            <p className="text-green-400 text-xs font-mono bg-slate-900/50 px-3 py-2 rounded-lg inline-block">{selectedExercise.gifUrl}</p>
                           </div>
                         </div>
                       )}
                       {selectedExercise.imageUrl && (
-                        <div className="aspect-video bg-slate-800 rounded-lg flex items-center justify-center">
-                          <div className="text-center">
-                            <ImageIcon className="w-12 h-12 text-blue-400 mx-auto mb-2" />
-                            <p className="text-slate-400 text-sm">Reference image</p>
-                            <p className="text-blue-400 text-xs mt-1">{selectedExercise.imageUrl}</p>
+                        <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-blue-500/40 flex items-center justify-center shadow-lg shadow-blue-500/10 hover:border-blue-400/60 transition-all group">
+                          <div className="text-center p-6">
+                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/30 to-cyan-500/30 border-2 border-blue-500/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-blue-500/20">
+                              <ImageIcon className="w-8 h-8 text-blue-400" />
+                            </div>
+                            <p className="text-slate-300 text-base font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Reference Image</p>
+                            <p className="text-blue-400 text-xs font-mono bg-slate-900/50 px-3 py-2 rounded-lg inline-block">{selectedExercise.imageUrl}</p>
                           </div>
                         </div>
                       )}
@@ -879,14 +921,17 @@ export default function WorkoutPage() {
 
                 {/* Notes */}
                 {selectedExercise.notes && (
-                  <Card className="bg-amber-500/10 border-amber-500/30">
-                    <CardHeader>
-                      <CardTitle className={`text-amber-400 text-lg flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                        ≡ƒÆí {t("importantNotes")}
+                  <Card className="bg-gradient-to-br from-amber-900/30 via-amber-800/20 to-yellow-900/30 border-2 border-amber-500/40 shadow-xl shadow-amber-500/10 overflow-hidden">
+                    <CardHeader className="bg-gradient-to-r from-amber-900/40 to-yellow-900/40 border-b border-amber-500/30">
+                      <CardTitle className={`text-transparent bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-lg flex items-center gap-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
+                        <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center">
+                          <span className="text-2xl">💡</span>
+                        </div>
+                        {t("importantNotes")}
                       </CardTitle>
                     </CardHeader>
-                    <CardContent>
-                      <p className="text-white">{selectedExercise.notes}</p>
+                    <CardContent className="p-6">
+                      <p className="text-white text-base leading-relaxed">{selectedExercise.notes}</p>
                     </CardContent>
                   </Card>
                 )}
