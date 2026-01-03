@@ -22,11 +22,11 @@ function UserDashboard() {
   const { t, language } = useLanguage()
   const [activeTab, setActiveTab] = useState("dashboard")
   const [notificationOpen, setNotificationOpen] = useState(false)
-  const [subscriptionStatus, setSubscriptionStatus] = useState({
-    isActive: true,
-    isExpired: false,
-    daysRemaining: 30,
-  })
+  const [subscriptionStatus, setSubscriptionStatus] = useState<{
+    isActive: boolean
+    isExpired: boolean
+    daysRemaining: number
+  } | null>(null)
   const [userData, setUserData] = useState<any>(null)
   const [requestingPro, setRequestingPro] = useState(false)
   const [hasActiveProRequest, setHasActiveProRequest] = useState(false)
@@ -248,14 +248,14 @@ function UserDashboard() {
         </div>
 
         {/* Subscription Warning */}
-        {subscriptionStatus.isExpired && (
+        {subscriptionStatus?.isExpired && (
           <SubscriptionWarning variant="expired" />
         )}
-        {!subscriptionStatus.isExpired && subscriptionStatus.daysRemaining <= 7 && subscriptionStatus.daysRemaining > 0 && (
+        {subscriptionStatus && !subscriptionStatus.isExpired && subscriptionStatus.daysRemaining <= 7 && subscriptionStatus.daysRemaining > 0 && (
           <SubscriptionWarning variant="warning" daysRemaining={subscriptionStatus.daysRemaining} />
         )}
 
-        {!subscriptionStatus.isExpired && (
+        {subscriptionStatus && !subscriptionStatus.isExpired && (
           <Card className="bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] border-none p-8 mb-8 relative overflow-hidden">
             <div className="relative z-10">
               <h3 className="text-white text-xl font-bold mb-2">{t("limitedOffer")}</h3>
