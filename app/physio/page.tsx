@@ -27,6 +27,10 @@ interface PhysioRequest {
   status: "pending" | "accepted" | "rejected"
   completed?: boolean
   createdAt: string
+  appointmentDate?: string
+  appointmentTime?: string
+  appointmentLocation?: string
+  physioNotes?: string
 }
 
 interface Physiotherapist {
@@ -319,13 +323,74 @@ export default function PhysioPage() {
               </div>
             ) : requests.length > 0 ? (
               requests.map(r => (
-                  <div key={r.id} className="p-3 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-rose-500/30 transition-all">
-                    <div className="text-xs">
-                      <p className="text-white font-semibold">{r.injuryType}</p>
-                      <p className="text-slate-400 mt-0.5">{r.physioName} ΓÇó Pain {r.painPercent}% ΓÇó {r.status}</p>
-                      {r.notes && <p className="text-slate-500 mt-0.5 line-clamp-1">{r.notes}</p>}
-                      <p className="text-slate-600 mt-0.5">{new Date(r.createdAt).toLocaleDateString()}</p>
+                  <div key={r.id} className="p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-rose-500/30 transition-all">
+                    {/* Header */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex-1">
+                        <p className="text-white font-semibold text-sm">{r.injuryType}</p>
+                        <p className="text-slate-400 text-xs mt-1">{r.physioName} • Pain {r.painPercent}%</p>
+                      </div>
+                      <div className={`px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wide ${
+                        r.status === 'accepted' ? 'bg-green-500/10 text-green-400 border border-green-500/30' :
+                        r.status === 'rejected' ? 'bg-red-500/10 text-red-400 border border-red-500/30' :
+                        'bg-yellow-500/10 text-yellow-400 border border-yellow-500/30'
+                      }`}>
+                        {r.status === 'accepted' ? t('accepted') : r.status === 'rejected' ? t('rejected') : t('pendingLabel')}
+                      </div>
                     </div>
+
+                    {/* Appointment Details - Only show if accepted and appointment is set */}
+                    {r.status === 'accepted' && r.appointment && (r.appointment.date || r.appointment.time || r.appointment.location) && (
+                      <div className="mb-3 p-3 rounded-lg bg-gradient-to-r from-green-500/5 to-emerald-500/5 border border-green-500/20">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Calendar className="w-4 h-4 text-green-400" />
+                          <span className="text-green-400 text-xs font-semibold uppercase tracking-wide">{t('appointmentDetails')}</span>
+                        </div>
+                        <div className="space-y-1.5 text-xs">
+                          {r.appointment.date && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-400 min-w-[60px]">{t('date')}:</span>
+                              <span className="text-white font-medium">{new Date(r.appointment.date).toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' })}</span>
+                            </div>
+                          )}
+                          {r.appointment.time && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-400 min-w-[60px]">{t('time')}:</span>
+                              <span className="text-white font-medium">{r.appointment.time}</span>
+                            </div>
+                          )}
+                          {r.appointment.location && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-400 min-w-[60px]">{t('location')}:</span>
+                              <span className="text-white font-medium">{r.appointment.location}</span>
+                            </div>
+                          )}
+                          {r.appointment.price && (
+                            <div className="flex items-center gap-2">
+                              <span className="text-slate-400 min-w-[60px]">{t('sessionPrice')}:</span>
+                              <span className="text-green-400 font-bold">${r.appointment.price}</span>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Notes */}
+                    {r.notes && (
+                      <div className="mb-2">
+                        <p className="text-slate-500 text-xs line-clamp-2">{t('yourNote')}: {r.notes}</p>
+                      </div>
+                    )}
+                    
+                    {/* Physio Response Notes */}
+                    {r.appointment?.notes && (
+                      <div className="mb-2 p-2 rounded bg-rose-500/5 border border-rose-500/20">
+                        <p className="text-rose-300 text-xs">{t('physioNote')}: {r.appointment.notes}</p>
+                      </div>
+                    )}
+
+                    {/* Request Date */}
+                    <p className="text-slate-600 text-[10px] mt-2">{t('requested')}: {new Date(r.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</p>
                   </div>
               ))
             ) : (

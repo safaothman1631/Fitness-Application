@@ -144,9 +144,7 @@ export async function GET(request: NextRequest) {
           // Generate signed URL for the video (valid for 7 days)
           const [url] = await file.getSignedUrl({
             action: 'read',
-            expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
-          })
-
+            expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year
           const [metadata] = await file.getMetadata()
 
           // Get category from Firestore by matching video filename
@@ -227,10 +225,10 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Generate signed URL
+    // Generate signed URL with 1 year expiration
     const [url] = await fileRef.getSignedUrl({
       action: 'read',
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+      expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year
     })
 
     console.log("✅ Video uploaded successfully:", fileName)

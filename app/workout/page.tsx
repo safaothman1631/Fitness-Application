@@ -641,84 +641,89 @@ export default function WorkoutPage() {
 
       </div>
 
-      {/* Day Workout Dialog */}
+      {/* Day Workout Dialog - Modern Professional */}
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>
-        <DialogContent className="bg-slate-950 border-slate-800 text-white max-w-[96vw] sm:max-w-2xl max-h-[90vh]">
-          <DialogHeader>
-            <DialogTitle className={`text-2xl font-bold bg-gradient-to-r from-purple-400 to-purple-600 bg-clip-text text-transparent ${isRTL ? 'text-right pr-12' : ''}`}>
+        <DialogContent className="bg-slate-950 border border-slate-800 text-white max-w-[96vw] sm:max-w-2xl max-h-[92vh] p-0 gap-0">
+          {/* Modern Header */}
+          <div className="border-b border-slate-800/50 bg-slate-950/95 backdrop-blur-xl px-6 py-5">
+            <DialogTitle className={`text-2xl sm:text-3xl font-bold text-white ${isRTL ? 'text-right' : ''}`}>
               {selectedDay && t(selectedDay.toLowerCase() as any)} {t("workout")}
             </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="max-h-[70vh] pr-4">
-            <div className="space-y-6">
+            <p className="text-slate-400 text-sm mt-1">
+              {workoutSchedule.find(d => d.day === selectedDay)?.exercises.length || 0} {t("exercises")}
+            </p>
+          </div>
+
+          <ScrollArea className="h-[calc(92vh-100px)] px-6 py-4">
+            <div className="space-y-3">
               {workoutSchedule
                 .find(d => d.day === selectedDay)
                 ?.exercises.map((exercise, idx) => (
                   <Card
                     key={exercise.id}
-                    className="bg-slate-900/70 border-slate-800 hover:border-purple-500/50 transition-all cursor-pointer"
+                    className="bg-slate-900/50 border-slate-800/50 hover:border-slate-700 hover:bg-slate-900/70 transition-all cursor-pointer group"
                     onClick={() => setSelectedExercise(exercise)}
                   >
                     <CardContent className="p-4">
-                      <div className={`flex items-start gap-4 ${isRTL ? 'flex-row-reverse justify-between' : 'justify-between'}`}>
-                        {/* Title section - Right for RTL */}
-                        <div className={`flex-1 ${isRTL ? 'order-1 text-right' : 'order-1'}`}>
-                          <div className={`flex items-center gap-2 mb-3 ${isRTL ? 'flex-row-reverse justify-start' : ''}`}>
-                            <span className="text-purple-400 font-bold text-lg">{t(getExerciseOrdinal(idx + 1))}</span>
-                            <h3 className="text-white font-semibold text-lg">{exercise.name}</h3>
-                          </div>
-                          <div className={`flex flex-wrap gap-3 mb-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                            <div className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm">
-                              {exercise.sets} {t("sets")}
-                            </div>
-                            <div className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm">
-                              {exercise.reps} {t("reps")}
-                            </div>
-                            {exercise.duration && (
-                              <div className="px-3 py-1 rounded-full bg-purple-500/10 text-purple-400 text-sm">
-                                {exercise.duration}
+                      <div className={`flex items-start gap-4 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                        {/* Exercise Number Badge */}
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center flex-shrink-0 group-hover:scale-105 transition-transform">
+                          <span className="text-purple-400 font-bold text-lg">{idx + 1}</span>
+                        </div>
+
+                        {/* Content */}
+                        <div className="flex-1 min-w-0">
+                          <h3 className={`text-white font-semibold text-base mb-2 ${isRTL ? 'text-right' : ''}`}>
+                            {exercise.name?.replace(/\.(mp4|mov|avi|webm)$/i, '').replace(/\s*\(\d+\)\s*/g, '').trim()}
+                          </h3>
+                          
+                          <div className={`flex flex-wrap gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            {exercise.sets && (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/60 border border-slate-700/50">
+                                <ListOrdered className="w-3 h-3 text-purple-400" />
+                                <span className="text-xs text-slate-300 font-medium">{exercise.sets}×</span>
                               </div>
                             )}
-                            <div className="px-3 py-1 rounded-full bg-slate-800 text-slate-300 text-sm">
-                              {t(exercise.muscleGroup.toLowerCase() === "chest" ? "chest" : 
-                                 exercise.muscleGroup.toLowerCase() === "back" ? "backMuscle" : 
-                                 exercise.muscleGroup.toLowerCase() === "legs" ? "legs" : 
-                                 exercise.muscleGroup.toLowerCase() === "shoulders" ? "shoulders" : 
-                                 exercise.muscleGroup.toLowerCase() === "arms" ? "arms" : "core")}
+                            {exercise.reps && (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/60 border border-slate-700/50">
+                                <Target className="w-3 h-3 text-pink-400" />
+                                <span className="text-xs text-slate-300 font-medium">{exercise.reps}</span>
+                              </div>
+                            )}
+                            {exercise.duration && (
+                              <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-slate-800/60 border border-slate-700/50">
+                                <Clock className="w-3 h-3 text-cyan-400" />
+                                <span className="text-xs text-slate-300 font-medium">{exercise.duration}</span>
+                              </div>
+                            )}
+                            <div className="px-2.5 py-1 rounded-full bg-slate-800/40 text-xs text-slate-400">
+                              {exercise.muscleGroup}
                             </div>
                           </div>
+
+                          {exercise.notes && (
+                            <p className={`text-amber-400/80 text-xs mt-2 ${isRTL ? 'text-right' : ''}`}>
+                              💡 {exercise.notes}
+                            </p>
+                          )}
                         </div>
-                        
-                        {/* Icons section - Center for RTL */}
-                        <div className={`flex gap-2 ${isRTL ? 'flex-row-reverse order-2' : 'order-2'}`}>
-                          {exercise.videoUrl && (
-                            <div className="relative w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
-                              <Film className="w-5 h-5 text-purple-400" />
-                              {exercise.videoUrls && exercise.videoUrls.length > 1 && (
-                                <div className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center border-2 border-slate-900">
-                                  {exercise.videoUrls.length}
+
+                        {/* Media Indicators */}
+                        <div className={`flex gap-1.5 flex-shrink-0 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          {exercise.videos && exercise.videos.length > 0 && (
+                            <div className="relative">
+                              <div className="w-9 h-9 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center">
+                                <Film className="w-4 h-4 text-purple-400" />
+                              </div>
+                              {exercise.videos.length > 1 && (
+                                <div className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-purple-500 text-white text-[10px] font-bold flex items-center justify-center">
+                                  {exercise.videos.length}
                                 </div>
                               )}
                             </div>
                           )}
-                          {exercise.gifUrl && (
-                            <div className="w-10 h-10 rounded-lg bg-green-500/10 flex items-center justify-center">
-                              <Play className="w-5 h-5 text-green-400" />
-                            </div>
-                          )}
-                          {exercise.imageUrl && (
-                            <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                              <ImageIcon className="w-5 h-5 text-blue-400" />
-                            </div>
-                          )}
                         </div>
                       </div>
-                      {/* Notes section - Below everything */}
-                      {exercise.notes && (
-                        <div className={`px-4 pb-4 ${isRTL ? 'text-right' : ''}`}>
-                          <p className="text-slate-400 text-sm italic">≡ƒÆí {exercise.notes}</p>
-                        </div>
-                      )}
                     </CardContent>
                   </Card>
                 ))}
@@ -727,287 +732,246 @@ export default function WorkoutPage() {
         </DialogContent>
       </Dialog>
 
-      {/* Exercise Detail Dialog */}
+      {/* Exercise Detail Dialog - Modern European Style */}
       <Dialog open={!!selectedExercise} onOpenChange={(open) => !open && setSelectedExercise(null)}>
-        <DialogContent className="bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 border-2 border-purple-500/30 text-white max-w-[96vw] sm:max-w-4xl max-h-[90vh] shadow-2xl shadow-purple-500/20">
-          <DialogHeader className="border-b border-purple-500/20 pb-4">
-            <DialogTitle className={`text-3xl font-bold bg-gradient-to-r from-purple-400 via-pink-400 to-purple-500 bg-clip-text text-transparent ${isRTL ? 'text-right pr-12' : ''} flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/30 to-pink-500/30 border border-purple-500/50 flex items-center justify-center shadow-lg shadow-purple-500/20">
-                <Dumbbell className="w-6 h-6 text-purple-400" />
-              </div>
-              {selectedExercise?.name}
-            </DialogTitle>
-          </DialogHeader>
-          <ScrollArea className="max-h-[70vh] pr-4">
-            {selectedExercise && (
-              <div className="space-y-6">
-                {/* Exercise Info Cards - Modern Grid */}
-                <div className={`grid grid-cols-2 md:grid-cols-4 gap-4 ${isRTL ? 'text-right' : ''}`}>
-                  <Card className="bg-gradient-to-br from-purple-900/40 to-purple-800/20 border-purple-500/40 hover:border-purple-400 transition-all hover:shadow-lg hover:shadow-purple-500/20 group">
-                    <CardContent className="p-4">
-                      <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className="w-8 h-8 rounded-lg bg-purple-500/20 flex items-center justify-center group-hover:bg-purple-500/30 transition-colors">
-                          <ListOrdered className="w-4 h-4 text-purple-400" />
-                        </div>
-                        <p className="text-purple-300 text-xs font-medium uppercase tracking-wide">{t("sets")}</p>
-                      </div>
-                      <p className="text-white font-bold text-3xl group-hover:text-purple-300 transition-colors">{selectedExercise.sets}</p>
-                    </CardContent>
-                  </Card>
-
-                  <Card className="bg-gradient-to-br from-cyan-900/40 to-cyan-800/20 border-cyan-500/40 hover:border-cyan-400 transition-all hover:shadow-lg hover:shadow-cyan-500/20 group">
-                    <CardContent className="p-4">
-                      <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className="w-8 h-8 rounded-lg bg-cyan-500/20 flex items-center justify-center group-hover:bg-cyan-500/30 transition-colors">
-                          <Target className="w-4 h-4 text-cyan-400" />
-                        </div>
-                        <p className="text-cyan-300 text-xs font-medium uppercase tracking-wide">{t("reps")}</p>
-                      </div>
-                      <p className="text-white font-bold text-3xl group-hover:text-cyan-300 transition-colors">{selectedExercise.reps}</p>
-                    </CardContent>
-                  </Card>
-
-                  {selectedExercise.duration && (
-                    <Card className="bg-gradient-to-br from-orange-900/40 to-orange-800/20 border-orange-500/40 hover:border-orange-400 transition-all hover:shadow-lg hover:shadow-orange-500/20 group">
-                      <CardContent className="p-4">
-                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                          <div className="w-8 h-8 rounded-lg bg-orange-500/20 flex items-center justify-center group-hover:bg-orange-500/30 transition-colors">
-                            <Clock className="w-4 h-4 text-orange-400" />
-                          </div>
-                          <p className="text-orange-300 text-xs font-medium uppercase tracking-wide">{t("duration")}</p>
-                        </div>
-                        <p className="text-white font-bold text-2xl group-hover:text-orange-300 transition-colors">{selectedExercise.duration}</p>
-                      </CardContent>
-                    </Card>
+        <DialogContent className="bg-slate-950 border border-slate-800 text-white max-w-[98vw] sm:max-w-3xl max-h-[95vh] p-0 gap-0 overflow-hidden">
+          <DialogTitle className="sr-only">{selectedExercise?.name}</DialogTitle>
+          
+          {/* Modern Professional Header */}
+          <div className="relative border-b border-slate-800/50 bg-slate-950/95 backdrop-blur-xl">
+            <div className="px-4 sm:px-6 py-5">
+              <div className={`${isRTL ? 'text-right' : ''}`}>
+                <h2 className="text-2xl sm:text-3xl font-bold text-white mb-2 leading-tight">
+                  {selectedExercise?.name?.replace(/\.(mp4|mov|avi|webm)$/i, '').replace(/\s*\(\d+\)\s*/g, '').trim()}
+                </h2>
+                <div className="flex flex-wrap items-center gap-3 text-sm">
+                  {selectedExercise?.muscleGroup && (
+                    <span className="text-slate-400 font-medium">
+                      {selectedExercise.muscleGroup}
+                    </span>
                   )}
-
-                  <Card className="bg-gradient-to-br from-pink-900/40 to-pink-800/20 border-pink-500/40 hover:border-pink-400 transition-all hover:shadow-lg hover:shadow-pink-500/20 group">
-                    <CardContent className="p-4">
-                      <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className="w-8 h-8 rounded-lg bg-pink-500/20 flex items-center justify-center group-hover:bg-pink-500/30 transition-colors">
-                          <HeartPulse className="w-4 h-4 text-pink-400" />
-                        </div>
-                        <p className="text-pink-300 text-xs font-medium uppercase tracking-wide">Target</p>
-                      </div>
-                      <p className="text-white font-bold text-lg group-hover:text-pink-300 transition-colors">{selectedExercise.muscleGroup}</p>
-                    </CardContent>
-                  </Card>
+                  {selectedExercise?.sets && (
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/50">
+                      <ListOrdered className="w-3.5 h-3.5 text-purple-400" />
+                      <span className="text-slate-300 font-semibold">{selectedExercise.sets} sets</span>
+                    </div>
+                  )}
+                  {selectedExercise?.reps && (
+                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/60 border border-slate-700/50">
+                      <Target className="w-3.5 h-3.5 text-pink-400" />
+                      <span className="text-slate-300 font-semibold">{selectedExercise.reps} reps</span>
+                    </div>
+                  )}
                 </div>
+              </div>
+            </div>
+          </div>
 
-                {/* Media Section */}
-                {(selectedExercise.videoUrl || selectedExercise.gifUrl || selectedExercise.imageUrl) && (
-                  <Card className="bg-gradient-to-br from-slate-900/90 to-slate-800/50 border-2 border-purple-500/30 shadow-xl shadow-purple-500/10 overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-purple-900/30 to-pink-900/30 border-b border-purple-500/30">
-                      <CardTitle className={`text-white text-lg flex items-center gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
-                        <div className="w-10 h-10 rounded-lg bg-purple-500/20 border border-purple-500/50 flex items-center justify-center">
-                          <Play className="w-5 h-5 text-purple-400" />
-                        </div>
-                        <span className="bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent font-bold">
-                          Exercise Demo
-                        </span>
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4 p-6">
-                      {selectedExercise.videos && selectedExercise.videos.length > 0 ? (
-                        <div className="space-y-6">
-                          {selectedExercise.videos.map((video, index) => (
-                            <div key={index}>
-                              <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-2">
-                                  <div className="w-6 h-6 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center">
-                                    {index + 1}
-                                  </div>
-                                  <p className="text-white text-sm font-bold">
-                                    {video.name}
-                                  </p>
-                                </div>
-                                <div className="flex gap-2">
-                                  {video.sets && (
-                                    <span className="px-3 py-1 rounded-full bg-blue-500/20 text-blue-300 text-sm font-bold">
-                                      {video.sets} sets
-                                    </span>
-                                  )}
-                                  {video.reps && (
-                                    <span className="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 text-sm font-bold">
-                                      {video.reps} reps
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                              {video.notes && (
-                                <p className="text-amber-300 text-sm mb-2 italic">≡ƒÆí {video.notes}</p>
-                              )}
-                              <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30 relative">
-                                <video 
-                                  src={video.url} 
-                                  controls 
-                                  loop
-                                  autoPlay
-                                  muted
-                                  playsInline
-                                  className="w-full h-full object-contain"
-                                  preload="metadata"
-                                  onError={(e) => {
-                                    console.error('❌ Video load failed:', video.name || 'Unknown')
-                                    console.error('   URL:', video.url)
-                                    console.error('   Video object:', video)
-                                    const target = e.currentTarget
-                                    target.style.display = 'none'
-                                    const parent = target.parentElement
-                                    if (parent) {
-                                      const errorDiv = document.createElement('div')
-                                      errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
-                                      errorDiv.innerHTML = `
-                                        <svg class="w-16 h-16 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <p class="text-red-300 text-lg font-bold">Video Unavailable</p>
-                                        <p class="text-gray-400 text-sm mt-2">Video may have expired or been removed</p>
-                                      `
-                                      parent.appendChild(errorDiv)
-                                    }
-                                  }}
-                                  onLoadStart={() => console.log('📹 Loading video:', video.name || video.url)}
-                                  onCanPlay={() => console.log('✅ Video ready:', video.name || video.url)}
-                                >
-                                  <source src={video.url} type="video/mp4" />
-                                  Your browser does not support the video tag.
-                                </video>
-                              </div>
+          {/* Scrollable Content */}
+          <ScrollArea className="h-[calc(95vh-80px)]">
+            {selectedExercise && (
+              <div className="p-4 sm:p-6 space-y-4">
+                {/* Videos Grid - Full Width */}
+                {selectedExercise.videos && selectedExercise.videos.length > 0 ? (
+                  <div className="space-y-4">
+                    {selectedExercise.videos.map((video, index) => (
+                      <div key={index} className="group">
+                        {/* Video Header */}
+                        <div className={`flex items-center justify-between mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
+                              {index + 1}
                             </div>
-                          ))}
+                            <p className="text-white text-sm font-semibold truncate max-w-[200px] sm:max-w-none">
+                              {video.name?.replace(/\.(mp4|mov|avi|webm)$/i, '').replace(/\s*\(\d+\)\s*/g, '').trim()}
+                            </p>
+                          </div>
+                          <div className={`flex gap-1.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                            {video.sets && (
+                              <span className="px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-xs font-semibold">
+                                {video.sets}×
+                              </span>
+                            )}
+                            {video.reps && (
+                              <span className="px-2 py-0.5 rounded-full bg-pink-500/20 text-pink-300 text-xs font-semibold">
+                                {video.reps}
+                              </span>
+                            )}
+                          </div>
                         </div>
-                      ) : selectedExercise.videoUrls && selectedExercise.videoUrls.length > 0 ? (
-                        <div className="space-y-4">
-                          {selectedExercise.videoUrls.map((videoUrl, index) => (
-                            <div key={index}>
-                              <div className="flex items-center gap-2 mb-2">
-                                <div className="w-6 h-6 rounded-full bg-purple-500 text-white text-xs font-bold flex items-center justify-center">
-                                  {index + 1}
-                                </div>
-                                <p className="text-slate-400 text-sm font-semibold">
-                                  Video {index + 1} of {selectedExercise.videoUrls?.length || 1}
-                                </p>
-                              </div>
-                              <div className="aspect-video bg-slate-900 rounded-lg overflow-hidden border-2 border-purple-500/30 relative">
-                                <video 
-                                  src={videoUrl} 
-                                  controls 
-                                  loop
-                                  autoPlay
-                                  muted
-                                  playsInline
-                                  className="w-full h-full object-contain"
-                                  preload="metadata"
-                                  crossOrigin="anonymous"
-                                  onError={(e) => {
-                                    console.error('❌ Video load failed:', videoUrl)
-                                    const target = e.currentTarget
-                                    target.style.display = 'none'
-                                    const parent = target.parentElement
-                                    if (parent && !parent.querySelector('.error-message')) {
-                                      const errorDiv = document.createElement('div')
-                                      errorDiv.className = 'error-message absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
-                                      errorDiv.innerHTML = `
-                                        <svg class="w-16 h-16 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        <p class="text-red-300 text-lg font-bold">Video Unavailable</p>
-                                        <p class="text-gray-400 text-sm mt-2 text-center px-4">Video may have expired or been removed</p>
-                                      `
-                                      parent.appendChild(errorDiv)
-                                    }
-                                  }}
-                                  onLoadStart={() => console.log('📹 Loading video from:', videoUrl.substring(0, 100))}
-                                  onCanPlay={() => console.log('✅ Video ready to play')}
-                                >
-                                  <source src={videoUrl} type="video/mp4" />
-                                  Your browser does not support the video tag.
-                                </video>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      ) : selectedExercise.videoUrl ? (
-                        <div className="aspect-video bg-gradient-to-br from-slate-900 to-slate-950 rounded-xl overflow-hidden border-2 border-purple-500/40 shadow-2xl shadow-purple-500/20 relative group">
-                          <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"></div>
+
+                        {/* Video Notes */}
+                        {video.notes && (
+                          <p className={`text-amber-300 text-xs mb-2 px-2 ${isRTL ? 'text-right' : ''}`}>
+                            💡 {video.notes}
+                          </p>
+                        )}
+
+                        {/* Video Player - Interactive Thumbnail Style */}
+                        <div className="relative aspect-video bg-white rounded-xl overflow-hidden border border-slate-700 shadow-lg group">
                           <video 
-                            src={selectedExercise.videoUrl} 
-                            controls 
+                            src={video.url} 
                             loop
-                            autoPlay
-                            muted
                             playsInline
-                            className="w-full h-full object-contain"
+                            muted
+                            className="w-full h-full object-contain cursor-pointer"
                             preload="metadata"
-                            crossOrigin="anonymous"
+                            poster={video.url + '#t=0.1'}
+                            onClick={(e) => {
+                              const vid = e.currentTarget
+                              if (vid.paused) {
+                                vid.play()
+                              } else {
+                                vid.pause()
+                              }
+                            }}
                             onError={(e) => {
-                              console.error('❌ Single video load failed:', selectedExercise.videoUrl)
+                              console.error('❌ Video load failed:', video.name || 'Unknown')
                               const target = e.currentTarget
                               target.style.display = 'none'
                               const parent = target.parentElement
-                              if (parent && !parent.querySelector('.error-message')) {
+                              if (parent) {
                                 const errorDiv = document.createElement('div')
-                                errorDiv.className = 'error-message absolute inset-0 flex flex-col items-center justify-center bg-slate-900/90'
+                                errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900'
                                 errorDiv.innerHTML = `
-                                  <svg class="w-16 h-16 text-red-400 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <svg class="w-12 h-12 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
-                                  <p class="text-red-300 text-lg font-bold">Video Unavailable</p>
-                                  <p class="text-gray-400 text-sm mt-2">Video link may have expired</p>
+                                  <p class="text-red-300 text-sm font-medium">Video Unavailable</p>
                                 `
                                 parent.appendChild(errorDiv)
                               }
                             }}
-                            onLoadStart={() => console.log('📹 Loading single video')}
-                            onCanPlay={() => console.log('✅ Single video ready')}
                           >
-                            <source src={selectedExercise.videoUrl} type="video/mp4" />
-                            Your browser does not support the video tag.
+                            <source src={video.url} type="video/mp4" />
                           </video>
+                          
+                          {/* Fullscreen Button - Bottom Corner */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              const vid = e.currentTarget.previousElementSibling as HTMLVideoElement
+                              if (vid.requestFullscreen) {
+                                vid.requestFullscreen()
+                              }
+                            }}
+                            className="absolute bottom-3 right-3 bg-black/60 hover:bg-black/80 text-white p-2 rounded-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                            </svg>
+                          </button>
                         </div>
-                      ) : null}
-                      {selectedExercise.gifUrl && (
-                        <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-green-500/40 flex items-center justify-center shadow-lg shadow-green-500/10 hover:border-green-400/60 transition-all group">
-                          <div className="text-center p-6">
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500/30 to-emerald-500/30 border-2 border-green-500/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-green-500/20">
-                              <Play className="w-8 h-8 text-green-400" />
-                            </div>
-                            <p className="text-slate-300 text-base font-bold mb-2 bg-gradient-to-r from-green-400 to-emerald-400 bg-clip-text text-transparent">GIF Animation Available</p>
-                            <p className="text-green-400 text-xs font-mono bg-slate-900/50 px-3 py-2 rounded-lg inline-block">{selectedExercise.gifUrl}</p>
+                      </div>
+                    ))}
+                  </div>
+                ) : selectedExercise.videoUrls && selectedExercise.videoUrls.length > 0 ? (
+                  <div className="space-y-4">
+                    {selectedExercise.videoUrls.map((videoUrl, index) => (
+                      <div key={index}>
+                        <div className={`flex items-center gap-2 mb-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                          <div className="w-7 h-7 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 text-white text-xs font-bold flex items-center justify-center shadow-lg">
+                            {index + 1}
                           </div>
+                          <p className="text-slate-400 text-sm font-semibold">
+                            Video {index + 1} / {selectedExercise.videoUrls.length}
+                          </p>
                         </div>
-                      )}
-                      {selectedExercise.imageUrl && (
-                        <div className="aspect-video bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border-2 border-blue-500/40 flex items-center justify-center shadow-lg shadow-blue-500/10 hover:border-blue-400/60 transition-all group">
-                          <div className="text-center p-6">
-                            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/30 to-cyan-500/30 border-2 border-blue-500/50 flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform shadow-lg shadow-blue-500/20">
-                              <ImageIcon className="w-8 h-8 text-blue-400" />
-                            </div>
-                            <p className="text-slate-300 text-base font-bold mb-2 bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">Reference Image</p>
-                            <p className="text-blue-400 text-xs font-mono bg-slate-900/50 px-3 py-2 rounded-lg inline-block">{selectedExercise.imageUrl}</p>
-                          </div>
+                        <div className="relative aspect-video bg-white rounded-xl overflow-hidden border border-slate-700 shadow-lg group">
+                          <video 
+                            src={videoUrl} 
+                            loop
+                            playsInline
+                            muted
+                            className="w-full h-full object-contain cursor-pointer"
+                            preload="metadata"
+                            poster={videoUrl + '#t=0.1'}
+                            onClick={(e) => {
+                              const vid = e.currentTarget
+                              if (vid.paused) {
+                                vid.play()
+                              } else {
+                                vid.pause()
+                              }
+                            }}
+                          >
+                            <source src={videoUrl} type="video/mp4" />
+                          </video>
+                          
+                          {/* Fullscreen Button */}
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              const vid = e.currentTarget.previousElementSibling as HTMLVideoElement
+                              if (vid.requestFullscreen) {
+                                vid.requestFullscreen()
+                              }
+                            }}
+                            className="absolute bottom-3 right-3 bg-black/60 hover:bg-black/80 text-white p-2 rounded-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+                          >
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                            </svg>
+                          </button>
                         </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                )}
+                      </div>
+                    ))}
+                  </div>
+                ) : selectedExercise.videoUrl ? (
+                  <div className="relative aspect-video bg-white rounded-xl overflow-hidden border border-slate-700 shadow-lg group">
+                    <video 
+                      src={selectedExercise.videoUrl} 
+                      loop
+                      playsInline
+                      muted
+                      className="w-full h-full object-contain cursor-pointer"
+                      preload="metadata"
+                      poster={selectedExercise.videoUrl + '#t=0.1'}
+                      onClick={(e) => {
+                        const vid = e.currentTarget
+                        if (vid.paused) {
+                          vid.play()
+                        } else {
+                          vid.pause()
+                        }
+                      }}
+                    >
+                      <source src={selectedExercise.videoUrl} type="video/mp4" />
+                    </video>
+                    
+                    {/* Fullscreen Button */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        const vid = e.currentTarget.previousElementSibling as HTMLVideoElement
+                        if (vid.requestFullscreen) {
+                          vid.requestFullscreen()
+                        }
+                      }}
+                      className="absolute bottom-3 right-3 bg-black/60 hover:bg-black/80 text-white p-2 rounded-lg backdrop-blur-sm transition-all opacity-0 group-hover:opacity-100"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+                      </svg>
+                    </button>
+                  </div>
+                ) : null}
 
-                {/* Notes */}
+                {/* Notes Section - Simplified */}
                 {selectedExercise.notes && (
-                  <Card className="bg-gradient-to-br from-amber-900/30 via-amber-800/20 to-yellow-900/30 border-2 border-amber-500/40 shadow-xl shadow-amber-500/10 overflow-hidden">
-                    <CardHeader className="bg-gradient-to-r from-amber-900/40 to-yellow-900/40 border-b border-amber-500/30">
-                      <CardTitle className={`text-transparent bg-gradient-to-r from-amber-400 to-yellow-400 bg-clip-text text-lg flex items-center gap-3 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-                        <div className="w-10 h-10 rounded-lg bg-amber-500/20 border border-amber-500/50 flex items-center justify-center">
-                          <span className="text-2xl">💡</span>
-                        </div>
-                        {t("importantNotes")}
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-6">
-                      <p className="text-white text-base leading-relaxed">{selectedExercise.notes}</p>
-                    </CardContent>
-                  </Card>
+                  <div className="bg-amber-500/10 border-l-4 border-amber-500 rounded-r-lg p-4">
+                    <div className={`flex items-start gap-3 ${isRTL ? 'flex-row-reverse' : ''}`}>
+                      <span className="text-2xl flex-shrink-0">💡</span>
+                      <div className="flex-1">
+                        <p className={`text-sm font-semibold text-amber-300 mb-1 ${isRTL ? 'text-right' : ''}`}>
+                          {t("importantNotes")}
+                        </p>
+                        <p className={`text-white text-sm leading-relaxed ${isRTL ? 'text-right' : ''}`}>
+                          {selectedExercise.notes}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 )}
               </div>
             )}

@@ -1,6 +1,6 @@
 {
-  "timestamp": "2025-12-20T00:16:53.269Z",
-  "date": "2025-12-20_03-16",
+  "timestamp": "2026-01-06T00:00:04.290Z",
+  "date": "2026-01-06_03-00",
   "projectId": "final-database-51935",
   "collections": [
     {
@@ -28,16 +28,6 @@
           }
         },
         {
-          "id": "7ZN1QXQaxtaXv55kIkwZ6NFYhKn1",
-          "data": {
-            "email": "physio@fitpro.com",
-            "displayName": "Physiotherapist",
-            "role": "physiotherapist",
-            "createdAt": "2025-12-18T23:29:58.054Z",
-            "emailVerified": true
-          }
-        },
-        {
           "id": "AhJ8ruMpzTSS3aDmrPhkiaNcOaT2",
           "data": {
             "email": "darinvipapp@gmail.com",
@@ -45,8 +35,6 @@
             "firstName": "Darin",
             "lastName": "Fitness",
             "role": "user",
-            "membership": "Free",
-            "subscriptionStatus": "inactive",
             "subscriptionEndDate": null,
             "isActive": true,
             "emailVerified": false,
@@ -57,7 +45,33 @@
               "_nanoseconds": 553000000
             },
             "approvedBy": "superadmin",
-            "status": "active"
+            "status": "active",
+            "subscriptionEnd": {
+              "_seconds": 1768819170,
+              "_nanoseconds": 636000000
+            },
+            "proExpiryDate": {
+              "_seconds": 1768819170,
+              "_nanoseconds": 636000000
+            },
+            "subscriptionAmount": "100",
+            "subscriptionStatus": "active",
+            "membership": "Pro",
+            "subscriptionDuration": 1,
+            "membershipDate": {
+              "_seconds": 1766227170,
+              "_nanoseconds": 636000000
+            },
+            "updatedAt": {
+              "_seconds": 1766227170,
+              "_nanoseconds": 636000000
+            },
+            "subscriptionStart": {
+              "_seconds": 1766140770,
+              "_nanoseconds": 636000000
+            },
+            "lastLogin": "2026-01-01T19:14:24.613Z",
+            "lastActive": "2026-01-01T19:14:24.613Z"
           }
         },
         {
@@ -82,8 +96,8 @@
               "_seconds": 1765659083,
               "_nanoseconds": 290000000
             },
-            "lastLogin": "2025-12-19T23:19:20.809Z",
-            "lastActive": "2025-12-19T23:19:20.808Z"
+            "lastLogin": "2025-12-31T13:43:28.879Z",
+            "lastActive": "2025-12-31T13:43:28.879Z"
           }
         },
         {
@@ -149,8 +163,8 @@
               "_seconds": 1765659084,
               "_nanoseconds": 637000000
             },
-            "lastLogin": "2025-12-17T16:31:27.393Z",
-            "lastActive": "2025-12-17T16:31:27.393Z"
+            "lastLogin": "2025-12-31T14:12:22.661Z",
+            "lastActive": "2025-12-31T14:12:22.661Z"
           }
         },
         {
@@ -175,24 +189,6 @@
           }
         },
         {
-          "id": "IVCzYoTrPcd7jzrN2BU8WI67k0L2",
-          "data": {
-            "emailVerified": true,
-            "role": "user",
-            "name": "Test User",
-            "email": "user@darinfitness.com",
-            "status": "active",
-            "createdAt": {
-              "_seconds": 1765659089,
-              "_nanoseconds": 602000000
-            },
-            "lastLogin": "2025-11-16T13:36:03.652Z",
-            "lastActive": "2025-11-16T13:36:03.652Z",
-            "isActive": true,
-            "updatedAt": "2025-12-19T22:27:34.738Z"
-          }
-        },
-        {
           "id": "IkxYL7BngNa1g5HE3sZdGaeRhxG3",
           "data": {
             "createdAt": "2025-12-03T22:06:37.199Z",
@@ -212,10 +208,10 @@
               "_nanoseconds": 14000000
             },
             "status": "active",
-            "lastLogin": "2025-12-09T12:41:26.793Z",
-            "lastActive": "2025-12-09T12:41:26.793Z",
             "emailVerified": true,
-            "role": "admin"
+            "role": "admin",
+            "lastLogin": "2025-12-31T13:43:11.320Z",
+            "lastActive": "2025-12-31T13:43:11.320Z"
           }
         },
         {
@@ -227,8 +223,8 @@
             "createdAt": "2025-12-18T23:30:00.929Z",
             "emailVerified": true,
             "approvedDate": "2025-12-18T23:29:52.058Z",
-            "lastLogin": "2025-12-19T21:48:37.921Z",
-            "lastActive": "2025-12-19T21:48:37.921Z"
+            "lastLogin": "2025-12-20T12:16:27.795Z",
+            "lastActive": "2025-12-20T12:16:27.795Z"
           }
         },
         {
@@ -314,16 +310,34 @@
             "subscriptionStatus": "active",
             "membership": "Pro",
             "subscriptionDuration": 1,
-            "updatedAt": {
-              "_seconds": 1765655517,
-              "_nanoseconds": 331000000
-            },
             "membershipDate": {
               "_seconds": 1765662900,
               "_nanoseconds": 272000000
             },
-            "lastLogin": "2025-12-19T22:47:28.479Z",
-            "lastActive": "2025-12-19T22:47:28.479Z"
+            "subscriptionStart": {
+              "_seconds": 1765569117,
+              "_nanoseconds": 331000000
+            },
+            "goal": "",
+            "phone": "655959",
+            "weight": 0,
+            "activityLevel": "",
+            "height": 0,
+            "notifyPhysio": true,
+            "notifyWorkout": true,
+            "notifyMeals": true,
+            "notifyEmail": true,
+            "notifyPush": true,
+            "notifySMS": true,
+            "twoFactorEnabled": false,
+            "twoFactorSetupInProgress": true,
+            "twoFactorSecret": "IRJDOXR4ONWXU42XIVKG2NCJPEZGEULSIBCDQ3ZXFJJGOXJ3IVXQ",
+            "updatedAt": {
+              "_seconds": 1766991844,
+              "_nanoseconds": 128000000
+            },
+            "lastLogin": "2026-01-05T20:55:37.716Z",
+            "lastActive": "2026-01-05T20:55:37.716Z"
           }
         },
         {
@@ -372,7 +386,11 @@
               "_nanoseconds": 539000000
             },
             "lastLogin": "2025-12-03T18:29:51.984Z",
-            "lastActive": "2025-12-03T18:29:51.984Z"
+            "lastActive": "2025-12-03T18:29:51.984Z",
+            "subscriptionStart": {
+              "_seconds": 1763840133,
+              "_nanoseconds": 354000000
+            }
           }
         },
         {
@@ -387,7 +405,6 @@
             "role": "user",
             "membership": "Pro",
             "subscriptionStatus": "active",
-            "subscriptionEnd": "2025-12-24T15:14:23.273Z",
             "isActive": true,
             "joinDate": "2025-11-24T15:14:24.344Z",
             "createdAt": "2025-11-24T15:14:24.344Z",
@@ -396,7 +413,15 @@
               "_nanoseconds": 800000000
             },
             "lastLogin": "2025-11-19T17:34:30.767Z",
-            "lastActive": "2025-11-19T17:34:30.767Z"
+            "lastActive": "2025-11-19T17:34:30.767Z",
+            "subscriptionEnd": {
+              "_seconds": 1766589263,
+              "_nanoseconds": 273000000
+            },
+            "subscriptionStart": {
+              "_seconds": 1766284417,
+              "_nanoseconds": 828000000
+            }
           }
         },
         {
@@ -410,6 +435,53 @@
           }
         },
         {
+          "id": "cwIKe1ou3xSpsB75ub6KCawlhfU2",
+          "data": {
+            "email": "suhaibmodern36@gmail.com",
+            "name": "Suhaib  Hamadameen ",
+            "firstName": "Suhaib ",
+            "lastName": "Hamadameen ",
+            "role": "user",
+            "subscriptionEndDate": null,
+            "isActive": true,
+            "emailVerified": false,
+            "joinDate": "2025-12-25T18:28:45.981Z",
+            "createdAt": "2025-12-25T18:28:45.981Z",
+            "approvedDate": {
+              "_seconds": 1766687875,
+              "_nanoseconds": 434000000
+            },
+            "approvedBy": "superadmin",
+            "status": "active",
+            "subscriptionEnd": {
+              "_seconds": 1769279958,
+              "_nanoseconds": 337000000
+            },
+            "proExpiryDate": {
+              "_seconds": 1769279958,
+              "_nanoseconds": 337000000
+            },
+            "subscriptionAmount": "50000",
+            "subscriptionStart": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "subscriptionStatus": "active",
+            "membership": "Pro",
+            "subscriptionDuration": 1,
+            "membershipDate": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "updatedAt": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "lastLogin": "2025-12-25T18:39:47.512Z",
+            "lastActive": "2025-12-25T18:39:47.512Z"
+          }
+        },
+        {
           "id": "k9qbTbcrr8Y7OvXM3wYh72pIGoQ2",
           "data": {
             "email": "superadmin@fitpro.com",
@@ -417,8 +489,89 @@
             "role": "superadmin",
             "createdAt": "2025-12-18T23:29:53.843Z",
             "emailVerified": true,
-            "lastLogin": "2025-12-20T00:14:32.011Z",
-            "lastActive": "2025-12-20T00:14:32.011Z"
+            "twoFactorEnabledAt": {
+              "_seconds": 1766456155,
+              "_nanoseconds": 533000000
+            },
+            "twoFactorBackupCodes": [
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "C441LB8M"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "code": "QFK5S8OJ",
+                "used": false
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "LRZVA6G5"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "ZN40XLDN"
+              },
+              {
+                "used": false,
+                "code": "QSQ64ZHM",
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                }
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "083R3J74"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "IWJ0E43W"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766456155,
+                  "_nanoseconds": 533000000
+                },
+                "used": false,
+                "code": "HNPWG0IK"
+              }
+            ],
+            "emailNotifications": true,
+            "language": "en",
+            "notificationsEnabled": true,
+            "darkMode": true,
+            "twoFactorEnabled": false,
+            "twoFactorSecret": "IFJESPTBOBKWKORRKQYXMZZGMZDXQQLLEMZEYN3SLNMG4WSBFJEA",
+            "twoFactorSetupInProgress": true,
+            "updatedAt": {
+              "_seconds": 1766687810,
+              "_nanoseconds": 585000000
+            },
+            "lastLogin": "2026-01-05T20:46:20.867Z",
+            "lastActive": "2026-01-05T20:46:20.867Z"
           }
         },
         {
@@ -477,7 +630,11 @@
               "_nanoseconds": 55000000
             },
             "lastLogin": "2025-12-07T10:40:08.883Z",
-            "lastActive": "2025-12-07T10:40:08.883Z"
+            "lastActive": "2025-12-07T10:40:08.883Z",
+            "subscriptionStart": {
+              "_seconds": 1763926705,
+              "_nanoseconds": 360000000
+            }
           }
         },
         {
@@ -535,16 +692,89 @@
               "_seconds": 1765659088,
               "_nanoseconds": 329000000
             },
-            "updatedAt": {
-              "_seconds": 1765659088,
-              "_nanoseconds": 329000000
+            "twoFactorSecret": "KZZD4ZKDIBGEMVB6NZBEOLBSKF3W64JJNVKGY5KBORZVGUCAFBJA",
+            "twoFactorEnabled": true,
+            "twoFactorEnabledAt": {
+              "_seconds": 1766450894,
+              "_nanoseconds": 8000000
             },
-            "lastLogin": "2025-12-19T20:38:30.348Z",
-            "lastActive": "2025-12-19T20:38:30.348Z"
+            "twoFactorBackupCodes": [
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "ZCHD2S70"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "01FCKF62"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "MNHYWPJP"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "used": false,
+                "code": "TFI2E3DV"
+              },
+              {
+                "used": false,
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "JH6PXUUY"
+              },
+              {
+                "used": false,
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "01IR3EO5"
+              },
+              {
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "H6B4SDSI",
+                "used": false
+              },
+              {
+                "used": false,
+                "createdAt": {
+                  "_seconds": 1766450894,
+                  "_nanoseconds": 8000000
+                },
+                "code": "W2WNHFBS"
+              }
+            ],
+            "twoFactorSetupInProgress": false,
+            "updatedAt": {
+              "_seconds": 1766450894,
+              "_nanoseconds": 8000000
+            },
+            "lastLogin": "2025-12-23T01:10:04.051Z",
+            "lastActive": "2025-12-23T01:10:04.051Z"
           }
         }
       ],
-      "count": 24
+      "count": 23
     },
     {
       "collection": "trainers",
@@ -607,6 +837,31 @@
     {
       "collection": "physio-requests",
       "documents": [
+        {
+          "id": "0hbHgsU0FB7rhsHHkh2z",
+          "data": {
+            "notes": "",
+            "painPercent": 67,
+            "injuryType": "Twgdhruri",
+            "userId": "cwIKe1ou3xSpsB75ub6KCawlhfU2",
+            "userName": "suhaibmodern36@gmail.com",
+            "userPhone": "",
+            "physioName": "Physiotherapist",
+            "physioId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "userEmail": "",
+            "createdAt": "2025-12-25T18:40:29.051Z",
+            "completed": false,
+            "userAge": 0,
+            "appointment": {
+              "date": "2025-12-26",
+              "time": "09:00",
+              "notes": "",
+              "price": "50"
+            },
+            "status": "accepted",
+            "updatedAt": "2025-12-25T18:46:46.717Z"
+          }
+        },
         {
           "id": "2DL0FuPp8ZQi6QrAvO9L",
           "data": {
@@ -778,6 +1033,25 @@
           }
         },
         {
+          "id": "fpEEUKxn9Odvf7g2xKDa",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "ashnamusa1631@gmail.com",
+            "userEmail": "",
+            "userPhone": "",
+            "userAge": 0,
+            "physioId": "mHvOi4Av3qTB9euwW8jE",
+            "physioName": "Dr. Sara Ahmed",
+            "injuryType": "Bsjsb",
+            "painPercent": 85,
+            "notes": "Bsbzb",
+            "status": "pending",
+            "completed": false,
+            "createdAt": "2025-12-20T08:56:47.375Z",
+            "updatedAt": "2025-12-20T08:56:47.375Z"
+          }
+        },
+        {
           "id": "gaOdYBFoAjL6qOTBtzTj",
           "data": {
             "userId": "warning@darinfitness.com",
@@ -855,7 +1129,7 @@
           }
         }
       ],
-      "count": 13
+      "count": 15
     },
     {
       "collection": "appointments",
@@ -70204,8 +70478,45 @@
     },
     {
       "collection": "notifications",
-      "documents": [],
-      "count": 0
+      "documents": [
+        {
+          "id": "54v5FyHp2UPuCZAC88d9",
+          "data": {
+            "updatedAt": "2025-12-25T18:40:29.179Z",
+            "category": "request",
+            "type": "info",
+            "title": "ریکوێستی نەخۆشی نوێ",
+            "message": "suhaibmodern36@gmail.com (بێ ئیمەیڵ) ریکوێستی ناردووە بۆ تۆ",
+            "metadata": {
+              "patientName": "suhaibmodern36@gmail.com",
+              "injuryType": "Twgdhruri",
+              "requestId": "0hbHgsU0FB7rhsHHkh2z"
+            },
+            "userId": "G0I9eB0qdXcpUUTmAeksve7IGs02",
+            "read": false,
+            "createdAt": "2025-12-25T18:40:29.179Z"
+          }
+        },
+        {
+          "id": "92kyW3t7TFmZfU2V2pFD",
+          "data": {
+            "userId": "mHvOi4Av3qTB9euwW8jE",
+            "title": "ریکوێستی نەخۆشی نوێ",
+            "message": "ashnamusa1631@gmail.com (بێ ئیمەیڵ) ریکوێستی ناردووە بۆ تۆ",
+            "type": "info",
+            "category": "request",
+            "metadata": {
+              "requestId": "fpEEUKxn9Odvf7g2xKDa",
+              "patientName": "ashnamusa1631@gmail.com",
+              "injuryType": "Bsjsb"
+            },
+            "read": false,
+            "createdAt": "2025-12-20T08:56:47.480Z",
+            "updatedAt": "2025-12-20T08:56:47.480Z"
+          }
+        }
+      ],
+      "count": 2
     },
     {
       "collection": "community-posts",
@@ -70215,6 +70526,102 @@
     {
       "collection": "payments",
       "documents": [
+        {
+          "id": "12caNic8SXyVUOG8sKO3",
+          "data": {
+            "userId": "nmnUOSvqr9Tlmy3iz7IZaBMp0vW2",
+            "userName": "Safa O Abdulkareem",
+            "userEmail": "safaothman11@gmail.com",
+            "amount": 500000,
+            "currency": "IQD",
+            "duration": 2,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1763926705,
+              "_nanoseconds": 360000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1769197105,
+              "_nanoseconds": 360000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1763926705,
+              "_nanoseconds": 360000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282355,
+              "_nanoseconds": 873000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
+        },
+        {
+          "id": "CGLrt5m5i7kFL4meMk6O",
+          "data": {
+            "userId": "Yot8jyPbOZX9A8g8Zy1B3CBqu0v1",
+            "userName": "Ashna musa",
+            "userEmail": "ashnamusa1631@gmail.com",
+            "amount": 50000,
+            "currency": "IQD",
+            "duration": 1,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1765569117,
+              "_nanoseconds": 331000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1768247517,
+              "_nanoseconds": 331000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1765569117,
+              "_nanoseconds": 331000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282354,
+              "_nanoseconds": 21000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
+        },
+        {
+          "id": "CVUYicsTFZa0XVgr7G1J",
+          "data": {
+            "userId": "aYT8NPQg1uROsOdaN6NU1fe8VWF3",
+            "userName": "Safa O Abdulkareem",
+            "userEmail": "safaothman1@gmail.com",
+            "amount": 500000,
+            "currency": "IQD",
+            "duration": 3,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1763840133,
+              "_nanoseconds": 354000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1771788933,
+              "_nanoseconds": 354000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1763840133,
+              "_nanoseconds": 354000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282354,
+              "_nanoseconds": 925000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
+        },
         {
           "id": "DAnYhVyMp1C39mOEnraG",
           "data": {
@@ -70324,6 +70731,38 @@
           }
         },
         {
+          "id": "WrWE4IcbApizikP1RvJs",
+          "data": {
+            "currency": "IQD",
+            "subscriptionStart": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 337000000
+            },
+            "createdAt": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 531000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1769279958,
+              "_nanoseconds": 337000000
+            },
+            "method": "Admin Approved",
+            "status": "completed",
+            "amount": 50000,
+            "userId": "cwIKe1ou3xSpsB75ub6KCawlhfU2",
+            "updatedAt": {
+              "_seconds": 1766687958,
+              "_nanoseconds": 531000000
+            },
+            "relatedType": "pro-request",
+            "relatedId": "YqrFzvAFleryecqCCiff",
+            "userEmail": "suhaibmodern36@gmail.com",
+            "userName": "Suhaib  Hamadameen ",
+            "duration": 1,
+            "type": "pro-subscription"
+          }
+        },
+        {
           "id": "bD8ytskKyiQsWSxMHZR2",
           "data": {
             "userId": "1dcXN8WW9MPsJOIVmbake9Vdvsz1",
@@ -70349,9 +70788,41 @@
               "_nanoseconds": 881000000
             }
           }
+        },
+        {
+          "id": "zSZqLflgVBj8Io3v0hra",
+          "data": {
+            "userId": "AhJ8ruMpzTSS3aDmrPhkiaNcOaT2",
+            "userName": "Darin Fitness",
+            "userEmail": "darinvipapp@gmail.com",
+            "amount": 100,
+            "currency": "IQD",
+            "duration": 1,
+            "type": "historical-subscription",
+            "method": "Historical Record",
+            "status": "completed",
+            "subscriptionStart": {
+              "_seconds": 1766140770,
+              "_nanoseconds": 636000000
+            },
+            "subscriptionEnd": {
+              "_seconds": 1768819170,
+              "_nanoseconds": 636000000
+            },
+            "relatedType": "data-migration",
+            "createdAt": {
+              "_seconds": 1766140770,
+              "_nanoseconds": 636000000
+            },
+            "updatedAt": {
+              "_seconds": 1766282353,
+              "_nanoseconds": 98000000
+            },
+            "note": "Created during data migration to populate payment history"
+          }
         }
       ],
-      "count": 5
+      "count": 10
     },
     {
       "collection": "subscriptions",
@@ -70388,6 +70859,6 @@
     "totalCollections": 21,
     "successfulCollections": 21,
     "failedCollections": 0,
-    "totalDocuments": 2222
+    "totalDocuments": 2230
   }
 }

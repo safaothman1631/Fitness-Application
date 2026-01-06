@@ -1222,6 +1222,14 @@ export type TranslationKey =
   | "viewDetails"
   | "complete"
   | "date"
+  | "time"
+  | "location"
+  | "appointmentDetails"
+  | "yourNote"
+  | "physioNote"
+  | "requested"
+  | "accepted"
+  | "rejected"
   | "live"
   | "modelLoaded"
   | "modelName"
@@ -2792,6 +2800,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   viewDetails: "View Details",
   complete: "Complete",
   date: "Date",
+  time: "Time",
+  location: "Location",
+  appointmentDetails: "Appointment Details",
+  yourNote: "Your Note",
+  physioNote: "Physiotherapist's Note",
+  requested: "Requested",
+  accepted: "Accepted",
+  rejected: "Rejected",
   live: "LIVE",
   modelLoaded: "3D MODEL LOADED",
   modelName: "Name",
@@ -3598,7 +3614,22 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,noPendingRequests: "لا توجد طلبات معلقة"
   ,requestFrom: "طلب من"
   ,requestDetails: "تفاصيل الطلب"
-  ,approve: "موافقة"
+  ,requestsAppearHere: "ستظهر طلبات المرضى هنا"
+  ,loadingRequests: "جاري تحميل الطلبات..."
+  ,searchRequests: "ابحث باسم المريض أو نوع الإصابة..."
+  ,totalRequests: "إجمالي الطلبات"
+  ,viewDetails: "عرض التفاصيل"
+  ,complete: "إكمال"
+  ,date: "التاريخ"
+  ,time: "الوقت"
+  ,location: "الموقع"
+  ,appointmentDetails: "تفاصيل الموعد"
+  ,yourNote: "ملاحظتك"
+  ,physioNote: "ملاحظة أخصائي العلاج الطبيعي"
+  ,requested: "مطلوب"
+  ,accepted: "مقبول"
+  ,rejected: "مرفوض"
+  ,live: "مباشر"
   ,reject: "رفض"
   ,pending: "قيد الانتظار"
   ,approved: "تمت الموافقة"
@@ -5360,6 +5391,14 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,viewDetails: "وردەکاری ببینە"
     ,complete: "تەواوکردن"
     ,date: "بەروار"
+    ,time: "کاتژمێر"
+    ,location: "شوێن"
+    ,appointmentDetails: "وردەکاری چاوپێکەوتن"
+    ,yourNote: "تێبینی تۆ"
+    ,physioNote: "تێبینی فیزیۆتێراپیست"
+    ,requested: "داواکراوە"
+    ,accepted: "قبوڵکراوە"
+    ,rejected: "ڕەتکراوەتەوە"
     ,live: "زیندوو"
     ,modelLoaded: "مۆدێلی ٣ڕەهەند باریکرا"
     ,modelName: "ناو"

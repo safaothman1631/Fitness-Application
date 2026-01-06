@@ -43,7 +43,7 @@ export async function GET(request: NextRequest) {
         try {
           const [url] = await file.getSignedUrl({
             action: 'read',
-            expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+            expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year
           })
 
           const [metadata] = await file.getMetadata()
@@ -112,10 +112,10 @@ export async function POST(request: NextRequest) {
       public: false,
     })
 
-    // Generate signed URL
+    // Generate signed URL with 1 year expiration
     const [url] = await file.getSignedUrl({
       action: 'read',
-      expires: Date.now() + 7 * 24 * 60 * 60 * 1000, // 7 days
+      expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year
     })
 
     console.log(`✅ Uploaded meal video: ${fileName}`)

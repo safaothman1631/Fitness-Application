@@ -1,12 +1,16 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { useLanguage } from "@/hooks/useLanguage"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
+import { storage } from "@/lib/firebase"
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage"
+import SidebarSleek from "@/components/layouts/sidebar-sleek"
+import AuthGuard from "@/components/auth-guard"
 import {
   Select,
   SelectContent,
@@ -66,6 +70,9 @@ export default function AdsManagementPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingAd, setEditingAd] = useState<Ad | null>(null)
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all')
+  const [uploading, setUploading] = useState(false)
+  const [previewImage, setPreviewImage] = useState<string | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Form state
   const [formData, setFormData] = useState({
@@ -114,6 +121,54 @@ export default function AdsManagementPage() {
       status: 'active'
     })
     setEditingAd(null)
+    setPreviewImage(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const handleImageUpload = async (file: File) => {
+    try {
+      setUploading(true)
+      
+      // Create preview
+      const reader = new FileReader()
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+
+      // Upload to Firebase Storage
+      const timestamp = Date.now()
+      const fileName = `ads/${timestamp}_${file.name}`
+      const storageRef = ref(storage, fileName)
+      
+      await uploadBytes(storageRef, file)
+      const downloadURL = await getDownloadURL(storageRef)
+      
+      setFormData({ ...formData, imageUrl: downloadURL })
+      toast.success(isRTL ? 'وێنەکە سەرکەوتووانە ئەپلۆد کرا' : 'Image uploaded successfully')
+    } catch (error) {
+      console.error('Error uploading image:', error)
+      toast.error(isRTL ? 'هەڵە لە ئەپلۆدکردنی وێنە' : 'Error uploading image')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      if (!file.type.startsWith('image/')) {
+        toast.error(isRTL ? 'تکایە تەنها وێنە هەڵبژێرە' : 'Please select an image file')
+        return
+      }
+      if (file.size > 5 * 1024 * 1024) {
+        toast.error(isRTL ? 'قەبارەی وێنە نابێت لە 5MB زیاتر بێت' : 'Image size must be less than 5MB')
+        return
+      }
+      handleImageUpload(file)
+    }
   }
 
   const handleSubmit = async () => {
@@ -182,8 +237,9 @@ export default function AdsManagementPage() {
   const activeAdsCount = ads.filter(ad => ad.status === 'active').length
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-slate-950 p-6 ${isRTL ? 'font-arabic' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="max-w-7xl mx-auto space-y-6">
+    <AuthGuard allowedRoles={["superadmin"]}>
+      <SidebarSleek role="superadmin">
+        <div className={`space-y-6 ${isRTL ? 'font-arabic' : ''}`} dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Header with gradient and animation */}
         <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-purple-600 via-pink-600 to-purple-600 p-8 shadow-2xl">
           <div className="absolute inset-0 bg-black/20" />
@@ -301,21 +357,61 @@ export default function AdsManagementPage() {
                   />
                 </div>
 
-                {/* Image URL */}
+                {/* Image Upload/URL */}
                 <div className="space-y-2">
                   <Label className="text-gray-300 flex items-center gap-2">
                     <ImageIcon className="w-4 h-4" />
                     {t('imageUrl')} *
                   </Label>
+                  
+                  {/* File Upload Button */}
+                  <div className="flex gap-2">
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handleFileSelect}
+                      className="hidden"
+                    />
+                    <Button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploading}
+                      className="bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white"
+                    >
+                      {uploading ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
+                          {isRTL ? 'ئەپلۆد دەکرێت...' : 'Uploading...'}
+                        </>
+                      ) : (
+                        <>
+                          <ImageIcon className="w-4 h-4 mr-2" />
+                          {isRTL ? '📤 وێنە هەڵبژێرە' : '📤 Choose Image'}
+                        </>
+                      )}
+                    </Button>
+                    <span className="text-gray-400 text-sm flex items-center">
+                      {isRTL ? 'یان' : 'or'}
+                    </span>
+                  </div>
+
+                  {/* URL Input */}
                   <Input
                     value={formData.imageUrl}
                     onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                     className="bg-slate-800 border-slate-700 text-white"
                     placeholder="https://example.com/image.jpg"
                   />
-                  {formData.imageUrl && (
+                  
+                  {/* Preview */}
+                  {(formData.imageUrl || previewImage) && (
                     <div className="mt-2 rounded-lg overflow-hidden border border-slate-700">
-                      <img src={formData.imageUrl} alt="Preview" className="w-full h-48 object-cover" />
+                      <img 
+                        src={previewImage || formData.imageUrl} 
+                        alt="Preview" 
+                        className="w-full h-48 object-cover" 
+                      />
                     </div>
                   )}
                 </div>
@@ -526,7 +622,8 @@ export default function AdsManagementPage() {
             ))}
           </div>
         )}
-      </div>
-    </div>
+        </div>
+      </SidebarSleek>
+    </AuthGuard>
   )
 }

@@ -53,8 +53,59 @@ export default function MealsPage() {
   const [selectedImageIndex, setSelectedImageIndex] = useState<number>(0)
   const [showImageOverlay, setShowImageOverlay] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [refreshingImages, setRefreshingImages] = useState(false)
   const { t, language } = useLanguage()
   const isRTL = language === "ar" || language === "ku"
+
+  // Refresh expired image URLs
+  const refreshImageUrls = async (imageUrl: string): Promise<string> => {
+    if (!imageUrl || refreshingImages) return imageUrl
+    
+    try {
+      // Check if URL might be expired (simple heuristic: if it has X-Goog-Expires parameter)
+      const urlObj = new URL(imageUrl)
+      const expires = urlObj.searchParams.get('X-Goog-Expires')
+      const signature = urlObj.searchParams.get('X-Goog-Signature')
+      
+      // If it's not a signed URL (no signature), no need to refresh
+      if (!signature) return imageUrl
+      
+      setRefreshingImages(true)
+      
+      const imageUrls = imageUrl.split(',').map(u => u.trim())
+      const response = await fetch('/api/refresh-meal-images', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ imageUrls })
+      })
+      
+      if (response.ok) {
+        const data = await response.json()
+        const refreshedUrl = data.refreshedUrls.join(', ')
+        console.log('✅ Refreshed meal image URLs')
+        setRefreshingImages(false)
+        return refreshedUrl
+      }
+    } catch (error) {
+      console.error('❌ Error refreshing image URLs:', error)
+    }
+    
+    setRefreshingImages(false)
+    return imageUrl
+  }
+
+  // Update selected meal to refresh images when opened
+  const handleMealClick = async (meal: Meal) => {
+    setSelectedMeal(meal)
+    
+    // Refresh images if they exist
+    if (meal.imageUrl) {
+      const refreshedUrl = await refreshImageUrls(meal.imageUrl)
+      if (refreshedUrl !== meal.imageUrl) {
+        setSelectedMeal({ ...meal, imageUrl: refreshedUrl })
+      }
+    }
+  }
 
   // Helper: Get accessible days for user (Saturday to today only)
   // Saturday = day 0, Sunday = day 1, ..., Friday = day 6
@@ -472,7 +523,7 @@ export default function MealsPage() {
                   <Card
                     key={`${selectedDay}-meal-${idx}`}
                     className="bg-slate-900/70 border-slate-800 hover:border-amber-500/50 transition-all cursor-pointer"
-                    onClick={() => setSelectedMeal(meal)}
+                    onClick={() => handleMealClick(meal)}
                   >
                     <CardContent className="p-4">
                       <div className="flex items-start justify-between gap-4">

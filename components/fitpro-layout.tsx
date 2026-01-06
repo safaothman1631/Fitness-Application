@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useLanguage } from "@/contexts/language-context"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -39,12 +39,20 @@ interface FitproLayoutProps {
 
 export default function FitproLayout({ children, role = "user" }: FitproLayoutProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const [currentPath, setCurrentPath] = useState("")
   const router = useRouter()
   const { t } = useLanguage()
   const cfg = getRoleConfig((role as AppRole) || "user")
   const iconMap = { Home, Dumbbell, TrendingUp, Users, User, Settings, Bell, HelpCircle, Wrench, Zap, Eye, Bone, Utensils, ClipboardList, UserPlus, FileText, Sparkles } as const
   const navigationItems = cfg.main.map((i) => ({ name: t(i.key as any), href: i.path, icon: iconMap[i.icon as keyof typeof iconMap] }))
   const menuItems = cfg.menu.map((i) => ({ name: t(i.key as any), href: i.path, icon: iconMap[i.icon as keyof typeof iconMap] }))
+
+  // Track current path for active state
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setCurrentPath(window.location.pathname)
+    }
+  }, [])
 
   const handleLogout = () => {
     localStorage.removeItem("userRole")
@@ -106,25 +114,55 @@ export default function FitproLayout({ children, role = "user" }: FitproLayoutPr
       {/* Mobile Bottom Navigation */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-slate-900/95 backdrop-blur-xl border-t border-white/10 safe-area-bottom">
         <div className="grid grid-cols-5 gap-0.5 px-1 py-2.5">
-          {navigationItems.slice(0, 4).map((item) => {
+          {navigationItems.slice(0, 4).map((item, idx) => {
             const Icon = item.icon
+            const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
             return (
               <Link key={item.href} href={item.href}>
-                <div className="flex flex-col items-center justify-center gap-1 px-1 py-1.5">
-                  <div className="p-2 rounded-xl transition-colors text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/20">
-                    <Icon className="w-5 h-5" />
+                <div className="relative flex flex-col items-center justify-center gap-1 px-1 py-1.5 group active:scale-90 transition-transform duration-200">
+                  <div className={`relative p-2 rounded-xl transition-all duration-500 ease-out overflow-hidden ${
+                    isActive 
+                      ? 'bg-gradient-to-br from-cyan-500/30 to-blue-500/30 text-cyan-400 shadow-lg shadow-cyan-500/50 scale-110'
+                      : 'text-gray-400 group-hover:bg-gradient-to-br group-hover:from-cyan-500/10 group-hover:to-blue-500/10 group-hover:text-cyan-400 group-hover:scale-110 group-hover:shadow-md group-hover:shadow-cyan-500/30'
+                  }`}>
+                    {/* Shimmer effect */}
+                    <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out" aria-hidden="true"></span>
+                    
+                    {/* Active indicator ring */}
+                    {isActive && (
+                      <span className="absolute inset-0 rounded-xl border-2 border-cyan-400/50 animate-pulse" aria-hidden="true"></span>
+                    )}
+                    
+                    <Icon className={`relative z-10 w-5 h-5 transition-all duration-500 ease-out ${
+                      isActive ? 'scale-110' : 'group-hover:scale-125 group-hover:rotate-12'
+                    }`} />
+                    
+                    {/* Active dot indicator */}
+                    {isActive && (
+                      <div className="absolute -top-0.5 -right-0.5 z-20">
+                        <div className="w-1.5 h-1.5 rounded-full bg-cyan-400"></div>
+                        <div className="absolute inset-0 w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></div>
+                      </div>
+                    )}
                   </div>
-                  <span className="text-[9px] font-medium text-center text-slate-400 leading-tight line-clamp-1 max-w-[56px]">{item.name}</span>
+                  <span className={`text-[9px] font-medium text-center leading-tight line-clamp-1 max-w-[56px] transition-all duration-300 ${
+                    isActive ? 'text-cyan-400 font-semibold' : 'text-gray-400 group-hover:text-cyan-400 group-hover:font-semibold'
+                  }`}>{item.name}</span>
                 </div>
               </Link>
             )
           })}
           <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            <div className="flex flex-col items-center justify-center gap-1 px-1 py-1.5">
-              <div className="p-2 rounded-xl text-gray-400 transition-colors hover:text-cyan-400 hover:bg-cyan-500/20">
-                <Menu className="w-5 h-5" />
+            <div className="relative flex flex-col items-center justify-center gap-1 px-1 py-1.5 group">
+              <div className="relative p-2 rounded-xl transition-all duration-500 ease-out overflow-hidden text-gray-400 group-hover:bg-gradient-to-br group-hover:from-cyan-500/10 group-hover:to-blue-500/10 group-hover:text-cyan-400 group-hover:scale-105 group-hover:shadow-md group-hover:shadow-cyan-500/20">
+                <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-out"></span>
+                <div className="relative w-5 h-5 flex flex-col justify-center gap-[3px]">
+                  <span className="block h-[2px] rounded-full bg-current transition-all duration-500 ease-out w-5 group-hover:w-4"></span>
+                  <span className="block h-[2px] rounded-full bg-current transition-all duration-500 ease-out w-5 group-hover:w-3 group-hover:translate-x-1"></span>
+                  <span className="block h-[2px] rounded-full bg-current transition-all duration-500 ease-out w-5 group-hover:w-4"></span>
+                </div>
               </div>
-              <span className="text-[9px] font-medium text-center text-gray-400 leading-tight line-clamp-1 max-w-[56px]">{t("more")}</span>
+              <span className="text-[9px] font-medium text-center leading-tight line-clamp-1 max-w-[56px] transition-all duration-300 text-gray-400 group-hover:text-cyan-400">{t("more")}</span>
             </div>
           </button>
         </div>

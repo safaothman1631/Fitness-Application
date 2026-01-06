@@ -659,10 +659,25 @@ export const dbService = {
     details?: any
     description?: string
   }) {
+    // Map fields to match API expectations
+    const apiPayload = {
+      type: logData.action,
+      performedBy: logData.actorId,
+      performedByName: logData.actorName,
+      performedByRole: logData.actorRole,
+      targetUserId: logData.targetId,
+      targetUserName: logData.targetName,
+      description: logData.description || `${logData.action} performed`,
+      metadata: {
+        targetType: logData.targetType,
+        ...logData.details
+      }
+    }
+    
     const response = await authenticatedFetch("/api/activity-logs", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(logData),
+      body: JSON.stringify(apiPayload),
     })
     if (!response.ok) throw new Error("Failed to create activity log")
     return safeJsonParse(response)

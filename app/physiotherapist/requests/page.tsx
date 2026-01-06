@@ -72,6 +72,7 @@ export default function PhysiotherapistRequestsPage() {
   const [isAppointmentDialogOpen, setIsAppointmentDialogOpen] = useState(false)
   const [appointmentDate, setAppointmentDate] = useState("")
   const [appointmentTime, setAppointmentTime] = useState("")
+  const [appointmentLocation, setAppointmentLocation] = useState("")
   const [appointmentPrice, setAppointmentPrice] = useState("")
   const [appointmentNotes, setAppointmentNotes] = useState("")
 
@@ -131,6 +132,7 @@ export default function PhysiotherapistRequestsPage() {
     tomorrow.setDate(tomorrow.getDate() + 1)
     setAppointmentDate(tomorrow.toISOString().split('T')[0])
     setAppointmentTime("09:00")
+    setAppointmentLocation("")
     setAppointmentPrice("")
     setAppointmentNotes("")
   }
@@ -149,6 +151,7 @@ export default function PhysiotherapistRequestsPage() {
       console.log("📋 Selected Request Data:", selectedRequest)
       console.log("🕐 Appointment Date:", appointmentDate)
       console.log("⏰ Appointment Time:", appointmentTime)
+      console.log("� Appointment Location:", appointmentLocation)
       console.log("💰 Appointment Price:", appointmentPrice)
       console.log("📝 Appointment Notes:", appointmentNotes)
       
@@ -156,9 +159,14 @@ export default function PhysiotherapistRequestsPage() {
       const updateData = {
         status: "accepted" as PhysioRequest["status"],
         updatedAt: new Date().toISOString(),
+        appointmentDate: appointmentDate,
+        appointmentTime: appointmentTime,
+        appointmentLocation: appointmentLocation || "",
+        physioNotes: appointmentNotes || "",
         appointment: {
           date: appointmentDate,
           time: appointmentTime,
+          location: appointmentLocation || "",
           price: appointmentPrice,
           notes: appointmentNotes
         }
@@ -182,6 +190,7 @@ export default function PhysiotherapistRequestsPage() {
           injuryType: selectedRequest.injuryType,
           appointmentDate: appointmentDate,
           appointmentTime: appointmentTime,
+          appointmentLocation: appointmentLocation,
           price: appointmentPrice
         },
         description: `Accepted request from ${selectedRequest.userName} and scheduled appointment`
@@ -701,6 +710,21 @@ export default function PhysiotherapistRequestsPage() {
                   type="time"
                   value={appointmentTime}
                   onChange={(e) => setAppointmentTime(e.target.value)}
+                  className="bg-slate-800 border-slate-700 text-white mt-1"
+                />
+              </div>
+
+              {/* Location */}
+              <div>
+                <Label htmlFor="appointmentLocation" className="text-slate-400 text-sm">
+                  {t("location")}
+                </Label>
+                <Input
+                  id="appointmentLocation"
+                  type="text"
+                  placeholder={t("enterLocation")}
+                  value={appointmentLocation}
+                  onChange={(e) => setAppointmentLocation(e.target.value)}
                   className="bg-slate-800 border-slate-700 text-white mt-1"
                 />
               </div>
