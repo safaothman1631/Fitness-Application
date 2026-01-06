@@ -28,6 +28,10 @@ export function FloatingNotificationButton() {
   const [unreadCount, setUnreadCount] = useState(0)
   const [loading, setLoading] = useState(false)
   
+  // Check if RTL language
+  const isRTL = language === "ar" || language === "ku"
+  const positionClass = isRTL ? "left-20" : "right-20"
+
   // Get userId from localStorage
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -41,10 +45,6 @@ export function FloatingNotificationButton() {
   if (hideOnPages.some(page => pathname?.startsWith(page))) {
     return null
   }
-  
-  // Check if RTL language
-  const isRTL = language === "ar" || language === "ku"
-  const positionClass = isRTL ? "left-20" : "right-20"
 
   // Fetch notifications
   const fetchNotifications = async () => {

@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Get target users based on audience
-    let usersQuery = adminDb.collection('users')
+    let usersQuery: FirebaseFirestore.Query<FirebaseFirestore.DocumentData> = adminDb.collection('users')
     
     if (targetAudience && targetAudience !== 'all') {
       usersQuery = usersQuery.where('role', '==', targetAudience)
