@@ -84,6 +84,7 @@ export type TranslationKey =
   | "day"
   | "month"
   | "year"
+  | "completeWorkout"
   | "superadminPanel"
   | "fullSystemControl"
   | "menu"
@@ -1600,6 +1601,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     day: "Day",
     month: "Month",
     year: "Year",
+    completeWorkout: "Complete Workout",
     superadminPanel: "Super Admin Panel",
     fullSystemControl: "Full system access and management authority",
     menu: "Menu",
@@ -2205,6 +2207,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   trainersAlwaysActive: "Trainers and Superadmins are always active",
   saveChanges: "Save Changes",
   cancelAction: "Cancel",
+  completeWorkout: "Complete Workout",
   deleteUserTitle: "Delete User",
   areYouSure: "Are you sure?",
   actionCannotBeUndone: "This action cannot be undone",
@@ -3604,6 +3607,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,trainersAlwaysActive: "المدربون والمسؤولون نشطون دائماً"
   ,saveChanges: "حفظ التغييرات"
   ,cancelAction: "إلغاء"
+  ,completeWorkout: "إكمال التمرين"
   ,deleteUserTitle: "حذف المستخدم"
   ,areYouSure: "هل أنت متأكد؟"
   ,actionCannotBeUndone: "لا يمكن التراجع عن هذا الإجراء"
@@ -4869,6 +4873,7 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,saveChanges: "پاشەکەوتکردنی گۆڕانکاریەکان"
     ,cancel: "پاشگەزبوونەوە"
     ,cancelAction: "پاشگەزبوونەوە"
+    ,completeWorkout: "تەواوکردنی راهێنان"
     ,deleteUserTitle: "سڕینەوەی بەکارهێنەر"
     ,areYouSure: "دڵنیایت؟"
     ,actionCannotBeUndone: "ئەم کردارە ناگەڕێتەوە"

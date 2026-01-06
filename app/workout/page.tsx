@@ -51,9 +51,11 @@ export default function WorkoutPage() {
   const [workoutStats, setWorkoutStats] = useState({
     totalWorkouts: 0,
     activeStreak: 0,
-    caloriesBurned: 0,
+    longestStreak: 0,
     totalTime: 0
   })
+  const [completedDays, setCompletedDays] = useState<Record<string, boolean>>({})
+  const [missedDays, setMissedDays] = useState<Record<string, boolean>>({})
   const [mounted, setMounted] = useState(false)
   const { t, language } = useLanguage()
   const isRTL = language === "ar" || language === "ku"
@@ -86,42 +88,78 @@ export default function WorkoutPage() {
       const userId = localStorage.getItem("userId")
       if (!userId) return
       
-      // Fetch real stats from Firebase
-      const response = await fetch(`/api/user-stats?userId=${userId}`)
+      // Fetch workout completion data
+      const response = await fetch(`/api/workout-completion?userId=${userId}`)
       if (response.ok) {
         const data = await response.json()
         
-        // Calculate total time and calories from submissions
-        const submissions = getWorkoutSubmissions()
-        const totalTime = submissions.length * 45 // Assume 45 min per workout
-        const caloriesBurned = submissions.length * 350 // Assume 350 cal per workout
+        console.log('📊 Workout completion data:', data)
+        console.log('📅 Missed days from API:', data.missedDays)
         
         setWorkoutStats({
-          totalWorkouts: data.totalWorkouts || submissions.length,
+          totalWorkouts: data.totalWorkouts || 0,
           activeStreak: data.currentStreak || 0,
-          caloriesBurned: caloriesBurned,
-          totalTime: totalTime
+          longestStreak: data.longestStreak || 0,
+          totalTime: data.todayTime || 0  // Today's workout time only
         })
+        
+        // Mark completed days
+        const completed: Record<string, boolean> = {}
+        if (data.completions) {
+          Object.keys(data.completions).forEach(date => {
+            // Convert date to day name
+            const dateObj = new Date(date + 'T00:00:00')
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            const dayName = days[dateObj.getDay()]
+            completed[dayName] = true
+          })
+        }
+        setCompletedDays(completed)
+        
+        // Mark missed days (exclude rest days)
+        const missed: Record<string, boolean> = {}
+        if (data.missedDays && data.missedDays.length > 0) {
+          console.log('🔴 Processing missed days:', data.missedDays)
+          data.missedDays.forEach((date: string) => {
+            const dateObj = new Date(date + 'T00:00:00')
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+            const dayName = days[dateObj.getDay()]
+            
+            // Check if this day is a rest day in the workout schedule
+            const dayWorkout = workoutSchedule.find(d => d.day === dayName)
+            const isRestDay = !dayWorkout || dayWorkout.exercises.length === 0 || dayWorkout.exercises[0]?.muscleGroup === "Recovery"
+            
+            // Only mark as missed if it's not a rest day
+            if (!isRestDay) {
+              console.log(`   ${date} -> ${dayName} (MISSED)`)
+              missed[dayName] = true
+            } else {
+              console.log(`   ${date} -> ${dayName} (SKIPPED - Rest Day)`)
+            }
+          })
+        }
+        console.log('🔴 Final missed days state:', missed)
+        setMissedDays(missed)
       } else {
-        // Fallback to localStorage data
-        const submissions = getWorkoutSubmissions()
         setWorkoutStats({
-          totalWorkouts: submissions.length,
+          totalWorkouts: 0,
           activeStreak: 0,
-          caloriesBurned: submissions.length * 350,
-          totalTime: submissions.length * 45
+          longestStreak: 0,
+          totalTime: 0
         })
+        setCompletedDays({})
+        setMissedDays({})
       }
     } catch (error) {
       console.error('Error fetching workout stats:', error)
-      // Fallback to localStorage data
-      const submissions = getWorkoutSubmissions()
       setWorkoutStats({
-        totalWorkouts: submissions.length,
+        totalWorkouts: 0,
         activeStreak: 0,
-        caloriesBurned: submissions.length * 350,
-        totalTime: submissions.length * 45
+        longestStreak: 0,
+        totalTime: 0
       })
+      setCompletedDays({})
+      setMissedDays({})
     }
   }
 
@@ -137,10 +175,14 @@ export default function WorkoutPage() {
     
     // Load workout programs from Firestore
     fetchUserWorkoutPrograms()
-    
-    // Fetch workout stats
-    fetchWorkoutStats()
   }, [])
+
+  // Fetch workout stats after workoutSchedule is loaded
+  useEffect(() => {
+    if (workoutSchedule.length > 0) {
+      fetchWorkoutStats()
+    }
+  }, [workoutSchedule])
 
   const fetchUserWorkoutPrograms = async () => {
     try {
@@ -161,16 +203,19 @@ export default function WorkoutPage() {
       const programs = await response.json()
       console.log('Γ£à Fetched programs:', programs)
 
-      // Helper: Check if URL is expired
+      // Helper: Check if URL is expired or will expire soon (within 1 day)
       const isUrlExpired = (url: string): boolean => {
         try {
           const match = url.match(/Expires=(\d+)/)
           if (match) {
             const expiryTimestamp = parseInt(match[1]) * 1000
-            return Date.now() >= expiryTimestamp
+            const oneDayFromNow = Date.now() + (24 * 60 * 60 * 1000)
+            // Refresh if expired or will expire within 24 hours
+            return Date.now() >= expiryTimestamp || oneDayFromNow >= expiryTimestamp
           }
         } catch {}
-        return false
+        // If no expiry found, assume it needs refresh
+        return true
       }
 
       // Helper: Refresh expired video URL
@@ -231,6 +276,7 @@ export default function WorkoutPage() {
                       sets: parseInt(ex.sets) || 0,
                       reps: ex.reps || '',
                       notes: ex.notes || '',
+                      duration: program.duration || '',  // Use program duration
                       videoUrl: videos[0]?.url || ex.videoUrls?.[0] || '',
                       videoUrls: ex.videoUrls || [],
                       videos: videos,
@@ -358,10 +404,16 @@ export default function WorkoutPage() {
           </div>
         </Card>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
           <StatsCard icon={Dumbbell} label={t("totalWorkouts")} value={workoutStats.totalWorkouts.toString()} color="#9333EA" isRTL={isRTL} />
-          <StatsCard icon={Calendar} label={t("activeStreak")} value={`${workoutStats.activeStreak} ${t("days")}`} color="#A855F7" isRTL={isRTL} />
-          <StatsCard icon={Flame} label={t("caloriesBurned")} value={workoutStats.caloriesBurned.toLocaleString()} color="#C084FC" isRTL={isRTL} />
+          <StatsCard 
+            icon={Calendar} 
+            label={t("activeStreak")} 
+            value={`${workoutStats.activeStreak} ${t("days")}`} 
+            subtitle={workoutStats.longestStreak > workoutStats.activeStreak ? `${language === 'ku' ? 'باشترین' : language === 'ar' ? 'الأفضل' : 'Best'}: ${workoutStats.longestStreak} ${t("days")}` : undefined}
+            color="#A855F7" 
+            isRTL={isRTL} 
+          />
           <StatsCard icon={Clock} label={t("totalTime")} value={`${workoutStats.totalTime} ${t("min")}`} color="#9333EA" isRTL={isRTL} />
         </div>
 
@@ -536,9 +588,11 @@ export default function WorkoutPage() {
                         key={i}
                         onClick={() => isAccessible && dayWorkout && setSelectedDay(displayName)}
                         className={`w-full grid items-center gap-0 p-4 rounded-lg border transition-all duration-300 ${
-                          isAccessible && dayWorkout
-                            ? 'bg-[#0E151B] border-[#2E3944] hover:border-purple-500/50 cursor-pointer group'
-                            : 'bg-[#0E151B]/30 border-[#2E3944]/30 cursor-not-allowed opacity-50'
+                          missedDays[displayName] && isAccessible
+                            ? 'bg-red-950/20 border-red-900/30 cursor-pointer hover:border-red-500/50'
+                            : isAccessible && dayWorkout
+                              ? 'bg-[#0E151B] border-[#2E3944] hover:border-purple-500/50 cursor-pointer group'
+                              : 'bg-[#0E151B]/30 border-[#2E3944]/30 cursor-not-allowed opacity-50'
                         } ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
                       >
                         {/* Right column: Play button + muscle tag */}
@@ -563,15 +617,29 @@ export default function WorkoutPage() {
                         
                         {/* Center: Text content */}
                         <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                          <p className={`font-semibold text-sm ${isAccessible ? 'text-white' : 'text-gray-500'}`}>
+                          <p className={`font-semibold text-sm flex items-center gap-2 ${
+                            missedDays[displayName] ? 'text-red-400' : isAccessible ? 'text-white' : 'text-gray-500'
+                          } ${isRTL ? 'flex-row-reverse' : ''}`}>
                             {t(dayName as any)}
+                            {completedDays[displayName] && isAccessible && (
+                              <span className="text-green-400 text-xs">✓</span>
+                            )}
+                            {missedDays[displayName] && isAccessible && (
+                              <span className="text-red-400 text-xs">⚠</span>
+                            )}
                           </p>
-                          <p className={`text-xs ${isAccessible ? 'text-[#B6C4CF]' : 'text-gray-600'}`}>
+                          <p className={`text-xs ${
+                            missedDays[displayName] ? 'text-red-300' : isAccessible ? 'text-[#B6C4CF]' : 'text-gray-600'
+                          }`}>
                             {!isAccessible 
                               ? '🔒' 
-                              : isRestDay 
-                                ? t("restAndRecovery") 
-                                : `${exerciseCount} ${t("exercisesCount")}`
+                              : missedDays[displayName]
+                                ? language === 'ku' ? 'میسید' : language === 'ar' ? 'فائت' : 'Missed'
+                                : completedDays[displayName]
+                                  ? t("completed")
+                                  : isRestDay 
+                                    ? t("restAndRecovery") 
+                                    : `${exerciseCount} ${t("exercisesCount")}`
                             }
                           </p>
                         </div>
@@ -652,6 +720,185 @@ export default function WorkoutPage() {
             <p className="text-slate-400 text-sm mt-1">
               {workoutSchedule.find(d => d.day === selectedDay)?.exercises.length || 0} {t("exercises")}
             </p>
+            
+            {/* Complete Workout Button */}
+            {selectedDay && completedDays[selectedDay] ? (
+              <Button
+                disabled
+                className="w-full mt-4 bg-green-500/20 text-green-300 font-semibold py-3 rounded-xl border border-green-500/30 cursor-not-allowed flex items-center justify-center gap-2"
+              >
+                <CheckCircle2 className="w-5 h-5" />
+                {t("completed")} ✓
+              </Button>
+            ) : selectedDay && missedDays[selectedDay] ? (
+              <div className="w-full mt-4 bg-red-500/20 text-red-300 font-semibold py-3 rounded-xl border border-red-500/30 flex items-center justify-center gap-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+                {language === 'ku' ? 'میسید - ئەو رۆژە بیرت چووە' : language === 'ar' ? 'فائت - نسيت هذا اليوم' : 'Missed - You forgot this day'}
+              </div>
+            ) : (
+              <Button
+                onClick={async () => {
+                const userId = localStorage.getItem("userId")
+                if (!userId) return
+                
+                const dayWorkout = workoutSchedule.find(d => d.day === selectedDay)
+                if (!dayWorkout) return
+                
+                try {
+                  // Calculate total time from program duration
+                  let totalTime = 0
+                  
+                  // Get unique program durations from exercises
+                  const programDurations = new Set<string>()
+                  dayWorkout.exercises.forEach(exercise => {
+                    if (exercise.duration) {
+                      programDurations.add(exercise.duration)
+                    }
+                  })
+                  
+                  // If all exercises share the same program duration, use it once
+                  if (programDurations.size === 1) {
+                    const duration = Array.from(programDurations)[0]
+                    const durationStr = duration.toLowerCase()
+                    if (durationStr.includes('min')) {
+                      totalTime = parseInt(durationStr) || 0
+                    } else if (durationStr.includes('hour') || durationStr.includes('h')) {
+                      totalTime = (parseInt(durationStr) || 0) * 60
+                    } else {
+                      totalTime = parseInt(durationStr) || 0
+                    }
+                  } else {
+                    // Fallback: assume 3 minutes per exercise
+                    totalTime = dayWorkout.exercises.length * 3
+                  }
+                  
+                  const response = await fetch('/api/workout-completion', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      userId,
+                      day: selectedDay,
+                      exerciseCount: dayWorkout.exercises.length,
+                      totalTime
+                    })
+                  })
+                  
+                  if (response.ok) {
+                    const data = await response.json()
+                    
+                    // Update stats
+                    setWorkoutStats(prev => ({
+                      ...prev,
+                      totalWorkouts: data.totalWorkouts,
+                      activeStreak: data.streak,
+                      longestStreak: Math.max(data.streak, prev.longestStreak),
+                      totalTime: totalTime  // Use today's time
+                    }))
+                    
+                    // Show streak broken warning if applicable
+                    if (data.wasStreakBroken && data.previousStreak > 0) {
+                      const warningDiv = document.createElement('div')
+                      warningDiv.className = 'fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300'
+                      warningDiv.innerHTML = `
+                        <div class="bg-gradient-to-br from-orange-500 to-red-600 text-white rounded-3xl shadow-2xl p-8 max-w-sm mx-4 border border-orange-400/30 animate-in zoom-in duration-500">
+                          <div class="text-center">
+                            <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center mx-auto mb-6">
+                              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                              </svg>
+                            </div>
+                            <div class="text-6xl mb-4">💔</div>
+                            <h3 class="text-3xl font-bold mb-3">${language === 'ku' ? 'ستریک شکا' : language === 'ar' ? 'انقطعت السلسلة' : 'Streak Broken!'}</h3>
+                            <p class="text-orange-100 text-lg mb-4">${language === 'ku' ? 'رۆژێکت بیر چوو' : language === 'ar' ? 'نسيت يوماً' : 'You missed days'}</p>
+                            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20 mb-4">
+                              <p class="text-sm text-orange-50">${language === 'ku' ? 'ستریکی پێشوو' : language === 'ar' ? 'السلسلة السابقة' : 'Previous Streak'}</p>
+                              <p class="font-bold text-2xl text-white">${data.previousStreak} ${language === 'ku' ? 'رۆژ' : language === 'ar' ? 'يوم' : 'days'}</p>
+                            </div>
+                            <div class="bg-green-500/20 backdrop-blur-sm rounded-2xl p-4 border border-green-400/30">
+                              <p class="text-sm text-green-50">${language === 'ku' ? 'ستریکی نوێ' : language === 'ar' ? 'السلسلة الجديدة' : 'New Streak'}</p>
+                              <p class="font-bold text-2xl text-white">1 ${language === 'ku' ? 'رۆژ' : language === 'ar' ? 'يوم' : 'day'}</p>
+                            </div>
+                          </div>
+                        </div>
+                      `
+                      document.body.appendChild(warningDiv)
+                      
+                      setTimeout(() => {
+                        warningDiv.style.animation = 'fade-out 300ms ease-out'
+                        setTimeout(() => warningDiv.remove(), 300)
+                      }, 4000)
+                      
+                      warningDiv.addEventListener('click', () => {
+                        warningDiv.style.animation = 'fade-out 300ms ease-out'
+                        setTimeout(() => warningDiv.remove(), 300)
+                      })
+                      
+                      // Wait 4.5 seconds then show success
+                      setTimeout(() => {
+                        showSuccessAnimation()
+                      }, 4500)
+                    } else {
+                      // Show success immediately if no streak break
+                      showSuccessAnimation()
+                    }
+                    
+                    function showSuccessAnimation() {
+                      const successDiv = document.createElement('div')
+                      successDiv.className = 'fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-sm animate-in fade-in duration-300'
+                      successDiv.innerHTML = `
+                        <div class="bg-gradient-to-br from-green-500 to-emerald-600 text-white rounded-3xl shadow-2xl p-8 max-w-sm mx-4 border border-green-400/30 animate-in zoom-in duration-500">
+                          <div class="text-center">
+                            <div class="w-20 h-20 rounded-full bg-white/20 backdrop-blur-xl flex items-center justify-center mx-auto mb-6 animate-bounce">
+                              <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+                              </svg>
+                            </div>
+                            <div class="text-6xl mb-4 animate-pulse">🔥</div>
+                            <h3 class="text-3xl font-bold mb-3">${language === 'ku' ? 'راهێنان تەواو بوو' : language === 'ar' ? 'اكتمل التمرين' : 'Workout Complete!'}</h3>
+                            <p class="text-green-100 text-lg mb-4">${language === 'ku' ? 'ستریک' : language === 'ar' ? 'السلسلة' : 'Streak'}: ${data.streak} ${language === 'ku' ? 'رۆژ' : language === 'ar' ? 'يوم' : 'days'}</p>
+                            <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 border border-white/20">
+                              <p class="text-sm text-green-50">${language === 'ku' ? 'کۆی گشتی راهێنانەکان' : language === 'ar' ? 'إجمالي التمارين' : 'Total Workouts'}</p>
+                              <p class="font-bold text-2xl text-white">${data.totalWorkouts}</p>
+                            </div>
+                          </div>
+                        </div>
+                      `
+                      document.body.appendChild(successDiv)
+                      
+                      setTimeout(() => {
+                        successDiv.style.animation = 'fade-out 300ms ease-out'
+                        setTimeout(() => successDiv.remove(), 300)
+                      }, 3000)
+                      
+                      successDiv.addEventListener('click', () => {
+                        successDiv.style.animation = 'fade-out 300ms ease-out'
+                        setTimeout(() => successDiv.remove(), 300)
+                      })
+                    }
+                    
+                    // Mark this day as completed
+                    if (selectedDay) {
+                      setCompletedDays(prev => ({ ...prev, [selectedDay]: true }))
+                    }
+                    
+                    // Close dialog
+                    setSelectedDay(null)
+                    
+                    // Refresh stats to update missed days
+                    fetchWorkoutStats()
+                  }
+                } catch (error) {
+                  console.error('Error completing workout:', error)
+                }
+              }}
+              className="w-full mt-4 bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-semibold py-3 rounded-xl shadow-lg shadow-green-500/30 flex items-center justify-center gap-2"
+            >
+              <CheckCircle2 className="w-5 h-5" />
+              {t("completeWorkout")}
+            </Button>
+            )}
           </div>
 
           <ScrollArea className="h-[calc(92vh-100px)] px-6 py-4">
@@ -825,19 +1072,44 @@ export default function WorkoutPage() {
                                 vid.pause()
                               }
                             }}
-                            onError={(e) => {
+                            onError={async (e) => {
                               console.error('❌ Video load failed:', video.name || 'Unknown')
-                              const target = e.currentTarget
+                              const target = e.currentTarget as HTMLVideoElement
+                              
+                              // Try to refresh the URL if we have the video name
+                              if (video.name && !target.dataset.retried) {
+                                target.dataset.retried = 'true'
+                                console.log('🔄 Attempting to refresh video URL for:', video.name)
+                                
+                                try {
+                                  const res = await fetch(`/api/videos?name=${encodeURIComponent(video.name)}`)
+                                  if (res.ok) {
+                                    const data = await res.json()
+                                    if (data.videos && data.videos.length > 0) {
+                                      const newUrl = data.videos[0].url
+                                      console.log('✅ Got fresh URL, reloading video:', video.name)
+                                      target.src = newUrl
+                                      target.load()
+                                      return // Don't show error if we got a new URL
+                                    }
+                                  }
+                                } catch (err) {
+                                  console.warn('⚠️ Could not refresh URL for:', video.name, err)
+                                }
+                              }
+                              
+                              // If refresh failed or no video name, show error
                               target.style.display = 'none'
                               const parent = target.parentElement
-                              if (parent) {
+                              if (parent && !parent.querySelector('.video-error')) {
                                 const errorDiv = document.createElement('div')
-                                errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900'
+                                errorDiv.className = 'absolute inset-0 flex flex-col items-center justify-center bg-slate-900 video-error'
                                 errorDiv.innerHTML = `
                                   <svg class="w-12 h-12 text-red-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                   </svg>
                                   <p class="text-red-300 text-sm font-medium">Video Unavailable</p>
+                                  <p class="text-red-400 text-xs mt-1">${video.name || ''}</p>
                                 `
                                 parent.appendChild(errorDiv)
                               }
@@ -987,7 +1259,7 @@ export default function WorkoutPage() {
   )
 }
 
-function StatsCard({ icon: Icon, label, value, color, isRTL }: any) {
+function StatsCard({ icon: Icon, label, value, subtitle, color, isRTL }: any) {
   return (
     <Card className="bg-[#101A23] border-[#2E3944] p-6 hover:border-[#C084FC]/30 transition-all">
       <div className="flex flex-col gap-3">
@@ -998,6 +1270,11 @@ function StatsCard({ icon: Icon, label, value, color, isRTL }: any) {
           <span className="text-xs text-[#B6C4CF] uppercase">{label}</span>
         </div>
         <p className={`text-3xl font-bold text-white ${isRTL ? 'text-right' : ''}`}>{value}</p>
+        {subtitle && (
+          <p className={`text-xs text-[#B6C4CF] mt-1 ${isRTL ? 'text-right' : ''}`}>
+            🏆 {subtitle}
+          </p>
+        )}
       </div>
     </Card>
   )

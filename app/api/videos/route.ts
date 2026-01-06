@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
             const [metadata] = await file.getMetadata()
             const [url] = await file.getSignedUrl({
               action: 'read',
-              expires: Date.now() + 7 * 24 * 60 * 60 * 1000 // 7 days
+              expires: Date.now() + 30 * 24 * 60 * 60 * 1000 // 30 days instead of 7
             })
             
             return NextResponse.json({
@@ -141,10 +141,12 @@ export async function GET(request: NextRequest) {
         try {
           console.log(`🔄 Processing video ${index + 1}/${pageVideos.length}: ${file.name}`)
           
-          // Generate signed URL for the video (valid for 7 days)
+          // Generate signed URL for the video (valid for 30 days)
           const [url] = await file.getSignedUrl({
             action: 'read',
-            expires: Date.now() + 365 * 24 * 60 * 60 * 1000, // 1 year
+            expires: Date.now() + 30 * 24 * 60 * 60 * 1000, // 30 days
+          })
+
           const [metadata] = await file.getMetadata()
 
           // Get category from Firestore by matching video filename
