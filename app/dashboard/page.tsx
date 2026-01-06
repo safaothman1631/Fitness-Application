@@ -17,6 +17,20 @@ import { toast } from "sonner"
 import { firestoreProxy } from "@/lib/firestore-proxy"
 import { PWAInstallPrompt } from "@/components/pwa-install-prompt"
 
+interface Ad {
+  id: string
+  title: string
+  description?: string
+  imageUrl?: string
+  link?: string
+  buttonText?: string
+  gradientFrom?: string
+  gradientTo?: string
+  textColor?: string
+  status: 'active' | 'inactive'
+  position?: string
+}
+
 function UserDashboard() {
   const router = useRouter()
   const { t, language } = useLanguage()
@@ -30,6 +44,8 @@ function UserDashboard() {
   const [userData, setUserData] = useState<any>(null)
   const [requestingPro, setRequestingPro] = useState(false)
   const [hasActiveProRequest, setHasActiveProRequest] = useState(false)
+  const [banners, setBanners] = useState<Ad[]>([]) // Changed to array
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0)
   const [workoutStats, setWorkoutStats] = useState({
     totalWorkouts: 0,
     activeStreak: 0,
@@ -179,6 +195,32 @@ function UserDashboard() {
 
     fetchWorkoutStats()
 
+    // Fetch banner ads (all active banners for slideshow)
+    const fetchBanners = async () => {
+      try {
+        console.log('🎯 Fetching banner ads for dashboard...')
+        const response = await fetch('/api/ads?status=active')
+        console.log('📡 Banner response status:', response.status)
+        if (response.ok) {
+          const ads = await response.json()
+          console.log('✅ Fetched all ads:', ads)
+          console.log('📋 Ads details:', JSON.stringify(ads.map((a: Ad) => ({ title: a.title, position: a.position }))))
+          const dashboardBanners = ads.filter((ad: Ad) => ad.position === 'dashboard' || ad.position === 'top')
+          console.log('🎪 Dashboard banners found:', dashboardBanners.length)
+          if (dashboardBanners.length > 0) {
+            setBanners(dashboardBanners)
+            console.log(`✅ ${dashboardBanners.length} banners set successfully`)
+          } else {
+            console.log('⚠️ No banners found for dashboard position')
+          }
+        }
+      } catch (error) {
+        console.error('❌ Error fetching banners:', error)
+      }
+    }
+
+    fetchBanners()
+
     // Check subscription status
     const updateSubscriptionStatus = () => {
       const expiry = getSubscriptionExpiry()
@@ -207,6 +249,17 @@ function UserDashboard() {
     }
   }, [router])
 
+  // Auto-slide banners every 5 seconds
+  useEffect(() => {
+    if (banners.length <= 1) return // No need to slide if only 1 banner
+
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % banners.length)
+    }, 5000) // Change banner every 5 seconds
+
+    return () => clearInterval(interval)
+  }, [banners.length])
+
   return (
     <AuthGuard requiredRole="user" allowedRoles={["user"]}>
     <>
@@ -220,7 +273,7 @@ function UserDashboard() {
         <div className="mb-2 flex items-center justify-between">
           <div>
             <h1 className="text-3xl font-bold bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] bg-clip-text text-transparent mb-2">
-              {t("welcomeBackUser")}
+              {language === 'en' && 'Welcome back'}{language === 'ar' && 'مرحباً بعودتك'}{language === 'ku' && 'بەخێربێیتەوە'}{language === 'tr' && 'Tekrar Hoş Geldin'}{userData?.name ? `, ${userData.name}` : userData?.fullName ? `, ${userData.fullName}` : ''}
             </h1>
             <p className="text-[#B6C4CF] mb-8">{t("readyForToday")}</p>
           </div>
@@ -255,12 +308,71 @@ function UserDashboard() {
           <SubscriptionWarning variant="warning" daysRemaining={subscriptionStatus.daysRemaining} />
         )}
 
-        {subscriptionStatus && !subscriptionStatus.isExpired && (
-          <Card className="bg-gradient-to-r from-[#10B2E3] to-[#73E8FF] border-none p-8 mb-8 relative overflow-hidden">
-            <div className="relative z-10">
-              <h3 className="text-white text-xl font-bold mb-2">{t("limitedOffer")}</h3>
-              <p className="text-white/90 text-sm mb-4">{t("upgradeToday")}</p>
-              <Button className="bg-white text-[#10B2E3] hover:bg-white/90 font-semibold">{t("now")}</Button>
+        {/* Banner Ad Slideshow - Always show if available */}
+        {banners.length > 0 && (
+          <Card 
+            className="border-none p-8 mb-8 relative overflow-hidden"
+            style={{
+              background: `linear-gradient(to right, ${banners[currentBannerIndex].gradientFrom || '#10B2E3'}, ${banners[currentBannerIndex].gradientTo || '#73E8FF'})`,
+              transition: 'background 1.5s ease-in-out'
+            }}
+          >
+            <div 
+              className="relative z-10"
+              key={currentBannerIndex}
+              style={{
+                animation: 'fadeIn 1.2s ease-in-out'
+              }}
+            >
+              <style jsx>{`
+                @keyframes fadeIn {
+                  0% {
+                    opacity: 0;
+                    transform: translateX(50px);
+                  }
+                  100% {
+                    opacity: 1;
+                    transform: translateX(0);
+                  }
+                }
+              `}</style>
+              <h3 className="text-white text-xl font-bold mb-2">
+                {banners[currentBannerIndex].title}
+              </h3>
+              <p className="text-white/90 text-sm mb-4">
+                {banners[currentBannerIndex].description}
+              </p>
+              {banners[currentBannerIndex].link ? (
+                <Button 
+                  className="bg-white hover:bg-white/90 font-semibold"
+                  style={{ color: banners[currentBannerIndex].gradientFrom || '#10B2E3' }}
+                  onClick={() => window.open(banners[currentBannerIndex].link, '_blank')}
+                >
+                  {banners[currentBannerIndex].buttonText || t("now")}
+                </Button>
+              ) : (
+                <Button className="bg-white hover:bg-white/90 font-semibold" style={{ color: banners[currentBannerIndex].gradientFrom || '#10B2E3' }}>
+                  {banners[currentBannerIndex].buttonText || t("now")}
+                </Button>
+              )}
+              
+              {/* Slideshow Indicators - only show if more than 1 banner */}
+              {banners.length > 1 && (
+                <div className="flex gap-2 mt-4 justify-center">
+                  {banners.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentBannerIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ease-in-out ${
+                        index === currentBannerIndex 
+                          ? 'w-8 bg-white shadow-lg' 
+                          : 'w-2 bg-white/50 hover:bg-white/75 hover:scale-110'
+                      }`}
+                      aria-label={`Go to banner ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </Card>
         )}

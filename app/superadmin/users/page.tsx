@@ -649,11 +649,19 @@ export default function UsersPage() {
               <div className="flex items-center justify-center gap-2">
                 <Activity className="w-5 h-5" />
                 <span>{t("renewSubscription")}</span>
-                {users.filter(u => u.role === 'user' && (u.membership === 'Free' || !u.membership)).length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-gray-500 to-gray-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-lg shadow-gray-500/50 ring-2 ring-slate-900">
-                    {users.filter(u => u.role === 'user' && (u.membership === 'Free' || !u.membership)).length}
-                  </span>
-                )}
+                {(() => {
+                  const renewalCount = users.filter(u => {
+                    if (u.role !== 'user') return false
+                    const expiryDate = u.subscriptionEnd ? new Date(u.subscriptionEnd) : null
+                    const daysLeft = expiryDate ? Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0
+                    return daysLeft <= 7 || u.membership === 'Free' || !u.membership
+                  }).length
+                  return renewalCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-6 h-6 bg-gradient-to-br from-red-500 to-red-600 rounded-full text-xs text-white flex items-center justify-center font-bold shadow-lg shadow-red-500/50 ring-2 ring-slate-900">
+                      {renewalCount}
+                    </span>
+                  )
+                })()}
               </div>
             </button>
           </div>
@@ -862,13 +870,22 @@ export default function UsersPage() {
                       <tr className="border-b border-slate-800/50">
                         <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">User</th>
                         <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap hidden md:table-cell">Plan</th>
-                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Status</th>
+                        <th className="text-left p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Days Left</th>
                         <th className="text-right p-2 md:p-4 text-gray-400 font-semibold text-xs md:text-sm whitespace-nowrap">Actions</th>
                       </tr>
                     </thead>
                     <tbody>
                       {users
-                        .filter((user) => user.role === 'user' && (user.membership === 'Free' || !user.membership))
+                        .filter((user) => {
+                          // Only show regular users
+                          if (user.role !== 'user') return false
+                          
+                          const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
+                          const daysLeft = expiryDate ? Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0
+                          
+                          // Show if expired, expiring soon (≤7 days), or Free users
+                          return daysLeft <= 7 || user.membership === 'Free' || !user.membership
+                        })
                         .map((user) => {
                           const expiryDate = user.subscriptionEnd ? new Date(user.subscriptionEnd) : null
                           const daysLeft = expiryDate ? Math.ceil((expiryDate.getTime() - Date.now()) / (1000 * 60 * 60 * 24)) : 0
@@ -890,19 +907,21 @@ export default function UsersPage() {
                               </td>
                               <td className="p-2 md:p-4 hidden md:table-cell">
                                 <span className="px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg bg-gradient-to-r from-gray-500/40 via-slate-500/30 to-gray-500/20 text-gray-300 border border-gray-400/50 shadow-gray-500/30 whitespace-nowrap">
-                                  FREE
+                                  {user.membership || 'FREE'}
                                 </span>
                               </td>
                               <td className="p-2 md:p-2 md:p-4">
-                                <span className={`px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg whitespace-nowrap ${
-                                  isExpired
-                                    ? "bg-gradient-to-r from-red-500/30 via-red-600/20 to-red-500/10 text-red-300 border border-red-400/40 shadow-red-500/20"
-                                    : isExpiringSoon
-                                    ? "bg-gradient-to-r from-orange-500/30 via-orange-600/20 to-orange-500/10 text-orange-300 border border-orange-400/40 shadow-orange-500/20"
-                                    : "bg-gradient-to-r from-green-500/30 via-green-600/20 to-green-500/10 text-green-300 border border-green-400/40 shadow-green-500/20"
-                                }`}>
-                                  {isExpired ? 'Expired' : isExpiringSoon ? 'Soon' : 'Active'}
-                                </span>
+                                <div className="flex flex-col gap-1">
+                                  <span className={`px-2 md:px-4 py-1 md:py-1.5 rounded-full text-[10px] md:text-xs font-bold shadow-lg whitespace-nowrap ${
+                                    isExpired
+                                      ? "bg-gradient-to-r from-red-500/30 via-red-600/20 to-red-500/10 text-red-300 border border-red-400/40 shadow-red-500/20"
+                                      : isExpiringSoon
+                                      ? "bg-gradient-to-r from-orange-500/30 via-orange-600/20 to-orange-500/10 text-orange-300 border border-orange-400/40 shadow-orange-500/20"
+                                      : "bg-gradient-to-r from-gray-500/30 via-gray-600/20 to-gray-500/10 text-gray-300 border border-gray-400/40 shadow-gray-500/20"
+                                  }`}>
+                                    {isExpired ? `${Math.abs(daysLeft)}d ago` : daysLeft > 0 ? `${daysLeft}d` : 'Expired'}
+                                  </span>
+                                </div>
                               </td>
                               <td className="p-2 md:p-4 text-right">
                                 <Button

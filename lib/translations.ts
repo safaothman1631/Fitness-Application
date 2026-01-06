@@ -467,6 +467,16 @@ export type TranslationKey =
   | "exerciseEighth"
   | "exerciseNinth"
   | "exerciseTenth"
+  | "mealFirst"
+  | "mealSecond"
+  | "mealThird"
+  | "mealFourth"
+  | "mealFifth"
+  | "mealSixth"
+  | "mealSeventh"
+  | "mealEighth"
+  | "mealNinth"
+  | "mealTenth"
   | "keepBackStraightEngageCore"
   | "goDeepKeepChestUp"
   | "lightStretchingYogaWalking"
@@ -1099,6 +1109,10 @@ export type TranslationKey =
   | "highServerLoad"
   | "markAsRead"
   | "deleteNotification"
+  | "notificationDeleted"
+  | "allNotificationsDeleted"
+  | "allMarkedAsRead"
+  | "deleteAll"
   | "noNotifications"
   | "allCaughtUp"
   // Physiotherapist Dashboard
@@ -1978,6 +1992,16 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   exerciseEighth: "Eighth Exercise",
   exerciseNinth: "Ninth Exercise",
   exerciseTenth: "Tenth Exercise",
+  mealFirst: "First Meal",
+  mealSecond: "Second Meal",
+  mealThird: "Third Meal",
+  mealFourth: "Fourth Meal",
+  mealFifth: "Fifth Meal",
+  mealSixth: "Sixth Meal",
+  mealSeventh: "Seventh Meal",
+  mealEighth: "Eighth Meal",
+  mealNinth: "Ninth Meal",
+  mealTenth: "Tenth Meal",
   sets: "sets",
   reps: "reps",
   calories: "Calories",
@@ -2604,6 +2628,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   highServerLoad: "High Server Load",
   markAsRead: "Mark as Read",
   deleteNotification: "Delete",
+  notificationDeleted: "Notification deleted",
+  allNotificationsDeleted: "All notifications deleted",
+  allMarkedAsRead: "All marked as read",
+  deleteAll: "Delete All",
   noNotifications: "No notifications",
   allCaughtUp: "You're all caught up!",
   approvedRequests: "Approved Requests",
@@ -3405,6 +3433,16 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,exerciseEighth: "التمرين الثامن"
   ,exerciseNinth: "التمرين التاسع"
   ,exerciseTenth: "التمرين العاشر"
+  ,mealFirst: "الوجبة الأولى"
+  ,mealSecond: "الوجبة الثانية"
+  ,mealThird: "الوجبة الثالثة"
+  ,mealFourth: "الوجبة الرابعة"
+  ,mealFifth: "الوجبة الخامسة"
+  ,mealSixth: "الوجبة السادسة"
+  ,mealSeventh: "الوجبة السابعة"
+  ,mealEighth: "الوجبة الثامنة"
+  ,mealNinth: "الوجبة التاسعة"
+  ,mealTenth: "الوجبة العاشرة"
   ,sets: "مجموعات"
   ,reps: "تكرارات"
   ,calories: "السعرات"
@@ -4020,6 +4058,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   ,highServerLoad: "حمل عالٍ على الخادم"
   ,markAsRead: "تمييز كمقروء"
   ,deleteNotification: "حذف"
+  ,notificationDeleted: "تم حذف الإشعار"
+  ,allNotificationsDeleted: "تم حذف جميع الإشعارات"
+  ,allMarkedAsRead: "تم تمييز الكل كمقروء"
+  ,deleteAll: "حذف الكل"
   ,noNotifications: "لا توجد إشعارات"
   ,allCaughtUp: "أنت على اطلاع على كل شيء!"
   ,live: "مباشر"
@@ -4667,6 +4709,16 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,exerciseEighth: "یاری هەشتەم"
     ,exerciseNinth: "یاری نۆیەم"
     ,exerciseTenth: "یاری دەیەم"
+    ,mealFirst: "خواردنی یەکەم"
+    ,mealSecond: "خواردنی دووەم"
+    ,mealThird: "خواردنی سێیەم"
+    ,mealFourth: "خواردنی چوارەم"
+    ,mealFifth: "خواردنی پێنجەم"
+    ,mealSixth: "خواردنی شەشەم"
+    ,mealSeventh: "خواردنی حەوتەم"
+    ,mealEighth: "خواردنی هەشتەم"
+    ,mealNinth: "خواردنی نۆیەم"
+    ,mealTenth: "خواردنی دەیەم"
     ,sets: "سێت"
     ,reps: "دووبارە"
     ,calories: "کالۆری"
@@ -5271,6 +5323,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
     ,highServerLoad: "باری زۆری سێرڤەر"
     ,markAsRead: "نیشانکردن وەک خوێندراوە"
     ,deleteNotification: "سڕینەوە"
+    ,notificationDeleted: "ئاگادارییەکە سڕایەوە"
+    ,allNotificationsDeleted: "هەموو ئاگادارییەکان سڕانەوە"
+    ,allMarkedAsRead: "هەموو نیشانکران وەک خوێندراوە"
+    ,deleteAll: "سڕینەوەی هەموو"
     ,noNotifications: "هیچ ئاگادارییەک نییە"
     ,allCaughtUp: "تۆ لەسەر هەموو شتێک نوێی!"
     // Physiotherapist Kurdish
@@ -6111,6 +6167,16 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   exerciseEighth: "Sekizinci Egzersiz",
   exerciseNinth: "Dokuzuncu Egzersiz",
   exerciseTenth: "Onuncu Egzersiz",
+  mealFirst: "Birinci Öğün",
+  mealSecond: "İkinci Öğün",
+  mealThird: "Üçüncü Öğün",
+  mealFourth: "Dördüncü Öğün",
+  mealFifth: "Beşinci Öğün",
+  mealSixth: "Altıncı Öğün",
+  mealSeventh: "Yedinci Öğün",
+  mealEighth: "Sekizinci Öğün",
+  mealNinth: "Dokuzuncu Öğün",
+  mealTenth: "Onuncu Öğün",
   sets: "setler",
   reps: "tekrarlar",
   calories: "Kaloriler",
@@ -6741,6 +6807,10 @@ export const translations: Record<Language, Partial<Record<TranslationKey, strin
   highServerLoad: "Yüksek sunucu yükü",
   markAsRead: "Okundu İşaretle",
   deleteNotification: "Sil",
+  notificationDeleted: "Bildirim silindi",
+  allNotificationsDeleted: "Tüm bildirimler silindi",
+  allMarkedAsRead: "Tümü okundu olarak işaretlendi",
+  deleteAll: "Tümünü Sil",
   noNotifications: "Bildirim yok",
   allCaughtUp: "Her şey tamam!",
   live: "CANLI",

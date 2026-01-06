@@ -13,7 +13,7 @@ import { auth } from "@/lib/firebase"
 import { onAuthStateChanged } from "firebase/auth"
 
 export default function NotificationsPage() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { toast } = useToast()
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
@@ -226,14 +226,16 @@ export default function NotificationsPage() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.15),transparent_60%)] animate-pulse" />
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500/0 via-cyan-500/10 to-blue-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <CardHeader className="relative pb-4">
-                <CardTitle className="text-white flex items-center gap-2 text-xl animate-in fade-in slide-in-from-left-4 justify-end">
-                  <span>{t("notificationChannels")}</span>
+                <CardTitle className="text-white flex items-center gap-2 text-xl animate-in fade-in slide-in-from-left-4">
                   <Bell className="w-5 h-5 text-blue-400 group-hover:animate-bounce" />
+                  <span>{t("notificationChannels")}</span>
                 </CardTitle>
-                <p className="text-slate-400 text-sm text-right">{t("chooseNotificationMethod")}</p>
+                <p className="text-slate-400 text-sm">{t("chooseNotificationMethod")}</p>
               </CardHeader>
               <CardContent className="relative space-y-3">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-blue-500/30 duration-300 group/item">
+                <div className={`flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-blue-500/30 duration-300 group/item ${
+                  language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                }`}>
                   <button
                     onClick={() => handleToggle('notifyEmail', notifyEmail, setNotifyEmail)}
                     className={`relative w-12 h-7 rounded-full transition-all duration-300 hover:scale-105 shrink-0 ${
@@ -244,8 +246,10 @@ export default function NotificationsPage() {
                       notifyEmail ? 'left-6' : 'left-1'
                     }`} />
                   </button>
-                  <div className="flex items-center gap-3">
-                    <div>
+                  <div className={`flex items-center gap-3 ${
+                    language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                  }`}>
+                    <div className={language === 'ar' || language === 'ku' ? 'text-right' : 'text-left'}>
                       <div className="text-white font-semibold">{t("email")}</div>
                       <div className="text-xs text-slate-400">{t("receiveEmailNotifications")}</div>
                     </div>
@@ -255,7 +259,9 @@ export default function NotificationsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-cyan-500/30 duration-300 group/item">
+                <div className={`flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-cyan-500/30 duration-300 group/item ${
+                  language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                }`}>
                   <button
                     onClick={() => handleToggle('notifyPush', notifyPush, setNotifyPush)}
                     className={`relative w-12 h-7 rounded-full transition-all duration-300 hover:scale-105 shrink-0 ${
@@ -266,8 +272,10 @@ export default function NotificationsPage() {
                       notifyPush ? 'left-6' : 'left-1'
                     }`} />
                   </button>
-                  <div className="flex items-center gap-3">
-                    <div>
+                  <div className={`flex items-center gap-3 ${
+                    language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                  }`}>
+                    <div className={language === 'ar' || language === 'ku' ? 'text-right' : 'text-left'}>
                       <div className="text-white font-semibold">{t("pushNotifications")}</div>
                       <div className="text-xs text-slate-400">{t("getInstantAlerts")}</div>
                     </div>
@@ -277,7 +285,9 @@ export default function NotificationsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.02] hover:border-purple-500/30 duration-300 group/item">
+                <div className={`flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.02] hover:border-purple-500/30 duration-300 group/item ${
+                  language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                }`}>
                   <button
                     onClick={() => handleToggle('notifySMS', notifySMS, setNotifySMS)}
                     className={`relative w-12 h-7 rounded-full transition-all duration-300 hover:scale-105 shrink-0 ${
@@ -288,8 +298,10 @@ export default function NotificationsPage() {
                       notifySMS ? 'left-6' : 'left-1'
                     }`} />
                   </button>
-                  <div className="flex items-center gap-3">
-                    <div>
+                  <div className={`flex items-center gap-3 ${
+                    language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                  }`}>
+                    <div className={language === 'ar' || language === 'ku' ? 'text-right' : 'text-left'}>
                       <div className="text-white font-semibold">{t("sms")}</div>
                       <div className="text-xs text-slate-400">{t("textMessageAlerts")}</div>
                     </div>
@@ -306,14 +318,16 @@ export default function NotificationsPage() {
               <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(168,85,247,0.15),transparent_60%)] animate-pulse" />
               <div className="absolute inset-0 bg-gradient-to-r from-purple-500/0 via-pink-500/10 to-purple-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
               <CardHeader className="relative pb-4">
-                <CardTitle className="text-white flex items-center gap-2 text-xl animate-in fade-in slide-in-from-left-4 justify-end">
-                  <span>{t("activityNotifications")}</span>
+                <CardTitle className="text-white flex items-center gap-2 text-xl animate-in fade-in slide-in-from-left-4">
                   <Bell className="w-5 h-5 text-purple-400 group-hover:animate-bounce" />
+                  <span>{t("activityNotifications")}</span>
                 </CardTitle>
-                <p className="text-slate-400 text-sm text-right">{t("chooseActivityNotifications")}</p>
+                <p className="text-slate-400 text-sm">{t("chooseActivityNotifications")}</p>
               </CardHeader>
               <CardContent className="relative space-y-3">
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-purple-500/30 duration-300 group/item">
+                <div className={`flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-purple-500/30 duration-300 group/item ${
+                  language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                }`}>
                   <button
                     onClick={() => handleToggle('notifyWorkout', notifyWorkout, setNotifyWorkout)}
                     className={`relative w-12 h-7 rounded-full transition-all duration-300 hover:scale-105 shrink-0 ${
@@ -324,8 +338,10 @@ export default function NotificationsPage() {
                       notifyWorkout ? 'left-6' : 'left-1'
                     }`} />
                   </button>
-                  <div className="flex items-center gap-3">
-                    <div>
+                  <div className={`flex items-center gap-3 ${
+                    language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                  }`}>
+                    <div className={language === 'ar' || language === 'ku' ? 'text-right' : 'text-left'}>
                       <div className="text-white font-semibold">{t("workoutReminders")}</div>
                       <div className="text-xs text-slate-400">{t("dailyWorkoutNotifications")}</div>
                     </div>
@@ -333,7 +349,9 @@ export default function NotificationsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-pink-500/30 duration-300 group/item">
+                <div className={`flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-pink-500/30 duration-300 group/item ${
+                  language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                }`}>
                   <button
                     onClick={() => handleToggle('notifyMeals', notifyMeals, setNotifyMeals)}
                     className={`relative w-12 h-7 rounded-full transition-all duration-300 hover:scale-105 shrink-0 ${
@@ -344,8 +362,10 @@ export default function NotificationsPage() {
                       notifyMeals ? 'left-6' : 'left-1'
                     }`} />
                   </button>
-                  <div className="flex items-center gap-3">
-                    <div>
+                  <div className={`flex items-center gap-3 ${
+                    language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                  }`}>
+                    <div className={language === 'ar' || language === 'ku' ? 'text-right' : 'text-left'}>
                       <div className="text-white font-semibold">{t("mealPlans")}</div>
                       <div className="text-xs text-slate-400">{t("nutritionUpdates")}</div>
                     </div>
@@ -353,7 +373,9 @@ export default function NotificationsPage() {
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-red-500/30 duration-300 group/item">
+                <div className={`flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/10 transition-all hover:bg-white/10 hover:scale-[1.01] hover:border-red-500/30 duration-300 group/item ${
+                  language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                }`}>
                   <button
                     onClick={() => handleToggle('notifyPhysio', notifyPhysio, setNotifyPhysio)}
                     className={`relative w-12 h-7 rounded-full transition-all duration-300 hover:scale-105 shrink-0 ${
@@ -364,8 +386,10 @@ export default function NotificationsPage() {
                       notifyPhysio ? 'left-6' : 'left-1'
                     }`} />
                   </button>
-                  <div className="flex items-center gap-3">
-                    <div>
+                  <div className={`flex items-center gap-3 ${
+                    language === 'ar' || language === 'ku' ? 'flex-row' : 'flex-row-reverse'
+                  }`}>
+                    <div className={language === 'ar' || language === 'ku' ? 'text-right' : 'text-left'}>
                       <div className="text-white font-semibold">{t("physioSessions")}</div>
                       <div className="text-xs text-slate-400">{t("therapyAppointments")}</div>
                     </div>

@@ -51,10 +51,14 @@ interface Ad {
   imageUrl: string
   link: string
   targetAudience: 'all' | 'pro' | 'free'
-  position: 'top' | 'bottom' | 'sidebar'
+  position: 'top' | 'bottom' | 'sidebar' | 'dashboard' | 'meals' | 'workout'
   startDate: string
   endDate: string | null
   status: 'active' | 'inactive'
+  gradientFrom?: string
+  gradientTo?: string
+  buttonText?: string
+  textColor?: string
   clicks: number
   views: number
   createdAt: string
@@ -81,10 +85,14 @@ export default function AdsManagementPage() {
     imageUrl: '',
     link: '',
     targetAudience: 'all' as 'all' | 'pro' | 'free',
-    position: 'top' as 'top' | 'bottom' | 'sidebar',
+    position: 'top' as 'top' | 'bottom' | 'sidebar' | 'dashboard' | 'meals' | 'workout',
     startDate: new Date().toISOString().split('T')[0],
     endDate: '',
-    status: 'active' as 'active' | 'inactive'
+    status: 'active' as 'active' | 'inactive',
+    gradientFrom: '#10B2E3',
+    gradientTo: '#73E8FF',
+    buttonText: 'Now',
+    textColor: '#FFFFFF'
   })
 
   useEffect(() => {
@@ -118,7 +126,11 @@ export default function AdsManagementPage() {
       position: 'top',
       startDate: new Date().toISOString().split('T')[0],
       endDate: '',
-      status: 'active'
+      status: 'active',
+      gradientFrom: '#10B2E3',
+      gradientTo: '#73E8FF',
+      buttonText: 'Now',
+      textColor: '#FFFFFF'
     })
     setEditingAd(null)
     setPreviewImage(null)
@@ -210,7 +222,11 @@ export default function AdsManagementPage() {
       position: ad.position,
       startDate: ad.startDate.split('T')[0],
       endDate: ad.endDate ? ad.endDate.split('T')[0] : '',
-      status: ad.status
+      status: ad.status,
+      gradientFrom: ad.gradientFrom || '#10B2E3',
+      gradientTo: ad.gradientTo || '#73E8FF',
+      buttonText: ad.buttonText || 'Now',
+      textColor: ad.textColor || '#FFFFFF'
     })
     setIsDialogOpen(true)
   }
@@ -460,6 +476,9 @@ export default function AdsManagementPage() {
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="top">{t('topBanner')}</SelectItem>
+                        <SelectItem value="dashboard">Dashboard</SelectItem>
+                        <SelectItem value="meals">Meals</SelectItem>
+                        <SelectItem value="workout">Workout</SelectItem>
                         <SelectItem value="bottom">{t('bottomBanner')}</SelectItem>
                         <SelectItem value="sidebar">{t('sidebar')}</SelectItem>
                       </SelectContent>
@@ -494,6 +513,67 @@ export default function AdsManagementPage() {
                       className="bg-slate-800 border-slate-700 text-white"
                     />
                   </div>
+                </div>
+
+                {/* Row: Gradient Colors */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label className="text-gray-300 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      Gradient From
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={formData.gradientFrom}
+                        onChange={(e) => setFormData({ ...formData, gradientFrom: e.target.value })}
+                        className="w-16 h-10 p-1 bg-slate-800 border-slate-700"
+                      />
+                      <Input
+                        type="text"
+                        value={formData.gradientFrom}
+                        onChange={(e) => setFormData({ ...formData, gradientFrom: e.target.value })}
+                        className="flex-1 bg-slate-800 border-slate-700 text-white"
+                        placeholder="#10B2E3"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label className="text-gray-300 flex items-center gap-2">
+                      <Sparkles className="w-4 h-4" />
+                      Gradient To
+                    </Label>
+                    <div className="flex gap-2">
+                      <Input
+                        type="color"
+                        value={formData.gradientTo}
+                        onChange={(e) => setFormData({ ...formData, gradientTo: e.target.value })}
+                        className="w-16 h-10 p-1 bg-slate-800 border-slate-700"
+                      />
+                      <Input
+                        type="text"
+                        value={formData.gradientTo}
+                        onChange={(e) => setFormData({ ...formData, gradientTo: e.target.value })}
+                        className="flex-1 bg-slate-800 border-slate-700 text-white"
+                        placeholder="#73E8FF"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Button Text */}
+                <div className="space-y-2">
+                  <Label className="text-gray-300 flex items-center gap-2">
+                    <Target className="w-4 h-4" />
+                    Button Text
+                  </Label>
+                  <Input
+                    value={formData.buttonText}
+                    onChange={(e) => setFormData({ ...formData, buttonText: e.target.value })}
+                    className="bg-slate-800 border-slate-700 text-white"
+                    placeholder="Now"
+                  />
                 </div>
 
                 {/* Status */}

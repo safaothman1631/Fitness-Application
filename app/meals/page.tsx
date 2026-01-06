@@ -39,6 +39,21 @@ interface DayMeal {
   meals: Meal[]
 }
 
+interface Ad {
+  id: string
+  title: string
+  description?: string
+  imageUrl?: string
+  link?: string
+  buttonText?: string
+  gradientFrom?: string
+  gradientTo?: string
+  textColor?: string
+  status: 'active' | 'inactive'
+  position?: string
+  targetAudience?: string
+}
+
 export default function MealsPage() {
   const router = useRouter()
   const [isSuperadmin, setIsSuperadmin] = useState(false)
@@ -54,6 +69,9 @@ export default function MealsPage() {
   const [showImageOverlay, setShowImageOverlay] = useState(false)
   const [mounted, setMounted] = useState(false)
   const [refreshingImages, setRefreshingImages] = useState(false)
+  const [userCalorieGoal, setUserCalorieGoal] = useState<number>(2000) // Default 2000 calories
+  const [banners, setBanners] = useState<Ad[]>([])
+  const [currentBannerIndex, setCurrentBannerIndex] = useState(0)
   const { t, language } = useLanguage()
   const isRTL = language === "ar" || language === "ku"
 
@@ -119,13 +137,13 @@ export default function MealsPage() {
     return daysOrder.slice(0, todayIndex + 1)
   }
 
-  // Get meal ordinal translation key (reusing exercise keys)
+  // Get meal ordinal translation key
   const getMealOrdinal = (num: number): TranslationKey => {
     const ordinals: TranslationKey[] = [
-      "exerciseFirst", "exerciseSecond", "exerciseThird", "exerciseFourth", "exerciseFifth",
-      "exerciseSixth", "exerciseSeventh", "exerciseEighth", "exerciseNinth", "exerciseTenth"
+      "mealFirst", "mealSecond", "mealThird", "mealFourth", "mealFifth",
+      "mealSixth", "mealSeventh", "mealEighth", "mealNinth", "mealTenth"
     ]
-    return ordinals[num - 1] || "exerciseFirst"
+    return ordinals[num - 1] || "mealFirst"
   }
 
   useEffect(() => {
@@ -138,9 +156,66 @@ export default function MealsPage() {
     } catch {}
     setSubmittedToday(hasSubmittedMealToday())
     
+    // Fetch user calorie goal from profile
+    fetchUserCalorieGoal()
+    
     // Fetch meal programs from database
     fetchMealPrograms()
+    
+    // Fetch banner ads
+    fetchBanners()
   }, [])
+
+  // Auto-slide banners every 5 seconds
+  useEffect(() => {
+    if (banners.length <= 1) return
+
+    const interval = setInterval(() => {
+      setCurrentBannerIndex((prev) => (prev + 1) % banners.length)
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [banners.length])
+
+  const fetchBanners = async () => {
+    try {
+      console.log('🎯 Fetching banner ads for meals...')
+      const response = await fetch('/api/ads?status=active')
+      console.log('📡 Banner response status:', response.status)
+      if (response.ok) {
+        const ads = await response.json()
+        console.log('✅ Fetched all ads:', ads.length)
+        const mealsBanners = ads.filter((ad: Ad) => ad.position === 'meals' || ad.position === 'top')
+        console.log('🍽️ Meals banners found:', mealsBanners.length)
+        if (mealsBanners.length > 0) {
+          setBanners(mealsBanners)
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching banners:', error)
+    }
+  }
+
+  const fetchUserCalorieGoal = async () => {
+    try {
+      const userId = localStorage.getItem("userId")
+      if (!userId) return
+      
+      const response = await fetch(`/api/users/${userId}`)
+      if (response.ok) {
+        const user = await response.json()
+        if (user.calorieGoal || user.dailyCalories || user.targetCalories) {
+          const goal = Number(user.calorieGoal || user.dailyCalories || user.targetCalories)
+          if (goal > 0) {
+            setUserCalorieGoal(goal)
+            console.log("🎯 Calorie goal set from user profile:", goal)
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching user calorie goal:", error)
+    }
+  }
 
   const fetchMealPrograms = async () => {
     try {
@@ -167,6 +242,15 @@ export default function MealsPage() {
           console.log("📋 Program data:", program)
           console.log("🍽️ Program meals:", program.meals)
           console.log("📅 Program weeklySchedule:", program.weeklySchedule)
+          
+          // Get calorie goal from program if available
+          if (program.dailyCalories || program.calorieGoal || program.targetCalories) {
+            const goal = Number(program.dailyCalories || program.calorieGoal || program.targetCalories)
+            if (goal > 0) {
+              setUserCalorieGoal(goal)
+              console.log("🎯 Calorie goal set from program:", goal)
+            }
+          }
           
           // Check if program has weeklySchedule first (new format)
           if (program.weeklySchedule && Object.keys(program.weeklySchedule).length > 0) {
@@ -268,6 +352,31 @@ export default function MealsPage() {
     return mealSchedule.find(d => d.day === today) || mealSchedule[0]
   }
 
+  // Calculate today's stats from program meals (automatic, no click needed)
+  const todayStats = (() => {
+    const todayMeals = getTodayMeals().meals
+    let totalCalories = 0
+    let totalProtein = 0
+    const mealsCount = todayMeals.length
+    
+    // Sum all meals for today from the program
+    todayMeals.forEach((meal) => {
+      totalCalories += Number(meal.calories) || 0
+      totalProtein += Number(meal.protein) || 0
+    })
+    
+    const dailyGoalPercent = userCalorieGoal > 0 
+      ? Math.min(100, Math.round((totalCalories / userCalorieGoal) * 100))
+      : 0
+    
+    return {
+      calories: totalCalories,
+      protein: totalProtein,
+      mealsCount,
+      dailyGoal: dailyGoalPercent
+    }
+  })()
+
   const toggleTask = (id: string) => {
     setCompleted((prev) => {
       const next = { ...prev, [id]: !prev[id] }
@@ -313,21 +422,91 @@ export default function MealsPage() {
         </h1>
         <p className="text-[#B6C4CF] mb-8">{t("trackDailyMealsDesc")}</p>
 
-        <Card className="bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] border-none p-8 mb-8 relative overflow-hidden">
-          <div className="relative z-10">
-            <h3 className="text-white text-xl font-bold mb-2">{t("fuelYourBodyRight")}</h3>
-            <p className="text-white/90 text-sm mb-4">{t("fuelYourBodyRightDesc")}</p>
-            {isSuperadmin && (
-              <Button className="bg-white text-[#F59E0B] hover:bg-white/90 font-semibold flex items-center gap-2"><Plus className="w-4 h-4" /> Add Meal</Button>
-            )}
-          </div>
-        </Card>
+        {banners.length > 0 ? (
+          <Card 
+            className="border-none p-8 mb-8 relative overflow-hidden"
+            style={{
+              background: `linear-gradient(to right, ${banners[currentBannerIndex].gradientFrom || '#F59E0B'}, ${banners[currentBannerIndex].gradientTo || '#FCD34D'})`,
+              transition: 'background 1.5s ease-in-out'
+            }}
+          >
+            <div 
+              className="relative z-10"
+              key={currentBannerIndex}
+              style={{
+                animation: 'fadeIn 1.2s ease-in-out'
+              }}
+            >
+              <style jsx>{`
+                @keyframes fadeIn {
+                  0% {
+                    opacity: 0;
+                    transform: translateX(50px);
+                  }
+                  100% {
+                    opacity: 1;
+                    transform: translateX(0);
+                  }
+                }
+              `}</style>
+              <h3 className="text-white text-xl font-bold mb-2">
+                {banners[currentBannerIndex].title}
+              </h3>
+              <p className="text-white/90 text-sm mb-4">
+                {banners[currentBannerIndex].description}
+              </p>
+              {banners[currentBannerIndex].link ? (
+                <Button 
+                  className="bg-white hover:bg-white/90 font-semibold"
+                  style={{ color: banners[currentBannerIndex].gradientFrom || '#F59E0B' }}
+                  onClick={() => window.open(banners[currentBannerIndex].link, '_blank')}
+                >
+                  {banners[currentBannerIndex].buttonText || 'Now'}
+                </Button>
+              ) : isSuperadmin ? (
+                <Button className="bg-white hover:bg-white/90 font-semibold flex items-center gap-2" style={{ color: banners[currentBannerIndex].gradientFrom || '#F59E0B' }}>
+                  <Plus className="w-4 h-4" /> Add Meal
+                </Button>
+              ) : null}
+              
+              {/* Slideshow Indicators */}
+              {banners.length > 1 && (
+                <div className="flex gap-2 mt-4 justify-center">
+                  {banners.map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentBannerIndex(index)}
+                      className={`h-2 rounded-full transition-all duration-300 ease-in-out ${
+                        index === currentBannerIndex 
+                          ? 'w-8 bg-white shadow-lg' 
+                          : 'w-2 bg-white/50 hover:bg-white/75 hover:scale-110'
+                      }`}
+                      aria-label={`Go to banner ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </Card>
+        ) : (
+          <Card className="bg-gradient-to-r from-[#F59E0B] to-[#FCD34D] border-none p-8 mb-8 relative overflow-hidden">
+            <div className="relative z-10">
+              <h3 className="text-white text-xl font-bold mb-2">{t("fuelYourBodyRight")}</h3>
+              <p className="text-white/90 text-sm mb-4">{t("fuelYourBodyRightDesc")}</p>
+              {isSuperadmin && (
+                <Button className="bg-white text-[#F59E0B] hover:bg-white/90 font-semibold flex items-center gap-2">
+                  <Plus className="w-4 h-4" /> Add Meal
+                </Button>
+              )}
+            </div>
+          </Card>
+        )}
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          <StatsCard icon={Flame} label={t("caloriesTodayLabel")} value="0" color="#F59E0B" />
-          <StatsCard icon={Apple} label={t("protein")} value="0g" color="#FB923C" />
-          <StatsCard icon={Utensils} label={t("mealsLogged")} value="0" color="#FCD34D" />
-          <StatsCard icon={Target} label={t("dailyGoal")} value="0%" color="#F59E0B" />
+          <StatsCard icon={Flame} label={t("caloriesTodayLabel")} value={todayStats.calories.toLocaleString()} color="#F59E0B" />
+          <StatsCard icon={Apple} label={t("protein")} value={`${todayStats.protein}g`} color="#FB923C" />
+          <StatsCard icon={Utensils} label={t("mealsLogged")} value={todayStats.mealsCount.toString()} color="#FCD34D" />
+          <StatsCard icon={Target} label={t("dailyGoal")} value={`${todayStats.dailyGoal}%`} color="#F59E0B" />
         </div>
 
       <section className="space-y-4">
@@ -357,9 +536,9 @@ export default function MealsPage() {
                 transition: 'opacity 0.3s ease-out, transform 0.3s ease-out, filter 0.3s ease-out'
               }}
             >
-            {view === "day" && (
-              <div className="space-y-2">
-                {(() => {
+              {view === "day" && (
+                <div className="space-y-2">
+                  {(() => {
                   const todayMeals = getTodayMeals()
                   
                   if (!todayMeals || todayMeals.meals.length === 0) {
@@ -424,88 +603,133 @@ export default function MealsPage() {
                     </button>
                   )
                 })()}
-              </div>
-            )}
+                </div>
+              )}
 
-            {view === "week" && (
-              <div className="space-y-2">
-                {(() => {
-                  // Filter mealSchedule to show only accessible days (Saturday to today)
-                  const accessibleDays = getAccessibleDays()
-                  const filteredSchedule = mealSchedule.filter(dayMeal => 
-                    accessibleDays.includes(dayMeal.day)
-                  )
-                  
-                  // Sort by day order (Saturday first)
-                  const daysOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
-                  filteredSchedule.sort((a, b) => 
-                    daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day)
-                  )
-                  
-                  if (filteredSchedule.length === 0) {
-                    return (
-                  <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
-                    <CardContent className="text-center py-20 px-6">
-                      <div className="relative inline-block mb-6">
-                        <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 flex items-center justify-center shadow-2xl shadow-amber-500/20 border border-amber-500/30">
-                          <Utensils className="w-14 h-14 text-amber-400" />
-                        </div>
-                        <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
-                          <span className="text-white text-xl">🍽️</span>
-                        </div>
-                      </div>
-                      <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
-                        {language === 'ku' ? 'خشتەی خواردن نییە' : language === 'ar' ? 'لا يوجد جدول وجبات' : 'No Meal Schedule'}
-                      </h3>
-                      <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
-                        {language === 'ku' ? 'مەشقگەرەکەت خشتەی خواردنت بۆ دیاری دەکات' : language === 'ar' ? 'سيقوم مدربك بتعيين جدول الوجبات لك' : 'Your trainer will assign a meal schedule to you'}
-                      </p>
-                    </CardContent>
-                  </Card>
-                    )
-                  }
-                  
-                  return filteredSchedule.map((dayMeal, i) => {
-                  const mealCount = dayMeal.meals.length
-                  const totalCalories = dayMeal.meals.reduce((sum, m) => sum + m.calories, 0)
-                  return (
-                    <button
-                      key={i}
-                      onClick={() => setSelectedDay(dayMeal.day)}
-                      className={`w-full grid items-center gap-0 p-4 rounded-lg bg-[#0E151B] border border-[#2E3944] hover:border-amber-500/50 transition-all duration-300 group ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
-                    >
-                      {/* Right column: Play button + calories */}
-                      <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
-                        <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
-                          <Play className={`w-4 h-4 text-amber-400 ${isRTL ? 'rotate-180' : ''}`} />
-                        </div>
-                        <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs whitespace-nowrap">
-                          {totalCalories} cal
-                        </div>
-                      </div>
+              {view === "week" && (
+                <div className="space-y-2">
+                  {(() => {
+                    // Get accessible days (Saturday to today)
+                    const accessibleDays = getAccessibleDays()
+                    
+                    // ALWAYS SHOW ALL 7 DAYS
+                    const daysOrder = ['Saturday', 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+                    
+                    if (mealSchedule.length === 0) {
+                      return (
+                        <Card className="border-dashed border-2 border-slate-700/50 bg-gradient-to-br from-slate-900/50 to-slate-800/30">
+                          <CardContent className="text-center py-20 px-6">
+                            <div className="relative inline-block mb-6">
+                              <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-amber-500/20 via-orange-500/20 to-red-500/20 flex items-center justify-center shadow-2xl shadow-amber-500/20 border border-amber-500/30">
+                                <Utensils className="w-14 h-14 text-amber-400" />
+                              </div>
+                              <div className="absolute -top-3 -right-3 w-10 h-10 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg">
+                                <span className="text-white text-xl">🍽️</span>
+                              </div>
+                            </div>
+                            <h3 className="text-3xl font-bold text-white mb-4 bg-gradient-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent">
+                              {language === 'ku' ? 'خشتەی خواردن نییە' : language === 'ar' ? 'لا يوجد جدول وجبات' : 'No Meal Schedule'}
+                            </h3>
+                            <p className="text-gray-400 mb-2 text-lg max-w-md mx-auto">
+                              {language === 'ku' ? 'مەشقگەرەکەت خشتەی خواردنت بۆ دیاری دەکات' : language === 'ar' ? 'سيقوم مدربك بتعيين جدول الوجبات لك' : 'Your trainer will assign a meal schedule to you'}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      )
+                    }
+                    
+                    return daysOrder.map((dayName, i) => {
+                      // Find this day's meals
+                      const dayMeal = mealSchedule.find(d => d.day === dayName)
                       
-                      {/* Center: Text content */}
-                      <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
-                        <p className="text-white font-semibold text-sm">{t(dayMeal.day.toLowerCase() as any)}</p>
-                        <p className="text-[#B6C4CF] text-xs">{mealCount} {t("meals")} • {totalCalories} {t("kcal")}</p>
-                      </div>
+                      // Check if this day is accessible (Saturday to today)
+                      const isAccessible = accessibleDays.includes(dayName)
                       
-                      {/* Left column: Icon */}
-                      <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
-                        <div className="w-12 h-12 rounded-lg flex items-center justify-center bg-gradient-to-br from-amber-600 to-amber-500">
-                          <Utensils className="w-5 h-5 text-white" />
+                      const mealCount = dayMeal?.meals?.length || 0
+                      const totalCalories = dayMeal?.meals?.reduce((sum, m) => sum + Number(m.calories || 0), 0) || 0
+                      
+                      // Check if it's a rest day (no meals assigned)
+                      const isRestDay = !dayMeal || mealCount === 0
+                      
+                      return (
+                        <div
+                          key={i}
+                          onClick={() => isAccessible && dayMeal && !isRestDay && setSelectedDay(dayName)}
+                          className={`w-full grid items-center gap-0 p-4 rounded-lg border transition-all duration-300 ${
+                            isAccessible && dayMeal && !isRestDay
+                              ? 'bg-[#0E151B] border-[#2E3944] hover:border-amber-500/50 cursor-pointer group'
+                              : 'bg-[#0E151B]/30 border-[#2E3944]/30 cursor-not-allowed opacity-50'
+                          } ${isRTL ? 'grid-cols-[80px_1fr_auto]' : 'grid-cols-[80px_1fr_auto]'}`}
+                        >
+                          {/* Right column: Play button + calories */}
+                          <div className={`flex items-center gap-2 justify-end ${isRTL ? 'order-3' : 'order-3'}`}>
+                            {isAccessible && dayMeal && !isRestDay ? (
+                              <>
+                                <div className="w-8 h-8 rounded-full bg-amber-500/10 flex items-center justify-center group-hover:bg-amber-500/20 transition-colors">
+                                  <Play className={`w-4 h-4 text-amber-400 ${isRTL ? 'rotate-180' : ''}`} />
+                                </div>
+                                <div className="px-2 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs whitespace-nowrap">
+                                  {totalCalories} cal
+                                </div>
+                              </>
+                            ) : !isAccessible ? (
+                              <div className="px-2 py-1 rounded-full bg-slate-700/30 text-slate-500 text-xs">
+                                🔒
+                              </div>
+                            ) : null}
+                          </div>
+                          
+                          {/* Center: Text content */}
+                          <div className={`order-2 ${isRTL ? 'text-right' : 'text-left'}`}>
+                            <p className={`font-semibold text-sm flex items-center gap-2 ${
+                              isAccessible ? 'text-white' : 'text-gray-500'
+                            } ${isRTL ? 'flex-row-reverse' : ''}`}>
+                              {t(dayName.toLowerCase() as any)}
+                              {isRestDay && isAccessible && (
+                                <span className="px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-300 text-[10px] font-medium">
+                                  {language === 'ku' ? 'پشوو' : language === 'ar' ? 'راحة' : language === 'tr' ? 'Dinlenme' : 'Rest'}
+                                </span>
+                              )}
+                            </p>
+                            <p className={`text-xs ${isAccessible ? 'text-[#B6C4CF]' : 'text-gray-600'}`}>
+                              {!isAccessible 
+                                ? (language === 'ku' ? 'قوڵفکراو' : language === 'ar' ? 'مقفل' : language === 'tr' ? 'Kilitli' : 'Locked')
+                                : isRestDay
+                                  ? (language === 'ku' ? 'خواردن دیاری نەکراوە' : language === 'ar' ? 'لا وجبات محددة' : language === 'tr' ? 'Öğün belirlenmedi' : 'No meals assigned')
+                                  : `${mealCount} ${t("meals")} • ${totalCalories} ${t("kcal")}`
+                              }
+                            </p>
+                          </div>
+                          
+                          {/* Left column: Icon */}
+                          <div className={`flex ${isRTL ? 'justify-end order-1' : 'justify-start order-1'}`}>
+                            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                              !isAccessible 
+                                ? 'bg-slate-800/30' 
+                                : isRestDay 
+                                  ? 'bg-slate-800/50' 
+                                  : 'bg-gradient-to-br from-amber-600 to-amber-500'
+                            }`}>
+                              {!isAccessible ? (
+                                <Calendar className="w-5 h-5 text-gray-600" />
+                              ) : isRestDay ? (
+                                <Calendar className="w-5 h-5 text-slate-400" />
+                              ) : (
+                                <Utensils className="w-5 h-5 text-white" />
+                              )}
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </button>
-                  )
-                })})()}
-              </div>
-            )}
+                      )
+                    })
+                  })()}
+                </div>
+              )}
             </div>
           </CardContent>
-        </Card>
-      </section>
-      </div>
+          </Card>
+        </section>
+        </div>
 
       {/* Day Meals Dialog */}
       <Dialog open={!!selectedDay} onOpenChange={(open) => !open && setSelectedDay(null)}>

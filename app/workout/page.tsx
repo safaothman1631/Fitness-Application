@@ -568,7 +568,7 @@ export default function WorkoutPage() {
                   // Get accessible days (Saturday to today)
                   const accessibleDays = getAccessibleDays()
                   
-                  // Create complete week schedule with all 7 days
+                  // Create complete week schedule with all 7 days - ALWAYS SHOW ALL 7 DAYS
                   const daysOrder = ['saturday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday']
                   
                   return daysOrder.map((dayName, i) => {
@@ -583,6 +583,7 @@ export default function WorkoutPage() {
                     const isRestDay = dayWorkout?.exercises?.[0]?.muscleGroup === "Recovery" || !dayWorkout
                     const displayName = dayName.charAt(0).toUpperCase() + dayName.slice(1)
                     
+                    // ALWAYS render the day, even if not accessible
                     return (
                       <div
                         key={i}
@@ -613,6 +614,11 @@ export default function WorkoutPage() {
                               )}
                             </>
                           )}
+                          {!isAccessible && (
+                            <div className="px-2 py-1 rounded-full bg-slate-700/30 text-slate-500 text-xs">
+                              🔒
+                            </div>
+                          )}
                         </div>
                         
                         {/* Center: Text content */}
@@ -627,14 +633,19 @@ export default function WorkoutPage() {
                             {missedDays[displayName] && isAccessible && (
                               <span className="text-red-400 text-xs">⚠</span>
                             )}
+                            {isRestDay && isAccessible && (
+                              <span className="px-2 py-0.5 rounded-full bg-slate-700/50 text-slate-300 text-[10px] font-medium">
+                                {language === 'ku' ? 'پشوو' : language === 'ar' ? 'راحة' : language === 'tr' ? 'Dinlenme' : 'Rest'}
+                              </span>
+                            )}
                           </p>
                           <p className={`text-xs ${
                             missedDays[displayName] ? 'text-red-300' : isAccessible ? 'text-[#B6C4CF]' : 'text-gray-600'
                           }`}>
                             {!isAccessible 
-                              ? '🔒' 
+                              ? (language === 'ku' ? 'قوڵفکراو' : language === 'ar' ? 'مقفل' : language === 'tr' ? 'Kilitli' : 'Locked')
                               : missedDays[displayName]
-                                ? language === 'ku' ? 'میسید' : language === 'ar' ? 'فائت' : 'Missed'
+                                ? language === 'ku' ? 'میسید - ئەو رۆژە بیرت چووە' : language === 'ar' ? 'فائت - نسيت ذلك اليوم' : 'Missed'
                                 : completedDays[displayName]
                                   ? t("completed")
                                   : isRestDay 

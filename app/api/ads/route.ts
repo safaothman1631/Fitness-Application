@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
     const searchParams = request.nextUrl.searchParams
     const status = searchParams.get('status') // 'active' or 'inactive'
     const targetAudience = searchParams.get('targetAudience')
+    const position = searchParams.get('position') // 'top', 'meals', 'workout', 'sidebar', etc.
 
     // Fetch all ads without complex queries to avoid index requirements
     const snapshot = await adminDb.collection('ads').get()
@@ -23,6 +24,10 @@ export async function GET(request: NextRequest) {
 
     if (targetAudience && targetAudience !== 'all') {
       ads = ads.filter(ad => ad.targetAudience === targetAudience || ad.targetAudience === 'all')
+    }
+
+    if (position) {
+      ads = ads.filter(ad => ad.position === position || ad.position === 'all')
     }
 
     // Sort by createdAt in memory
@@ -47,11 +52,25 @@ export async function POST(request: NextRequest) {
   try {
     const data = await request.json()
     
-    const { title, description, imageUrl, link, targetAudience, position, startDate, endDate, status } = data
+    const { 
+      title, 
+      description, 
+      imageUrl, 
+      link, 
+      targetAudience, 
+      position, 
+      startDate, 
+      endDate, 
+      status,
+      gradientFrom,
+      gradientTo,
+      buttonText,
+      textColor
+    } = data
 
-    if (!title || !imageUrl) {
+    if (!title) {
       return NextResponse.json(
-        { error: 'Title and image are required' },
+        { error: 'Title is required' },
         { status: 400 }
       )
     }
@@ -59,13 +78,17 @@ export async function POST(request: NextRequest) {
     const adData = {
       title,
       description: description || '',
-      imageUrl,
+      imageUrl: imageUrl || '',
       link: link || '',
       targetAudience: targetAudience || 'all', // 'all', 'pro', 'free'
-      position: position || 'top', // 'top', 'bottom', 'sidebar'
+      position: position || 'top', // 'top', 'bottom', 'sidebar', 'meals', 'workout'
       startDate: startDate || new Date().toISOString(),
       endDate: endDate || null,
       status: status || 'active', // 'active', 'inactive'
+      gradientFrom: gradientFrom || '#10B2E3',
+      gradientTo: gradientTo || '#73E8FF',
+      buttonText: buttonText || 'Now',
+      textColor: textColor || '#FFFFFF',
       clicks: 0,
       views: 0,
       createdAt: new Date().toISOString(),
